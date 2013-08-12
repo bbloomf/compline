@@ -1,0 +1,151 @@
+﻿<html>
+<head>
+<title>Compline</title>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'></script>
+<script src='compline.js'></script>
+<script src='jgabc.full.js'></script>
+<style>
+.red {
+  color: red;
+}
+body {
+  font-family: 'OFL Sorts Mill Goudy TT';
+}
+</style>
+</head>
+<body>
+<span id='weekday'></span> at Compline<br/>
+<div class='jgabc' src='jube-domne.gabc'></div>
+<div class='jgabc' src='blessing.gabc'></div>
+<div class='jgabc' src='lesson.gabc'></div>
+<div class='jgabc' src='adjutorium-nostrum.gabc'></div>
+Pater noster. <i>altogether in silence.</i>
+<!--<br><i>Then the Officiant says the </i>Confiteor<i> entirely recto tono, in a low voice.</i>
+<br/><br/>
+<i>The Choir replies:</i>
+<br>Misereátur tui omnípotens Deus, et dimíssis peccátis tuis, perdúcat te ad vitam ætérnam. <span class='versiculum'>r</span>&nbsp;Amen.
+<br><br>
+<i>Then the Choir says the </i>Confiteor<i> as follows&nbsp;:</i>
+<br>
+-->
+<br>
+<span class='red'><i>All, still standing, bow profoundly, and say together the Confiteor once through in a low voice, recto tono, as follows:</i></span>
+<br>
+Confíteor Deo omnipoténti, beátæ Maríæ semper Vírgini, beáto Michaéli Archángelo, beáto Joánni Baptístæ, sanctis Apóstolis tuis Petro et Páulo, et ómnibus Sanctis, quia peccávi nimis, cogitatióne, verbo et ópere : mea culpa, mea culpa, mea máxima culpa.  Ideo precor beátam Maríam semper Vírginem, beátum Michaélem Archángelum, beátum Joánnem Baptístam, sanctos Apóstolos Petrum et Páulum, et omnes Sanctos: oráre pro me ad Dóminum Deum nostrum.
+<br><br>
+<i class='red'>All still bowing profoundly, the Officiant continues alone:</i>
+<br>
+Misereátur nostri omnípotens Deus, et dimíssis peccátis nostris, perdúcat vos ad vitam ætérnam.
+<br><span class='versiculum'>r</span>&nbsp;Amen.
+<br><br>
+<span class='red'><i>All stand upright and make the Sign of the Cross as the Officiant says :</i></span>
+<br>
+Indulgéntiam, absolutiónem, et remissiónem peccatórum nostrórum tríbuat nobis omnípotens et miséricors Dóminus.
+<br><span class='versiculum'>r</span>&nbsp;Amen.
+<br><br>
+<span class='red'><i>Then all make the Sign of the Cross with their thumbs over their hearts, as the Officiant says :</i></span>
+<div class='jgabc' src='converte-nos.gabc'></div>
+<div class='jgabc' src='deus-in-adjutorium.gabc'></div>
+<div id='placeholder'></div>
+<!--SHOULD BE PROPER-->
+<div id='te-lucis-choices'>
+<input type='radio' name='te-lucis' checked value='Ordinary' id='te-lucis-Ordinary'/>Ordinary (from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)<label for='te-lucis-Ordinary'></label><br/>
+<input type='radio' name='te-lucis' value='Ferial' id='te-lucis-Ferial'/>Ferial (Ferial days from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)<label for='te-lucis-Ferial'></label><br/>
+<input type='radio' name='te-lucis' value='Solemn' id='te-lucis-Solemn'/>Solemn (All First class feasts lacking a proper tone at any time of the year)<label for='te-lucis-Solemn'></label><br/>
+<input type='radio' name='te-lucis' value='Our-Lady' id='te-lucis-Our-Lady'/>Our Lady (All feasts of the Blessed Virgin Mary, except the Seven Sorrows, of whatever rank at any time of the year)<label for='te-lucis-Our-Lady'></label><br/>
+<input type='radio' name='te-lucis' value='Advent' id='te-lucis-Advent'/>Advent (All days except first class feasts from Saturday before the First Sunday of Advent until December 23 inclusive)<label for='te-lucis-Advent'></label><br/>
+<input type='radio' name='te-lucis' value='Christmas' id='te-lucis-Christmas'/>Christmas (All days from December 24 until January 4 inclusive)<label for='te-lucis-Christmas'></label><br/>
+<input type='radio' name='te-lucis' value='Epiphany' id='te-lucis-Epiphany'/>Epiphany (All days from January 5 until January 13 inclusive)<label for='te-lucis-Epiphany'></label><br/>
+<input type='radio' name='te-lucis' value='Holy-Family' id='te-lucis-Holy-Family'/>Holy Family (On the Feast of the Holy Family)<label for='te-lucis-Holy-Family'></label><br/>
+<input type='radio' name='te-lucis' value='Lent' id='te-lucis-Lent'/>Lent (On Sundays, Ferial Days, and Second Class Feasts from Saturday before First Sunday of Lent until Friday before Passion Sunday inclusive)<label for='te-lucis-Lent'></label><br/>
+<input type='radio' name='te-lucis' value='Passiontide' id='te-lucis-Passiontide'/>Passiontide (On Sundays, Ferial Days, and Second Class Feasts from the Saturday before the First Sunday of Passiontide until Wednesday of Holy Week)<label for='te-lucis-Passiontide'></label><br/>
+<input type='radio' name='te-lucis' value='Seven-Dolors' id='te-lucis-Seven-Dolors'/>Seven Sorrows (Feast of the Seven Sorrows of the Blessed Mother)<label for='te-lucis-Seven-Dolors'></label><br/>
+<input type='radio' name='te-lucis' value='Easter' id='te-lucis-Easter'/>Easter (On all days, except First Class Feasts, from the Saturday before Low Sunday until the Tuesday after the Fifth Sunday after Easter inclusive)<label for='te-lucis-Easter'></label><br/>
+<input type='radio' name='te-lucis' value='Ascension' id='te-lucis-Ascension'/>Ascension (On all days, except First Class Feasts beside the Ascension, from Wesdnesday before the Ascension until the Friday before Pentecost inclusive)<label for='te-lucis-Ascension'></label><br/>
+<input type='radio' name='te-lucis' value='Transfiguration' id='te-lucis-Transfiguration'/>Transfiguration (On the Feast of the Transfiguration)<label for='te-lucis-Transfiguration'></label><br/>
+<input type='radio' name='te-lucis' value='Pentecost' id='te-lucis-Pentecost'/>Pentecost (On all days from the Vigil of Pentecost until the Friday in the Octave of Pentecost)<label for='te-lucis-Pentecost'></label><br/>
+<input type='radio' name='te-lucis' value='Christ-the-King' id='te-lucis-Christ-the-King'/>Christ the King (On the Feast of Christ the King)<label for='te-lucis-Christ-the-King'></label><br/>
+<input type='radio' name='te-lucis' value='Sacred-Heart' id='te-lucis-Sacred-Heart'/>Sacred Heart (On the Feast of the Sacred Heart of Jesus)<label for='te-lucis-Sacred-Heart'></label><br/>
+</div>
+<div class='jgabc' id='te-lucis' src='te-lucis/Ordinary.gabc'></div>
+<i class='red'>The Officiant then says the Chapter:</i>
+<br>
+Tu autem in nobis es, Dómine, † et nomen sanctum tuum invocátum est super nos: * ne derelínquas nos, Dómine Deus noster.
+<br/><span class='versiculum'>r</span> Deo grátias.
+<br/>
+<!--SHOULD BE PROPER:-->
+<div id='in-manus-tuas-choices'>
+<input type='radio' name='in-manus-tuas' value='ordinary' checked id='in-manus-tuas-ordinary'/><label for='in-manus-tuas-ordinary'>Throughout the year</label><br/>
+<input type='radio' name='in-manus-tuas' value='advent' id='in-manus-tuas-advent'/><label for='in-manus-tuas-advent'>Saturday before the First Sunday of Advent until Dec. 23 inclusive</label><br/>
+<input type='radio' name='in-manus-tuas' value='pt' id='in-manus-tuas-pt'/><label for='in-manus-tuas-pt'>Saturday before Low Sunday until Friday in the Octave of Pentecost inclusive</label>
+</div>
+<div class='jgabc' id='in-manus-tuas' src='in-manus-tuas/ordinary.gabc'></div>
+<div class='jgabc' src='custodi-nos.gabc'></div>
+<br><br>
+<div class='jgabc' src='canticle-ant.gabc'></div>
+<div class='jgabc' src='canticle-psalm.gabc'></div>
+<div id="verses"><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">2.&nbsp;</span>Quia vidérunt <b>ó</b>culi <b>me</b>i&nbsp;* salutá<i>re</i> <b>tu</b>um&nbsp;:<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">3.&nbsp;</span><b>Quod</b> pa<b>rá</b>sti&nbsp;* ante fáciem ómnium po<i>pu</i><b>ló</b>rum&nbsp;:<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">4.&nbsp;</span>Lumen ad revelati<b>ó</b>nem <b>gén</b><b>ti</b>um,&nbsp;* et glóriam plebis tu<i>æ</i> <b>Is</b>ræl.<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">5.&nbsp;</span>Glória <b>Pá</b>tri, et <b>Fí</b><b>li</b>o,&nbsp;* et Spirítu<i>i</i> <b>Sán</b>cto.<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">6.&nbsp;</span>Sicut érat in princípio, et <b>núnc</b>, et <b>sém</b>per,&nbsp;* et in sǽcula sæculó<i>rum</i>. <b>A</b>men.<br></p></div>
+<div class='jgabc' src='canticle-ant.gabc'></div>
+<br>
+<span class='versiculum'>v</span> Dómine, exáudi oratiónem meam.
+<span class='versiculum'>r</span> Et clamor meus ad te véniat.
+<div class='jgabc' src='benedicamus-domino.gabc'></div>
+<i class='red'>The Officiant then says the blessing in a low recto tono, slowly and gravely, at the end of which all make the Sign of the Cross:</i>
+<br>
+Benedícat et custódiat nos omnípotens et miséricors Dóminus, Pater, et Fílius, et Spíritus Sanctus.
+<br>
+<span class='versiculum'>r</span> Amen.
+<br><br>
+MARIAN ANTIPHON
+<!-- SHOULD BE PROPER -->
+<div id='marian-antiphon-choices'>
+<input type='radio' name='marian-antiphon' value='alma-redemptoris-mater' id='marian-antiphon-alma'/><label for='marian-antiphon-alma'>Alma Redemptoris Mater</label><br/>
+<input type='radio' name='marian-antiphon' value='alma-redemptoris-mater-solemn' id='marian-antiphon-alma-solemn'/><label for='marian-antiphon-alma'>Alma Redemptoris Mater (Solemn)</label><br/>
+<input type='radio' name='marian-antiphon' value='salve-regina' checked id='marian-antiphon-salve'/><label for='marian-antiphon-salve'>Salve Regina</label><br/>
+<input type='radio' name='marian-antiphon' value='salve-regina-solemn' id='marian-antiphon-salve-solemn'/><label for='marian-antiphon-salve-solemn'>Salve Regina (Solemn)</label><br/>
+<input type='radio' name='marian-antiphon' value='ave-regina-caelorum' id='marian-antiphon-ave'/><label for='marian-antiphon-ave'>Ave Regina Cælorum</label><br/>
+<input type='radio' name='marian-antiphon' value='ave-regina-caelorum-solemn' id='marian-antiphon-ave-solemn'/><label for='marian-antiphon-ave-solemn'>Ave Regina Cælorum (Solemn)</label><br/>
+<input type='radio' name='marian-antiphon' value='regina-caeli' id='marian-antiphon-regina'/><label for='marian-antiphon-regina'>Regina Cæli</label><br/>
+<input type='radio' name='marian-antiphon' value='regina-caeli-solemn' id='marian-antiphon-regina-solemn'/><label for='marian-antiphon-regina-solemn'>Regina Cæli (Solemn)</label>
+</div>
+<div class='jgabc' id='marian-antiphon' src='marian-antiphon/salve-regina.gabc'></div>
+<br/>
+<div class='marian-antiphon alma-redemptoris-mater alma-redemptoris-mater-solemn' style='display:none;'>
+<i class='red'>During Advent:</i><br/>
+<span class='versiculum'>v</span> Angelus Dómini nuntiávit Maríæ.<br/>
+<span class='versiculum'>r</span> Et concépit de Spíritu Sancto.
+<br/><br/>
+Orémus.<br/>
+Grátiam tuam, quǽsumus Dómine, méntibus nostris infúnde: † ut qui, Angelo nuntiánte, Christi Fílii tui incarnatiónem cognóvimus, * per passiónem ejus et crucem ad resurrectiónis glóriam perducámur.  Per eúmdem Christum Dóminum nostrum. <span class='versiculum'>r</span> Amen.
+<br/><br/>
+<i class='red'>From 1st Vespers of Christmas to 2nd Vesper of the Purification:</i><br/>
+<span class='versiculum'>v</span> Post partum Virgo invioláta permansísti.<br/>
+<span class='versiculum'>r</span> Dei Génitrix intercéde pro nóbis.
+<br/><br/>
+Orémus.<br/>
+Deus, qui salútis ætérnæ, beátæ Maríæ virginitáte fœcúnda, humáno géneri prǽmia præstitísti: † tríbue, quǽsumus; ut ipsam pro nobis intercédere sentiámus, * per quam merúimus auctórem vitæ suscípere, Dóminum nostrum Jesum Christum Fílium tuum. <span class='versiculum'>r</span> Amen.
+</div>
+<div class='marian-antiphon salve-regina salve-regina-solemn'>
+<span class='versiculum'>v</span> Ora pro nobis sancta Dei Génitrix.<br/>
+<span class='versiculum'>r</span> Ut digni efficiámur promissiónibus Christi.
+<br/><br/>
+Orémus.<br/>
+Omnípotens sempitérne Deus, qui gloriósæ Vírginis Matris Maríæ corpus et ánimam, ut dignum Fílii tui habitáculum éffici mererétur, Spíritu Sancto cooperánte præparásti: † da, ut cujus commemoratióne lætámur, * ejus pia intercessióne ab instántibus malis et a morte perpétua liberémur.  Per eúmdem Christum Dóminum nostrum. <span class='versiculum'>r</span> Amen.
+</div>
+<div class='marian-antiphon ave-regina-caelorum ave-regina-caelorum-solemn' style='display:none;'>
+<span class='versiculum'>v</span> Dignáre me laudáre te Virgo sacráta.<br/>
+<span class='versiculum'>r</span> Da mihi virtútem contra hostes tuos.
+<br/><br/>
+Orémus.<br/>
+Concéde, miséricors Deus, fragilitáti nostræ præsídium: † ut qui sanctæ Dei Genitrícis memóriam ágimus, * intercessiónis ejus auxílio a nostris iniquitátibus resurgámus.  Per eúmdem Christum Dóminum nostrum. <span class='versiculum'>r</span> Amen.
+</div>
+<div class='marian-antiphon regina-caeli regina-caeli-solemn' style='display:none;'>
+<span class='versiculum'>v</span> Gaude et lætáre Virgo María, allelúja.<br/>
+<span class='versiculum'>r</span> Quia surréxit Dóminus vere, allelúja.
+<br/><br/>
+Orémus.<br/>
+Deus, qui per resurrectiónem Fílii tui Dómini nostri Jesu Christi mundum lætificáre dignátus es: † præsta, quǽsumus; ut per ejus Genitrícem Víginem Maríam, * perpétuæ capiámus gáudia vitæ.  Per eúmdem Christum Dóminum nostrum. <span class='versiculum'>r</span> Amen.
+</div>
+
+</body>
+</html>
