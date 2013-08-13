@@ -1,4 +1,5 @@
-﻿String.prototype.repeat = function(num){return new Array(num+1).join(this);};
+String.prototype.repeat = function(num){return new Array(num+1).join(this);};
+if(!String.prototype.trimRight) String.prototype.trimRight = function(){return this.replace(/\s+$/,'');};
 var gabcSettings={trimStaff:true};
 var uuid;
 // lower-staff ext: 0xe1, upper: 0xe2
@@ -189,6 +190,7 @@ var staffheight = 48;
 var spaceheight = staffheight / 4;
 var notewidth = staffheight / 6;
 var spaceBetweenNeumes = notewidth;
+var slashSpace = staffheight/20;
 var verticalSpace = staffheight/4;
 var fontsize = spaceheight*3/2;
 var spaceWidth = spaceheight * 3/4;
@@ -216,7 +218,7 @@ var styleFont="@font-face {font-family: '"+familyCaeciliae+"'; font-weight: norm
         + "@font-face {font-family: 'OFL Sorts Mill Goudy TT'; font-style: normal; font-weight: normal; src: local('OFL Sorts Mill Goudy TT'), local('OFLGoudyStMTT'), url('OFLGoudyStMTT.ttf') format('truetype');}"
 
 var svgWidth;
-var svg;
+var _svg,svg;
 var textElem;
 var codea = 'a'.charCodeAt(0);
 var codem = codea + 12;
@@ -251,7 +253,7 @@ String.prototype.replaceSpTags = function(){
     return spSubstitutions[tmp]||tmp;
   });
 }
-var regexInner = /(?:[!\/ ,;:`]+|[^\)!\/ ,;:`\[]+)(?:\[[^\]]*(?:$|\]))?/g;
+var regexInner = /(?:[!\/ ,;:`]+|[^\)!\/ ,;:`\[]+)|(\[[^\]]*(?:$|\]))/g;
 var rog = {
   syl:3,
   gabc:5,
@@ -329,9 +331,6 @@ var selectedNeumeTag=null;
 var _timeoutGabcUpdate = null;
 var _minUpdateInterval = 1700;
 var _heightCorrection = 0;
-var _clefs=[];
-var _accidentals=[];
-var _tones=[];
 
 var utf8_bom=String.fromCharCode(0xEF)+String.fromCharCode(0xBB)+String.fromCharCode(0xBF);
 function encode_utf8( s )
@@ -344,6 +343,7 @@ function decode_utf8( s )
 }
 
 function Header(text){
+  if(typeof(text)!='string') text='';
   this.comments=[];
   this.cValues={};
   this.original='';
@@ -355,7 +355,15 @@ function Header(text){
       var line=lines[i],
           match = regexHeaderLine.exec(line);
       if(match){
-        this[match[1]]=match[2];
+        if(this[match[1]]) {
+          var arrayName=match[1]+'Array';
+          if(!this[arrayName]){
+            this[arrayName] = [this[match[1]]];
+          }
+          this[arrayName].push(match[2]);
+        } else {
+          this[match[1]]=match[2];
+        }
       } else if((match = regexHeaderComment.exec(line))){
         if(line!='%%'){
           match = regexHeaderLine.exec(line.slice(1));
@@ -372,8 +380,15 @@ function Header(text){
 Header.prototype.toString = function(){
   var result=[];
   for(key in this){
-    if(key=='length' || key=='original' || key=='comments' || key=='cValues' || (typeof this[key])=="function")continue;
-    result .push(key + ': ' + this[key] + ';');
+    if(key=='length' || key=='original' || key=='comments' || key=='cValues' || (typeof this[key])!="string")continue;
+    var array = this[key+'Array'];
+    if(array) {
+      for(i in array) {
+        result.push(key + ': ' + array[i] + ';');
+      }
+    } else {
+      result.push(key + ': ' + this[key] + ';');
+    }
   }
   for(key in this.cValues){
     if(key.length==0)continue;
@@ -427,7 +442,20 @@ function updateLinks(text){
 var gabcProcessTime = 0;
 var _nextUpdate = new Date().getTime();
 var dontUpdateChant = false;
+var otherElements = [];
 function updateChant(text, svg, dontDelay) {
+  var originalSvg = svg;
+  var $svg = $(svg);
+  if(!$svg.is('svg')) {
+    $svg = $svg.find('svg');
+    if(!$svg.length) {
+      $svg = $(_svg).clone().appendTo(svg);
+    }
+    svg = $svg[0];
+  }
+  if(svg != _svg && otherElements.indexOf(svg)<0 && originalSvg){
+    otherElements.push(originalSvg);
+  }
   if(dontUpdateChant || !text)return;
   var gtext=updateLinks(text);
   if(_timeoutGabcUpdate) clearTimeout(_timeoutGabcUpdate);
@@ -495,6 +523,7 @@ function textWidth(txt,clas,special) {
     var key;
     if(txt.length==1 && txt[0].tags.length==0) {
       txt = txt[0].text;
+      if(txt.length==0) return 0;
       if(clas==undefined)clas="";
       if(i==0 && !len && (key=clas+","+txt) && (tw=_txtWidths[key])) return tw;
     } else {
@@ -575,8 +604,9 @@ function getChantWidth(text) {
   return defChant.getComputedTextLength();
 }
 
-function selectGabc(start,len){
-  var e=$("#editor");
+function selectGabc(start,len,svg){
+  var e = $('#' + $(svg).parent().attr('for'));
+  if(e.length==0) e = $('#editor');
   start+=getHeaderLen(e.val());
   if(e.is(':visible')){
     e=e[0];
@@ -588,6 +618,10 @@ function selectGabc(start,len){
       i=_hymnGabcMap[j] + start - j;
     }
     start = i;
+  }
+  if(len == -1) {
+    var m = $(e).val().slice(start).match(/^[^) ]*/);
+    len = m[0].length;
   }
   e.select(start,len);
   e.selectionStart=start;
@@ -657,7 +691,7 @@ function TagInfo(txt,tags) {
   }
 };
 TagInfo.prototype.span = function(){
-  var result=make('tspan',this.text, fontclass + " " + this.tags.join(" "));
+  var result=make('tspan',this.text, fontclass + ' ' + this.tags.join(" "));
   return result;
 };
 TagInfo.prototype.spanV = function(){
@@ -874,6 +908,33 @@ function relayoutChant(svg){
   staffInfo.htone = 10;
   if($tmp.length)$tmp.attr('x',width-$tmp[0].getComputedTextLength());
   
+    lastClefBeforeNeume=function(neumeId){
+      var i,result={clefTone:9};
+      for(i in svg.clefs){
+        if(i<neumeId)result=svg.clefs[i];
+        else break;
+      }
+      return result;
+    };
+    lastClefBeforePunctum=function(punctumId){
+      var i,result={clefTone:9};
+      for(i in svg.clefs){
+        try {
+          var punctumI = parseInt($(svg).find('#neume'+i).children()[0].id.match(/\d+$/)[0]);
+          if(punctumI<punctumId)result=svg.clefs[i].info;
+          else break;
+        } catch(e){}
+      }
+      return result;
+    }
+    var isPunctumFlat=function(punctumId,toneId){
+      var i,result=null;
+      for(i in svg.accidentals){
+        if(i<=punctumId)result=svg.accidentals[i];
+        else break;
+      }
+      return result;
+    }
   while(true){
     pneume = cneume;
     $lastText = $text;
@@ -907,7 +968,7 @@ function relayoutChant(svg){
         x + cneume.wText + Math.max(Math.floor(offset),0)
       : nextXTextMin||0;
     if(cneume.match[7]&&cneume.match.index>0)nextXTextMin+=5;
-    var nextXChantMin = x + cneume.wChant + spaceBetweenNeumes - Math.min(offset,0);
+    var nextXChantMin = x + cneume.wChant + (cneume.spaceBeforeNextNeume || spaceBetweenNeumes) - Math.min(offset,0);
     var lastX;
     cneume.x = x;
 
@@ -923,7 +984,7 @@ function relayoutChant(svg){
       nextXTextMin -= x;
       nextXChantMin -= x;
       x=0;
-      xChantMin=wClef+spaceBetweenNeumes+offset;
+      xChantMin=wClef+(cneume.spaceBeforeNextNeume || spaceBetweenNeumes)+offset;
       if(cneume.wChant > 0 && x < xChantMin) {
         x = xChantMin;
       }
@@ -955,7 +1016,7 @@ function relayoutChant(svg){
         $staff = $(curStaff);
       }
       staffInfo = curStaff.info;
-      maxX = width - staffInfo.x - spaceBetweenNeumes;
+      maxX = width - staffInfo.x - (cneume.spaceBeforeNextNeume || spaceBetweenNeumes);
     }
     curWord = curWord.concat($all.toArray());
     
@@ -965,7 +1026,7 @@ function relayoutChant(svg){
       $staff.append($neume);
       //$neume.attr('x',x);
       //if(cneume.transform)$neume.attr('transform',cneume.transform);
-      if(needCustos){
+      if(needCustos && !cneume.gabc.match(/^[,;:]+$/)){
         addCustos(needCustos,cneume);
         //justifyLine(needCustos,true,true);
         needCustos = null;
@@ -1049,7 +1110,9 @@ function relayoutChant(svg){
     $staff = $svg.find('#system'+staffI);
     $staff.remove();
   }
-  svg.setAttribute('height',$(svg).children("g")[0].getBBox().height + extraHeight + _heightCorrection - _defText.getExtentOfChar("q").height);
+  var height = $(svg).children("g")[0].getBBox().height + extraHeight + _heightCorrection - _defText.getExtentOfChar("q").height;
+  svg.setAttribute('height',height);
+  $(svg).height(height);
 }
 
 function getChant(text,svg,result,top) {
@@ -1058,7 +1121,10 @@ function getChant(text,svg,result,top) {
   text = text[1];
   var m = text.match(/[\r\n]\s*[-\w]+:[^;]+;\s*[\r\n]/);
   if(m)text = text.slice(0,m.index);
-  var makeLinks=svg?(svg.parentNode&&svg.parentNode.id=="chant-preview"):false;
+  var forEditor = svg.parentNode.getAttribute('for'),
+      $forEditor = $('#'+forEditor);
+  if(!$forEditor.is('textarea')) forEditor = $forEditor = null;
+  var makeLinks=svg?(svg.parentNode&&(svg.parentNode.id=="chant-preview"||forEditor)):false;
   var defs = $(svg).find("defs")[0];
   if(!defs)defs=_defs;
   var match;
@@ -1073,9 +1139,9 @@ function getChant(text,svg,result,top) {
     result.setAttribute("class", "caeciliae");
   }
   if(makeLinks){
-    _clefs=[];
-    _accidentals=[];
-    _tones=[];
+    svg.clefs=[];
+    svg.accidentals=[];
+    svg.tones=[];
   }
   var width = $(svg.parentNode).width();
   var userNotes = header["user-notes"];
@@ -1128,368 +1194,397 @@ function getChant(text,svg,result,top) {
   } catch(e) { }
   svgWidth = width;
   
-  while(match = regexOuter.exec(text)) {
-    //TODO: first collect all data from match into the cneume object
-    // so that we can have a function to process just from a cneume object
-    // Put the actual text elements in the cneume object as well.
-    var cneume={index:match.index+match[1].length,match:match,ledgers:{},wChant:0,wText:0};
-    var tags=[];
-    if(match[5]) {
-      cneume.gabc=match[5];
-      // if there is an open paren, assume that the correct close paren has not yet been marked for this GABC.
-      if(cneume.gabc.indexOf('(')>=0){
-        var iop=match[0].indexOf('(');
-        var mspace=cneume.gabc.match(/ /);
-        var gabclen=0;
-        if(mspace)gabclen=mspace.index;
-        cneume.gabc=cneume.gabc.slice(0,gabclen);
-        if(gabclen)++gabclen;
-        regexOuter.lastIndex -= match[0].length - iop - 1 - gabclen;
+  while(gmatch = regexOuter.exec(text)) {
+    var curGabc = gmatch[5]? gmatch[5].match(/[`,;:]+|[^\/,;:]*\/*/g) : ['',''];
+    curGabc.splice(-1,1);
+    var spaceBeforeNextNeume;
+    var matchIndex = gmatch.index;
+    for(var gabcI=0; gabcI < curGabc.length; ++gabcI) {
+      //TODO: first collect all data from match into the cneume object
+      // so that we can have a function to process just from a cneume object
+      // Put the actual text elements in the cneume object as well.
+      var match = (curGabc.length == 1)? gmatch : (gabcI == 0? gmatch.slice(0,6) : ((gabcI == curGabc.length - 1)? gmatch.slice(4) : ['','']));
+      if(match.length == 5) {
+        match.splice(0,0,'','','','');
       }
-      cneume.info = getChantFragment(cneume.gabc,defs);
-      clef=cneume.info.clef||clef;
-      if(makeLinks){
-        if(cneume.info.clef){
-          _clefs[neumeId]=clefNeume=cneume;
-          clefNeume.clefs = [];
-          _accidentals[punctumId] = clef.length==3? -1 : null;
-        }
-        _tones=_tones.concat(cneume.info.tones);
+      match.index = (matchIndex += match[1].length);
+      var cGabc = curGabc[gabcI];
+      matchIndex += cGabc.length;
+      var slashCount = cGabc.match(/\//g);
+      if(slashCount) {
+        slashCount = slashCount.length;
+        cGabc = cGabc.slice(0,-slashCount);
+        spaceBeforeNextNeume = slashCount * slashSpace;
+      } else {
+        spaceBeforeNextNeume = spaceBetweenNeumes;
       }
-      defChant.textContent = cneume.info.def.textContent;
-      cneume.wChant = defChant.getComputedTextLength();
-      if(cneume.gabc==clef)wClef=cneume.wChant;
-    } else cneume.info={};
-    if(currentWord.length>0 && previousMatch && (previousMatch[7]||previousMatch[8])) {
-      words.push(currentWord);
-      currentWord=[];
-    }
-    var space = match[7]||match[8];
-    var txt = match[3] || space;
-    var translation = regexSqBrackets.exec(txt);
-    if(translation){
-      txt = txt.slice(0,translation.index) + txt.slice(translation.index + translation[0].length);
-      translation = translation[1];
-    }
-    if(match[3] && space) {
-      txt += space;
-    }
-    cneume.txt =txt;
-    cneume.translation = translation;
-    var offset = 0;
-    if(txt) {
-      if(firstText && match[3]) {
-        firstText=false;
-        if(header["initial-style"]!="0") {
-          var initial = txt[0];
-          txt = txt.slice(1);
-          if(txt.length==0)txt='-';
-          var txtInitial = staffInfo.txtInitial = make('text',initial);
-          txtInitial.setAttribute('transform','translate(0,'+staffInfo.vOffset+')');
-          txtInitial.setAttribute('class','greinitial');
-          result.appendChild(txtInitial);
-          var lenInitial=txtInitial.getComputedTextLength();
-          var annotation = header["annotation"];
-          if(typeof(annotation)=="string" && annotation.length>0){
-            var m=/([a-g]\d?\*?\s*)$/.exec(annotation);
-            var suffix='</sc>';
-            if(m){
-              annotation=annotation.slice(0,m.index);
-              suffix+=m[0];
-            }
-            annotation = annotation.replace(/\b[A-Z\d]+\b/,function(s){return s.toLowerCase();}) + suffix;
-            var txtAnnotation = staffInfo.txtAnnotation = make('text');
-            var tagsAnnotation = tagsForText('<sc><v>'+annotation+'</v></sc>');
-            for(i in tagsAnnotation){
-              txtAnnotation.appendChild(tagsAnnotation[i].span());
-            }
-            txtAnnotation.setAttribute('class','greannotation');
-            txtAnnotation.setAttribute('y',staffInfo.vOffset-25);
-            result.appendChild(txtAnnotation);
-            var lenAnnotation=txtAnnotation.getComputedTextLength();
-            var centerX = Math.max(lenAnnotation,lenInitial) / 2;
-            txtAnnotation.setAttribute('x',centerX-(lenAnnotation/2));
-            txtInitial.setAttribute('x',centerX-(lenInitial/2));
-            startX=Math.max(lenAnnotation,lenInitial)+5;
-          } else {
-            startX=lenInitial + 5;
+      if(cGabc=='z0') continue; //TODO: Instead, it needs to create a custos character based on the new clef and the next actual note.
+      var cneume={index:match.index,match:match,ledgers:{},wChant:0,wText:0,spaceBeforeNextNeume:spaceBeforeNextNeume};
+      var tags=[];
+      if(cGabc) {
+        cneume.gabc=cGabc;
+        // if there is an open paren, assume that the correct close paren has not yet been marked for this GABC.
+        /*
+        if(cneume.gabc.indexOf('(')>=0){
+          var iop=match[0].indexOf('(');
+          var mspace=cneume.gabc.match(/ /);
+          var gabclen=0;
+          if(mspace)gabclen=mspace.index;
+          cneume.gabc=cneume.gabc.slice(0,gabclen);
+          if(gabclen)++gabclen;
+          regexOuter.lastIndex -= match[0].length - iop - 1 - gabclen;
+        }*/
+        cneume.info = getChantFragment(cneume.gabc,defs);
+        clef=cneume.info.clef||clef;
+        if(makeLinks){
+          if(cneume.info.clef){
+            svg.clefs[neumeId]=clefNeume=cneume;
+            clefNeume.clefs = [];
+            svg.accidentals[punctumId] = clef.length==3? -1 : null;
           }
-          staffInfo.eText.setAttribute("transform", "translate("+startX+","+staffInfo.vOffset+")");
-          staffInfo.eTrans.setAttribute("transform", "translate("+startX+","+staffInfo.vOffset+")");
-          staffInfo.x=startX;
-          var useStaff = $(curStaff).find("use[href=#staff]")[0];
-          useStaff.setAttribute("transform", "scale(" + (width-startX) + ",1)");
+          svg.tones=svg.tones.concat(cneume.info.tones);
         }
-      }
-      txt = txt.replace(/^\s+/,'').replace(/\r\n/g,' ').replace(/\n/g,' ').replace(/<v>(?:\\greheightstar|\$\\star\$)<\/v>/g,'*').replaceSpTags();
-      
-      var tmpArray=[txt];
-      tags = tagsForText(tmpArray,activeTags);
-      txt=tmpArray[0];
-      var pretext="";
-      if(tags.length>0)tags.forEach(function(e){pretext+=e.text;});
-      if(txt.length>0)tags.push(new TagInfo(txt.replace(/[{}]/g,''),activeTags));
-      txt = pretext+txt;
-      cneume.wText = textWidth(tags);
-      if(txt) {
-        var obi=txt.indexOf('{'), //opening brace index
-            cbi=txt.indexOf('}'), //closing brace index
-            vowel;
-        if(obi>=0 && cbi>obi){
-          var tmp=txt.slice(obi+1,cbi);
-          txt=txt.slice(0,obi) + tmp + txt.slice(cbi+1);
-          --cbi;
-          vowel = {index:obi, "0":tmp, "1":tmp};
-        } else if(/^english$/i.exec(header["centering-scheme"])) {
-          vowel = {index: 0, "0":txt.replace(/[,.:;\s]*$/,''), "1":txt.replace(/[,.:;\s]*$/,'')};
-        } else {
-          vowel = regexVowel.exec(txt);
-        }
-        if(!vowel) {
-          vowel = {index: 0, "0":txt.trimRight(), "1":txt.trimRight()};
-        }
-        try {
-          var index = vowel.index + vowel[0].length - vowel[1].length;
-          offset -= textWidth(tags,0,index);
-          offset -= textWidth(tags,index,vowel[1].length) / 2;
-        } catch(e) {
-        }
-        offset += notewidth / 2;//defChant.getComputedTextLength() / 2;
-      }
-    }
-    // if there aren't enough characters before the vowel so that the neume begins far enough to the right of the previous neume,
-    // add extra space in the text:
-    var preWidth=cneume.info.startsWithAccidental?getChantWidth("b-"):0;
-    offset += preWidth;
-    cneume.offset = offset;
-    xoffsetChantMin += Math.min(0,offset);
-    if(cneume.wChant > 0 && (xoffset < xoffsetChantMin || !txt)) {
-      xoffset = xoffsetChantMin;
-    }
-    var nextXoffsetTextMin = txt?
-        xoffset + cneume.wText + Math.max(Math.floor(offset),0)
-      : nextXoffsetTextMin||0;
-    if(match[7]&&match.index>0)nextXoffsetTextMin+=5;
-    var nextXoffsetChantMin = xoffset + cneume.wChant + spaceBetweenNeumes - Math.min(offset,0);
-   //Experimental change (2010.03.14)  Old line:
-    var nextXoffset = cneume.wText==0?Math.max(nextXoffset||0,xoffset):Math.max(nextXoffsetTextMin, nextXoffsetChantMin);
-    //var nextXoffset = wText==0?Math.max(nextXoffset||0,xoffset):nextXoffsetTextMin;
-    var lastX;
-    if(needCustosNextTime || nextXoffset >= width - startX - spaceBetweenNeumes - cneume.wChant) {
-      needCustos = curStaff;
-      needCustos.justify = needCustosNextTime? needCustosNextTime.justify : true;
-      if(!needCustos.justify){
-        custosXoffset = xoffset;
-      }
-      needCustosNextTime=undefined;
-      usesBetweenText=[];
-      if(span&&txt&&$(span).text().slice(-1)!='-'){
-        span.appendChild(cneume.lastOnLineHyphen = new TagInfo('-').span());
-      }
-      if(currentWord.length>0){
+        defChant.textContent = cneume.info.def.textContent;
+        cneume.wChant = defChant.getComputedTextLength();
+        if(cneume.gabc==clef)wClef=cneume.wChant;
+      } else cneume.info={};
+      if(currentWord.length>0 && previousMatch && (previousMatch[7]||previousMatch[8])) {
         words.push(currentWord);
         currentWord=[];
       }
-      curStaff.words=words;
-      words=[];
-      var y = finishStaff(curStaff);
-      var lineOffset = staffoffset + y + verticalSpace + staffInfo.y;
-      curStaff = addStaff(svg,result,0,lineOffset,++line, null, defs);
-      curStaff.info.vOffset = curStaff.info.y;
-      staffInfo = curStaff.info;
-      staffInfo.eText.setAttribute('transform', "translate(0," + staffInfo.vOffset + ")");
-      staffInfo.eTrans.setAttribute('transform', "translate(0," + staffInfo.vOffset + ")");
-      
-      nextXoffset -= xoffset;
-      nextXoffsetTextMin -= xoffset;
-      nextXoffsetChantMin -= xoffset;
-      if(clef){
-        var use = make('use');
-        use.setAttribute('class','clef');
-        use.setAttributeNS(xlinkns, 'href', '#' + clef);
-        use.setAttribute('x', 0);
-        use.setAttribute('y', 0);
-        curStaff.appendChild(use);
-        if(clefNeume && clefNeume.clefs){
-          clefNeume.clefs.push(use);
-        }
-        xoffset=0;
-        xoffsetChantMin=wClef+spaceBetweenNeumes+offset;
-//        nextStaffX=wClef;
-        if(cneume.wChant > 0 && xoffset < xoffsetChantMin) {
-          xoffset = xoffsetChantMin;
-        }
-        nextXoffset+=xoffset;
-        nextXoffsetTextMin+=xoffset;
-        nextXoffsetChantMin+=xoffset;
-      } else {
-        xoffset=0;
+      var space = match[7]||match[8];
+      var txt = match[3] || space;
+      var translation = regexSqBrackets.exec(txt);
+      if(translation){
+        txt = txt.slice(0,translation.index) + txt.slice(translation.index + translation[0].length);
+        translation = translation[1];
       }
-    }
-    needCustosNextTime = cneume.gabc && cneume.gabc.match(/z/i);
-    if(needCustosNextTime){
-      needCustosNextTime.justify = cneume.gabc.match(/z/);
-    }
-      
-    if(cneume.gabc) {
-      if(needCustos) {
-        addCustos(needCustos,cneume,needCustos.justify,custosXoffset);
-        needCustos = false;
-        startX=0;
+      if(match[3] && space) {
+        txt += space;
       }
-      if(cneume.info.mask) {
-        use2 = make('use');
-        use2.setAttributeNS(xlinkns, 'href', '#' + cneume.info.mask);
-        use2.setAttribute('id','neumemask'+neumeId);
-        use2.setAttribute('class',"caeciliae");
-        use2.setAttribute('x', xoffset);
-        use2.setAttribute('y', 0);
-        
-        currentWord.push(use2);
-        masks[line].firstChild.appendChild(use2);
-      } else use2 = null;
-      staffInfo.ltone = Math.min(staffInfo.ltone, cneume.info.ltone);
-      staffInfo.htone = Math.max(staffInfo.htone, cneume.info.htone);
-      if(makeLinks) {
-        use = $(cneume.info.def).clone()[0];
-      } else {
-        use = make('use');
-        use.setAttributeNS(xlinkns, 'href', '#' + cneume.gabc);
-      }
-      use.setAttribute('id','neume'+neumeId);
-      use.setAttribute('x', xoffset);
-      use.setAttribute('y', 0);
-      use.neume = cneume;
-      if(makeLinks) {
-        punctumId = setUpPunctaIn(use,punctumId);
-        if(space){
-          var tmp = clef && clef.length==3? -1 : null;
-          if(_accidentals[_accidentals.length-1] != tmp){
-            _accidentals[punctumId] = tmp;
-          }
-        }
-        //use.setAttributeNS(xlinkns, 'href', 'javascript:selectGabc('+(match.index+match[1].length)+','+cneume.gabc.length+')');
-      }
-      curStaff.appendChild(use);
-      currentWord.push(use);
-      
-      currentUse=[use];
-      if(use2)currentUse.push(use2);
+      cneume.txt =txt;
+      cneume.translation = translation;
+      var offset = 0;
       if(txt) {
-        var count = usesBetweenText.length - 1;
-        if(count<=0) {
-          usesBetweenText[0]=currentUse;
-        } else {
-          var first = usesBetweenText[0][0];
-          var x1=parseFloat(first.getAttribute('x'))+first.neume.wChant;
-          var transform = first.getAttribute('transform');
-          if(transform) {
-            var m = regexTranslate.exec(transform);
-            x1 += parseFloat(m[1]);
+        if(firstText && match[3]) {
+          firstText=false;
+          if(header["initial-style"]!="0") {
+            var initial = txt[0];
+            txt = txt.slice(1);
+            if(txt.replace(/[{}]/g,'').length==0)txt='-';
+            var txtInitial = staffInfo.txtInitial = make('text',initial);
+            txtInitial.setAttribute('transform','translate(0,'+staffInfo.vOffset+')');
+            txtInitial.setAttribute('class','greinitial');
+            result.appendChild(txtInitial);
+            var lenInitial=txtInitial.getComputedTextLength();
+            var annotation = header["annotation"];
+            if(typeof(annotation)=="string" && annotation.length>0){
+              var m=/([a-g]\d?\*?\s*)$/.exec(annotation);
+              var suffix='</sc>';
+              if(m){
+                annotation=annotation.slice(0,m.index);
+                suffix+=m[0];
+              }
+              annotation = annotation.replace(/\b[A-Z\d]+\b/,function(s){return s.toLowerCase();}) + suffix;
+              var txtAnnotation = staffInfo.txtAnnotation = make('text');
+              var tagsAnnotation = tagsForText('<sc><v>'+annotation+'</v></sc>');
+              for(i in tagsAnnotation){
+                txtAnnotation.appendChild(tagsAnnotation[i].span());
+              }
+              txtAnnotation.setAttribute('class','greannotation');
+              txtAnnotation.setAttribute('y',staffInfo.vOffset-25);
+              result.appendChild(txtAnnotation);
+              var lenAnnotation=txtAnnotation.getComputedTextLength();
+              var centerX = Math.max(lenAnnotation,lenInitial) / 2;
+              txtAnnotation.setAttribute('x',centerX-(lenAnnotation/2));
+              txtInitial.setAttribute('x',centerX-(lenInitial/2));
+              startX=Math.max(lenAnnotation,lenInitial)+5;
+            } else {
+              startX=lenInitial + 5;
+            }
+            staffInfo.eText.setAttribute("transform", "translate("+startX+","+staffInfo.vOffset+")");
+            staffInfo.eTrans.setAttribute("transform", "translate("+startX+","+staffInfo.vOffset+")");
+            staffInfo.x=startX;
+            var useStaff = $(curStaff).find("use[href=#staff]")[0];
+            useStaff.setAttribute("transform", "scale(" + (width-startX) + ",1)");
           }
-          var x2=xoffset;
-          if(offset<0)x2-=offset;
-          var chantWidth=0;
-          for(var i=1;i<=count;++i) {
-            chantWidth+=usesBetweenText[i][0].neume.wChant;
-          }
-          var spaceWidth=x2-x1-chantWidth;
-          spaceWidth /= (count+1);
-          var x = x1 + spaceWidth;
-          for(var i=1;i<=count;++i) {
-            $(usesBetweenText[i]).attr('x',x);
-            x += spaceWidth + usesBetweenText[i][0].neume.wChant;
-          }
-          usesBetweenText = [currentUse];
         }
-      } else if(usesBetweenText.length>0 && !cneume.info.ftone) {
-        usesBetweenText.push(currentUse);
-        if((currentWord.length==1 && currentWord[0]==use) || (currentWord.length==2 && currentWord[0]==use2 && currentWord[1]==use)){
+        txt = txt.replace(/^\s+/,'').replace(/\r\n/g,' ').replace(/\n/g,' ').replace(/<v>(?:\\greheightstar|\$\\star\$)<\/v>/g,'*').replaceSpTags();
+        
+        var tmpArray=[txt];
+        tags = tagsForText(tmpArray,activeTags);
+        txt=tmpArray[0];
+        var pretext="";
+        if(tags.length>0)tags.forEach(function(e){pretext+=e.text;});
+        if(txt.length>0){
+          var newTxt = txt.replace(/[{}]/g,'');
+          if(newTxt.length > 0) tags.push(new TagInfo(newTxt,activeTags));
+        }
+        txt = pretext+txt;
+        cneume.wText = textWidth(tags);
+        if(txt) {
+          var obi=txt.indexOf('{'), //opening brace index
+              cbi=txt.indexOf('}'), //closing brace index
+              vowel;
+          if(obi>=0 && cbi>obi){
+            var tmp=txt.slice(obi+1,cbi);
+            txt=txt.slice(0,obi) + tmp + txt.slice(cbi+1);
+            --cbi;
+            vowel = {index:obi, "0":tmp, "1":tmp};
+          } else if(/^english$/i.exec(header["centering-scheme"])) {
+            vowel = {index: 0, "0":txt.replace(/[,.:;\s]*$/,''), "1":txt.replace(/[,.:;\s]*$/,'')};
+          } else {
+            vowel = regexVowel.exec(txt);
+          }
+          if(!vowel) {
+            vowel = {index: 0, "0":txt.trimRight(), "1":txt.trimRight()};
+          }
+          try {
+            var index = vowel.index + vowel[0].length - vowel[1].length;
+            offset -= textWidth(tags,0,index);
+            offset -= textWidth(tags,index,vowel[1].length) / 2;
+          } catch(e) {
+          }
+          offset += notewidth / 2;//defChant.getComputedTextLength() / 2;
+        }
+      }
+      // if there aren't enough characters before the vowel so that the neume begins far enough to the right of the previous neume,
+      // add extra space in the text:
+      var preWidth=cneume.info.startsWithAccidental?getChantWidth("b-"):0;
+      offset += preWidth;
+      cneume.offset = offset;
+      xoffsetChantMin += Math.min(0,offset);
+      if(cneume.wChant > 0 && (xoffset < xoffsetChantMin || !txt)) {
+        xoffset = xoffsetChantMin;
+      }
+      var nextXoffsetTextMin = txt?
+          xoffset + cneume.wText + Math.max(Math.floor(offset),0)
+        : nextXoffsetTextMin||0;
+      if(match[7]&&match.index>0)nextXoffsetTextMin+=5;
+      var nextXoffsetChantMin = Math.max(xoffset,xoffsetChantMin) + cneume.wChant + spaceBeforeNextNeume - Math.min(offset,0);
+     //Experimental change (2010.03.14)  Old line:
+      var nextXoffset = cneume.wText==0?Math.max(nextXoffset||0,xoffset):Math.max(nextXoffsetTextMin, nextXoffsetChantMin);
+      //var nextXoffset = wText==0?Math.max(nextXoffset||0,xoffset):nextXoffsetTextMin;
+      var lastX;
+      if(needCustosNextTime || nextXoffset >= width - startX - spaceBeforeNextNeume - cneume.wChant) {
+        needCustos = curStaff;
+        needCustos.justify = needCustosNextTime? needCustosNextTime.justify : true;
+        if(!needCustos.justify){
+          custosXoffset = xoffset;
+        }
+        needCustosNextTime=undefined;
+        usesBetweenText=[];
+        if(span&&txt&&$(span).text().slice(-1)!='-'){
+          span.appendChild(cneume.lastOnLineHyphen = new TagInfo('-').span());
+        }
+        if(currentWord.length>0){
           words.push(currentWord);
           currentWord=[];
         }
+        curStaff.words=words;
+        words=[];
+        var y = finishStaff(curStaff);
+        var lineOffset = staffoffset + y + verticalSpace + staffInfo.y;
+        curStaff = addStaff(svg,result,0,lineOffset,++line, null, defs);
+        curStaff.info.vOffset = curStaff.info.y;
+        staffInfo = curStaff.info;
+        staffInfo.eText.setAttribute('transform', "translate(0," + staffInfo.vOffset + ")");
+        staffInfo.eTrans.setAttribute('transform', "translate(0," + staffInfo.vOffset + ")");
+        
+        nextXoffset -= xoffset;
+        nextXoffsetTextMin -= xoffset;
+        nextXoffsetChantMin -= xoffset;
+        if(clef){
+          var use = make('use');
+          use.setAttribute('class','clef');
+          use.setAttributeNS(xlinkns, 'href', '#' + clef);
+          use.setAttribute('x', 0);
+          use.setAttribute('y', 0);
+          curStaff.appendChild(use);
+          if(clefNeume && clefNeume.clefs){
+            clefNeume.clefs.push(use);
+          }
+          xoffset=0;
+          xoffsetChantMin=wClef+spaceBeforeNextNeume+offset;
+  //        nextStaffX=wClef;
+          if(cneume.wChant > 0 && xoffset < xoffsetChantMin) {
+            xoffset = xoffsetChantMin;
+          }
+          nextXoffset+=xoffset;
+          nextXoffsetTextMin+=xoffset;
+          nextXoffsetChantMin+=xoffset;
+        } else {
+          xoffset=0;
+        }
       }
-    } else use = use2 = null;
-    if(txt) {
-      lastSpan = span;
-      pneume = spanNeume;
-      span = make('tspan');
-      spanNeume = cneume;
-      var spanXoffset = xoffset;
-      // Don't worry about placing the vowel correctly if there is no neume.
-      if(use) {
-        cneume.transform = "translate("+(-offset)+")";
-        cneume.transformX = -offset;
-        if(offset > 0) {
-          //check if we can push the syllable to the left rather than force a hyphen.
-          if(spanXoffset-offset >= xoffsetChantMin) {
-            cneume.wText -= offset;
+      needCustosNextTime = cneume.gabc && cneume.gabc.match(/z(?!0)/i);
+      if(needCustosNextTime){
+        needCustosNextTime.justify = cneume.gabc.match(/z/);
+      }
+        
+      if(cneume.gabc) {
+        if(needCustos && !cneume.gabc.match(/^[`,;:]+$/)) {
+          addCustos(needCustos,cneume,needCustos.justify,custosXoffset);
+          needCustos = false;
+          startX=0;
+        }
+        if(cneume.info.mask) {
+          use2 = make('use');
+          use2.setAttributeNS(xlinkns, 'href', '#' + cneume.info.mask);
+          use2.setAttribute('id','neumemask'+neumeId);
+          use2.setAttribute('class',"caeciliae");
+          use2.setAttribute('x', xoffset);
+          use2.setAttribute('y', 0);
+          
+          currentWord.push(use2);
+          masks[line].firstChild.appendChild(use2);
+        } else use2 = null;
+        staffInfo.ltone = Math.min(staffInfo.ltone, cneume.info.ltone);
+        staffInfo.htone = Math.max(staffInfo.htone, cneume.info.htone);
+        if(makeLinks) {
+          use = $(cneume.info.def).clone()[0];
+        } else {
+          use = make('use');
+          use.setAttributeNS(xlinkns, 'href', '#' + cneume.gabc);
+        }
+        use.setAttribute('id','neume'+neumeId);
+        use.setAttribute('x', xoffset);
+        use.setAttribute('y', 0);
+        use.neume = cneume;
+        if(makeLinks) {
+          punctumId = setUpPunctaIn(use,punctumId,svg);
+          if(space){
+            var tmp = clef && clef.length==3? -1 : null;
+            if(svg.accidentals[svg.accidentals.length-1] != tmp){
+              svg.accidentals[punctumId] = tmp;
+            }
+          }
+          //use.setAttributeNS(xlinkns, 'href', 'javascript:selectGabc('+(match.index+match[1].length)+','+cneume.gabc.length+')');
+        }
+        curStaff.appendChild(use);
+        currentWord.push(use);
+        
+        currentUse=[use];
+        if(use2)currentUse.push(use2);
+        if(txt) {
+          var count = usesBetweenText.length - 1;
+          if(count<=0) {
+            usesBetweenText[0]=currentUse;
+          } else {
+            var first = usesBetweenText[0][0];
+            var x1=parseFloat(first.getAttribute('x'))+first.neume.wChant;
+            var transform = first.getAttribute('transform');
+            if(transform) {
+              var m = regexTranslate.exec(transform);
+              x1 += parseFloat(m[1]);
+            }
+            var x2=xoffset;
+            if(offset<0)x2-=offset;
+            var chantWidth=0;
+            for(var i=1;i<=count;++i) {
+              chantWidth+=usesBetweenText[i][0].neume.wChant;
+            }
+            var spaceWidth=x2-x1-chantWidth;
+            spaceWidth /= (count+1);
+            var x = x1 + spaceWidth;
+            for(var i=1;i<=count;++i) {
+              $(usesBetweenText[i]).attr('x',x);
+              x += spaceWidth + usesBetweenText[i][0].neume.wChant;
+            }
+            usesBetweenText = [currentUse];
+          }
+        } else if(usesBetweenText.length>0 && !cneume.info.ftone) {
+          usesBetweenText.push(currentUse);
+          if((currentWord.length==1 && currentWord[0]==use) || (currentWord.length==2 && currentWord[0]==use2 && currentWord[1]==use)){
+            words.push(currentWord);
+            currentWord=[];
+          }
+        } else if(cneume.info.ftone) {
+          usesBetweenText = [];
+        }
+      } else use = use2 = null;
+      if(txt) {
+        lastSpan = span;
+        pneume = spanNeume;
+        span = make('tspan');
+        spanNeume = cneume;
+        var spanXoffset = xoffset;
+        // Don't worry about placing the vowel correctly if there is no neume.
+        if(use) {
+          cneume.transform = "translate("+(-offset)+")";
+          cneume.transformX = -offset;
+          if(offset > 0) {
+            //check if we can push the syllable to the left rather than force a hyphen.
+            if(spanXoffset-offset >= xoffsetChantMin) {
+              cneume.wText -= offset;
+              use.setAttribute('transform', cneume.transform);
+              if(use2)
+                use2.setAttribute('transform', cneume.transform);
+            } else {
+              spanXoffset += offset;
+              cneume.wText += offset;
+            }
+          } else {
             use.setAttribute('transform', cneume.transform);
             if(use2)
               use2.setAttribute('transform', cneume.transform);
-          } else {
-            spanXoffset += offset;
-            cneume.wText += offset;
           }
-        } else {
-          use.setAttribute('transform', cneume.transform);
-          if(use2)
-            use2.setAttribute('transform', cneume.transform);
         }
-      }
-      if(lastSpan) {
-        var lastXoffset = parseFloat(lastSpan.getAttribute('x'),10);
-        var lastSpanX2 = lastXoffset + textWidth(lastSpan);
-        if(lastSpanX2 < spanXoffset) {
-          if($(lastSpan).text().slice(-1)!='-'){
-            lastSpan.appendChild(new TagInfo('-').span());
-            pneume.wText = textWidth(lastSpan);
-            lastSpanX2 = lastXoffset + pneume.wText;
-            if(lastSpanX2 > spanXoffset) {
-              var additionalOffset = lastSpanX2 - spanXoffset;
-              spanXoffset = lastSpanX2;
-              if(use) {
-                use.setAttribute('x', xoffset + additionalOffset);
-                if(use2) {
-                  use2.setAttribute('x', xoffset + additionalOffset);
+        if(lastSpan) {
+          var lastXoffset = parseFloat(lastSpan.getAttribute('x'),10);
+          var lastSpanX2 = lastXoffset + textWidth(lastSpan);
+          if(lastSpanX2 < spanXoffset) {
+            if($(lastSpan).text().slice(-1)!='-'){
+              lastSpan.appendChild(new TagInfo('-').span());
+              pneume.wText = textWidth(lastSpan);
+              lastSpanX2 = lastXoffset + pneume.wText;
+              if(lastSpanX2 > spanXoffset) {
+                var additionalOffset = lastSpanX2 - spanXoffset;
+                spanXoffset = lastSpanX2;
+                if(use) {
+                  use.setAttribute('x', xoffset + additionalOffset);
+                  if(use2) {
+                    use2.setAttribute('x', xoffset + additionalOffset);
+                  }
                 }
+                nextXoffsetTextMin += additionalOffset;
+                nextXoffsetChantMin += additionalOffset;
               }
-              nextXoffsetTextMin += additionalOffset;
-              nextXoffsetChantMin += additionalOffset;
             }
           }
         }
-      }
-      span.setAttribute('id', 'neumetext'+neumeId);
-      span.setAttribute('x', spanXoffset);
-      span.setAttribute("class", activeClass);
-      span.neume = cneume;
-      xoffset = nextXoffsetTextMin;
-      xoffsetChantMin = nextXoffsetChantMin;
-      tags.forEach(function(e){
-        span.appendChild(e.span());
-      });
-      if(translation){
-        var cspan = new TagInfo(translation,['i','trans']).span();
-        cspan.setAttribute('id','neumetrans'+neumeId);
-        cspan.setAttribute('x',spanXoffset);
-        currentWord.push(cspan);
-        staffInfo.eTrans.appendChild(cspan);
-      }
-      currentWord.push(span);
-      staffInfo.eText.appendChild(span);
-    } else {
-      if(use) {
-        xoffsetChantMin = xoffset+getChantWidth(cneume.info.def.textContent) + spaceBetweenNeumes;
-        xoffset=nextXoffsetTextMin;
+        span.setAttribute('id', 'neumetext'+neumeId);
+        span.setAttribute('x', spanXoffset);
+        span.setAttribute("class", activeClass + ' selectable');
+        span.setAttribute("selectIndex", cneume.index);
+        span.neume = cneume;
+        xoffset = nextXoffsetTextMin;
+        xoffsetChantMin = nextXoffsetChantMin;
+        tags.forEach(function(e){
+          span.appendChild(e.span());
+        });
+        if(translation){
+          var cspan = new TagInfo(translation,['i','trans']).span();
+          cspan.setAttribute('id','neumetrans'+neumeId);
+          cspan.setAttribute('x',spanXoffset);
+          currentWord.push(cspan);
+          staffInfo.eTrans.appendChild(cspan);
+        }
+        currentWord.push(span);
+        staffInfo.eText.appendChild(span);
       } else {
-        xoffsetChantMin = xoffset;
+        if(use) {
+          xoffsetChantMin = Math.max(xoffsetChantMin,xoffset+getChantWidth(cneume.info.def.textContent) + spaceBeforeNextNeume);
+          xoffset=nextXoffsetTextMin;
+        } else {
+          xoffsetChantMin = Math.max(xoffsetChantMin,xoffset);
+        }
       }
+      neumeId++;
+      previousMatch = match;
+      if(space)span=null;
+      processLedger(cneume,use,currentWord);
     }
-    neumeId++;
-    previousMatch = match;
-    if(space)span=null;
-    processLedger(cneume,use,currentWord);
   }
   finishStaff(curStaff);
   if(gabcSettings.trimStaff) trimStaff(curStaff);
@@ -1589,7 +1684,6 @@ var ToneInfo = function(obj){
         code,
         curChar,
         nextChar,
-        charsLeft = gabc.length,
         index = 0,
         prevIndex = 0,
         match,
@@ -1604,6 +1698,7 @@ var ToneInfo = function(obj){
     regexInner.lastMatch = 0;
     var globalTones=[];
     while(match = regexInner.exec(gabc)) {
+      if(match[1]) continue;
       tones = [];
       var previousToneId = -1;
       chant=match[0];
@@ -1668,7 +1763,7 @@ var ToneInfo = function(obj){
           globalTones.push(tmp=new ToneInfo({match:[]}));
           tmp.match[rtg.whitespace] = cmatch[rtg.whitespace];
         } else {
-          var toneId = parseInt(cmatch[rtg.tone]||cmatch[rtg.clef].slice(0,1),23)-10;
+          var toneId = parseInt(cmatch[rtg.tone]||cmatch[rtg.clef]&&cmatch[rtg.clef].slice(0,1),23)-10;
           if(cmatch[rtg.tone] && cmatch[rtg.tone].length == 1) {
             ltone = Math.min(ltone,toneId);
             htone = Math.max(htone,toneId);
@@ -2105,16 +2200,17 @@ function setGradient(punctumTag,offset){
   
   punctumTag.setAttribute("style","fill:url(#"+gradId+")");
 }
-function setUpPunctaIn(use,punctumId){
+function setUpPunctaIn(use,punctumId,svg){
   var id=0,
       oId=punctumId,
-      tones=use.neume.info.tones;
+      tones=use.neume.info.tones,
+      clefs = svg.clefs;
   $(use).children().each(function(){
     var tone = tones[id];
     if(tone.match[rtg.accidental]){
-      _accidentals[punctumId] = tone.match[rtg.flat]? (tone.index - _clefs[_clefs.length-1].info.clefTone) : null;
+      svg.accidentals[punctumId] = tone.match[rtg.flat]? (tone.index - clefs[clefs.length-1].info.clefTone) : null;
     } else if(tone.match[rtg.whitespace] && tone.match[rtg.whitespace].match(/[,;:]/)){
-      _accidentals[punctumId] = _clefs[_clefs.length-1].gabc.length==3? -1 : null;
+      svg.accidentals[punctumId] = (clefs.length && clefs[clefs.length-1].gabc.length==3)? -1 : null;
     }
     this.setAttribute('id','punctum'+punctumId);
     this.tone = tone;
@@ -2201,16 +2297,19 @@ $(function() {
       };
       var _isPlaying=false;
       tempo=150;
+      setTempo = function(newTempo) { tempo = newTempo || 150; }
+      setRelativeTempo = function(delta) { tempo += delta; if(tempo <= 0) tempo = 150; }
       var seq;
       playScore = function(fromBeginning){
+        var svg = selectedSvg;
         var punctumId = fromBeginning?0:(selectedPunctum||0);
         while(seq && seq.next());
-        seq = new PSequence(_tones,1,punctumId);
+        seq = new PSequence(svg.tones,1,punctumId);
         _isPlaying=true;
         audiolet.scheduler.setTempo(tempo);
         audiolet.scheduler.play([seq], 1, function(toneInfo){
           var duration;
-          while(!(_isPlaying=_isPlaying && punctumId < _tones.length) || !(duration = toneInfo.play(punctumId))){
+          while(!(_isPlaying=_isPlaying && punctumId < svg.tones.length) || !(duration = toneInfo.play(punctumId))){
             ++punctumId;
             if(!(toneInfo=seq.next())){
               selectPunctum(-1);
@@ -2265,7 +2364,10 @@ $(function() {
     }
   }
 
-  svg = document.createElementNS(svgns, 'svg');
+  if(typeof(document.createElementNS)!='function') {
+    return;
+  }
+  _svg = svg = document.createElementNS(svgns, 'svg');
   svg.setAttribute('style','width:100%;height:0');
   setPrintFont=function(usePrintFont){
     $(svg).find(".caeciliae,.caeciliae-print").attr("class",usePrintFont?"caeciliae-print":"caeciliae");
@@ -2373,57 +2475,61 @@ $(function() {
   textElem.setAttribute("transform", "translate(0," + staffoffset + ")");
   textElem.setAttribute("class", "caeciliae");
   svg.appendChild(textElem);
-  var cp=$("#chant-preview");
+  var cp=$("#chant-preview,[id$=-preview][for]");
   if(cp.length==0) {
     $(document.body).append(svg);
   } else {
     cp.append(svg);
-    lastClefBeforeNeume=function(neumeId){
+    lastClefBeforeNeume=function(neumeId,svg){
       var i,result={clefTone:9};
-      for(i in _clefs){
-        if(i<neumeId)result=_clefs[i];
+      for(i in svg.clefs){
+        if(i<neumeId)result=svg.clefs[i];
         else break;
       }
       return result;
     };
-    lastClefBeforePunctum=function(punctumId){
+    lastClefBeforePunctum=function(punctumId,svg){
       var i,result={clefTone:9};
-      for(i in _clefs){
+      for(i in svg.clefs){
         try {
           var punctumI = parseInt($(svg).find('#neume'+i).children()[0].id.match(/\d+$/)[0]);
-          if(punctumI<punctumId)result=_clefs[i].info;
+          if(punctumI<punctumId)result=svg.clefs[i].info;
           else break;
         } catch(e){}
       }
       return result;
     }
-    var isPunctumFlat=function(punctumId,toneId){
+    var isPunctumFlat=function(punctumId,svg){
       var i,result=null;
-      for(i in _accidentals){
-        if(i<=punctumId)result=_accidentals[i];
+      for(i in svg.accidentals){
+        if(i<=punctumId)result=svg.accidentals[i];
         else break;
       }
       return result;
     }
     ToneInfo.prototype.play = function(punctumId){
-      var clefIndex = lastClefBeforePunctum(punctumId).clefTone;
-      var duration = this.match&&(this.match[rtg.dot]||this.match[rtg.episema])?2:1;
+      var svg=selectedSvg;
+      var clefIndex = lastClefBeforePunctum(punctumId,svg).clefTone;
+      var duration = this.match&&(this.match[rtg.dot]||this.match[rtg.episema])?2:(this.match[rtg.virga]||'v').length;
       if(duration == 1){
-        var nextPunctum = $("#punctum" + (1+punctumId));
+        var nextPunctum = $(svg).find("[id=punctum" + (1+punctumId) + "]");
         if(nextPunctum.length){
           nextPunctum = nextPunctum[0].tone;
           if(nextPunctum && nextPunctum.match[rtg.quilisma]) duration = 2;
         }
       }
       if(!this.clef && !this.accidental && typeof(this.index)=="number"){
-        playTone(this.index-clefIndex,isPunctumFlat(punctumId),duration);
+        playTone(this.index-clefIndex,isPunctumFlat(punctumId,svg),duration);
         return duration;
       }
       return false;
     };
 
     var moveSelectedPunctum=function(offset){
-      var tag = selectedPunctumTag;
+      var tag = selectedPunctumTag,
+          svg = selectedSvg,
+          e = $('#' + $(svg).parent().attr('for'));
+      if(e.length==0) e = $('#editor');
       if(!tag)return;
       var neumeTag = tag.parentNode;
       var punctumId = selectedPunctum - /^punctum(\d+)$/.exec(neumeTag.childNodes[0].id)[1];
@@ -2450,7 +2556,6 @@ $(function() {
         newLetter = String.fromCharCode(letter.charCodeAt(0)+offset);
       }
 
-      e=$("#editor");
       var cGABC = e.val();
       var index = getHeaderLen(cGABC);
       index += neume.index;
@@ -2467,8 +2572,8 @@ $(function() {
       var oldInfo = neume.info;
       var newNeume = neume.info = getChantFragment(neumeText,$(svg).find("defs")[0]);
       if(clef){
-        for(i in _clefs[selectedNeume].clefs){
-          var c = _clefs[selectedNeume].clefs[i];
+        for(i in svg.clefs[selectedNeume].clefs){
+          var c = svg.clefs[selectedNeume].clefs[i];
           c.setAttributeNS(xlinkns, 'href', '#' + clef);
         }
       }
@@ -2527,10 +2632,11 @@ $(function() {
       
       punctumId = selectedPunctum - punctumId;
       selectedPunctumTag=null;
-      punctumId = setUpPunctaIn(use,punctumId);
+      punctumId = setUpPunctaIn(use,punctumId,svg);
       selectedNeumeTag=use;
       e.val(cGABC);
     }
+    var selectedSvg = svg;
     var selectSelectedGabc=function(getOffset){
       if(!(selectedPunctum!=null && selectedPunctumTag))return;
       var tag = selectedPunctumTag;
@@ -2543,9 +2649,14 @@ $(function() {
         len = parseInt(tag.getAttribute("len1"));
       }
       if(getOffset) return offset;
-      selectGabc(parent.neume.index+offset,len);
+      selectGabc(parent.neume.index+offset,len,selectedSvg);
     }
-    var selectPunctum=function(punctumToSelect,dontPlay){
+    var selectPunctum=function(punctumToSelect,dontPlay,svg){
+      if(svg) {
+        selectedSvg = svg;
+      } else {
+        svg = selectedSvg;
+      }
       punctumToSelect=parseInt(punctumToSelect);
       if(punctumToSelect<0)punctumToSelect=-1;
       if(punctumToSelect==selectedPunctum)return;
@@ -2584,14 +2695,24 @@ $(function() {
       }
     };
     var selectNeume=function(neumeToSelect){
-      var neume=$(svg).find("#neume"+neumeToSelect + ">tspan");
+      var neume=$(selectedSvg).find("#neume"+neumeToSelect + ">tspan");
       punctumToSelect=/punctum(\d+)/i.exec(neume.attr("id"));
       if(punctumToSelect)selectPunctum(parseInt(punctumToSelect[1]));
     };
     $(document).on("click","tspan.selectable[id^=punctum]",function(e){
-      selectPunctum(/punctum(\d+)/i.exec(this.id)[1]);
+      selectPunctum(/punctum(\d+)/i.exec(this.id)[1],false,$(e.target).parents('svg')[0]);
+    }).on("click","tspan.selectable[id^=neumetext]",function(e){
+      var index = parseInt(this.getAttribute('selectIndex'));
+      if(index >= 0) {
+        //index += getHeaderLen($this.val());
+        selectGabc(index,-1,$(this).parents('svg')[0]);
+      }
     });
     var docKeyDown=function(e){
+      if(e.which == 27) { // escape
+        stopScore();
+        return;
+      }
       if(e.target.tagName.match(/textarea|input|select/i)){
         selectPunctum(-1);
         return;
@@ -2619,6 +2740,12 @@ $(function() {
             return;
           case 32: // space
             playScore();
+            return;
+          case 107: // plus
+            setRelativeTempo(1);
+            return;
+          case 109: // minus
+            setRelativeTempo(-1);
             return;
           default:
             return;
@@ -2648,8 +2775,13 @@ $(function() {
             playScore(true);
             e.preventDefault();
             return;
-          case 27:
-            stopScore();
+          case 107: // plus
+            setRelativeTempo(10);
+            e.preventDefault();
+            return;
+          case 109: // minus
+            setRelativeTempo(-10);
+            e.preventDefault();
             return;
           default:
             console.info(e.which);
@@ -2699,7 +2831,7 @@ $(function() {
       return;
     }
     _timeoutUpdate = null;
-    elements.each(function(index, element) {
+    $.each(elements, function(index, element) {
       var old=$(element).next(".jgabc-svg").find("svg")[0];
       if(!old) return;
       if(element.innerHTML.match(/^\s*$/)) return;
@@ -2716,11 +2848,20 @@ $(function() {
       return;
     }
     _timeoutUpdateWidth = null;
-    relayoutChant(svg);
-    elements.each(function(index, element) {
+    try {
+      relayoutChant(svg);
+    } catch(ex) { }
+    $.each(elements,function(index, element) {
       var old=$(element).next(".jgabc-svg").find("svg")[0];
       if(!old) return;
       relayoutChant(old);
+    });
+    $.each(otherElements,function(i,e){
+      var $old=$(e),
+          old=$old.is('svg')?$old[0] : $old.find('svg')[0];
+      if(!old) return;
+      relayoutChant(old);
+      $old.trigger('relayout');
     });
   }
   //var updateAllChantWidth;
@@ -2777,30 +2918,32 @@ $(function() {
   var oldTWidth=0;
   var initCount=0;
   var init = function() {
-    if(svg.parentNode && svg.parentNode.clientWidth == 0) {
-      setTimeout(init, 100);
-    } else {
-      tWidth=textWidth("abcdefghijklmnopqrstuvwxyz",fontclass,true);
-      var cWidth1=getChantWidth("4q5P");
-      var cWidth2=getChantWidth("P");
-      notewidth = getChantWidth("p");
-      if(cWidth1==cWidth2) {
-        neume = _neumeLig;
-        indices=_indicesLig;
-        makeClefSpan=_clefSpanLig;
+    if(svg) {
+      if(svg.parentNode && svg.parentNode.clientWidth == 0) {
+        setTimeout(init, 100);
       } else {
-        neume = _neumeChar;
-        indices=_indicesChar;
-        makeClefSpan=_clefSpanChar;
-      }
-      if(tWidth != oldTWidth) {
-        _txtWidths={};
-        oldTWidth=tWidth;
-        forceUpdateChant();
-        updateAllChant();
-      }
-      if(++initCount < 100) {
-        setTimeout(init,300);
+        tWidth=textWidth("abcdefghijklmnopqrstuvwxyz",fontclass,true);
+        var cWidth1=getChantWidth("4q5P");
+        var cWidth2=getChantWidth("P");
+        notewidth = getChantWidth("p");
+        if(cWidth1==cWidth2) {
+          neume = _neumeLig;
+          indices=_indicesLig;
+          makeClefSpan=_clefSpanLig;
+        } else {
+          neume = _neumeChar;
+          indices=_indicesChar;
+          makeClefSpan=_clefSpanChar;
+        }
+        if(tWidth != oldTWidth) {
+          _txtWidths={};
+          oldTWidth=tWidth;
+          forceUpdateChant();
+          updateAllChant();
+        }
+        if(++initCount < 100) {
+          setTimeout(init,300);
+        }
       }
     }
   };
@@ -2812,3 +2955,239 @@ window.updateChant=updateChant;
 var neume=_neumeChar;
 var indices=_indicesChar;
 var makeClefSpan=_clefSpanChar;
+
+function gabcEditorKeyDown(e) {
+  var $this = $(this), txt = $this.val(), selStart = this.selectionStart, selEnd = this.selectionEnd;
+  switch(e.which) {
+    case 66: //b
+      if(e.ctrlKey || e.altKey) {
+        e.preventDefault();
+        index = txt.indexOf(' ',this.selectionEnd);
+        if(index <= 0) index = txt.length;
+        $this.val(txt.slice(0,index) + ' ()' + txt.slice(index));
+        this.selectionEnd = this.selectionStart = index + 2;
+      }
+      break;
+    case 83: //s
+      if(selStart == selEnd && (e.ctrlKey || e.altKey) && txt[selStart-1]!='(' && txt[selStart]!=')') {
+        e.preventDefault();
+        $this.val(txt.slice(0,selStart) + '()' + txt.slice(selStart));
+        this.selectionEnd = this.selectionStart = selStart + 1;
+      }
+      break;
+    case 9: { //tab
+      var index, indexEnd, headerIndex;
+      e.preventDefault();
+      if(e.shiftKey) {
+        // go backwards
+        index = this.selectionStart;
+        headerIndex = txt.lastIndexOf('\n%%\n',index-1);
+        index = txt.lastIndexOf(')',index - 1);
+        if(index <= headerIndex) index = txt.lastIndexOf(')');
+        if(index >= 0) {
+          indexEnd = index;
+          index = txt.lastIndexOf('(',index);
+        }
+      } else {
+        index = this.selectionEnd;
+        var regex = /(\()|(-(?!\())|(\s+(?![:;!.]))|([^)\s]$)/g;
+        regex.lastIndex = index;
+        var match;
+        while((match = regex.exec(txt)) && (match[2]||match[3])) {
+          if(match[3] && (match.index==0 || txt[match.index-1]==')')) continue;
+          //check if this line is in the header:
+          index = match.index;
+          var begIndex = txt.lastIndexOf('\n',index-1)+1,
+          endIndex = txt.indexOf('\n',index);
+          if(endIndex < 0) endIndex = txt.length;
+          if(txt[endIndex]=='\r') endIndex--;
+          var line = txt.slice(begIndex,endIndex);
+          if(line.match(/^(?:\s*(?:%.*|[-\w]+:[^;]+;)\s*|%%)$/)) {
+            continue;
+          } else {
+            break;
+          }
+        }
+        if(match) {
+          if(match[1]) {
+            index = match.index;
+          } else if(match[2]||match[3]||match[4]) {
+            if(match[2]) index = match.index+1;
+            txt = txt.slice(0,index) + '()' + txt.slice(index);
+            $this.val(txt);
+          } else {
+            index = txt.indexOf('(');
+          }
+        } else {
+          index = txt.indexOf('(');
+        }
+        index = txt.indexOf('(',index);
+        
+        if(index >= 0) {
+          indexEnd = txt.indexOf(')',index);
+        }
+      }
+      if(index >= 0 && indexEnd >= 0) {
+        this.selectionStart = index + 1;
+        this.selectionEnd = indexEnd;
+      }
+      break;
+    }
+    case 57:
+      if(e.shiftKey) { //open parenthesis
+        var rightSide = this.value.slice(selEnd),
+            firstClose = rightSide.indexOf(')'),
+            firstOpen = rightSide.indexOf('(');
+        if(firstClose < 0 || (firstOpen >= 0 && firstOpen < firstClose)) {
+          this.value=this.value.slice(0,this.selectionStart) + '()' + this.value.slice(selEnd);
+          this.selectionStart=this.selectionEnd=selStart+1;
+          e.preventDefault();
+          return;
+        }
+      }
+      break;
+    case 48:
+      if(e.shiftKey) { //close parenthesis
+        if(selStart == selEnd && txt[selStart]==')') {
+          e.preventDefault();
+          this.selectionStart = this.selectionEnd = selStart + 1;
+        }
+      }
+      break;
+    case 8: {
+      var selEnd = this.selectionEnd;
+      if(selEnd == this.selectionStart && selEnd > 0 && this.value[selEnd]==')' && this.value[selEnd-1]=='(') {
+        e.preventDefault();
+        this.value=this.value.slice(0,this.selectionStart-1) + this.value.slice(selEnd+1);
+        this.selectionStart=this.selectionEnd=selEnd-1;
+      }
+      break;
+    }
+  }
+}
+
+var internationalTextBoxKeyDown = (function(){
+  var lastKey = 0;
+  var dictionaries=
+      {222://apostrophe
+        {"false":
+          {'a':'á',
+           'e':'é',
+           'i':'í',
+           'o':'ó',
+           'u':'ú',
+           'y':'ý',
+           'A':'Á',
+           'E':'É',
+           'I':'Í',
+           'O':'Ó',
+           'U':'Ú',
+           'Y':'Ý',
+           'æ':"ǽ",
+           'œ':"oé",
+           'Æ':"Ǽ",
+           'Œ':"Oé"
+           },
+        "true":
+          {'a':'ä',
+           'e':'ë',
+           'i':'ï',
+           'o':'ö',
+           'u':'ü',
+           'y':'ÿ',
+           'A':'Ä',
+           'E':'Ë',
+           'I':'Ï',
+           'O':'Ö',
+           'U':'Ü',
+           'æ':"aë",
+           'œ':"oë",
+           'Æ':"Aë",
+           'Œ':"Oë"
+          }
+        },
+        69://e
+        {"false":
+          {'a':'æ',
+           'o':'œ',
+           'A':'Æ',
+           'O':'Œ'
+          },
+        "true":
+          {'a':'æ',
+           'o':'œ',
+           'A':'Æ',
+           'O':'Œ'
+          }
+        },
+        8://backspace
+        {"false":
+          {
+            '†':"+",
+            'æ':"ae",
+            'œ':"oe",
+            'Æ':"Ae",
+            'Œ':"Oe",
+            'á':'a',
+            'é':'e',
+            'í':'i',
+            'ó':'o',
+            'ú':'u',
+            'ý':'y',
+            'Á':'A',
+            'É':'E',
+            'Í':'I',
+            'Ó':'O',
+            'Ú':'U',
+            'Ý':'Y',
+            'ä':'a',
+            'ë':'e',
+            'ï':'i',
+            'ö':'o',
+            'ü':'u',
+            'ÿ':'y',
+            'Ä':'A',
+            'Ë':'E',
+            'Ï':'I',
+            'Ö':'O',
+            'Ü':'U',
+            'Ǽ':"Aé",
+            'ǽ':"aé"
+          },
+        "true":
+          {
+          }
+        }
+      };
+  return function(e){
+    if(typeof(getHeaderLen)=='function' && getHeaderLen(this.value)>0) {
+      // Only process as international textbox if the cursor is not within parentheses:
+      var lastOpenParen = this.value.lastIndexOf('(',this.selectionStart-1);
+      var lastCloseParen = this.value.lastIndexOf(')',this.selectionStart-1);
+      if(lastCloseParen < lastOpenParen) return;
+    }
+    if(e.which == 187 && e.shiftKey) { //if + was entered
+      var selStart=this.selectionStart;
+      var len=1;
+      this.value=this.value.slice(0,selStart) + '†' + this.value.slice(this.selectionEnd);
+      this.selectionStart=this.selectionEnd=selStart+len;
+      e.preventDefault();
+      return;
+    }
+    var cbEnglish=$("#cbEnglish")[0];
+    if(cbEnglish&&cbEnglish.checked)return;
+    var dictionary=dictionaries[e.which];
+    if(dictionary && this.selectionStart==this.selectionEnd && this.selectionStart>0){
+      var previousChar=this.value[this.selectionStart-1];
+      var r=dictionary[e.shiftKey][previousChar];
+      if(r){
+        var selEnd=this.selectionEnd;
+        var len=r.length - 1;
+        this.value=this.value.slice(0,--this.selectionStart) + r + this.value.slice(selEnd);
+        this.selectionStart=this.selectionEnd=selEnd+len;
+        e.preventDefault();
+        return;
+      }
+    }
+  }
+})();
