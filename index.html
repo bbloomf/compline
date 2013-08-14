@@ -15,8 +15,20 @@ body {
 </head>
 <body>
 <span id='weekday'></span> at Compline<br/>
+<div id='officiant-choices'>
+<input type='radio' name='officiant' value='priest' id='officiant-priest'/><label for='officiant-priest'>Officiant is a Priest or Deacon</label><br/>
+<input type='radio' name='officiant' value='no-priest' checked id='officiant-no-priest'/><label for='officiant-no-priest'>No Priest or Deacon present</label><br/>
+</div>
+Season:
+<div id='season-choices'>
+<input type='radio' name='season' value='per-annum' checked id='season-per-annum'/><label for='season-per-annum'>Throughout the year</label><br/>
+<input type='radio' name='season' value='paschal' id='season-paschal'/><label for='season-paschal'>Paschal Time</label><br/>
+</div>
+<div class='officiant no-priest'>
 <i class='red'>In the absence of a priest or deacon, the Lector says “Dómine” below so as to invoke Our Lord directly for the blessing.</i>
-<div class='jgabc' src='jube-domne.gabc'></div>
+</div>
+<i class='red'>Lector:</i>
+<div class='jgabc' officiant-priest='jube-domne.gabc' officiant-no-priest='jube-domine.gabc' src='jube-domine.gabc'></div>
 <i class='red'>The Officiant gives the blessing:</i>
 <div class='jgabc' src='blessing.gabc'></div>
 <i class='red'>The Lector/Cantor continues (at the words “Tu autem...nobis,” he alone genuflects):</i>
@@ -24,11 +36,7 @@ body {
 <i class='red'>All make the Sign of the Cross as the Officiant says:</i>
 <div class='jgabc' src='adjutorium-nostrum.gabc'></div>
 <i class='red'>Here all pause in silence wherein one may make a short examination of consciense or quietly say a Pater Noster.</i>
-<div id='confiteor-choices'>
-<input type='radio' name='confiteor' value='priest' id='confiteor-priest'/><label for='confiteor-priest'>Officiant is a Priest or Deacon</label><br/>
-<input type='radio' name='confiteor' value='no-priest' checked id='confiteor-no-priest'/><label for='confiteor-no-priest'>No Priest or Deacon present</label><br/>
-</div>
-<div class='confiteor priest' style='display:none;'>
+<div class='officiant priest' style='display:none;'>
 <span class='red'><i>The Officiant now bows profoundly and says the </i>Confiteor<i> alone in a low voice, recto tono.  After this, all bow profoundly toward the Officiant and say in the same low recto tono voice:</i></span>
 <br/>Misereátur tui omnípotens Deus, et dimíssis peccátis tuis, perdúcat te ad vitam ætérnam. <span class='versiculum'>r</span>&nbsp;Amen.
 <br/><br/>
@@ -39,7 +47,7 @@ body {
 <br/><br/><i class='red'>All stand upright and make the Sign of the Cross as the Officiant says:</i>
 <br/>Indulgéntiam, absolutiónem, et remissiónem peccatórum nostrórum tríbuat nobis omnípotens et miséricors Dóminus. <span class='versiculum'>r</span>&nbsp;Amen.
 </div>
-<div class='confiteor no-priest'>
+<div class='officiant no-priest'>
 <span class='red'><i>All, still standing, bow profoundly, and say together the Confiteor once through in a low voice, recto tono, as follows:</i></span>
 <br/>Confíteor Deo omnipoténti, beátæ Maríæ semper Vírgini, beáto Michaéli Archángelo, beáto Joánni Baptístæ, sanctis Apóstolis tuis Petro et Páulo, et ómnibus Sanctis, quia peccávi nimis, cogitatióne, verbo et ópere : mea culpa, mea culpa, mea máxima culpa.  Ideo precor beátam Maríam semper Vírginem, beátum Michaélem Archángelum, beátum Joánnem Baptístam, sanctos Apóstolos Petrum et Páulum, et omnes Sanctos: oráre pro me ad Dóminum Deum nostrum.
 <br/><br/>
@@ -101,26 +109,26 @@ Tu autem in nobis es, Dómine, † et nomen sanctum tuum invocátum est super no
 <div class='jgabc' src='canticle-psalm.gabc'></div>
 <div id="verses"><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">2.&nbsp;</span>Quia vidérunt <b>ó</b>culi <b>me</b>i&nbsp;* salutá<i>re</i> <b>tu</b>um&nbsp;:<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">3.&nbsp;</span><b>Quod</b> pa<b>rá</b>sti&nbsp;* ante fáciem ómnium po<i>pu</i><b>ló</b>rum&nbsp;:<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">4.&nbsp;</span>Lumen ad revelati<b>ó</b>nem <b>gén</b><b>ti</b>um,&nbsp;* et glóriam plebis tu<i>æ</i> <b>Is</b>ræl.<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">5.&nbsp;</span>Glória <b>Pá</b>tri, et <b>Fí</b><b>li</b>o,&nbsp;* et Spirítu<i>i</i> <b>Sán</b>cto.<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">6.&nbsp;</span>Sicut érat in princípio, et <b>núnc</b>, et <b>sém</b>per,&nbsp;* et in sǽcula sæculó<i>rum</i>. <b>A</b>men.<br></p></div>
 <div class='jgabc' src='canticle-ant.gabc'></div>
-<div class='confiteor priest' style='display:none;'>
+<div class='officiant priest' style='display:none;'>
 <i class='red'>The Officiant introduces the Collect:</i>
 <br/><span class='versiculum'>v</span> Dóminus vobíscum.
 <span class='versiculum'>r</span> Et cum spíritu tuo.
 </div>
-<div class='confiteor no-priest'>
+<div class='officiant no-priest'>
 <i class='red'>The Officiant says:</i>
 <br/><span class='versiculum'>v</span> Dómine, exáudi oratiónem meam.
 <span class='versiculum'>r</span> Et clamor meus ad te véniat.
 </div>
 <br/>Orémus.
-<br/>Vísita, quǽsumus Dómine, habitatiónem istam, et omnes insídias inimíci ab ea longe repélle: † Angeli tui sancti hábitent in ea, qui nos in pace custódiant; * et benedíctio tua sit super nos sempter.  Per Dóminum nostrum Jesum Christum Fílium tuum: † qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, * per ómnia sǽcula sæculórum. <span class='versiculum'>r</span>&nbsp;Amen.
+<br/>Vísita, quǽsumus Dómine, habitatiónem istam, et omnes insídias inimíci ab ea longe repélle: † Angeli tui sancti hábitent in ea, qui nos in pace custódiant; * et benedíctio tua sit super nos semper.  Per Dóminum nostrum Jesum Christum Fílium tuum: † qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, * per ómnia sǽcula sæculórum. <span class='versiculum'>r</span>&nbsp;Amen.
 
 <br/><br/>
-<div class='confiteor priest' style='display:none;'>
+<div class='officiant priest' style='display:none;'>
 <i class='red'>The Officiant says again:</i>
 <br/><span class='versiculum'>v</span> Dóminus vobíscum.
 <span class='versiculum'>r</span> Et cum spíritu tuo.
 </div>
-<div class='confiteor no-priest'>
+<div class='officiant no-priest'>
 <i class='red'>The Officiant says:</i>
 <br/><span class='versiculum'>v</span> Dómine, exáudi oratiónem meam.
 <span class='versiculum'>r</span> Et clamor meus ad te véniat.
@@ -182,6 +190,10 @@ Concéde, miséricors Deus, fragilitáti nostræ præsídium: † ut qui sanctæ
 Orémus.<br/>
 Deus, qui per resurrectiónem Fílii tui Dómini nostri Jesu Christi mundum lætificáre dignátus es: † præsta, quǽsumus; ut per ejus Genitrícem Víginem Maríam, * perpétuæ capiámus gáudia vitæ.  Per eúmdem Christum Dóminum nostrum. <span class='versiculum'>r</span> Amen.
 </div>
-
+<br/>
+<i class='red'>All making the Sign of the Cross, Compline ends as the Officiant says:</i>
+<br/>
+<span class='versiculum'>v</span> Divínum auxílium máneat semper nobíscum.
+<span class='versiculum'>r</span> Amen.
 </body>
 </html>
