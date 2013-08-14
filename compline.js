@@ -37,7 +37,7 @@ $(function(){
     var gotData = function(data){
       var html = ant + psalm + data + ant;
       $('#placeholder').empty().append(html);
-      updateGabc();      
+      updateGabc();
       $('#in-manus-tuas-' + (paschalTime?'pt':'ordinary')).prop('checked',true).change();
     };
     $.get('psalms/'+day+'/psalm-verses'+pt+'.html',gotData).error(function(){
