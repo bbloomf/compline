@@ -39,6 +39,9 @@ $(function(){
       $('#placeholder').empty().append(html);
       updateGabc();
       $('#in-manus-tuas-' + (paschalTime?'pt':'ordinary')).prop('checked',true).change();
+      if(day == 0 || day == 6) {
+        $('#te-lucis-Ordinary').prop('checked',true).change();
+      }
     };
     $.get('psalms/'+day+'/psalm-verses'+pt+'.html',gotData).error(function(){
       $.get('psalms/'+day+'/psalm-verses.html',gotData);
