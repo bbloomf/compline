@@ -6,9 +6,10 @@ The Traditional office of Compline in HTML and GABC
 Forked from [project by bbloomf](https://github.com/bbloomf/compline).  You can see what it looks
 like in its current form [here](http://sethborders.github.io/compline/).
 
-todo
-----
+!TODO
+-----
 
+* add WIP tag to page with link to github project
 * Add text for silent Pater Noster
 * Add tones for all prayers (some may have ot be composed from teh rubrics)
 * Add option to short hand or long form. (where shorthand looks a lot like it is now, and long form should gregorian notation for everything)
