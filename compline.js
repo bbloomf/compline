@@ -36,7 +36,7 @@ $(function(){
     $('#weekday').text(dayName);
     var gotData = function(data){
       var html = ant;
-      if($('#placeholder').hasClass('short');){
+      if($('#placeholder').hasClass('short')){
         html += psalm + data;
       } else {
         html += "<div class='jgabc' src='psalms/"+day+"/long0"+pt+".gabc'></div>";
