@@ -1,12 +1,8 @@
 ﻿initial-style: 0;
-name: 133-3a;
-annotation: 3.a;
-user-notes: Psalm 133.;
+name: canticle-psalm;
 centering-scheme: latin;
-%font: GaramondPremierPro;
-%width: 7.5;
-%height: 11;
-%spacing: vichi;
+user-notes: Canticle of Simeon.;
+commentary: Luke 2.;
 %%
 (c4)1. Nunc(g) di(hj)mít(j)tis(j) ser(j)vum(j) tu(k)um(j) Dó(j)mi(ih)ne,(j.) <v>\greheightstar</v>(:) se(j)cún(j)dum(j) ver(j)bum(j) tu(j)um(j) in(h) pa(j)ce(ih..) (::)
 2. Qui(g)a(hj) vi(j)dé(j)runt(j) ó(k)cu(j)li(j) me(ih)i(j.) <v>\greheightstar</v>(:) sa(j)lu(j)tá(j)re(h) tu(j)um :(ih..) (::)
