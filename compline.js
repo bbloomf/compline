@@ -28,14 +28,22 @@ $(function(){
   }
   var setPsalms = function(day,paschalTime) {
     pt = paschalTime?'-PT':'';
-    var ant = paschalTime?
-      "<div class='jgabc' src='psalms/ant-PT.gabc'></div>" :
-      "<div class='jgabc' src='psalms/"+day+"/ant.gabc'></div>";
+    var ant   = "<div class='jgabc' src='psalms/" +
+                (paschalTime ? ("ant-PT") : (day+"/ant")) +
+                ".gabc'></div>";
     var psalm = "<div class='jgabc' src='psalms/"+day+"/psalm"+pt+".gabc'></div>";
     dayName = days[day];
     $('#weekday').text(dayName);
     var gotData = function(data){
-      var html = ant + psalm + data + ant;
+      var html = ant;
+      if($('#placeholder').hasClass('short');){
+        html += psalm + data;
+      } else {
+        html += "<div class='jgabc' src='psalms/"+day+"/long0"+pt+".gabc'></div>";
+        html += "<div class='jgabc' src='psalms/"+day+"/long1"+pt+".gabc'></div>";
+        html += "<div class='jgabc' src='psalms/"+day+"/long2"+pt+".gabc'></div>";
+      }
+      html += ant;
       $('#placeholder').empty().append(html);
       updateGabc();
       $('#in-manus-tuas-' + (paschalTime?'pt':'ordinary')).prop('checked',true).change();
