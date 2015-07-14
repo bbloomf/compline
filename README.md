@@ -9,8 +9,8 @@ like in its current form [here](http://sethborders.github.io/compline/).
 !TODO
 -----
 
-* Add tones for all prayers when in long form (some may have ot be composed from the rubrics)
-* make short and ong forms be on the same page (instead of maintaining separately)
+* Add tones for all prayers when in long form (some may have to be composed from the rubrics)
+* make short and long forms be the same page (instead of maintaining separately)
 * Consolidate seasonal selection to just one drop-down
 * Eventually support autodetecting from date.
 * Add english translations
