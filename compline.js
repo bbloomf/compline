@@ -29,15 +29,15 @@ $(function(){
   var setPsalms = function(day,paschalTime) {
     pt = paschalTime?'-PT':'';
     var ant = paschalTime?
-      "<div class='jgabc' src='psalms/ant-PT.gabc'></div>" :
-      "<div class='jgabc' src='psalms/"+day+"/ant.gabc'></div>";
-    var psalm = "<div class='jgabc' src='psalms/"+day+"/psalm"+pt+".gabc'></div>";
+      "<chant-gabc src='psalms/ant-PT.gabc'></chant-gabc>" :
+      "<chant-gabc src='psalms/"+day+"/ant.gabc'></chant-gabc>";
+    var psalm = "<chant-gabc src='psalms/"+day+"/psalm"+pt+".gabc'></chant-gabc>";
     dayName = days[day];
     $('#weekday').text(dayName);
     var gotData = function(data){
       var html = ant + psalm + data + ant;
       $('#placeholder').empty().append(html);
-      updateGabc();
+      //TODO: fix to work with exsurge: updateGabc();
       $('#in-manus-tuas-' + (paschalTime?'pt':'ordinary')).prop('checked',true).change();
       if(day == 0 || day == 6) {
         $('#te-lucis-Ordinary').prop('checked',true).change();
@@ -52,14 +52,10 @@ $(function(){
   if(pt) {
     $('#season-paschal').prop('checked',true);
   }
-  var setChantSrc = function($div,src){
-    if(!$div || $div.length == 0) return;
-    $.get(src,function(data){
-      $div.attr('src',src).text(data);
-      var old=$div.next(".jgabc-svg").find("svg")[0];
-      if(!old) console.warn('Couldn\'t find svg to update.');
-      else updateChant(data,old,true);
-    });
+  var setChantSrc = function($elem,src){
+    if(!$elem || $elem.length == 0) return;
+    $elem.attr('src',src);
+    $elem.data('setSrc')(src);
   };
   $('[id$=-choices] input').change(function(){
     var chant = this.name;
@@ -70,7 +66,7 @@ $(function(){
     var src = chant + '/' + this.value + '.gabc';
     console.info(src);
     setChantSrc($('#'+chant),src);
-    var $div = $('div.jgabc[' + this.id + ']');
+    var $div = $('chant-gabc[' + this.id + ']');
     if($div.length > 0) {
       setChantSrc($div,$div.attr(this.id));
     }

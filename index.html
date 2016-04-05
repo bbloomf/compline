@@ -1,17 +1,18 @@
-﻿<html>
+﻿<!DOCTYPE html>
+<html>
 <head>
-<title>Compline</title>
-<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'></script>
-<script src='compline.js'></script>
-<script src='jgabc.js'></script>
-<style>
-.red {
-  color: red;
-}
-body {
-  font-family: 'OFL Sorts Mill Goudy TT';
-}
-</style>
+  <title>Compline</title>
+  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'></script>
+  <script src='compline.js'></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <style>
+  .red {
+    color: red;
+  }
+  body {
+    font-family: 'OFL Sorts Mill Goudy TT';
+  }
+  </style>
 </head>
 <body>
 <span id='weekday'></span> at Compline<br/>
@@ -28,13 +29,13 @@ Season:
 <i class='red'>In the absence of a priest or deacon, the Lector says “Dómine” below so as to invoke Our Lord directly for the blessing.</i>
 </div>
 <i class='red'>Lector:</i>
-<div class='jgabc' officiant-priest='jube-domne.gabc' officiant-no-priest='jube-domine.gabc' src='jube-domine.gabc'></div>
+<chant-gabc officiant-priest='jube-domne.gabc' officiant-no-priest='jube-domine.gabc' src='jube-domine.gabc'></chant-gabc>
 <i class='red'>The Officiant gives the blessing:</i>
-<div class='jgabc' src='blessing.gabc'></div>
+<chant-gabc src='blessing.gabc'></chant-gabc>
 <i class='red'>The Lector/Cantor continues (at the words “Tu autem...nobis,” he alone genuflects):</i>
-<div class='jgabc' src='lesson.gabc'></div>
+<chant-gabc src='lesson.gabc'></chant-gabc>
 <i class='red'>All make the Sign of the Cross as the Officiant says:</i>
-<div class='jgabc' src='adjutorium-nostrum.gabc'></div>
+<chant-gabc src='adjutorium-nostrum.gabc'></chant-gabc>
 <i class='red'>Here all pause in silence wherein one may make a short examination of consciense or quietly say a Pater Noster.</i>
 <div class='officiant priest' style='display:none;'>
 <span class='red'><i>The Officiant now bows profoundly and says the </i>Confiteor<i> alone in a low voice, recto tono.  After this, all bow profoundly toward the Officiant and say in the same low recto tono voice:</i></span>
@@ -61,9 +62,9 @@ Indulgéntiam, absolutiónem, et remissiónem peccatórum nostrórum tríbuat no
 <br><span class='versiculum'>r</span>&nbsp;Amen.
 <br><br>
 <span class='red'><i>Then all make the Sign of the Cross with their thumbs over their hearts, as the Officiant says :</i></span>
-<div class='jgabc' src='converte-nos.gabc'></div>
+<chant-gabc src='converte-nos.gabc'></chant-gabc>
 <i class='red'>Then all make the Sign of the Cross as the Officiant says: (All continue together with the entire “Gloria Patri” after the response.)</i>
-<div class='jgabc' src='deus-in-adjutorium.gabc'></div>
+<chant-gabc src='deus-in-adjutorium.gabc'></chant-gabc>
 <div id='placeholder'></div>
 <!--SHOULD BE PROPER-->
 <span class='red'><i>The Officiant then intones the Hymn </i>Te lucis<i> which is sung in one of the tones given below.  All bow slightly for the first three stanzas of the third verse.</i></span>
@@ -86,7 +87,7 @@ Indulgéntiam, absolutiónem, et remissiónem peccatórum nostrórum tríbuat no
 <input type='radio' name='te-lucis' value='Christ-the-King' id='te-lucis-Christ-the-King'/><label for='te-lucis-Christ-the-King'>Christ the King <i class='red'>(On the Feast of Christ the King)</i></label><br/>
 <input type='radio' name='te-lucis' value='Sacred-Heart' id='te-lucis-Sacred-Heart'/><label for='te-lucis-Sacred-Heart'>Sacred Heart <i class='red'>(On the Feast of the Sacred Heart of Jesus)</i></label><br/>
 </div>
-<div class='jgabc' id='te-lucis' src='te-lucis/Ferial.gabc'></div>
+<chant-gabc id='te-lucis' src='te-lucis/Ferial.gabc'></chant-gabc>
 <i class='red'>The Officiant then says the Chapter:</i>
 <br>
 Tu autem in nobis es, Dómine, † et nomen sanctum tuum invocátum est super nos: * ne derelínquas nos, Dómine Deus noster.
@@ -102,13 +103,13 @@ Tu autem in nobis es, Dómine, † et nomen sanctum tuum invocátum est super no
 <div class='in-manus-tuas ordinary'>
 <i class='red'>(In Passiontide, except on a First or Second Class Feast, the Gloria Patri is omitted, and all repeat again immediately “In manus tuas...” in its place)</i>
 </div>
-<div class='jgabc' id='in-manus-tuas' src='in-manus-tuas/ordinary.gabc'></div>
-<div class='jgabc' src='custodi-nos.gabc'></div>
+<chant-gabc id='in-manus-tuas' src='in-manus-tuas/ordinary.gabc'></chant-gabc>
+<chant-gabc src='custodi-nos.gabc'></chant-gabc>
 <br/>
-<div class='jgabc' src='canticle-ant.gabc'></div>
-<div class='jgabc' src='canticle-psalm.gabc'></div>
+<chant-gabc src='canticle-ant.gabc'></chant-gabc>
+<chant-gabc src='canticle-psalm.gabc'></chant-gabc>
 <div id="verses"><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">2.&nbsp;</span>Quia vidérunt <b>ó</b>culi <b>me</b>i&nbsp;* salutá<i>re</i> <b>tu</b>um&nbsp;:<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">3.&nbsp;</span><b>Quod</b> pa<b>rá</b>sti&nbsp;* ante fáciem ómnium po<i>pu</i><b>ló</b>rum&nbsp;:<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">4.&nbsp;</span>Lumen ad revelati<b>ó</b>nem <b>gén</b><b>ti</b>um,&nbsp;* et glóriam plebis tu<i>æ</i> <b>Is</b>ræl.<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">5.&nbsp;</span>Glória <b>Pá</b>tri, et <b>Fí</b><b>li</b>o,&nbsp;* et Spirítu<i>i</i> <b>Sán</b>cto.<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">6.&nbsp;</span>Sicut érat in princípio, et <b>núnc</b>, et <b>sém</b>per,&nbsp;* et in sǽcula sæculó<i>rum</i>. <b>A</b>men.<br></p></div>
-<div class='jgabc' src='canticle-ant.gabc'></div>
+<chant-gabc src='canticle-ant.gabc'></chant-gabc>
 <div class='officiant priest' style='display:none;'>
 <i class='red'>The Officiant introduces the Collect:</i>
 <br/><span class='versiculum'>v</span> Dóminus vobíscum.
@@ -134,7 +135,7 @@ Tu autem in nobis es, Dómine, † et nomen sanctum tuum invocátum est super no
 <span class='versiculum'>r</span> Et clamor meus ad te véniat.
 </div>
 <br/><i class='red'>The Cantor then says:</i>
-<div class='jgabc' src='benedicamus-domino.gabc'></div>
+<chant-gabc src='benedicamus-domino.gabc'></chant-gabc>
 <br/><i class='red'>The Officiant then says the blessing in a low recto tono, slowly and gravely, at the end of which all make the Sign of the Cross:</i>
 <br>
 Benedícat et custódiat nos omnípotens et miséricors Dóminus, Pater, et Fílius, et Spíritus Sanctus.
@@ -152,7 +153,7 @@ MARIAN ANTIPHON
 <input type='radio' name='marian-antiphon' value='salve-regina' checked id='marian-antiphon-salve'/><label for='marian-antiphon-salve'>Salve Regina <i class='red'>(from Saturday before Trinity Sunday until Friday before the First Sunday of Advent inclusive)</i></label><br/>
 <input type='radio' name='marian-antiphon' value='salve-regina-solemn' id='marian-antiphon-salve-solemn'/><label for='marian-antiphon-salve-solemn'>Salve Regina (Solemn)</label>
 </div>
-<div class='jgabc' id='marian-antiphon' src='marian-antiphon/salve-regina.gabc'></div>
+<chant-gabc id='marian-antiphon' src='marian-antiphon/salve-regina.gabc'></chant-gabc>
 <br/>
 <div class='marian-antiphon alma-redemptoris-mater alma-redemptoris-mater-solemn' style='display:none;'>
 <i class='red'>During Advent:</i><br/>
@@ -195,5 +196,8 @@ Deus, qui per resurrectiónem Fílii tui Dómini nostri Jesu Christi mundum læt
 <br/>
 <span class='versiculum'>v</span> Divínum auxílium máneat semper nobíscum.
 <span class='versiculum'>r</span> Amen.
+<script src="http://cdnjs.cloudflare.com/ajax/libs/document-register-element/0.5.3/document-register-element.js">/* W3C Custom Elements */</script>
+<script src='https://ex.surge.sh/exsurge.js'></script>
+<script src='chant-element.js'></script>
 </body>
 </html>
