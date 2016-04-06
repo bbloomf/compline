@@ -13,22 +13,6 @@
   src: url('caeciliae-staffless-print.ttf') format('truetype');
 }
 @font-face {
-  font-family: 'OFL Sorts Mill Goudy TT';
-  font-style: italic;
-  font-weight: normal;
-  src: local('OFL Sorts Mill Goudy Italic TT'),
-    local('OFLGoudyStMTT-Italic'),
-    url('OFLGoudyStMTT-Italic.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'OFL Sorts Mill Goudy TT';
-  font-style: normal;
-  font-weight: normal;
-  src: local('OFL Sorts Mill Goudy TT'),
-    local('OFLGoudyStMTT'),
-    url('OFLGoudyStMTT.ttf') format('truetype');
-}
-@font-face {
   font-family: 'Versiculum';
   font-style: normal;
   font-weight: normal;
@@ -52,15 +36,15 @@ tspan.selectable{
   font-size:48px;
 }
 .goudy{
-  font-family: 'OFL Sorts Mill Goudy TT';
+  font-family: 'Sorts Mill Goudy';
   font-size: 18px;
 }
 .greinitial{
-  font-family: 'OFL Sorts Mill Goudy TT';
+  font-family: 'Sorts Mill Goudy';
   font-size: 60px;
 }
 .greannotation{
-  font-family: 'OFL Sorts Mill Goudy TT';
+  font-family: 'Sorts Mill Goudy';
   font-size: 15px;
 }
 @media screen {
