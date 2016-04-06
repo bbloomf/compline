@@ -20,15 +20,15 @@ ChantVisualElementPrototype.createdCallback = function() {
   $elem.data('setSrc', function(src){
     width = 0;
     var request = new XMLHttpRequest();
-    request.onreadystatechange = function() { 
-      if (request.readyState === 4 && request.status === 200) {
+    request.onreadystatechange = function() {
+      if (request.readyState === 4 && request.status === 200 && $elem.attr('src') === src) {
         var gabc = request.responseText;
         gabc = gabc.replace(/<v>\\([VRA])bar<\/v>/g,function(match,barType) {
           return barType + '/.';
         }).replace(/<\/?sc>/g,'%')
         .replace(/<\/?b>/g,'*')
         .replace(/<\/?i>/g,'_')
-        .replace(/<sp>'ae<\/sp>/g,'ǽ')
+        .replace(/<sp>'(?:ae|æ)<\/sp>/g,'ǽ')
         .replace(/<v>\\greheightstar<\/v>/g,'*');
         var gabcHeader = '';
         var headerEndIndex = gabc.indexOf('\n%%\n');
@@ -74,7 +74,7 @@ ChantVisualElementPrototype.createdCallback = function() {
 
   var width = 0;
   var doLayout = function() {
-    var newWidth = _element.parentElement.clientWidth;
+    var newWidth = (_element.parentElement || window.document.body).clientWidth;
     if(width === newWidth) return;
     width = newWidth;
     // perform layout on the chant

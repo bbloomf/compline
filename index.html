@@ -24,7 +24,7 @@
 Season:
 <div id='season-choices'>
 <input type='radio' name='season' value='per-annum' checked id='season-per-annum'/><label for='season-per-annum'>Throughout the year</label><br/>
-<input type='radio' name='season' value='paschal' id='season-paschal'/><label for='season-paschal'>Paschal Time</label><br/>
+<input type='radio' name='season' class='radio-pt' value='paschal' id='season-paschal'/><label for='season-paschal'>Paschal Time</label><br/>
 </div>
 <div class='officiant no-priest'>
 <i class='red'>In the absence of a priest or deacon, the Lector says “Dómine” below so as to invoke Our Lord directly for the blessing.</i>
@@ -74,14 +74,14 @@ Indulgéntiam, absolutiónem, et remissiónem peccatórum nostrórum tríbuat no
 <input type='radio' name='te-lucis' checked value='Ferial' id='te-lucis-Ferial'/><label for='te-lucis-Ferial'>Ferial <i class='red'>(Ferial days from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i></label><br/>
 <input type='radio' name='te-lucis' value='Solemn' id='te-lucis-Solemn'/><label for='te-lucis-Solemn'>Solemn <i class='red'>(All First class feasts lacking a proper tone at any time of the year)</i></label><br/>
 <input type='radio' name='te-lucis' value='Our-Lady' id='te-lucis-Our-Lady'/><label for='te-lucis-Our-Lady'>Our Lady <i class='red'>(All feasts of the Blessed Virgin Mary, except the Seven Sorrows, of whatever rank at any time of the year)</i></label><br/>
-<input type='radio' name='te-lucis' value='Advent' id='te-lucis-Advent'/><label for='te-lucis-Advent'>Advent <i class='red'>(All days except first class feasts from Saturday before the First Sunday of Advent until December 23 inclusive)</i></label><br/>
+<input type='radio' name='te-lucis' class='radio-advent' value='Advent' id='te-lucis-Advent'/><label for='te-lucis-Advent'>Advent <i class='red'>(All days except first class feasts from Saturday before the First Sunday of Advent until December 23 inclusive)</i></label><br/>
 <input type='radio' name='te-lucis' value='Christmas' id='te-lucis-Christmas'/><label for='te-lucis-Christmas'>Christmas <i class='red'>(All days from December 24 until January 4 inclusive)</i></label><br/>
 <input type='radio' name='te-lucis' value='Epiphany' id='te-lucis-Epiphany'/><label for='te-lucis-Epiphany'>Epiphany <i class='red'>(All days from January 5 until January 13 inclusive)</i></label><br/>
 <input type='radio' name='te-lucis' value='Holy-Family' id='te-lucis-Holy-Family'/><label for='te-lucis-Holy-Family'>Holy Family <i class='red'>(On the Feast of the Holy Family)</i></label><br/>
-<input type='radio' name='te-lucis' value='Lent' id='te-lucis-Lent'/><label for='te-lucis-Lent'>Lent <i class='red'>(On Sundays, Ferial Days, and Second Class Feasts from Saturday before First Sunday of Lent until Friday before Passion Sunday inclusive)</i></label><br/>
+<input type='radio' name='te-lucis' class='radio-lent' value='Lent' id='te-lucis-Lent'/><label for='te-lucis-Lent'>Lent <i class='red'>(On Sundays, Ferial Days, and Second Class Feasts from Saturday before First Sunday of Lent until Friday before Passion Sunday inclusive)</i></label><br/>
 <input type='radio' name='te-lucis' value='Passiontide' id='te-lucis-Passiontide'/><label for='te-lucis-Passiontide'>Passiontide <i class='red'>(On Sundays, Ferial Days, and Second Class Feasts from the Saturday before the First Sunday of Passiontide until Wednesday of Holy Week)</i></label><br/>
 <input type='radio' name='te-lucis' value='Seven-Dolors' id='te-lucis-Seven-Dolors'/><label for='te-lucis-Seven-Dolors'>Seven Sorrows <i class='red'>(Feast of the Seven Sorrows of the Blessed Mother)</i></label><br/>
-<input type='radio' name='te-lucis' value='Easter' id='te-lucis-Easter'/><label for='te-lucis-Easter'>Easter <i class='red'>(On all days, except First Class Feasts, from the Saturday before Low Sunday until the Tuesday after the Fifth Sunday after Easter inclusive)</i></label><br/>
+<input type='radio' name='te-lucis' class='radio-pt' value='Easter' id='te-lucis-Easter'/><label for='te-lucis-Easter'>Easter <i class='red'>(On all days, except First Class Feasts, from the Saturday before Low Sunday until the Tuesday after the Fifth Sunday after Easter inclusive)</i></label><br/>
 <input type='radio' name='te-lucis' value='Ascension' id='te-lucis-Ascension'/><label for='te-lucis-Ascension'>Ascension <i class='red'>(On all days, except First Class Feasts beside the Ascension, from Wesdnesday before the Ascension until the Friday before Pentecost inclusive)</i></label><br/>
 <input type='radio' name='te-lucis' value='Transfiguration' id='te-lucis-Transfiguration'/><label for='te-lucis-Transfiguration'>Transfiguration <i class='red'>(On the Feast of the Transfiguration)</i></label><br/>
 <input type='radio' name='te-lucis' value='Pentecost' id='te-lucis-Pentecost'/><label for='te-lucis-Pentecost'>Pentecost <i class='red'>(On all days from the Vigil of Pentecost until the Friday in the Octave of Pentecost)</i></label><br/>
@@ -98,8 +98,8 @@ Tu autem in nobis es, Dómine, † et nomen sanctum tuum invocátum est super no
 <br/><i class='red'>The Cantor then says the verses of the Short Responsory to which all reply after each invocation:</i>
 <div id='in-manus-tuas-choices'>
 <input type='radio' name='in-manus-tuas' value='ordinary' checked id='in-manus-tuas-ordinary'/><label for='in-manus-tuas-ordinary'>Throughout the year</label><br/>
-<input type='radio' name='in-manus-tuas' value='advent' id='in-manus-tuas-advent'/><label for='in-manus-tuas-advent'>Saturday before the First Sunday of Advent until Dec. 23 inclusive</label><br/>
-<input type='radio' name='in-manus-tuas' value='pt' id='in-manus-tuas-pt'/><label for='in-manus-tuas-pt'>Saturday before Low Sunday until Friday in the Octave of Pentecost inclusive</label>
+<input type='radio' name='in-manus-tuas' class='radio-advent' value='advent' id='in-manus-tuas-advent'/><label for='in-manus-tuas-advent'>Saturday before the First Sunday of Advent until Dec. 23 inclusive</label><br/>
+<input type='radio' name='in-manus-tuas' class='radio-pt' value='pt' id='in-manus-tuas-pt'/><label for='in-manus-tuas-pt'>Saturday before Low Sunday until Friday in the Octave of Pentecost inclusive</label>
 </div>
 <div class='in-manus-tuas ordinary'>
 <i class='red'>(In Passiontide, except on a First or Second Class Feast, the Gloria Patri is omitted, and all repeat again immediately “In manus tuas...” in its place)</i>
@@ -145,11 +145,11 @@ Benedícat et custódiat nos omnípotens et miséricors Dóminus, Pater, et Fíl
 MARIAN ANTIPHON
 <!-- SHOULD BE PROPER -->
 <div id='marian-antiphon-choices'>
-<input type='radio' name='marian-antiphon' value='alma-redemptoris-mater' id='marian-antiphon-alma'/><label for='marian-antiphon-alma'>Alma Redemptoris Mater <i class='red'>(from Saturday before the First Sunday of Advent until Feb. 1 inclusive)</i></label><br/>
+<input type='radio' name='marian-antiphon' class='radio-advent radio-till-feb1' value='alma-redemptoris-mater' id='marian-antiphon-alma'/><label for='marian-antiphon-alma'>Alma Redemptoris Mater <i class='red'>(from Saturday before the First Sunday of Advent until Feb. 1 inclusive)</i></label><br/>
 <input type='radio' name='marian-antiphon' value='alma-redemptoris-mater-solemn' id='marian-antiphon-alma-solemn'/><label for='marian-antiphon-alma-solemn'>Alma Redemptoris Mater (Solemn)</label><br/>
-<input type='radio' name='marian-antiphon' value='ave-regina-caelorum' id='marian-antiphon-ave'/><label for='marian-antiphon-ave'>Ave Regina Cælorum <i class='red'>(From February 2 until Wednesday of Holy Week inclusive)</i></label><br/>
+<input type='radio' name='marian-antiphon' class='radio-feb2-till-spy-wed' value='ave-regina-caelorum' id='marian-antiphon-ave'/><label for='marian-antiphon-ave'>Ave Regina Cælorum <i class='red'>(From February 2 until Wednesday of Holy Week inclusive)</i></label><br/>
 <input type='radio' name='marian-antiphon' value='ave-regina-caelorum-solemn' id='marian-antiphon-ave-solemn'/><label for='marian-antiphon-ave-solemn'>Ave Regina Cælorum (Solemn)</label><br/>
-<input type='radio' name='marian-antiphon' value='regina-caeli' id='marian-antiphon-regina'/><label for='marian-antiphon-regina'>Regina Cæli <i class='red'>(from Easter Sunday until Friday in the Octave of Pentecost inclusive)</i></label><br/>
+<input type='radio' name='marian-antiphon' class='radio-pt' value='regina-caeli' id='marian-antiphon-regina'/><label for='marian-antiphon-regina'>Regina Cæli <i class='red'>(from Easter Sunday until Friday in the Octave of Pentecost inclusive)</i></label><br/>
 <input type='radio' name='marian-antiphon' value='regina-caeli-solemn' id='marian-antiphon-regina-solemn'/><label for='marian-antiphon-regina-solemn'>Regina Cæli (Solemn)</label><br/>
 <input type='radio' name='marian-antiphon' value='salve-regina' checked id='marian-antiphon-salve'/><label for='marian-antiphon-salve'>Salve Regina <i class='red'>(from Saturday before Trinity Sunday until Friday before the First Sunday of Advent inclusive)</i></label><br/>
 <input type='radio' name='marian-antiphon' value='salve-regina-solemn' id='marian-antiphon-salve-solemn'/><label for='marian-antiphon-salve-solemn'>Salve Regina (Solemn)</label>
