@@ -6,7 +6,7 @@ ChantVisualElementPrototype.createdCallback = function() {
   var _element = this;
   var $elem = $(this);
   
-  ctxt.lyricTextFont = "'Sorts Mill Goudy', serif";
+  ctxt.lyricTextFont = "'Crimson Text', serif";
   ctxt.lyricTextSize *= 1.2;
   ctxt.dropCapTextFont = ctxt.lyricTextFont;
   ctxt.annotationTextFont = ctxt.lyricTextFont;
