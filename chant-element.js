@@ -36,7 +36,7 @@ ChantVisualElementPrototype.createdCallback = function() {
           gabcHeader = gabc.slice(0,headerEndIndex).split(/\r?\n/);
           gabc = gabc.slice(headerEndIndex + 4);
         }
-        mappings = exsurge.Gabc.parseSource(ctxt, gabc);
+        mappings = exsurge.Gabc.createMappingsFromSource(ctxt, gabc);
         if(gabcHeader) {
           gabcHeader = gabcHeader.reduce(function(result,line){
             var match = line.match(/^([\w-_]+):\s*([^;\r\n]*)(?:;|$)/i);
@@ -61,7 +61,7 @@ ChantVisualElementPrototype.createdCallback = function() {
   if(srcAttr) {
     $elem.data('setSrc')(srcAttr);
   } else {
-    mappings = exsurge.Gabc.parseSource(ctxt, this.innerText);
+    mappings = exsurge.Gabc.createMappingsFromSource(ctxt, this.innerText);
     score = new exsurge.ChantScore(ctxt, mappings, useDropCap);
 
     var annotationAttr = this.getAttribute("annotation");
