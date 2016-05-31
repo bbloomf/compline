@@ -75,6 +75,17 @@ $(function(){
       }
     }
   }
+  // type should be '-po' for paschal octave, or '-asd' for all souls' day
+  var setCanticle = function(type) {
+    var ant = "<chant-gabc src='canticle-ant"+type+".gabc'></chant-gabc>";
+    var psalm = "<chant-gabc src='canticle-psalm"+type+".gabc'></chant-gabc>";
+    var gotData = function(data){
+      var html = ant + psalm + data + ant;
+      $('#canticle').empty().append(html);
+    };
+    $('#canticle').empty();
+    $.get('canticle-psalm'+type+'.html',gotData);
+  }
   var setPsalms = function(day,paschalTime) {
     pt = paschalTime?'-PT':'';
     var ant = paschalTime?
@@ -95,6 +106,7 @@ $(function(){
     var isPT = isPaschalTime(date);
     if(isPT && isPaschalWeek(date)) {
       setPsalms(0,true);
+      setCanticle('-po');
       $('#weekday').text('Easter Week');
     } else if(isTriduum(date)) {
       var day = date.day();
@@ -112,8 +124,13 @@ $(function(){
           break;
       }
       $('#weekday').text(name);
+      //TODO: implement Triduum compline
+    } else if(date.month()==10 && date.date()==2) { // All Souls day
+      $('#weekday').text('All Souls Day');
+      //TODO: implement All Souls Day compline
     } else {
       setPsalms(date.day(),isPT);
+      setCanticle('');
     }
     $('.radio-pt').prop('checked',isPT).change();
     if(isAdvent(date)) {
