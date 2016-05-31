@@ -1,4 +1,10 @@
-System for changes
+Date selector at top.
+
+System for calendar:
+  how about tag attributes include and exclude?
+  i.e., <div exclude='11/02'> to exclude on november 2 and <div exclude='easter:easter+49'> to exclude from Easter through Pentecost Sunday
+  , <div include='advent1-1:12/23'>
+  special names needed for 'easter' and 'advent1', but 'septuagesima' and 'ashwednesday' might be nice
 
 Antiphon and Psalms are usually based simply on day of week
 Triduum Compline is much different, recto tono

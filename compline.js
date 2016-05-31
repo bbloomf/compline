@@ -14,11 +14,9 @@ $(function(){
     var M = 3 + Math.floor((L + 40)/44);
     var D = L + 28 - 31*Math.floor(M/4);
 
-    var easter = new Date(Y,M-1,D);
-    var septuagesima = new Date(easter);
-    var pentecost = new Date(easter);
-    septuagesima.setDate(easter.getDate() -(7 * 9));
-    pentecost.setDate(easter.getDate() + (7 * 7));
+    var easter = moment([Y,M-1,D]);
+    var septuagesima = moment(easter).subtract(7*9,'days');
+    var pentecost = moment(easter).add(49,'days');
     return {
       easter: easter,
       septuagesima: septuagesima,
@@ -37,16 +35,15 @@ $(function(){
       if (b.failMsg) showAlert(true, b.failMsg);
       return b;
   })(window.location.search.substr(1).split('&'));
-  var days = 1000*60*60*24; //number of milliseconds in a day;
-  var date = new Date();
-  var dates = EasterDates(date.getFullYear());
-  dates.pentecostSaturday = new Date(dates.pentecost);
-  dates.pentecostSaturday.setDate(dates.pentecost.getDate() + 6)
-  dates.christmas = new Date(date.getFullYear(),11,25);
-  dates.advent1 = new Date(dates.christmas.getTime() - ((dates.christmas.getDay() || 7) + 7*3)*days);
-  var isPaschalTime = (date >= dates.easter && date < dates.pentecostSaturday);
-  var isAdvent = (date >= (dates.advent1 - 1*days)) && (date <= (dates.christmas - 1*days));
-  var day = date.getDay();
+  var date = moment();
+  var dates = EasterDates(date.year());
+  dates.pentecostSaturday = moment(dates.pentecost).add(6,'days');
+  dates.christmas = moment([date.year(),11,25]);
+  dates.advent1 = moment(dates.christmas).subtract((dates.christmas.day() || 7) + 7*3,'days');
+  var isPaschalTime = date.isSameOrAfter(dates.easter) && date.isBefore(dates.pentecostSaturday);
+  var isAdvent = date.isSameOrAfter(moment(dates.advent1).subtract(1,'day')) && date.isSameOrBefore(moment(dates.christmas).subtract(1,'day'));
+  $('#date').val(date.format("YYYY-MM-DD"));
+  var day = date.day();
   var dayName;
   var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   if($.QueryString.day) {
@@ -104,9 +101,9 @@ $(function(){
   if(isAdvent) {
     $('.radio-advent').prop('checked',true).change();
   }
-  if(date < new Date(date.getFullYear(), 1, 2)) {
+  if(date.isBefore(moment([date.year(), 1, 2]))) {
     $('.radio-till-feb2').prop('checked',true).change();
-  } else if(date < dates.easter - 3*days) {
+  } else if(date.isBefore(moment(dates.easter).subtract(3,'days'))) {
     $('.radio-feb2-till-spy-wed').prop('checked',true).change();
   }
   if((day == 0 || day == 6) && $('#te-lucis-Ferial').prop('checked')) {
