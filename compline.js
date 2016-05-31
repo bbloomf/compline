@@ -1,7 +1,7 @@
 $(function(){
   // the following function is based on one taken from http://www.irt.org/articles/js052/index.htm
   // Y is the year to calculate easter for, e.g., 2017
-  function EasterDates(Y) {
+  function EasterDate(Y) {
     var C = Math.floor(Y/100);
     var N = Y - 19*Math.floor(Y/19);
     var K = Math.floor((C - 17)/25);
@@ -14,7 +14,10 @@ $(function(){
     var M = 3 + Math.floor((L + 40)/44);
     var D = L + 28 - 31*Math.floor(M/4);
 
-    var easter = moment([Y,M-1,D]);
+    return moment([Y,M-1,D]);
+  }
+  function EasterDates(Y) {
+    var easter = EasterDate(Y);
     var septuagesima = moment(easter).subtract(7*9,'days');
     var pentecost = moment(easter).add(49,'days');
     return {
@@ -22,6 +25,26 @@ $(function(){
       septuagesima: septuagesima,
       pentecost: pentecost
     }
+  }
+  function isTriduum(date) {
+    var easter = EasterDate(date.year());
+    var maundyThursday = moment(easter).subtract(3,'days');
+    return date.isSameOrAfter(maundyThursday) && date.isBefore(easter);
+  }
+  function isPaschalWeek(date) {
+    var easter = EasterDate(date.year());
+    var easterSaturday = moment(easter).add(6,'days');
+    return date.isSameOrAfter(easter) && date.isBefore(easterSaturday);
+  }
+  function isPaschalTime(date) {
+    var easter = EasterDate(date.year());
+    var pentecostSaturday = moment(easter).add(55,'days');
+    return date.isSameOrAfter(easter) && date.isBefore(pentecostSaturday);
+  }
+  function isAdvent(date) {
+    var christmas = moment([date.year(),11,25]);
+    var advent1 = moment(christmas).subtract((christmas.day() || 7) + 7*3,'days');
+    return date.isSameOrAfter(moment(advent1).subtract(1,'day')) && date.isSameOrBefore(moment(christmas).subtract(1,'day'));
   }
   $.QueryString = (function (a) {
       if (a == "") return {};
@@ -36,12 +59,7 @@ $(function(){
       return b;
   })(window.location.search.substr(1).split('&'));
   var date = moment();
-  var dates = EasterDates(date.year());
-  dates.pentecostSaturday = moment(dates.pentecost).add(6,'days');
-  dates.christmas = moment([date.year(),11,25]);
-  dates.advent1 = moment(dates.christmas).subtract((dates.christmas.day() || 7) + 7*3,'days');
-  var isPaschalTime = date.isSameOrAfter(dates.easter) && date.isBefore(dates.pentecostSaturday);
-  var isAdvent = date.isSameOrAfter(moment(dates.advent1).subtract(1,'day')) && date.isSameOrBefore(moment(dates.christmas).subtract(1,'day'));
+  
   $('#date').val(date.format("YYYY-MM-DD"));
   var day = date.day();
   var dayName;
@@ -73,7 +91,46 @@ $(function(){
       $.get('psalms/'+day+'/psalm-verses.html',gotData);
     });
   }
-  setPsalms(day,isPaschalTime);
+  var setDate = function(date) {
+    var isPT = isPaschalTime(date);
+    if(isPT && isPaschalWeek(date)) {
+      setPsalms(0,true);
+      $('#weekday').text('Easter Week');
+    } else if(isTriduum(date)) {
+      var day = date.day();
+      setPsalms(day,false);
+      var name;
+      switch(day) {
+        case 4:
+          name = 'Maundy Thursday';
+          break;
+        case 5:
+          name = 'Good Friday';
+          break;
+        case 6:
+          name = 'Holy Saturday';
+          break;
+      }
+      $('#weekday').text(name);
+    } else {
+      setPsalms(date.day(),isPT);
+    }
+    $('.radio-pt').prop('checked',isPT).change();
+    if(isAdvent(date)) {
+      $('.radio-advent').prop('checked',true).change();
+    }
+    if(date.isBefore(moment([date.year(), 1, 2]))) {
+      $('.radio-till-feb2').prop('checked',true).change();
+    } else if(date.isBefore(moment(EasterDate(date.year())).subtract(3,'days'))) {
+      $('.radio-feb2-till-spy-wed').prop('checked',true).change();
+    }
+    if((day == 0 || day == 6) && $('#te-lucis-Ferial').prop('checked')) {
+      $('#te-lucis-Ordinary').prop('checked',true).change();
+    }
+  }
+  $('#date').change(function(){
+    setDate(moment($(this).val()));
+  }).change();
   var setChantSrc = function($elem,src){
     if(!$elem || $elem.length == 0) return;
     $elem.attr('src',src);
@@ -82,7 +139,7 @@ $(function(){
   $('[id$=-choices] input').change(function(){
     var chant = this.name;
     if(chant=='season') {
-      setPsalms(day,this.value=='paschal');
+      //setPsalms(day,this.value=='paschal');
       return;
     }
     var src = chant + '/' + this.value + '.gabc';
@@ -95,18 +152,4 @@ $(function(){
     $('div.' + chant).hide();
     $('div.' + chant + '.' + this.value).show();
   });
-  if(isPaschalTime) {
-    $('.radio-pt').prop('checked',true).change();
-  }
-  if(isAdvent) {
-    $('.radio-advent').prop('checked',true).change();
-  }
-  if(date.isBefore(moment([date.year(), 1, 2]))) {
-    $('.radio-till-feb2').prop('checked',true).change();
-  } else if(date.isBefore(moment(dates.easter).subtract(3,'days'))) {
-    $('.radio-feb2-till-spy-wed').prop('checked',true).change();
-  }
-  if((day == 0 || day == 6) && $('#te-lucis-Ferial').prop('checked')) {
-    $('#te-lucis-Ordinary').prop('checked',true).change();
-  }
 });
