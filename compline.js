@@ -1,4 +1,30 @@
 $(function(){
+  // the following function is based on one taken from http://www.irt.org/articles/js052/index.htm
+  // Y is the year to calculate easter for, e.g., 2017
+  function EasterDates(Y) {
+    var C = Math.floor(Y/100);
+    var N = Y - 19*Math.floor(Y/19);
+    var K = Math.floor((C - 17)/25);
+    var I = C - Math.floor(C/4) - Math.floor((C - K)/3) + 19*N + 15;
+    I = I - 30*Math.floor((I/30));
+    I = I - Math.floor(I/28)*(1 - Math.floor(I/28)*Math.floor(29/(I + 1))*Math.floor((21 - N)/11));
+    var J = Y + Math.floor(Y/4) + I + 2 - C + Math.floor(C/4);
+    J = J - 7*Math.floor(J/7);
+    var L = I - J;
+    var M = 3 + Math.floor((L + 40)/44);
+    var D = L + 28 - 31*Math.floor(M/4);
+
+    var easter = new Date(Y,M-1,D);
+    var septuagesima = new Date(easter);
+    var pentecost = new Date(easter);
+    septuagesima.setDate(easter.getDate() -(7 * 9));
+    pentecost.setDate(easter.getDate() + (7 * 7));
+    return {
+      easter: easter,
+      septuagesima: septuagesima,
+      pentecost: pentecost
+    }
+  }
   $.QueryString = (function (a) {
       if (a == "") return {};
       var b = {};
@@ -11,7 +37,15 @@ $(function(){
       if (b.failMsg) showAlert(true, b.failMsg);
       return b;
   })(window.location.search.substr(1).split('&'));
+  var days = 1000*60*60*24; //number of milliseconds in a day;
   var date = new Date();
+  var dates = EasterDates(date.getFullYear());
+  dates.pentecostSaturday = new Date(dates.pentecost);
+  dates.pentecostSaturday.setDate(dates.pentecost.getDate() + 6)
+  dates.christmas = new Date(date.getFullYear(),11,25);
+  dates.advent1 = new Date(dates.christmas.getTime() - ((dates.christmas.getDay() || 7) + 7*3)*days);
+  var isPaschalTime = (date >= dates.easter && date < dates.pentecostSaturday);
+  var isAdvent = (date >= (dates.advent1 - 1*days)) && (date <= (dates.christmas - 1*days));
   var day = date.getDay();
   var dayName;
   var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -29,37 +63,24 @@ $(function(){
   var setPsalms = function(day,paschalTime) {
     pt = paschalTime?'-PT':'';
     var ant = paschalTime?
-      "<div class='jgabc' src='psalms/ant-PT.gabc'></div>" :
-      "<div class='jgabc' src='psalms/"+day+"/ant.gabc'></div>";
-    var psalm = "<div class='jgabc' src='psalms/"+day+"/psalm"+pt+".gabc'></div>";
+      "<chant-gabc src='psalms/ant-PT.gabc'></chant-gabc>" :
+      "<chant-gabc src='psalms/"+day+"/ant.gabc'></chant-gabc>";
+    var psalm = "<chant-gabc src='psalms/"+day+"/psalm"+pt+".gabc'></chant-gabc>";
     dayName = days[day];
     $('#weekday').text(dayName);
     var gotData = function(data){
       var html = ant + psalm + data + ant;
       $('#placeholder').empty().append(html);
-      updateGabc();
-      $('#in-manus-tuas-' + (paschalTime?'pt':'ordinary')).prop('checked',true).change();
-      if(day == 0 || day == 6) {
-        $('#te-lucis-Ordinary').prop('checked',true).change();
-      }
     };
     $.get('psalms/'+day+'/psalm-verses'+pt+'.html',gotData).error(function(){
       $.get('psalms/'+day+'/psalm-verses.html',gotData);
     });
   }
-  var pt = $.QueryString.pt && $.QueryString.pt!='0' && $.QueryString.pt!='false';
-  setPsalms(day,pt);
-  if(pt) {
-    $('#season-paschal').prop('checked',true);
-  }
-  var setChantSrc = function($div,src){
-    if(!$div || $div.length == 0) return;
-    $.get(src,function(data){
-      $div.attr('src',src).text(data);
-      var old=$div.next(".jgabc-svg").find("svg")[0];
-      if(!old) console.warn('Couldn\'t find svg to update.');
-      else updateChant(data,old,true);
-    });
+  setPsalms(day,isPaschalTime);
+  var setChantSrc = function($elem,src){
+    if(!$elem || $elem.length == 0) return;
+    $elem.attr('src',src);
+    $elem.data('setSrc')(src);
   };
   $('[id$=-choices] input').change(function(){
     var chant = this.name;
@@ -70,11 +91,25 @@ $(function(){
     var src = chant + '/' + this.value + '.gabc';
     console.info(src);
     setChantSrc($('#'+chant),src);
-    var $div = $('div.jgabc[' + this.id + ']');
+    var $div = $('chant-gabc[' + this.id + ']');
     if($div.length > 0) {
       setChantSrc($div,$div.attr(this.id));
     }
     $('div.' + chant).hide();
     $('div.' + chant + '.' + this.value).show();
   });
+  if(isPaschalTime) {
+    $('.radio-pt').prop('checked',true).change();
+  }
+  if(isAdvent) {
+    $('.radio-advent').prop('checked',true).change();
+  }
+  if(date < new Date(date.getFullYear(), 1, 2)) {
+    $('.radio-till-feb2').prop('checked',true).change();
+  } else if(date < dates.easter - 3*days) {
+    $('.radio-feb2-till-spy-wed').prop('checked',true).change();
+  }
+  if((day == 0 || day == 6) && $('#te-lucis-Ferial').prop('checked')) {
+    $('#te-lucis-Ordinary').prop('checked',true).change();
+  }
 });
