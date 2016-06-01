@@ -110,8 +110,11 @@ $(function(){
       }
     }
   }
-  // type should be '-po' for paschal octave, or '-asd' for all souls' day
+  // type should be '-po' for paschal octave, or '-asd' for all souls' day, or '' for regular
+  var currentCanticle = '';
   var setCanticle = function(type) {
+    if(type == currentCanticle) return;
+    currentCanticle = type;
     var ant = "<chant-gabc src='canticle-ant"+type+".gabc'></chant-gabc>";
     var psalm = "<chant-gabc src='canticle-psalm"+type+".gabc'></chant-gabc>";
     var gotData = function(data){
@@ -130,6 +133,9 @@ $(function(){
     if(day === 'triduum') {
       day = 0;
       pt = '-triduum';
+    } else if(day === 'asd') {
+      pt = '';
+      psalm = "Psalm 122<br/><chant-gabc src='psalms/"+day+"/psalm"+pt+".gabc'></chant-gabc>";
     } else {
       pt = paschalTime?'-PT':'';
       ant = paschalTime?
@@ -163,7 +169,7 @@ $(function(){
       $('#weekday').text('Easter ' + days[date.day()]);
     } else if(isTriduum(date)) {
       var day = date.day();
-      setPsalms('triduum',false);
+      setPsalms('triduum');
       var name;
       switch(day) {
         case 4:
@@ -177,10 +183,10 @@ $(function(){
           break;
       }
       $('#weekday').text(name);
-      //TODO: implement Triduum compline
     } else if(date.month()==10 && date.date()==2) { // All Souls day
       $('#weekday').text('All Souls Day');
-      //TODO: implement All Souls Day compline
+      setPsalms('asd');
+      setCanticle('-asd');
     } else {
       setPsalms(date.day(),isPT);
       setCanticle('');
