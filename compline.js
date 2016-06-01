@@ -103,11 +103,13 @@ $(function(){
     });
   }
   var setDate = function(date) {
+    $('.no-compline').hide();
+    $('.normal-compline').show();
     var isPT = isPaschalTime(date);
     if(isPT && isPaschalWeek(date)) {
       setPsalms(0,true);
       setCanticle('-po');
-      $('#weekday').text('Easter Week');
+      $('#weekday').text('Easter ' + days[date.day()]);
     } else if(isTriduum(date)) {
       var day = date.day();
       setPsalms(day,false);
@@ -121,6 +123,8 @@ $(function(){
           break;
         case 6:
           name = 'Holy Saturday';
+          $('.no-compline').show();
+          $('.normal-compline').hide();
           break;
       }
       $('#weekday').text(name);
@@ -133,6 +137,7 @@ $(function(){
       setCanticle('');
     }
     $('.radio-pt').prop('checked',isPT).change();
+    $('input[value="per-annum"]').prop('checked',!isPT).change();
     if(isAdvent(date)) {
       $('.radio-advent').prop('checked',true).change();
     }

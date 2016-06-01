@@ -1,4 +1,5 @@
-Date selector at top.
+Laus tibi... should only be shown, when it is actually to be used
+Same for "P.T..."
 
 System for calendar:
   how about tag attributes include and exclude?

@@ -23,6 +23,10 @@
 <body>
 <input type='date' id='date'><br/>
 <span id='weekday'></span> at Compline<br/>
+<div class='no-compline red'>
+No compline today
+</div>
+<div class='normal-compline'>
 <div id='officiant-choices'>
 <input type='radio' name='officiant' value='priest' id='officiant-priest'/><label for='officiant-priest'>Officiant is a Priest or Deacon</label><br/>
 <input type='radio' name='officiant' value='no-priest' checked id='officiant-no-priest'/><label for='officiant-no-priest'>No Priest or Deacon present</label><br/>
@@ -205,6 +209,7 @@ Deus, qui per resurrectiónem Fílii tui Dómini nostri Jesu Christi mundum læt
 <br/>
 <span class='versiculum'>v</span> Divínum auxílium máneat semper nobíscum.
 <span class='versiculum'>r</span> Amen.
+</div>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/document-register-element/0.5.3/document-register-element.js">/* W3C Custom Elements */</script>
 <script>window.document.registerElement || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/document-register-element/0.5.3/document-register-element.js">\x3C/script>')</script>
 <script>window.document.registerElement || document.write('<script src="fallback/document-register-element.js">\x3C/script>')</script>
