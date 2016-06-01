@@ -4,12 +4,19 @@
   font-weight: normal;
   src: url('versiculum.ttf') format('truetype');
 }
+.red {
+  color: red;
+}
+body {
+  font-family: 'Crimson Text', serif;
+  font-size: 13pt;
+}
 .sans{font-family:Verdana,Helvetica,sans-serif}
 .b{font-weight:700}
 .i{font-style:italic}
 .sc{font-variant:small-caps}
 .trans {font-size:15px;}
-.versiculum{font-family: 'Versiculum';font-variant:normal;font-size: 140%;}
+.versiculum{font-family: 'Versiculum';font-variant:normal;font-size: 140%;color:red;}
 @media print {
   .print-hide{
     display:none;

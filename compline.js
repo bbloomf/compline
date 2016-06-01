@@ -81,6 +81,9 @@ $(function(){
     var psalm = "<chant-gabc src='canticle-psalm"+type+".gabc'></chant-gabc>";
     var gotData = function(data){
       var html = ant + psalm + data + ant;
+      if(type === '-po') {
+        html += "<chant-gabc src='haec-dies.gabc'></chant-gabc>";
+      }
       $('#canticle').empty().append(html);
     };
     $('#canticle').empty();
