@@ -125,13 +125,20 @@ $(function(){
     $.get('canticle-psalm'+type+'.html',gotData);
   }
   var setPsalms = function(day,paschalTime) {
-    pt = paschalTime?'-PT':'';
-    var ant = paschalTime?
-      "<chant-gabc src='psalms/ant-PT.gabc'></chant-gabc>" :
-      "<chant-gabc src='psalms/"+day+"/ant.gabc'></chant-gabc>";
-    var psalm = "<chant-gabc src='psalms/"+day+"/psalm"+pt+".gabc'></chant-gabc>";
-    dayName = days[day];
-    $('#weekday').text(dayName);
+    var ant = '',
+        psalm = '';
+    if(day === 'triduum') {
+      day = 0;
+      pt = '-triduum';
+    } else {
+      pt = paschalTime?'-PT':'';
+      ant = paschalTime?
+        "<chant-gabc src='psalms/ant-PT.gabc'></chant-gabc>" :
+        "<chant-gabc src='psalms/"+day+"/ant.gabc'></chant-gabc>";
+      psalm = "<chant-gabc src='psalms/"+day+"/psalm"+pt+".gabc'></chant-gabc>";
+      dayName = days[day];
+      $('#weekday').text(dayName);
+    }
     var gotData = function(data){
       var html = ant + psalm + data + ant;
       $('#placeholder').empty().append(html);
@@ -156,7 +163,7 @@ $(function(){
       $('#weekday').text('Easter ' + days[date.day()]);
     } else if(isTriduum(date)) {
       var day = date.day();
-      setPsalms(day,false);
+      setPsalms('triduum',false);
       var name;
       switch(day) {
         case 4:

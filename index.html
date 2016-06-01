@@ -14,15 +14,21 @@
 <body>
 <input type='date' id='date'><br/>
 <span id='weekday'></span> at Compline<br/>
+<div include='easter-3' class='red'>
+On Holy Thursday, Compline is said after the stripping of the altars, with candles extinguished and without singing.
+</div>
+<div include='easter-2' class='red'>
+On Good Friday, Compline is said after the solemn liturgical action, with candles extinguished and without singing.
+</div>
 <div include='easter-1' class='red'>
 Compline is not said tonight.<br/>
 In private recitation, compline is said as follows:
 </div>
-<div exclude='easter-1'>
 <div id='officiant-choices'>
 <input type='radio' name='officiant' value='priest' id='officiant-priest'/><label for='officiant-priest'>Officiant is a Priest or Deacon</label><br/>
 <input type='radio' name='officiant' value='no-priest' checked id='officiant-no-priest'/><label for='officiant-no-priest'>No Priest or Deacon present</label><br/>
 </div>
+<div exclude='easter-3:easter-1 11/02'>
 Season:
 <div id='season-choices'>
 <input type='radio' name='season' value='per-annum' checked id='season-per-annum'/><label for='season-per-annum'>Throughout the year</label><br/>
@@ -40,6 +46,7 @@ Season:
 <i class='red'>All make the Sign of the Cross as the Officiant says:</i>
 <chant-gabc src='adjutorium-nostrum.gabc'></chant-gabc>
 <i class='red'>Here all pause in silence wherein one may make a short examination of consciense or quietly say a Pater Noster.</i>
+</div>
 <div class='officiant priest' style='display:none;'>
 <span class='red'><i>The Officiant now bows profoundly and says the </i>Confiteor<i> alone in a low voice, recto tono.  After this, all bow profoundly toward the Officiant and say in the same low recto tono voice:</i></span>
 <br/>Misereátur tui omnípotens Deus, et dimíssis peccátis tuis, perdúcat te ad vitam ætérnam. <span class='versiculum'>r</span>&nbsp;Amen.
@@ -64,12 +71,27 @@ Season:
 Indulgéntiam, absolutiónem, et remissiónem peccatórum nostrórum tríbuat nobis omnípotens et miséricors Dóminus.
 <br><span class='versiculum'>r</span>&nbsp;Amen.
 <br><br>
+<div exclude='easter-3:easter-1 11/02'>
 <span class='red'><i>Then all make the Sign of the Cross with their thumbs over their hearts, as the Officiant says :</i></span>
 <chant-gabc src='converte-nos.gabc'></chant-gabc>
 <i class='red'>Then all make the Sign of the Cross as the Officiant says: (All continue together with the entire “Gloria Patri” after the response.)</i>
 <chant-gabc src='deus-in-adjutorium.gabc'></chant-gabc>
+</div>
 <div id='placeholder'></div>
-<!--SHOULD BE PROPER-->
+<div include='easter-3:easter-2'>
+<br/>
+<i class='red'>Then all kneel and say:</i>
+<br/>
+Christus factus est pro nobis obédiens usque ad mortem.
+<span include='easter-2'>Mortem autem crucis.</span>
+<br/>
+</div>
+<div include='easter-3:easter-1'><br/>
+Pater noster <i class='red'>is said, silently throughout.
+<br/><br/>
+Afterwards there is added aloud, without</i> Orémus<i class='red'>, the collect:</i>
+</div>
+<div exclude='easter-3:easter-1 11/02'>
 <span class='red'><i>The Officiant then intones the Hymn </i>Te lucis<i> which is sung in one of the tones given below.  All bow slightly for the first three stanzas of the third verse.</i></span>
 <div id='te-lucis-choices'>
 <input type='radio' name='te-lucis' value='Ordinary' id='te-lucis-Ordinary'/><label for='te-lucis-Ordinary'>Ordinary Sundays and Minor Feasts <i class='red'>(from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i></label><br/>
@@ -126,7 +148,13 @@ Tu autem in nobis es, Dómine, † et nomen sanctum tuum invocátum est super no
 <span class='versiculum'>r</span> Et clamor meus ad te véniat.
 </div>
 <br/>Orémus.
-<br/>Vísita, quǽsumus Dómine, habitatiónem istam, et omnes insídias inimíci ab ea longe repélle: † Angeli tui sancti hábitent in ea, qui nos in pace custódiant; * et benedíctio tua sit super nos semper.  Per Dóminum nostrum Jesum Christum Fílium tuum: † qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, * per ómnia sǽcula sæculórum. <span class='versiculum'>r</span>&nbsp;Amen.
+<br/>
+</div>
+Vísita, quǽsumus Dómine, habitatiónem istam, et omnes insídias inimíci ab ea longe repélle: † Angeli tui sancti hábitent in ea, qui nos in pace custódiant; * et benedíctio tua sit super nos semper.
+<span include='easter-3:easter-1'>
+<i class='red'>The conclusion is said silently:</i>
+</span>
+Per Dóminum nostrum Jesum Christum Fílium tuum: † qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, * per ómnia sǽcula sæculórum. <span exclude='easter-3:easter-1'><span class='versiculum'>r</span>&nbsp;Amen.
 
 <br/><br/>
 <div class='officiant priest' style='display:none;'>
@@ -201,6 +229,10 @@ Deus, qui per resurrectiónem Fílii tui Dómini nostri Jesu Christi mundum læt
 <br/>
 <span class='versiculum'>v</span> Divínum auxílium máneat semper nobíscum.
 <span class='versiculum'>r</span> Amen.
+</span>
+<div include='easter-3:easter-1'>
+<br/>
+<i class='red'>Then all rise and depart in silence.</i>
 </div>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/document-register-element/0.5.3/document-register-element.js">/* W3C Custom Elements */</script>
 <script>window.document.registerElement || document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/document-register-element/0.5.3/document-register-element.js">\x3C/script>')</script>
