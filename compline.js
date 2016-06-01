@@ -20,10 +20,14 @@ $(function(){
     var easter = EasterDate(Y);
     var septuagesima = moment(easter).subtract(7*9,'days');
     var pentecost = moment(easter).add(49,'days');
+    var christmas = moment([Y,11,25]);
+    var advent1 = moment(christmas).subtract((christmas.day() || 7) + 7*3,'days');
     return {
       easter: easter,
       septuagesima: septuagesima,
-      pentecost: pentecost
+      pentecost: pentecost,
+      christmas: christmas,
+      advent1: advent1
     }
   }
   function isTriduum(date) {
@@ -45,6 +49,37 @@ $(function(){
     var christmas = moment([date.year(),11,25]);
     var advent1 = moment(christmas).subtract((christmas.day() || 7) + 7*3,'days');
     return date.isSameOrAfter(moment(advent1).subtract(1,'day')) && date.isSameOrBefore(moment(christmas).subtract(1,'day'));
+  }
+  //                    xxx1222222113333331x45555544466666677777444xxxxx89a
+  var regexDateRange = /(?:((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?))(?::(((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?)))?/g;
+  function momentFromRegex(date,matches,dates) {
+    if(matches[1]) {
+      return moment([date.year(), parseInt(matches[2]) - 1, parseInt(matches[3])]);
+    } else {
+      var m = moment(dates[matches[5]]||[0]);
+      if(matches[7]) {
+        var days = parseInt(matches[7]) || 0;
+        if(matches[6] == '-') {
+          days *= -1;
+        }
+        m.add(days, 'days');
+      }
+      return m;
+    }
+  }
+  function dateMatches(date,dateRange) {
+    var dates = EasterDates(date.year());
+    var matches = regexDateRange.exec('');
+    while(matches = regexDateRange.exec(dateRange)) {
+      var range = [momentFromRegex(date,matches,dates)];
+      if(matches[8]) {
+        range.push(momentFromRegex(date,matches.slice(8),dates))
+        if (date.isBetween(range[0],range[1],'day','[]')) return true;
+      } else {
+        if (date.isSame(range[0],'day')) return true;
+      }
+    }
+    return false;
   }
   $.QueryString = (function (a) {
       if (a == "") return {};
@@ -106,8 +141,14 @@ $(function(){
     });
   }
   var setDate = function(date) {
-    $('.no-compline').hide();
-    $('.normal-compline').show();
+    $('[exclude]').each(function(){
+      var $this = $(this);
+      $this.toggle(!dateMatches(date, $this.attr('exclude')));
+    });
+    $('[include]').each(function(){
+      var $this = $(this);
+      $this.toggle(dateMatches(date, $this.attr('include')));
+    });
     var isPT = isPaschalTime(date);
     if(isPT && isPaschalWeek(date)) {
       setPsalms(0,true);
@@ -126,8 +167,6 @@ $(function(){
           break;
         case 6:
           name = 'Holy Saturday';
-          $('.no-compline').show();
-          $('.normal-compline').hide();
           break;
       }
       $('#weekday').text(name);

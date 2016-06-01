@@ -14,10 +14,11 @@
 <body>
 <input type='date' id='date'><br/>
 <span id='weekday'></span> at Compline<br/>
-<div class='no-compline red'>
-No compline today
+<div include='easter-1' class='red'>
+Compline is not said tonight.<br/>
+In private recitation, compline is said as follows:
 </div>
-<div class='normal-compline'>
+<div exclude='easter-1'>
 <div id='officiant-choices'>
 <input type='radio' name='officiant' value='priest' id='officiant-priest'/><label for='officiant-priest'>Officiant is a Priest or Deacon</label><br/>
 <input type='radio' name='officiant' value='no-priest' checked id='officiant-no-priest'/><label for='officiant-no-priest'>No Priest or Deacon present</label><br/>
