@@ -176,11 +176,11 @@ $(function(){
       var $this = $(this);
       var matches = dateMatches(date, $this.attr('select-date'));
       if(matches) {
-        $this.attr('checked', true).change();
+        $this.prop('checked', true).change();
       } else {
         var otherInputs = $('input[name=' + $this.attr('name') + ']');
         if(otherInputs.length==1 && !otherInputs.is('[select-date]')) {
-          otherInputs.attr('checked',true).change();
+          otherInputs.prop('checked',true).change();
         }
       }
     });
