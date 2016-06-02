@@ -19,12 +19,14 @@ $(function(){
   function EasterDates(Y) {
     var easter = EasterDate(Y);
     var septuagesima = moment(easter).subtract(7*9,'days');
+    var lent1 = moment(septuagesima).add(7*4,'days');
     var pentecost = moment(easter).add(49,'days');
     var christmas = moment([Y,11,25]);
     var advent1 = moment(christmas).subtract((christmas.day() || 7) + 7*3,'days');
     return {
       easter: easter,
       septuagesima: septuagesima,
+      lent1: lent1,
       pentecost: pentecost,
       christmas: christmas,
       advent1: advent1
@@ -55,7 +57,7 @@ $(function(){
   function momentFromRegex(date,matches,dates) {
     if(matches[1]) {
       return moment([date.year(), parseInt(matches[2]) - 1, parseInt(matches[3])]);
-    } else {
+    } else if(matches[5] in dates) {
       var m = moment(dates[matches[5]]||[0]);
       if(matches[7]) {
         var days = parseInt(matches[7]) || 0;
@@ -65,6 +67,9 @@ $(function(){
         m.add(days, 'days');
       }
       return m;
+    } else {
+      console.info('date not found: ' + matches[5]);
+      return moment('');
     }
   }
   function dateMatches(date,dateRange) {
@@ -118,9 +123,11 @@ $(function(){
     var ant = "<chant-gabc src='canticle-ant"+type+".gabc'></chant-gabc>";
     var psalm = "<chant-gabc src='canticle-psalm"+type+".gabc'></chant-gabc>";
     var gotData = function(data){
-      var html = ant + psalm + data + ant;
+      var html = ant + psalm + data;
       if(type === '-po') {
         html += "<chant-gabc src='haec-dies.gabc'></chant-gabc>";
+      } else {
+        html += ant;
       }
       $('#canticle').empty().append(html);
     };
@@ -141,6 +148,7 @@ $(function(){
       ant = paschalTime?
         "<chant-gabc src='psalms/ant-PT.gabc'></chant-gabc>" :
         "<chant-gabc src='psalms/"+day+"/ant.gabc'></chant-gabc>";
+      if(paschalTime === 'no-antiphon') ant = '';
       psalm = "<chant-gabc src='psalms/"+day+"/psalm"+pt+".gabc'></chant-gabc>";
       dayName = days[day];
       if(!isSunday) $('#weekday').text(dayName);
@@ -154,6 +162,7 @@ $(function(){
     });
   }
   var setDate = function(date) {
+    //show and hide [include] and [exclude] elements based on the date
     $('[exclude]').each(function(){
       var $this = $(this);
       $this.toggle(!dateMatches(date, $this.attr('exclude')));
@@ -162,11 +171,24 @@ $(function(){
       var $this = $(this);
       $this.toggle(dateMatches(date, $this.attr('include')));
     });
+    //select inputs based on date
+    $('input[select-date]').each(function(){
+      var $this = $(this);
+      var matches = dateMatches(date, $this.attr('select-date'));
+      if(matches) {
+        $this.attr('checked', true).change();
+      } else {
+        var otherInputs = $('input[name=' + $this.attr('name') + ']');
+        if(otherInputs.length==1 && !otherInputs.is('[select-date]')) {
+          otherInputs.attr('checked',true).change();
+        }
+      }
+    });
     var isPT = isPaschalTime(date);
     var showChooseDay = (date.day() != 0);
     if(isPT && isPaschalWeek(date)) {
       showChooseDay = false;
-      setPsalms(0,true);
+      setPsalms(0,'no-antiphon',true);
       setCanticle('-po');
       $('#weekday').text('Easter ' + days[date.day()]);
     } else if(isTriduum(date)) {
@@ -198,7 +220,6 @@ $(function(){
     $('.chooseDay').toggle(showChooseDay);
     //TODO: if this is a first or second class feast, it should check #rbSunday instead:
     $('#rbWeekday').prop('value',date.day()).prop('checked',true);
-    $('.radio-pt').prop('checked',isPT).change();
     $('input[value="per-annum"]').prop('checked',!isPT).change();
     if(isAdvent(date)) {
       $('.radio-advent').prop('checked',true).change();
