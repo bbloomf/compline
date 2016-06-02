@@ -16,21 +16,28 @@ $(function(){
 
     return moment([Y,M-1,D]);
   }
-  function EasterDates(Y) {
-    var easter = EasterDate(Y);
-    var septuagesima = moment(easter).subtract(7*9,'days');
-    var lent1 = moment(septuagesima).add(7*4,'days');
-    var pentecost = moment(easter).add(49,'days');
-    var christmas = moment([Y,11,25]);
-    var advent1 = moment(christmas).subtract((christmas.day() || 7) + 7*3,'days');
-    return {
-      easter: easter,
-      septuagesima: septuagesima,
-      lent1: lent1,
-      pentecost: pentecost,
-      christmas: christmas,
-      advent1: advent1
-    }
+  var dateCache = {};
+  function datesForYear(Y) {
+    if(Y in dateCache) return dateCache[Y];
+    var dates = {}
+    dates.easter = EasterDate(Y);
+    dates.septuagesima = moment(dates.easter).subtract(7*9,'days');
+    dates.lent1 = moment(dates.septuagesima).add(7*4,'days');
+    dates.pentecost = moment(dates.easter).add(49,'days');
+    dates.christmas = moment([Y,11,25]);
+    dates.advent1 = moment(dates.christmas).subtract((dates.christmas.day() || 7) + 7*3,'days');
+    dates.allSouls = moment([Y,10,2]);
+    if(dates.allSouls.day() == 0) dates.allSouls.add(1,'day');
+    dates.sacredHeart = moment(dates.pentecost).add(19,'days');
+    dates.christTheKing = moment([Y,9,31]);
+    dates.christTheKing.subtract(dates.christTheKing.day(),'days');
+    dates.sevenDolors = moment([Y,8,15]);
+    dates.epiphany = moment([Y,0,6]);
+    // The Feast of the Holy Family is on the Sunday following Epiphany, unless Epiphany falls on a Sunday,
+    // in which case The Holy Family will be on the Saturday following.
+    dates.holyFamily = moment(dates.epiphany).add(7 - (dates.epiphany.day()||1), 'days');
+    dates.transfiguration = moment([Y,7,6]);
+    return dateCache[Y] = dates;
   }
   function isTriduum(date) {
     var easter = EasterDate(date.year());
@@ -73,7 +80,7 @@ $(function(){
     }
   }
   function dateMatches(date,dateRange) {
-    var dates = EasterDates(date.year());
+    var dates = datesForYear(date.year());
     var matches = regexDateRange.exec('');
     while(matches = regexDateRange.exec(dateRange)) {
       var range = [momentFromRegex(date,matches,dates)];
@@ -174,8 +181,14 @@ $(function(){
     //select inputs based on date
     $('input[select-date]').each(function(){
       var $this = $(this);
+      var selectDay = $this.attr('select-day');
+      if(selectDay) {
+        selectDay = new RegExp(selectDay).exec(date.day());
+      } else {
+        selectDay = true;
+      }
       var matches = dateMatches(date, $this.attr('select-date'));
-      if(matches) {
+      if(matches && selectDay) {
         $this.prop('checked', true).change();
       } else {
         var otherInputs = $('input[name=' + $this.attr('name') + ']');
@@ -208,7 +221,7 @@ $(function(){
           break;
       }
       $('#weekday').text(name);
-    } else if(date.month()==10 && date.date()==2) { // All Souls day
+    } else if(dateMatches(date,'allSouls')) {
       showChooseDay = false;
       $('#weekday').text('All Souls Day');
       setPsalms('asd');

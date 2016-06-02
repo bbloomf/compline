@@ -32,7 +32,7 @@ In private recitation, compline is said as follows:
 <input type='radio' name='officiant' value='priest' id='officiant-priest'/><label for='officiant-priest'>Officiant is a Priest or Deacon</label><br/>
 <input type='radio' name='officiant' value='no-priest' checked id='officiant-no-priest'/><label for='officiant-no-priest'>No Priest or Deacon present</label><br/>
 </div>
-<div exclude='easter-3:easter-1 11/02'>
+<div exclude='easter-3:easter-1 allSouls'>
 Season:
 <div id='season-choices'>
 <input type='radio' name='season' value='per-annum' checked id='season-per-annum'/><label for='season-per-annum'>Throughout the year</label><br/>
@@ -75,7 +75,7 @@ Season:
 Indulgéntiam, absolutiónem, et remissiónem peccatórum nostrórum tríbuat nobis omnípotens et miséricors Dóminus.
 <br><span class='versiculum'>r</span>&nbsp;Amen.
 <br><br>
-<div exclude='easter-3:easter-1 11/02'>
+<div exclude='easter-3:easter-1 allSouls'>
 <span class='red'><i>Then all make the Sign of the Cross with their thumbs over their hearts, as the Officiant says :</i></span>
 <chant-gabc src='converte-nos.gabc'></chant-gabc>
 <i class='red'>Then all make the Sign of the Cross as the Officiant says: (All continue together with the entire “Gloria Patri” after the response.)</i>
@@ -95,11 +95,11 @@ Pater noster <i class='red'>is said, silently throughout.
 <br/><br/>
 Afterwards there is added aloud, without</i> Orémus<i class='red'>, the collect:</i>
 </div>
-<div exclude='easter-3:easter+5 11/02'>
+<div exclude='easter-3:easter+5 allSouls'>
 <span class='red'><i>The Officiant then intones the Hymn </i>Te lucis<i> which is sung in one of the tones given below.  All bow slightly for the first three stanzas of the third verse.</i></span>
 <div id='te-lucis-choices'>
 <input type='radio' name='te-lucis' value='Ordinary' select-day='0' select-date='01/14:lent1-2 pentecost+15:advent1-2' id='te-lucis-Ordinary'/><label for='te-lucis-Ordinary'>Ordinary Sundays and Minor Feasts <i class='red'>(from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i></label><br/>
-<input type='radio' name='te-lucis' checked select-day='!0' select-date='01/14:lent1-2 pentecost+15:advent1-2' value='Ferial' id='te-lucis-Ferial'/><label for='te-lucis-Ferial'>Ferial <i class='red'>(Ferial days from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i></label><br/>
+<input type='radio' name='te-lucis' checked select-day='[^0]' select-date='01/14:lent1-2 pentecost+15:advent1-2' value='Ferial' id='te-lucis-Ferial'/><label for='te-lucis-Ferial'>Ferial <i class='red'>(Ferial days from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i></label><br/>
 <input type='radio' name='te-lucis' value='Solemn' select-date='firstClassFeast' id='te-lucis-Solemn'/><label for='te-lucis-Solemn'>Solemn <i class='red'>(All First class feasts lacking a proper tone at any time of the year)</i></label><br/>
 <input type='radio' name='te-lucis' value='Our-Lady' select-date='feastOfOurLady' id='te-lucis-Our-Lady'/><label for='te-lucis-Our-Lady'>Our Lady <i class='red'>(All feasts of the Blessed Virgin Mary, except the Seven Sorrows, of whatever rank at any time of the year)</i></label><br/>
 <input type='radio' name='te-lucis' class='radio-advent' select-date='advent1-1:12/23' value='Advent' id='te-lucis-Advent'/><label for='te-lucis-Advent'>Advent <i class='red'>(All days except first class feasts from Saturday before the First Sunday of Advent until December 23 inclusive)</i></label><br/>
@@ -142,7 +142,7 @@ Tu autem in nobis es, Dómine, † et nomen sanctum tuum invocátum est super no
 <div id="verses"><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">2.&nbsp;</span>Quia vidérunt <b>ó</b>culi <b>me</b>i&nbsp;* salutá<i>re</i> <b>tu</b>um&nbsp;:<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">3.&nbsp;</span><b>Quod</b> pa<b>rá</b>sti&nbsp;* ante fáciem ómnium po<i>pu</i><b>ló</b>rum&nbsp;:<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">4.&nbsp;</span>Lumen ad revelati<b>ó</b>nem <b>gén</b><b>ti</b>um,&nbsp;* et glóriam plebis tu<i>æ</i> <b>Is</b>ræl.<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">5.&nbsp;</span>Glória <b>Pá</b>tri, et <b>Fí</b><b>li</b>o,&nbsp;* et Spirítu<i>i</i> <b>Sán</b>cto.<br></p><p style="line-height:100%;margin: 6pt 0px;"><span style="float:left;width:25pt;text-align:right;">6.&nbsp;</span>Sicut érat in princípio, et <b>núnc</b>, et <b>sém</b>per,&nbsp;* et in sǽcula sæculó<i>rum</i>. <b>A</b>men.<br></p></div>
 <chant-gabc src='canticle-ant.gabc'></chant-gabc>
 </div>
-<div exclude='easter-3:easter-1 11/02'>
+<div exclude='easter-3:easter-1 allSouls'>
 <div class='officiant priest' style='display:none;'>
 <i class='red'>The Officiant introduces the Collect:</i>
 <br/><span class='versiculum'>v</span> Dóminus vobíscum.
@@ -156,12 +156,12 @@ Tu autem in nobis es, Dómine, † et nomen sanctum tuum invocátum est super no
 <br/>Orémus.
 <br/>
 </div>
-<span exclude='11/02'>
+<span exclude='allSouls'>
 Vísita, quǽsumus Dómine, habitatiónem istam, et omnes insídias inimíci ab ea longe repélle: † Angeli tui sancti hábitent in ea, qui nos in pace custódiant; * et benedíctio tua sit super nos semper.
 <span include='easter-3:easter-1'>
 <i class='red'>The conclusion is said silently:</i>
 </span>
-Per Dóminum nostrum Jesum Christum Fílium tuum: † qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, * per ómnia sǽcula sæculórum. </span><span exclude='easter-3:easter-1 11/02'><span class='versiculum'>r</span>&nbsp;Amen.
+Per Dóminum nostrum Jesum Christum Fílium tuum: † qui tecum vivit et regnat in unitáte Spíritus Sancti Deus, * per ómnia sǽcula sæculórum. </span><span exclude='easter-3:easter-1 allSouls'><span class='versiculum'>r</span>&nbsp;Amen.
 
 <br/><br/>
 <div class='officiant priest' style='display:none;'>
@@ -241,7 +241,7 @@ Deus, qui per resurrectiónem Fílii tui Dómini nostri Jesu Christi mundum læt
 <br/>
 <i class='red'>Then all rise and depart in silence.</i>
 </div>
-<div include='11/02'>
+<div include='allSouls'>
 <i class='red'>All kneel for the following prayers:</i>
 <br/>
 Pater noster <i class='red'>is said in silence until</i>
