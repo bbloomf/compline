@@ -25,3 +25,9 @@ body {
     max-width:8in;
   }
 }
+tspan[style="font-family:'Exsurge Characters';fill:#f00;"] {
+  font-family: 'Versiculum'!important;
+  font-variant:normal;
+  font-size: 140%;
+  text-transform: lowercase;
+}
