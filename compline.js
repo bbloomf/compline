@@ -206,7 +206,7 @@ $(function(){
     }
   }
   $('#date').change(function(){
-    setDate(moment($(this).val()));
+    if(this.value) setDate(moment(this.value));
   }).change();
   var setChantSrc = function($elem,src){
     if(!$elem || $elem.length == 0) return;
