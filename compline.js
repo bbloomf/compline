@@ -127,7 +127,7 @@ $(function(){
     $('#canticle').empty();
     $.get('canticle-psalm'+type+'.html',gotData);
   }
-  var setPsalms = function(day,paschalTime) {
+  var setPsalms = function(day,paschalTime,isSunday) {
     var ant = '',
         psalm = '';
     if(day === 'triduum') {
@@ -143,7 +143,7 @@ $(function(){
         "<chant-gabc src='psalms/"+day+"/ant.gabc'></chant-gabc>";
       psalm = "<chant-gabc src='psalms/"+day+"/psalm"+pt+".gabc'></chant-gabc>";
       dayName = days[day];
-      $('#weekday').text(dayName);
+      if(!isSunday) $('#weekday').text(dayName);
     }
     var gotData = function(data){
       var html = ant + psalm + data + ant;
@@ -163,11 +163,14 @@ $(function(){
       $this.toggle(dateMatches(date, $this.attr('include')));
     });
     var isPT = isPaschalTime(date);
+    var showChooseDay = (date.day() != 0);
     if(isPT && isPaschalWeek(date)) {
+      showChooseDay = false;
       setPsalms(0,true);
       setCanticle('-po');
       $('#weekday').text('Easter ' + days[date.day()]);
     } else if(isTriduum(date)) {
+      showChooseDay = false;
       var day = date.day();
       setPsalms('triduum');
       var name;
@@ -184,6 +187,7 @@ $(function(){
       }
       $('#weekday').text(name);
     } else if(date.month()==10 && date.date()==2) { // All Souls day
+      showChooseDay = false;
       $('#weekday').text('All Souls Day');
       setPsalms('asd');
       setCanticle('-asd');
@@ -191,6 +195,9 @@ $(function(){
       setPsalms(date.day(),isPT);
       setCanticle('');
     }
+    $('.chooseDay').toggle(showChooseDay);
+    //TODO: if this is a first or second class feast, it should check #rbSunday instead:
+    $('#rbWeekday').prop('value',date.day()).prop('checked',true);
     $('.radio-pt').prop('checked',isPT).change();
     $('input[value="per-annum"]').prop('checked',!isPT).change();
     if(isAdvent(date)) {
@@ -213,14 +220,19 @@ $(function(){
     $elem.attr('src',src);
     $elem.data('setSrc')(src);
   };
+  $('input[name=weekday]').change(function(){
+    if(this.checked) {
+      setPsalms(parseInt(this.value), choices.season == 'paschal', true);
+    }
+  });
+  var choices = {};
   $('[id$=-choices] input').change(function(){
     var chant = this.name;
+    choices[chant] = this.value;
     if(chant=='season') {
-      //setPsalms(day,this.value=='paschal');
       return;
     }
     var src = chant + '/' + this.value + '.gabc';
-    console.info(src);
     setChantSrc($('#'+chant),src);
     var $div = $('chant-gabc[' + this.id + ']');
     if($div.length > 0) {

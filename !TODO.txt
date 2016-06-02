@@ -1,18 +1,7 @@
 Laus tibi... should only be shown, when it is actually to be used
 Same for "P.T..."
 
-System for calendar:
-  how about tag attributes include and exclude?
-  i.e., <div exclude='11/02'> to exclude on november 2 and <div exclude='easter:easter+49'> to exclude from Easter through Pentecost Sunday
-  , <div include='advent1-1:12/23'>
-  special names needed for 'easter' and 'advent1', but 'septuagesima' and 'ashwednesday' might be nice,
-  regex: ((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?)
-         1222222113333331x45555544466666677777444
-
-Antiphon and Psalms are usually based simply on day of week
-Triduum Compline is much different, recto tono
-Easter Octave has its own special antiphon and psalms
-All Souls day omits the normal introductions and has special psalms and no antiphon
+Calendar of 1st and second class feasts, so that if the date is recognized as a first or second class feast, Sunday at Compline can be chosen by default but still with the day of the week as an option.
 
 
 Te Lucis has several different tones:

@@ -13,7 +13,11 @@
 </head>
 <body>
 <input type='date' id='date'><br/>
-<span id='weekday'></span> at Compline<br/>
+<span class='chooseDay'><input type='radio' name='weekday' id='rbWeekday' checked></span><!--
+--><label for='rbWeekday'><span id='weekday'></span> at Compline</label><br/>
+<span class='chooseDay'>
+<input type='radio' name='weekday' value='0' id='rbSunday'><label for='rbSunday'>Sunday at Compline (First or Second Class Feast)</label><br/><br/>
+</span>
 <div include='easter-3' class='red'>
 On Holy Thursday, Compline is said after the stripping of the altars, with candles extinguished and without singing.
 </div>
