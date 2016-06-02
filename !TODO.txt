@@ -1,9 +1,7 @@
-System for changes
+Laus tibi... should only be shown, when it is actually to be used
+Same for "P.T..."
 
-Antiphon and Psalms are usually based simply on day of week
-Triduum Compline is much different, recto tono
-Easter Octave has its own special antiphon and psalms
-All Souls day omits the normal introductions and has special psalms and no antiphon
+Calendar of 1st and second class feasts, so that if the date is recognized as a first or second class feast, Sunday at Compline can be chosen by default but still with the day of the week as an option.
 
 
 Te Lucis has several different tones:
@@ -51,5 +49,5 @@ In Passiontide, EXCEPT ON First or Second class FEASTS, Gloria Patri is omitted,
 
 Advent: from Saturday before 1st sunday of Advent until December 23 inclusive
 
-Easter: From Saturday before Low Sunday until the Friday in hte Octave of Pentecost inclusive
+Easter: From Saturday before Low Sunday until the Friday in the Octave of Pentecost inclusive
 
