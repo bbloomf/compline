@@ -230,7 +230,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      score.performLayout(ctxt, function () {
 	        score.layoutChantLines(ctxt, width, function () {
 	          // render the score to svg code
-	          _element.innerHTML = score.createDrawable(ctxt);
+	          _element.innerHTML = score.createSvgFragment(ctxt);
 	        });
 	      });
 	    };
@@ -2042,7 +2042,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  AcuteAccent: "AcuteAccent",
 	  Stropha: "Stropha",
-	  //  StrophaLiquescent: "StrophaLiquescent",
+	  StrophaLiquescent: "StrophaLiquescent",
 	
 	  BeginningAscLiquescent: "BeginningAscLiquescent",
 	  BeginningDesLiquescent: "BeginningDesLiquescent",
@@ -2122,10 +2122,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }node.appendChild(defs);
 	    };
 	
-	    return node;
-	  },
-	
-	  defs: function defs() {
 	    return node;
 	  },
 	
@@ -2255,8 +2251,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.glyphScaling = 1.0 / 16.0;
 	
 	    this.staffInterval = this.glyphPunctumWidth * this.glyphScaling;
-	    this.staffLineWeight = this.glyphPunctumWidth * this.glyphScaling / 8;
-	    this.neumeLineWeight = this.glyphPunctumWidth * this.glyphScaling / 8; // the weight of connecting lines in the glyphs.
+	
+	    // setup the line weights for the various elements.
+	    // we
+	    this.staffLineWeight = Math.round(this.glyphPunctumWidth * this.glyphScaling / 8);
+	    this.neumeLineWeight = this.staffLineWeight; // the weight of connecting lines in the glyphs.
 	    this.dividerLineWeight = this.neumeLineWeight; // of quarter bar, half bar, etc.
 	    this.episemaLineWeight = this.neumeLineWeight; // of horizontal episemae
 	
@@ -2268,6 +2267,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.dividerLineColor = "#000";
 	
 	    this.defaultLanguage = new _Exsurge3.Latin();
+	
+	    this.canvas = document.createElement("canvas");
+	    this.canvasCtxt = this.canvas.getContext("2d");
+	
+	    // calculate the pixel ratio for drawing to a canvas
+	    var dpr = window.devicePixelRatio || 1.0;
+	    var bsr = this.canvasCtxt.webkitBackingStorePixelRatio || this.canvasCtxt.mozBackingStorePixelRatio || this.canvasCtxt.msBackingStorePixelRatio || this.canvasCtxt.oBackingStorePixelRatio || this.canvasCtxt.backingStorePixelRatio || 1.0;
+	
+	    this.pixelRatio = dpr / bsr;
+	
+	    this.canvasCtxt.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
 	
 	    this.svgTextMeasurer = QuickSvg.svg(1, 1);
 	    this.svgTextMeasurer.setAttribute('id', "TextMeasurer");
@@ -2356,6 +2366,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      return null;
 	    }
+	  }, {
+	    key: 'setCanvasSize',
+	    value: function setCanvasSize(width, height) {
+	      this.canvas.width = width * this.pixelRatio;
+	      this.canvas.height = height * this.pixelRatio;
+	      this.canvas.style.width = width + "px";
+	      this.canvas.style.height = height + "px";
+	
+	      this.canvasCtxt.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
+	    }
 	  }]);
 	
 	  return ChantContext;
@@ -2377,7 +2397,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.highlighted = false;
 	  }
 	
-	  // draws the element an html5 canvas
+	  // draws the element on an html5 canvas
 	
 	
 	  _createClass(ChantLayoutElement, [{
@@ -2387,9 +2407,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // returns svg code for the element, used for printing support
 	
 	  }, {
-	    key: 'createDrawable',
-	    value: function createDrawable(ctxt) {
-	      throw "ChantLayout Elements must implement createDrawable(ctxt)";
+	    key: 'createSvgFragment',
+	    value: function createSvgFragment(ctxt) {
+	      throw "ChantLayout Elements must implement createSvgFragment(ctxt)";
 	    }
 	  }]);
 	
@@ -2424,8 +2444,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(DividerLineVisualizer, [{
-	    key: 'createDrawable',
-	    value: function createDrawable(ctxt) {
+	    key: 'draw',
+	    value: function draw(ctxt) {
+	      var canvasCtxt = ctxt.canvasCtxt;
+	
+	      canvasCtxt.lineWidth = this.bounds.width;
+	      canvasCtxt.strokeStyle = ctxt.dividerLineColor;
+	
+	      canvasCtxt.beginPath();
+	      canvasCtxt.moveTo(this.bounds.x - this.origin.x, this.bounds.y);
+	      canvasCtxt.lineTo(this.bounds.x - this.origin.x, this.bounds.y + this.bounds.height);
+	      canvasCtxt.stroke();
+	    }
+	  }, {
+	    key: 'createSvgFragment',
+	    value: function createSvgFragment(ctxt) {
 	
 	      return QuickSvg.createFragment('rect', {
 	        'x': this.bounds.x,
@@ -2486,8 +2519,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(NeumeLineVisualizer, [{
-	    key: 'createDrawable',
-	    value: function createDrawable(ctxt) {
+	    key: 'draw',
+	    value: function draw(ctxt) {
+	      var canvasCtxt = ctxt.canvasCtxt;
+	
+	      canvasCtxt.lineWidth = this.bounds.width;
+	      canvasCtxt.strokeStyle = ctxt.neumeLineColor;
+	
+	      canvasCtxt.beginPath();
+	
+	      // since the canvas context draws strokes centered on the path
+	      // and neume lines are supposed to be draw left aligned,
+	      // we need to offset the line by half the line width.
+	      var x = this.bounds.x + this.bounds.width / 2;
+	
+	      canvasCtxt.moveTo(x, this.bounds.y);
+	      canvasCtxt.lineTo(x, this.bounds.y + this.bounds.height);
+	      canvasCtxt.stroke();
+	    }
+	  }, {
+	    key: 'createSvgFragment',
+	    value: function createSvgFragment(ctxt) {
 	
 	      return QuickSvg.createFragment('rect', {
 	        'x': this.bounds.x,
@@ -2529,8 +2581,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(VirgaLineVisualizer, [{
-	    key: 'createDrawable',
-	    value: function createDrawable(ctxt) {
+	    key: 'draw',
+	    value: function draw(ctxt) {
+	      var canvasCtxt = ctxt.canvasCtxt;
+	
+	      canvasCtxt.lineWidth = this.bounds.width;
+	      canvasCtxt.strokeStyle = ctxt.neumeLineColor;
+	
+	      canvasCtxt.beginPath();
+	      canvasCtxt.moveTo(this.bounds.x, this.bounds.y);
+	      canvasCtxt.lineTo(this.bounds.x, this.bounds.y + this.bounds.height);
+	      canvasCtxt.stroke();
+	    }
+	  }, {
+	    key: 'createSvgFragment',
+	    value: function createSvgFragment(ctxt) {
 	
 	      return QuickSvg.createFragment('rect', {
 	        'x': this.bounds.x,
@@ -2598,8 +2663,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.bounds.y += ctxt.calculateHeightFromStaffPosition(staffPosition);
 	    }
 	  }, {
-	    key: 'createDrawable',
-	    value: function createDrawable(ctxt) {
+	    key: 'draw',
+	    value: function draw(ctxt) {
+	      var canvasCtxt = ctxt.canvasCtxt;
+	
+	      var x = this.bounds.x + this.origin.x;
+	      var y = this.bounds.y + this.origin.y;
+	      canvasCtxt.translate(x, y);
+	      canvasCtxt.scale(ctxt.glyphScaling, ctxt.glyphScaling);
+	
+	      for (var i = 0; i < this.glyph.paths.length; i++) {
+	        var path = this.glyph.paths[i];
+	        canvasCtxt.fillStyle = ctxt.neumeLineColor;
+	        canvasCtxt.fill(new Path2D(path.data));
+	      }
+	
+	      canvasCtxt.scale(1.0 / ctxt.glyphScaling, 1.0 / ctxt.glyphScaling);
+	      canvasCtxt.translate(-x, -y);
+	    }
+	  }, {
+	    key: 'createSvgFragment',
+	    value: function createSvgFragment(ctxt) {
 	
 	      return QuickSvg.createFragment('use', {
 	        'xlink:href': '#' + this.glyphCode,
@@ -2638,9 +2722,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(RoundBraceVisualizer, [{
-	    key: 'createDrawable',
-	    value: function createDrawable(ctxt) {
-	      var drawable = QuickSvg.createFragment('path', {
+	    key: 'createSvgFragment',
+	    value: function createSvgFragment(ctxt) {
+	      var fragment = QuickSvg.createFragment('path', {
 	        'd': this.generatePathString(),
 	        'stroke': ctxt.neumeLineColor,
 	        'stroke-width': ctxt.staffLineWeight + 'px',
@@ -2650,12 +2734,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      if (this.acuteAccent) {
 	
-	        drawable += this.acuteAccent.createDrawable(ctxt);
+	        fragment += this.acuteAccent.createSvgFragment(ctxt);
 	
 	        return QuickSvg.createFragment('g', {
 	          'class': 'accentedBrace'
-	        }, drawable);
-	      } else return drawable;
+	        }, fragment);
+	      } else return fragment;
 	    }
 	
 	    // returns svg path d string
@@ -2739,9 +2823,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(CurlyBraceVisualizer, [{
-	    key: 'createDrawable',
-	    value: function createDrawable(ctxt) {
-	      var drawable = QuickSvg.createFragment('path', {
+	    key: 'createSvgFragment',
+	    value: function createSvgFragment(ctxt) {
+	      var fragment = QuickSvg.createFragment('path', {
 	        'd': this.generatePathString(),
 	        'stroke': ctxt.neumeLineColor,
 	        'stroke-width': ctxt.staffLineWeight + 'px',
@@ -2751,12 +2835,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      if (this.acuteAccent) {
 	
-	        drawable += this.acuteAccent.createDrawable(ctxt);
+	        fragment += this.acuteAccent.createSvgFragment(ctxt);
 	
 	        return QuickSvg.createFragment('g', {
 	          'class': 'accentedBrace'
-	        }, drawable);
-	      } else return drawable;
+	        }, fragment);
+	      } else return fragment;
 	    }
 	
 	    // code below inspired by: https://gist.github.com/alexhornbake
@@ -2964,7 +3048,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.bounds.x = 0;
 	      this.bounds.y = 0;
 	
-	      var xml = '<svg xmlns="http://www.w3.org/2000/svg">' + this.createDrawable(ctxt) + '</svg>';
+	      var xml = '<svg xmlns="http://www.w3.org/2000/svg">' + this.createSvgFragment(ctxt) + '</svg>';
 	      var doc = new DOMParser().parseFromString(xml, 'application/xml');
 	
 	      while (ctxt.svgTextMeasurer.firstChild) {
@@ -2991,8 +3075,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return "";
 	    }
 	  }, {
-	    key: 'createDrawable',
-	    value: function createDrawable(ctxt) {
+	    key: 'draw',
+	    value: function draw(ctxt) {
+	
+	      var canvasCtxt = ctxt.canvasCtxt;
+	
+	      if (this.textAnchor === 'middle') canvasCtxt.textAlign = 'center';else canvasCtxt.textAlign = 'start';
+	
+	      canvasCtxt.font = this.fontSize + "px " + this.fontFamily;
+	
+	      for (var i = 0; i < this.spans.length; i++) {
+	        canvasCtxt.fillText(this.spans[i].text, this.bounds.x, this.bounds.y);
+	      }
+	    }
+	  }, {
+	    key: 'createSvgFragment',
+	    value: function createSvgFragment(ctxt) {
 	
 	      var spans = "";
 	
@@ -3197,13 +3295,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return props;
 	    }
 	  }, {
-	    key: 'createDrawable',
-	    value: function createDrawable(ctxt) {
+	    key: 'createSvgFragment',
+	    value: function createSvgFragment(ctxt) {
 	      if (this.spans.length > 0) {
 	        if (this.needsConnector) this.spans[this.spans.length - 1].text = this.lastSpanTextWithConnector;else this.spans[this.spans.length - 1].text = this.lastSpanText;
 	      }
 	
-	      return _get(Object.getPrototypeOf(Lyric.prototype), 'createDrawable', this).call(this, ctxt);
+	      return _get(Object.getPrototypeOf(Lyric.prototype), 'createSvgFragment', this).call(this, ctxt);
 	    }
 	  }]);
 	
@@ -3353,7 +3451,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    // chant notation elements are given an opportunity to perform their layout via this function.
 	    // subclasses should call this function first in overrides of this function.
-	    // on completion, exsurge presumes that the bounds, the origin, and the drawable objects are
+	    // on completion, exsurge presumes that the bounds, the origin, and the fragment objects are
 	    // all valid and prepared for higher level layout.
 	
 	  }, {
@@ -3394,14 +3492,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }this.needsLayout = false;
 	    }
 	  }, {
-	    key: 'createDrawable',
-	    value: function createDrawable(ctxt) {
+	    key: 'draw',
+	    value: function draw(ctxt) {
+	
+	      var canvasCtxt = ctxt.canvasCtxt;
+	      canvasCtxt.translate(this.bounds.x, 0);
+	
+	      for (var i = 0; i < this.visualizers.length; i++) {
+	        this.visualizers[i].draw(ctxt);
+	      }for (i = 0; i < this.lyrics.length; i++) {
+	        this.lyrics[i].draw(ctxt);
+	      }canvasCtxt.translate(-this.bounds.x, 0);
+	    }
+	  }, {
+	    key: 'createSvgFragment',
+	    value: function createSvgFragment(ctxt) {
 	      var inner = "";
 	
 	      for (var i = 0; i < this.visualizers.length; i++) {
-	        inner += this.visualizers[i].createDrawable(ctxt);
+	        inner += this.visualizers[i].createSvgFragment(ctxt);
 	      }for (i = 0; i < this.lyrics.length; i++) {
-	        inner += this.lyrics[i].createDrawable(ctxt);
+	        inner += this.lyrics[i].createSvgFragment(ctxt);
 	      }return QuickSvg.createFragment('g', {
 	        'class': 'ChantNotationElement ' + this.constructor.name,
 	        'transform': 'translate(' + this.bounds.x + ',' + 0 + ')'
@@ -3596,12 +3707,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.glyphVisualizer.draw(ctxt);
 	    }
 	  }, {
-	    key: 'createDrawable',
-	    value: function createDrawable(ctxt) {
+	    key: 'createSvgFragment',
+	    value: function createSvgFragment(ctxt) {
 	
 	      this.glyphVisualizer.bounds.x = this.bounds.x;
 	      this.glyphVisualizer.bounds.y = this.bounds.y;
-	      return this.glyphVisualizer.createDrawable(ctxt);
+	      return this.glyphVisualizer.createSvgFragment(ctxt);
 	    }
 	  }]);
 	
@@ -4074,31 +4185,44 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (finishedCallback) finishedCallback(this);
 	    }
 	  }, {
-	    key: 'createDrawable',
-	    value: function createDrawable(ctxt) {
+	    key: 'draw',
+	    value: function draw(ctxt) {
 	
-	      var i,
-	          drawable = "";
+	      var canvasCtxt = ctxt.canvasCtxt;
+	
+	      canvasCtxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
+	
+	      canvasCtxt.translate(this.bounds.x, this.bounds.y);
+	
+	      for (var i = 0; i < this.lines.length; i++) {
+	        this.lines[i].draw(ctxt);
+	      }canvasCtxt.translate(-this.bounds.x, -this.bounds.y);
+	    }
+	  }, {
+	    key: 'createSvg',
+	    value: function createSvg(ctxt) {
+	
+	      var fragment = "";
 	
 	      // create defs section
 	      for (var def in ctxt.defs) {
-	        if (ctxt.defs.hasOwnProperty(def)) drawable += ctxt.defs[def];
-	      }drawable = _Exsurge2.QuickSvg.createFragment('defs', {}, drawable);
+	        if (ctxt.defs.hasOwnProperty(def)) fragment += ctxt.defs[def];
+	      }fragment = _Exsurge2.QuickSvg.createFragment('defs', {}, fragment);
 	
-	      for (i = 0; i < this.lines.length; i++) {
-	        drawable += this.lines[i].createDrawable(ctxt);
-	      }drawable = _Exsurge2.QuickSvg.createFragment('g', {}, drawable);
+	      for (var i = 0; i < this.lines.length; i++) {
+	        fragment += this.lines[i].createSvgFragment(ctxt);
+	      }fragment = _Exsurge2.QuickSvg.createFragment('g', {}, fragment);
 	
-	      drawable = _Exsurge2.QuickSvg.createFragment('svg', {
+	      fragment = _Exsurge2.QuickSvg.createFragment('svg', {
 	        'xmlns': 'http://www.w3.org/2000/svg',
 	        'version': '1.1',
 	        'xmlns:xlink': 'http://www.w3.org/1999/xlink',
 	        'class': 'ChantScore',
 	        'width': this.bounds.width,
 	        'height': this.bounds.height
-	      }, drawable);
+	      }, fragment);
 	
-	      return drawable;
+	      return fragment;
 	    }
 	  }, {
 	    key: 'unserializeFromJson',
@@ -4408,8 +4532,69 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.origin = new _Exsurge.Point(this.staffLeft, -this.notationBounds.y);
 	    }
 	  }, {
-	    key: 'createDrawable',
-	    value: function createDrawable(ctxt) {
+	    key: 'draw',
+	    value: function draw(ctxt) {
+	
+	      var canvasCtxt = ctxt.canvasCtxt;
+	
+	      canvasCtxt.translate(this.bounds.x, this.bounds.y);
+	
+	      // draw the chant lines
+	      var i,
+	          x1 = this.staffLeft,
+	          x2 = this.staffRight,
+	          y;
+	
+	      canvasCtxt.lineWidth = Math.round(ctxt.staffLineWeight);
+	      canvasCtxt.strokeStyle = ctxt.staffLineWeight;
+	
+	      for (i = -3; i <= 3; i += 2) {
+	
+	        y = Math.round(ctxt.staffInterval * i) + 0.5;
+	
+	        canvasCtxt.beginPath();
+	        canvasCtxt.moveTo(x1, y);
+	        canvasCtxt.lineTo(x2, y);
+	        canvasCtxt.stroke();
+	      }
+	
+	      // draw the ledger lines
+	      for (i = 0; i < this.ledgerLines.length; i++) {
+	
+	        var ledgerLine = this.ledgerLines[i];
+	        y = ctxt.calculateHeightFromStaffPosition(ledgerLine.staffPosition);
+	
+	        canvasCtxt.beginPath();
+	        canvasCtxt.moveTo(ledgerLine.x1, y);
+	        canvasCtxt.lineTo(ledgerLine.x2, y);
+	        canvasCtxt.stroke();
+	      }
+	
+	      // fixme: draw the braces
+	
+	      // draw the dropCap and the annotations
+	      if (this.notationsStartIndex === 0) {
+	
+	        if (this.score.dropCap !== null) this.score.dropCap.draw(ctxt);
+	
+	        if (this.score.annotation !== null) this.score.annotation.draw(ctxt);
+	      }
+	
+	      // draw the notations
+	      var notations = this.score.notations;
+	      var lastIndex = this.notationsStartIndex + this.numNotationsOnLine;
+	
+	      for (i = this.notationsStartIndex; i < lastIndex; i++) {
+	        notations[i].draw(ctxt);
+	      }this.startingClef.draw(ctxt);
+	
+	      if (this.custos) this.custos.draw(ctxt);
+	
+	      canvasCtxt.translate(-this.bounds.x, -this.bounds.y);
+	    }
+	  }, {
+	    key: 'createSvgFragment',
+	    value: function createSvgFragment(ctxt) {
 	      var inner = "";
 	
 	      // add the chant lines
@@ -4450,24 +4635,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      // add any braces
 	      for (i = 0; i < this.braces.length; i++) {
-	        inner += this.braces[i].createDrawable(ctxt);
+	        inner += this.braces[i].createSvgFragment(ctxt);
 	      } // dropCap and the annotations
 	      if (this.notationsStartIndex === 0) {
 	
-	        if (this.score.dropCap !== null) inner += this.score.dropCap.createDrawable(ctxt);
+	        if (this.score.dropCap !== null) inner += this.score.dropCap.createSvgFragment(ctxt);
 	
-	        if (this.score.annotation !== null) inner += this.score.annotation.createDrawable(ctxt);
+	        if (this.score.annotation !== null) inner += this.score.annotation.createSvgFragment(ctxt);
 	      }
 	
-	      inner += this.startingClef.createDrawable(ctxt);
+	      inner += this.startingClef.createSvgFragment(ctxt);
 	
 	      var notations = this.score.notations;
 	      var lastIndex = this.notationsStartIndex + this.numNotationsOnLine;
 	
 	      // add all of the notations
 	      for (i = this.notationsStartIndex; i < lastIndex; i++) {
-	        inner += notations[i].createDrawable(ctxt);
-	      }if (this.custos) inner += this.custos.createDrawable(ctxt);
+	        inner += notations[i].createSvgFragment(ctxt);
+	      }if (this.custos) inner += this.custos.createSvgFragment(ctxt);
 	
 	      return _Exsurge2.QuickSvg.createFragment('g', {
 	        'class': 'chantLine',
@@ -5551,7 +5736,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/*
 	 * HorizontalEpisema
 	 *
-	 * A horizontal episema marking is it's own visualizer (that is, it implements createDrawable)
+	 * A horizontal episema marking is it's own visualizer (that is, it implements createSvgFragment)
 	 */
 	
 	var HorizontalEpisema = exports.HorizontalEpisema = function (_ChantLayoutElement) {
@@ -5630,8 +5815,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.origin.y = 0;
 	    }
 	  }, {
-	    key: 'createDrawable',
-	    value: function createDrawable(ctxt) {
+	    key: 'createSvgFragment',
+	    value: function createSvgFragment(ctxt) {
 	
 	      return _Exsurge2.QuickSvg.createFragment('rect', {
 	        'x': this.bounds.x,
@@ -7232,7 +7417,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        if (note.liquescent & _Exsurge3.LiquescentType.Small) note.setGlyph(this.ctxt, _Exsurge2.GlyphCode.PunctumInclinatumLiquescent);else if (note.liquescent & _Exsurge3.LiquescentType.Large)
 	          // fixme: is the large inclinatum liquescent the same as the apostropha?
-	          note.setGlyph(this.ctxt, _Exsurge2.GlyphCode.Apostropha);else
+	          note.setGlyph(this.ctxt, _Exsurge2.GlyphCode.Stropha);else
 	          // fixme: some climaci in the new chant books end with a punctum quadratum
 	          // (see, for example, the antiphon "Sancta Maria" for October 7).
 	          note.setGlyph(this.ctxt, _Exsurge2.GlyphCode.PunctumInclinatum);
@@ -7259,6 +7444,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        this.neume.addVisualizer(note);
 	      }
+	
+	      return this;
 	    }
 	  }, {
 	    key: 'withPorrectusSwash',
@@ -8225,8 +8412,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      for (i = 0; i < this.notes[0].epismata.length; i++) {
 	        if (this.notes[0].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[0].epismata[i].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
 	      }var positionHint = this.notes[2].shape === _Exsurge3.NoteShape.Virga ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below;
-	      for (i = 0; i < this.notes[2].epismata.length; i++) {
-	        if (this.notes[2].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[2].epismata[i].positionHint = positionHint;
+	      for (i = 0; i < this.notes[1].epismata.length; i++) {
+	        if (this.notes[1].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[1].epismata[i].positionHint = positionHint;
 	      } // by default place third note epismata above
 	      for (i = 0; i < this.notes[2].epismata.length; i++) {
 	        if (this.notes[2].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[2].epismata[i].positionHint = _ExsurgeChant.MarkingPositionHint.Above;
@@ -8282,14 +8469,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      for (i = 0; i < this.notes[0].epismata.length; i++) {
 	        if (this.notes[0].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[0].epismata[i].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
 	      }var positionHint = this.notes[2].shape === _Exsurge3.NoteShape.Virga ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below;
-	      for (i = 0; i < this.notes[2].epismata.length; i++) {
-	        if (this.notes[2].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[2].epismata[i].positionHint = positionHint;
+	      for (i = 0; i < this.notes[1].epismata.length; i++) {
+	        if (this.notes[1].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[1].epismata[i].positionHint = positionHint;
 	      } // by default place third note epismata above
 	      for (i = 0; i < this.notes[2].epismata.length; i++) {
 	        if (this.notes[2].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[2].epismata[i].positionHint = _ExsurgeChant.MarkingPositionHint.Above;
 	      } // by default place fourth note epismata above
-	      for (i = 0; i < this.notes[2].epismata.length; i++) {
-	        if (this.notes[2].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[2].epismata[i].positionHint = _ExsurgeChant.MarkingPositionHint.Above;
+	      for (i = 0; i < this.notes[3].epismata.length; i++) {
+	        if (this.notes[3].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[3].epismata[i].positionHint = _ExsurgeChant.MarkingPositionHint.Above;
 	      }
 	    }
 	  }, {
