@@ -7,6 +7,7 @@
   <script>window.jQuery || document.write('<script src="fallback/jquery.min.js">\x3C/script>')</script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js'></script>
   <script>window.moment || document.write('<script src="fallback/moment.min.js">\x3C/script>')</script>
+  <script src='calendar.js'></script>
   <script src='compline.js'></script>
   <link href='https://fonts.googleapis.com/css?family=Crimson+Text:400,700,700italic,400italic' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type="text/css" href="style.css">
@@ -16,7 +17,7 @@
 <span class='chooseDay'><input type='radio' name='weekday' id='rbWeekday' checked></span><!--
 --><label for='rbWeekday'><span id='weekday'></span> at Compline</label><br/>
 <span class='chooseDay'>
-<input type='radio' name='weekday' value='0' id='rbSunday'><label for='rbSunday'>Sunday at Compline (First or Second Class Feast)</label><br/><br/>
+<input type='radio' name='weekday' value='0' id='rbSunday'><label for='rbSunday'>Sunday at Compline (<span id='feastName'>First or Second Class Feast</span>)</label><br/><br/>
 </span>
 <div include='easter-3' class='red'>
 On Holy Thursday, Compline is said after the stripping of the altars, with candles extinguished and without singing.

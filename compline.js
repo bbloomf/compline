@@ -17,27 +17,57 @@ $(function(){
     return moment([Y,M-1,D]);
   }
   var dateCache = {};
-  function datesForYear(Y) {
+  var Dates = function(Y) {
     if(Y in dateCache) return dateCache[Y];
-    var dates = {}
-    dates.easter = EasterDate(Y);
-    dates.septuagesima = moment(dates.easter).subtract(7*9,'days');
-    dates.lent1 = moment(dates.septuagesima).add(7*4,'days');
-    dates.pentecost = moment(dates.easter).add(49,'days');
-    dates.christmas = moment([Y,11,25]);
-    dates.advent1 = moment(dates.christmas).subtract((dates.christmas.day() || 7) + 7*3,'days');
-    dates.allSouls = moment([Y,10,2]);
-    if(dates.allSouls.day() == 0) dates.allSouls.add(1,'day');
-    dates.sacredHeart = moment(dates.pentecost).add(19,'days');
-    dates.christTheKing = moment([Y,9,31]);
-    dates.christTheKing.subtract(dates.christTheKing.day(),'days');
-    dates.sevenDolors = moment([Y,8,15]);
-    dates.epiphany = moment([Y,0,6]);
+    this.year = Y;
+    this.easter = EasterDate(Y);
+    this.septuagesima = moment(this.easter).subtract(7*9,'days');
+    this.lent1 = moment(this.septuagesima).add(7*4,'days');
+    this.pentecost = moment(this.easter).add(49,'days');
+    this.christmas = moment([Y,11,25]);
+    this.advent1 = moment(this.christmas).subtract((this.christmas.day() || 7) + 7*3,'days');
+    this.allSouls = moment([Y,10,2]);
+    if(this.allSouls.day() == 0) this.allSouls.add(1,'day');
+    this.corpusChristi = moment(this.pentecost).add(11,'days');
+    this.sacredHeart = moment(this.pentecost).add(19,'days');
+    this.christTheKing = moment([Y,9,31]);
+    this.christTheKing.subtract(this.christTheKing.day(),'days');
+    this.sevenDolors = moment([Y,8,15]);
+    this.epiphany = moment([Y,0,6]);
     // The Feast of the Holy Family is on the Sunday following Epiphany, unless Epiphany falls on a Sunday,
     // in which case The Holy Family will be on the Saturday following.
-    dates.holyFamily = moment(dates.epiphany).add(7 - (dates.epiphany.day()||1), 'days');
-    dates.transfiguration = moment([Y,7,6]);
-    return dateCache[Y] = dates;
+    this.holyFamily = moment(this.epiphany).add(7 - (this.epiphany.day()||1), 'days');
+    this.transfiguration = moment([Y,7,6]);
+    dateCache[Y] = this;
+  }
+  function getFromCalendar(date) {
+    if(dateMatches(date,'corpusChristi')) return {title:'Corpus Christi', rank:1};
+    if(dateMatches(date,'sacredHeart')) return {title:'The Most Sacred Heart of Jesus', rank:1};
+    if(romanCalendar) {
+      if(date.day()==0) return null;
+      var month = date.month();
+      var day = date.date();
+      var d = romanCalendar[month][day];
+      if(!d && day > 1) {
+        d = romanCalendar[month][day-1];
+        if(!d.plus) return null;
+        else if(d.plus === 'ifLeapYear' && !date.isLeapYear()) return null;
+        else if(d.plus === 'ifSunday' && !date.day()===1) return null;
+      }
+      return d;
+    }
+    return null;
+  }
+  Dates.prototype.firstClassFeast = function(date) {
+    d = getFromCalendar(date);
+    return !!(d && d.rank === 1);
+  }
+  Dates.prototype.feastOfOurLady = function(date) {
+    d = getFromCalendar(date);
+    return !!(d && d.ol);
+  }
+  function datesForYear(Y) {
+    return new Dates(Y);
   }
   function isTriduum(date) {
     var easter = EasterDate(date.year());
@@ -65,7 +95,9 @@ $(function(){
     if(matches[1]) {
       return moment([date.year(), parseInt(matches[2]) - 1, parseInt(matches[3])]);
     } else if(matches[5] in dates) {
-      var m = moment(dates[matches[5]]||[0]);
+      var d = dates[matches[5]]||[0];
+      if(typeof d === 'function') return dates[matches[5]](date);
+      var m = moment(d);
       if(matches[7]) {
         var days = parseInt(matches[7]) || 0;
         if(matches[6] == '-') {
@@ -88,6 +120,7 @@ $(function(){
         range.push(momentFromRegex(date,matches.slice(8),dates))
         if (date.isBetween(range[0],range[1],'day','[]')) return true;
       } else {
+        if (typeof range[0]==='boolean') return range[0];
         if (date.isSame(range[0],'day')) return true;
       }
     }
@@ -231,8 +264,16 @@ $(function(){
       setCanticle('');
     }
     $('.chooseDay').toggle(showChooseDay);
-    //TODO: if this is a first or second class feast, it should check #rbSunday instead:
-    $('#rbWeekday').prop('value',date.day()).prop('checked',true);
+    var d = getFromCalendar(date);
+    var rbWeekday = $('#rbWeekday').prop('value',date.day());
+    var spanFeastName = $('#feastName');
+    if(d && d.rank <= 2) {
+      $('#rbSunday').prop('checked',true);
+      spanFeastName.text(d.title);
+    } else {
+      rbWeekday.prop('checked',true);
+      spanFeastName.text('First or Second Class Feast');
+    }
     $('input[value="per-annum"]').prop('checked',!isPT).change();
     if(isAdvent(date)) {
       $('.radio-advent').prop('checked',true).change();
