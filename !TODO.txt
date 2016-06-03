@@ -1,7 +1,12 @@
 Laus tibi... should only be shown, when it is actually to be used
 Same for "P.T..."
 
+Prayer for the Alma Redemptoris is different after Christmas...
+
 Calendar of 1st and second class feasts, so that if the date is recognized as a first or second class feast, Sunday at Compline can be chosen by default but still with the day of the week as an option.
+
+Still need a way of selecting the Te Lucis tone from the date.
+Some tones are for Sundays and second & third class feasts during a range of dates, etc.
 
 
 Te Lucis has several different tones:
@@ -38,16 +43,3 @@ Pentecost: All days from Vigil of Pentecost until the Friday in the Octave of Pe
 Christ the King: only on the feast of Christ the King
 
 Sacred Heart: On the feast of the Sacred Heart of Jesus
-
-
-
-
-In manus tuas also has different tones:
-all times of year except Advent and Eastertide
-
-In Passiontide, EXCEPT ON First or Second class FEASTS, Gloria Patri is omitted, and In Manus tuas is repeated immediately in its place
-
-Advent: from Saturday before 1st sunday of Advent until December 23 inclusive
-
-Easter: From Saturday before Low Sunday until the Friday in the Octave of Pentecost inclusive
-
