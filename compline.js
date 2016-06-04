@@ -50,7 +50,7 @@ $(function(){
       var d = romanCalendar[month][day];
       if(!d && day > 1) {
         d = romanCalendar[month][day-1];
-        if(!d.plus) return null;
+        if(!d || !d.plus) return null;
         else if(d.plus === 'ifLeapYear' && !date.isLeapYear()) return null;
         else if(d.plus === 'ifSunday' && !date.day()===1) return null;
       }
