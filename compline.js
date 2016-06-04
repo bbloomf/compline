@@ -112,6 +112,10 @@ $(function(){
     }
     if(dateMatches(date,'corpusChristi')) return {title:'Corpus Christi', rank:1};
     if(dateMatches(date,'sacredHeart')) return {title:'The Most Sacred Heart of Jesus', rank:1};
+    if(dateMatches(date,'easter-3')) return {title:'Maundy Thursday', rank:1};
+    if(dateMatches(date,'easter-2')) return {title:'Good Friday', rank:1};
+    if(dateMatches(date,'easter-1')) return {title:'Holy Saturday', rank:1};
+    if(dateMatches(date,'lent1-4')) return {title:'Ash Wednesday', rank:5}
     if(romanCalendar) {
       if(date.day()==0) return null;
       var month = date.month();
