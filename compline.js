@@ -22,7 +22,7 @@ $(function(){
     this.year = Y;
     this.easter = EasterDate(Y);
     this.septuagesima = moment(this.easter).subtract(7*9,'days');
-    this.lent1 = moment(this.septuagesima).add(7*4,'days');
+    this.lent1 = moment(this.septuagesima).add(7*3,'days');
     this.pentecost = moment(this.easter).add(49,'days');
     this.christmas = moment([Y,11,25]);
     this.advent1 = moment(this.christmas).subtract((this.christmas.day() || 7) + 7*3,'days');
@@ -40,7 +40,76 @@ $(function(){
     this.transfiguration = moment([Y,7,6]);
     dateCache[Y] = this;
   }
+  function getSunday(date) {
+    var title = 'Sunday';
+    var rank = 2;
+    var dates = datesForYear(date.year());
+    if(date.isSame(dates.christTheKing)) {
+      rank = 1;
+      title = 'Our Lord Jesus Christ the King';
+    } else if(date.isSameOrAfter(dates.advent1)) {
+      var weeksSinceAdvent1 = moment.duration(date - dates.advent1).asWeeks();
+      if(weeksSinceAdvent1 < 4) {
+        title = (weeksSinceAdvent1 + 1) + '. Sunday of Advent';
+        rank = 1;
+      } else if(date.isSame(dates.christmas)) {
+        return romanCalendar[11][25];
+      } else {
+        title = 'Sunday within the Octave of Christmas';
+      }
+    } else {
+      if(date.isBefore(dates.epiphany)) {
+        // TODO: Sundays before Epiphany
+      } else if(date.isSame(dates.epiphany)) {
+        return romanCalendar[0][6];
+      } else {
+        // after epiphany
+        if(date.isBefore(dates.septuagesima)) {
+          var weeksSinceEpiphany = Math.ceil(moment.duration(date - dates.epiphany).asWeeks());
+          title = Math.round(weeksSinceEpiphany) + '. Sunday after Epiphany';
+        } else if(date.isBefore(dates.lent1)) {
+          var weeksSinceSeptuagesima = moment.duration(date - dates.septuagesima).asWeeks();
+          title = (['Septua','Sexa','Quinqua'])[weeksSinceSeptuagesima] + 'gesima';
+        } else if(date.isBefore(dates.easter)) {
+          var weeksSinceLent1 = moment.duration(date - dates.lent1).asWeeks();
+          if(weeksSinceLent1 <= 3) {
+            title = (Math.round(weeksSinceLent1)+1) + '. Sunday of Lent';
+          } else if(weeksSinceLent1 == 4) {
+            title = 'Passion Sunday'
+          } else {
+            title = 'Palm Sunday'
+          }
+          rank = 1;
+        } else if(date.isBefore(dates.pentecost)) {
+          var weeksSinceEaster = moment.duration(date - dates.easter).asWeeks();
+          if(weeksSinceEaster == 0) {
+            rank = 1;
+            title = 'Easter';
+          } else if (weeksSinceEaster <= 5) {
+            title = Math.round(weeksSinceEaster) + '. Sunday after Easter';
+            if(weeksSinceEaster == 1) rank = 1;
+          } else {
+            title = 'Sunday after the Ascension'
+          }
+        } else {
+          var weeksSincePentecost = moment.duration(date - dates.pentecost).asWeeks();
+          if(weeksSincePentecost === 0) {
+            title = 'Pentecost';
+            rank = 1;
+          } else if(weeksSincePentecost === 1) {
+            title = 'Trinity Sunday';
+          } else {
+            title = Math.round(weeksSincePentecost) + '. Sunday after Pentecost';
+          }
+        }
+      }
+    }
+    return {title:title, rank: rank};
+  }
   function getFromCalendar(date) {
+    if(date.day() === 0) {
+      return getSunday(date);
+    }
     if(dateMatches(date,'corpusChristi')) return {title:'Corpus Christi', rank:1};
     if(dateMatches(date,'sacredHeart')) return {title:'The Most Sacred Heart of Jesus', rank:1};
     if(romanCalendar) {
@@ -66,6 +135,19 @@ $(function(){
     d = getFromCalendar(date);
     return !!(d && d.ol);
   }
+  Dates.prototype.minorFeast = function(date) {
+    d = getFromCalendar(date);
+    return (d && d.rank > 1 && d.rank < 5);
+  }
+  Dates.prototype.feria = function(date) {
+    d = getFromCalendar(date);
+    if(date.day() === 0) return false;
+    console.info(d);
+    return !d || d.rank >= 5;
+  }
+  Dates.prototype.sunday = function(date) {
+    return date.day() === 0;
+  }
   function datesForYear(Y) {
     return new Dates(Y);
   }
@@ -89,8 +171,6 @@ $(function(){
     var advent1 = moment(christmas).subtract((christmas.day() || 7) + 7*3,'days');
     return date.isSameOrAfter(moment(advent1).subtract(1,'day')) && date.isSameOrBefore(moment(christmas).subtract(1,'day'));
   }
-  //                    xxx1222222113333331x45555544466666677777444xxxxx89a
-  var regexDateRange = /(?:((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?))(?::(((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?)))?/g;
   function momentFromRegex(date,matches,dates) {
     if(matches[1]) {
       return moment([date.year(), parseInt(matches[2]) - 1, parseInt(matches[3])]);
@@ -113,15 +193,18 @@ $(function(){
   }
   function dateMatches(date,dateRange) {
     var dates = datesForYear(date.year());
-    var matches = regexDateRange.exec('');
+    //                    xxx1222222113333331x45555544466666677777444xxxxx89a
+    var regexDateRange = /(?:((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?))(?::(((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?)))?/g;
+    var matches;
     while(matches = regexDateRange.exec(dateRange)) {
       var range = [momentFromRegex(date,matches,dates)];
       if(matches[8]) {
         range.push(momentFromRegex(date,matches.slice(8),dates))
         if (date.isBetween(range[0],range[1],'day','[]')) return true;
       } else {
-        if (typeof range[0]==='boolean') return range[0];
-        if (date.isSame(range[0],'day')) return true;
+        if (typeof range[0]==='boolean') {
+          if(range[0]) return true;
+        } else if(date.isSame(range[0],'day')) return true;
       }
     }
     return false;
@@ -141,6 +224,35 @@ $(function(){
   var date = moment();
   
   $('#date').val(date.format("YYYY-MM-DD"));
+  var changeDateBy = function(days) {
+    return function(i,current) {
+      var m = moment(current);
+      if(!m.isValid()) {
+        m = moment();
+      } else {
+        m.add(days,'days');
+      }
+      return m.format("YYYY-MM-DD");
+    }
+  };
+  var nextDay = function(week) {
+    $('#date').val(changeDateBy(week? 7 : 1)).change();
+  };
+  var prevDay = function(week) {
+    $('#date').val(changeDateBy(week? -7 : -1)).change();
+  };
+  $(document).on('keypress', function(e){
+    switch(e.which) {
+      case 106: // j
+      case 74:
+        prevDay(e.shiftKey);
+        break;
+      case 107: // k
+      case 75:
+        nextDay(e.shiftKey);
+        break;
+    }
+  })
   var day = date.day();
   var dayName;
   var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -201,6 +313,20 @@ $(function(){
       $.get('psalms/'+day+'/psalm-verses.html',gotData);
     });
   }
+  var formattedRank = function(rank) {
+    switch(rank) {
+      case 1:
+        return 'I Class';
+      case 2:
+        return 'II Class';
+      case 3:
+        return 'III Class';
+      case 5:
+        return 'Commemoration';
+      default:
+        return 'Feria';
+    }
+  }
   var setDate = function(date) {
     //show and hide [include] and [exclude] elements based on the date
     $('[exclude]').each(function(){
@@ -216,7 +342,7 @@ $(function(){
       var $this = $(this);
       var selectDay = $this.attr('select-day');
       if(selectDay) {
-        selectDay = new RegExp(selectDay).exec(date.day());
+        selectDay = dateMatches(date, selectDay);
       } else {
         selectDay = true;
       }
@@ -266,13 +392,12 @@ $(function(){
     $('.chooseDay').toggle(showChooseDay);
     var d = getFromCalendar(date);
     var rbWeekday = $('#rbWeekday').prop('value',date.day());
-    var spanFeastName = $('#feastName');
+    if(!d) d = {title:'Feria', rank: 10};
+    $('#feastDay').text(d.title + (d.rank < 5?(' (' + formattedRank(d.rank) + ')'): ''));
     if(d && d.rank <= 2) {
       $('#rbSunday').prop('checked',true);
-      spanFeastName.text(d.title);
     } else {
       rbWeekday.prop('checked',true);
-      spanFeastName.text('First or Second Class Feast');
     }
     $('input[value="per-annum"]').prop('checked',!isPT).change();
     if(isAdvent(date)) {

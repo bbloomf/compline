@@ -14,10 +14,11 @@
 </head>
 <body>
 <input type='date' id='date'><br/>
+<span id='feastDay'></span><br/>
 <span class='chooseDay'><input type='radio' name='weekday' id='rbWeekday' checked></span><!--
 --><label for='rbWeekday'><span id='weekday'></span> at Compline</label><br/>
 <span class='chooseDay'>
-<input type='radio' name='weekday' value='0' id='rbSunday'><label for='rbSunday'>Sunday at Compline (<span id='feastName'>First or Second Class Feast</span>)</label><br/><br/>
+<input type='radio' name='weekday' value='0' id='rbSunday'><label for='rbSunday'>Sunday at Compline (First or Second Class Feast)</label><br/><br/>
 </span>
 <div include='easter-3' class='red'>
 On Holy Thursday, Compline is said after the stripping of the altars, with candles extinguished and without singing.
@@ -99,8 +100,8 @@ Afterwards there is added aloud, without</i> Orémus<i class='red'>, the collect
 <div exclude='easter-3:easter+5 allSouls'>
 <span class='red'><i>The Officiant then intones the Hymn </i>Te lucis<i> which is sung in one of the tones given below.  All bow slightly for the first three stanzas of the third verse.</i></span>
 <div id='te-lucis-choices'>
-<input type='radio' name='te-lucis' value='Ordinary' select-day='0' select-date='01/14:lent1-2 pentecost+15:advent1-2' id='te-lucis-Ordinary'/><label for='te-lucis-Ordinary'>Ordinary Sundays and Minor Feasts <i class='red'>(from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i></label><br/>
-<input type='radio' name='te-lucis' checked select-day='[^0]' select-date='01/14:lent1-2 pentecost+15:advent1-2' value='Ferial' id='te-lucis-Ferial'/><label for='te-lucis-Ferial'>Ferial <i class='red'>(Ferial days from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i></label><br/>
+<input type='radio' name='te-lucis' value='Ordinary' select-day='sunday minorFeast' select-date='01/14:lent1-2 pentecost+15:advent1-2' id='te-lucis-Ordinary'/><label for='te-lucis-Ordinary'>Ordinary Sundays and Minor Feasts <i class='red'>(from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i></label><br/>
+<input type='radio' name='te-lucis' checked select-day='feria' select-date='01/14:lent1-2 pentecost+15:advent1-2' value='Ferial' id='te-lucis-Ferial'/><label for='te-lucis-Ferial'>Ferial <i class='red'>(Ferial days from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i></label><br/>
 <input type='radio' name='te-lucis' value='Solemn' select-date='firstClassFeast' id='te-lucis-Solemn'/><label for='te-lucis-Solemn'>Solemn <i class='red'>(All First class feasts lacking a proper tone at any time of the year)</i></label><br/>
 <input type='radio' name='te-lucis' value='Our-Lady' select-date='feastOfOurLady' id='te-lucis-Our-Lady'/><label for='te-lucis-Our-Lady'>Our Lady <i class='red'>(All feasts of the Blessed Virgin Mary, except the Seven Sorrows, of whatever rank at any time of the year)</i></label><br/>
 <input type='radio' name='te-lucis' class='radio-advent' select-date='advent1-1:12/23' value='Advent' id='te-lucis-Advent'/><label for='te-lucis-Advent'>Advent <i class='red'>(All days except first class feasts from Saturday before the First Sunday of Advent until December 23 inclusive)</i></label><br/>
