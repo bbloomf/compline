@@ -195,6 +195,13 @@ $(function(){
       return moment('');
     }
   }
+  function momentFromString(str,date) {
+    var dates = datesForYear(date.year());
+    //                    xxx1222222113333331x45555544466666677777444xxxxx89a
+    var regexDateRange = /(?:((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?))(?::(((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?)))?/g;
+    var matches = regexDateRange.exec(dateRange);
+    return momentFromRegex(date,matches,dates);
+  }
   function dateMatches(date,dateRange) {
     var dates = datesForYear(date.year());
     //                    xxx1222222113333331x45555544466666677777444xxxxx89a
