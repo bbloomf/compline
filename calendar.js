@@ -319,6 +319,54 @@ var romanCalendar = [
 ///"Friday after the I Sunday in Passiontide": Commemoration of the Seven Sorrows of the Blessed Virgin Mary, Comm
 
 ///"Last Sunday in October": Our Lord Jesus Christ the King, I class
+var weeksBetween = function(a,b) {
+  if(typeof(a)=='string') {
+    a = momentFromString(a,b);
+  }
+  return Math.round(moment.duration(b - a).asDays())/7;
+}
+var SundayFeast = function(SundayObject,date,dates) {
+  if(SundayObject.feast) return SundayObject.feast;
+  return {
+    title: SundayObject.title.replace(/%([a-z])/g, function(match,callback) {
+      return SundayObject[callback](date,dates);
+    }),
+    rank: SundayObject.rank || 2
+  }
+}
+var CalendarSundays = [
+  { on: '01/01', feast: romanCalendar[0][1] },
+  { before: '01/06', title: 'The Most Holy Name of Jesus'},
+  { on: '01/06', feast: romanCalendar[0][6] },
+  { before: 'septuagesima', title: '%n. Sunday after Epiphany', n: function(date,dates) {return Math.ceil(weeksBetween('epiphany', date)); }},
+  { before: 'lent1', title: '%t', t: function(date,dates) {return (['Septua','Sexa','Quinqua'])[weeksBetween('septuagesima', date)]+'gesima'; }},
+  { before: 'easter', title: '%t', t: function(date, dates) {
+      var weeksSinceLent1 = weeksBetween('lent1', date);
+      switch(weeksSinceLent1) {
+        case 0:
+        case 1:
+        case 2:
+        case 3: return (weeksSinceLent1+1) + '. Sunday of Lent';
+        case 4: return 'Passion Sunday';
+        case 5: return 'Palm Sunday';
+      }
+    }
+  },
+  { on: 'easter', title: 'Easter Sunday', rank: 1 },
+  { before: 'ascension', title: '%n. Sunday after Easter', n: function(date,dates) { return weeksBetween('easter', date); }},
+  { on: 'pentecost', title: 'Pentecost', rank: 1 },
+  { before: 'pentecost', title: 'Sunday After the Ascension'},
+  { before: 'advent1', title: '%t', t: function(date,dates) {
+    var weeksSincePentecost = weeksBetween('pentecost', date);
+    if(weeksSincePentecost === 1) return 'Trinity Sunday';
+    var weeksSinceLastWeekOfOctober = weeksBetween('10/25',date);
+    if(weeksSinceLastWeekOfOctober>=0 && weeksSinceLastWeekOfOctober<1) return 'Our Lord Jesus Christ the King';
+    return weeksSincePentecost + '. Sunday after Pentecost';
+  }},
+  { before: '12/25', title: '%n. Sunday of Advent', rank: 1, n: function(date,dates) { return weeksBetween('advent1', date) + 1; }},
+  { on: '12/25', feast: romanCalendar[11][25]},
+  { after: '12/25', title: 'Sunday within the Octave of Christmas'}
+]
 
 firstClassSundays = [
 "advent1","advent1+7","advent1+14","advent1+21",

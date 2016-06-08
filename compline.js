@@ -23,6 +23,7 @@ $(function(){
     this.easter = EasterDate(Y);
     this.septuagesima = moment(this.easter).subtract(7*9,'days');
     this.lent1 = moment(this.septuagesima).add(7*3,'days');
+    this.ascension = moment(this.easter).add(39,'days');
     this.pentecost = moment(this.easter).add(49,'days');
     this.christmas = moment([Y,11,25]);
     this.advent1 = moment(this.christmas).subtract((this.christmas.day() || 7) + 7*3,'days');
@@ -41,70 +42,23 @@ $(function(){
     dateCache[Y] = this;
   }
   function getSunday(date) {
-    var title = 'Sunday';
-    var rank = 2;
     var dates = datesForYear(date.year());
-    if(date.isSame(dates.christTheKing)) {
-      rank = 1;
-      title = 'Our Lord Jesus Christ the King';
-    } else if(date.isSameOrAfter(dates.advent1)) {
-      var weeksSinceAdvent1 = moment.duration(date - dates.advent1).asWeeks();
-      if(weeksSinceAdvent1 < 4) {
-        title = (weeksSinceAdvent1 + 1) + '. Sunday of Advent';
-        rank = 1;
-      } else if(date.isSame(dates.christmas)) {
-        return romanCalendar[11][25];
-      } else {
-        title = 'Sunday within the Octave of Christmas';
-      }
-    } else {
-      if(date.isBefore(dates.epiphany)) {
-        // TODO: Sundays before Epiphany
-      } else if(date.isSame(dates.epiphany)) {
-        return romanCalendar[0][6];
-      } else {
-        // after epiphany
-        if(date.isBefore(dates.septuagesima)) {
-          var weeksSinceEpiphany = Math.ceil(moment.duration(date - dates.epiphany).asWeeks());
-          title = Math.round(weeksSinceEpiphany) + '. Sunday after Epiphany';
-        } else if(date.isBefore(dates.lent1)) {
-          var weeksSinceSeptuagesima = moment.duration(date - dates.septuagesima).asWeeks();
-          title = (['Septua','Sexa','Quinqua'])[weeksSinceSeptuagesima] + 'gesima';
-        } else if(date.isBefore(dates.easter)) {
-          var weeksSinceLent1 = moment.duration(date - dates.lent1).asWeeks();
-          if(weeksSinceLent1 <= 3) {
-            title = (Math.round(weeksSinceLent1)+1) + '. Sunday of Lent';
-          } else if(weeksSinceLent1 == 4) {
-            title = 'Passion Sunday'
-          } else {
-            title = 'Palm Sunday'
-          }
-          rank = 1;
-        } else if(date.isBefore(dates.pentecost)) {
-          var weeksSinceEaster = moment.duration(date - dates.easter).asWeeks();
-          if(weeksSinceEaster == 0) {
-            rank = 1;
-            title = 'Easter';
-          } else if (weeksSinceEaster <= 5) {
-            title = Math.round(weeksSinceEaster) + '. Sunday after Easter';
-            if(weeksSinceEaster == 1) rank = 1;
-          } else {
-            title = 'Sunday after the Ascension'
-          }
-        } else {
-          var weeksSincePentecost = moment.duration(date - dates.pentecost).asWeeks();
-          if(weeksSincePentecost === 0) {
-            title = 'Pentecost';
-            rank = 1;
-          } else if(weeksSincePentecost === 1) {
-            title = 'Trinity Sunday';
-          } else {
-            title = Math.round(weeksSincePentecost) + '. Sunday after Pentecost';
-          }
+    for(var i = 0; i < CalendarSundays.length; ++i) {
+      var test = CalendarSundays[i];
+      if(test.on) {
+        if(date.isSame(momentFromString(test.on,date))) {
+          return SundayFeast(test,date,dates);
+        }
+      } else if(test.before) {
+        if(date.isBefore(momentFromString(test.before,date))) {
+          return SundayFeast(test,date,dates);
+        }
+      } else if(test.after) {
+        if(date.isAfter(momentFromString(test.after,date))) {
+          return SundayFeast(test,date,dates);
         }
       }
     }
-    return {title:title, rank: rank};
   }
   function getFromCalendar(date) {
     if(date.day() === 0) {
@@ -146,7 +100,6 @@ $(function(){
   Dates.prototype.feria = function(date) {
     d = getFromCalendar(date);
     if(date.day() === 0) return false;
-    console.info(d);
     return !d || d.rank >= 5;
   }
   Dates.prototype.sunday = function(date) {
@@ -199,9 +152,10 @@ $(function(){
     var dates = datesForYear(date.year());
     //                    xxx1222222113333331x45555544466666677777444xxxxx89a
     var regexDateRange = /(?:((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?))(?::(((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?)))?/g;
-    var matches = regexDateRange.exec(dateRange);
+    var matches = regexDateRange.exec(str);
     return momentFromRegex(date,matches,dates);
   }
+  window.momentFromString = momentFromString;
   function dateMatches(date,dateRange) {
     var dates = datesForYear(date.year());
     //                    xxx1222222113333331x45555544466666677777444xxxxx89a
