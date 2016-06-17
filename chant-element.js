@@ -6,7 +6,7 @@ ChantVisualElementPrototype.createdCallback = function() {
   var _element = this;
   var $elem = $(this);
   
-  ctxt.lyricTextFont = "'Crimson Text', serif";
+  ctxt.lyricTextFont = "'Cormorant Garamond', serif";
   ctxt.lyricTextSize *= 1.2;
   ctxt.dropCapTextFont = ctxt.lyricTextFont;
   ctxt.annotationTextFont = ctxt.lyricTextFont;
