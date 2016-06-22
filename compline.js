@@ -232,12 +232,13 @@ $(function(){
       }
     }
   }
-  // type should be '-po' for paschal octave, or '-asd' for all souls' day, or '' for regular
+  // type should be '-po' for paschal octave, '-pt' for paschal time, or '-asd' for all souls' day, or '' for regular
   var currentCanticle = '';
   var setCanticle = function(type) {
-    if(type == currentCanticle) return;
+    if(type === currentCanticle) return;
     currentCanticle = type;
     var ant = "<chant-gabc src='canticle-ant"+type+".gabc'></chant-gabc>";
+    if(type==='-pt') type = '';
     var psalm = "<chant-gabc src='canticle-psalm"+type+".gabc'></chant-gabc>";
     var gotData = function(data){
       var html = ant + psalm + data;
@@ -352,7 +353,7 @@ $(function(){
       setCanticle('-asd');
     } else {
       setPsalms(date.day(),isPT);
-      setCanticle('');
+      setCanticle(isPT?'-pt':'');
     }
     $('.chooseDay').toggle(showChooseDay);
     var d = getFromCalendar(date);
