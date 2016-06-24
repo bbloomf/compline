@@ -2,6 +2,7 @@
 var ChantVisualElementPrototype = Object.create(HTMLElement.prototype);
 
 ChantVisualElementPrototype.createdCallback = function() {
+  var regexGabcHeader = /((?:[\w-_]+:\s*[^;\r\n]*;\r?\n)+)%%\r?\n/;
   var ctxt = new exsurge.ChantContext();
   var _element = this;
   var $elem = $(this);
@@ -11,47 +12,59 @@ ChantVisualElementPrototype.createdCallback = function() {
   ctxt.dropCapTextFont = ctxt.lyricTextFont;
   ctxt.annotationTextFont = ctxt.lyricTextFont;
 
-  var useDropCap = true;
+  var useDropCap;
   var useDropCapAttr = this.getAttribute("use-drop-cap");
-  if (useDropCapAttr === 'false')
-    useDropCap = false;
+  if (useDropCapAttr === 'false') {
+    useDropCapAttr = false;
+  } else {
+    useDropCapAttr = true;
+  }
 
   var mappings, score;
+  var setGabc = function(gabc, annotationAttr) {
+    useDropCap = [];
+    mappings = [];
+    score = [];
+    gabc = gabc.replace(/<v>\\([VRA])bar<\/v>/g,function(match,barType) {
+      return barType + '/.';
+    }).replace(/<\/?sc>/g,'%')
+    .replace(/<\/?b>/g,'*')
+    .replace(/<\/?i>/g,'_')
+    .replace(/<sp>'(?:ae|æ)<\/sp>/g,'ǽ')
+    .replace(/<v>\\greheightstar<\/v>/g,'*');
+    var gabcs = gabc.split(regexGabcHeader);
+    if(gabcs.length===1) gabcs.splice(0,'','');
+    var limit = (gabcs.length - 1) / 2;
+    for(var i=0; i<limit; ++i) {
+      var gabcHeader = gabcs[2*i+1].split(/\r?\n/);
+      var gabc = gabcs[2*i+2];
+      mappings[i] = exsurge.Gabc.createMappingsFromSource(ctxt, gabc);
+      if(gabcHeader) {
+        gabcHeader = gabcHeader.reduce(function(result,line){
+          var match = line.match(/^([\w-_]+):\s*([^;\r\n]*)(?:;|$)/i);
+          if(match) result[match[1]] = match[2];
+          return result;
+        }, {});
+        if('initial-style' in gabcHeader) {
+          useDropCap[i] = gabcHeader['initial-style'] === '1';
+        }
+      }
+      if(!(i in useDropCap)) useDropCap[i] = useDropCapAttr;
+      score[i] = new exsurge.ChantScore(ctxt, mappings[i], useDropCap[i]);
+      if(gabcHeader && gabcHeader.annotation) {
+        score[i].annotation = new exsurge.Annotation(ctxt, gabcHeader.annotation);
+      } else if(annotationAttr) {
+        score[i].annotation = new exsurge.Annotation(ctxt, annotationAttr);
+      }
+    }
+    init();
+  };
   $elem.data('setSrc', function(src){
     width = 0;
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
       if (request.readyState === 4 && request.status === 200 && $elem.attr('src') === src) {
-        var gabc = request.responseText;
-        gabc = gabc.replace(/<v>\\([VRA])bar<\/v>/g,function(match,barType) {
-          return barType + '/.';
-        }).replace(/<\/?sc>/g,'%')
-        .replace(/<\/?b>/g,'*')
-        .replace(/<\/?i>/g,'_')
-        .replace(/<sp>'(?:ae|æ)<\/sp>/g,'ǽ')
-        .replace(/<v>\\greheightstar<\/v>/g,'*');
-        var gabcHeader = '';
-        var headerEndIndex = gabc.indexOf('\n%%\n');
-        if(headerEndIndex >= 0) {
-          gabcHeader = gabc.slice(0,headerEndIndex).split(/\r?\n/);
-          gabc = gabc.slice(headerEndIndex + 4);
-        }
-        mappings = exsurge.Gabc.createMappingsFromSource(ctxt, gabc);
-        if(gabcHeader) {
-          gabcHeader = gabcHeader.reduce(function(result,line){
-            var match = line.match(/^([\w-_]+):\s*([^;\r\n]*)(?:;|$)/i);
-            if(match) result[match[1]] = match[2];
-            return result;
-          }, {});
-          if('initial-style' in gabcHeader) {
-            useDropCap = gabcHeader['initial-style'] === '1';
-          }
-        }
-        score = new exsurge.ChantScore(ctxt, mappings, useDropCap);
-        if(gabcHeader && gabcHeader.annotation) {
-          score.annotation = new exsurge.Annotation(ctxt, gabcHeader.annotation);
-        }
-        init();
+        setGabc(request.responseText);
       }
     }
     request.open("GET", src, true); // true for asynchronous 
@@ -61,15 +74,7 @@ ChantVisualElementPrototype.createdCallback = function() {
   if(srcAttr) {
     $elem.data('setSrc')(srcAttr);
   } else {
-    mappings = exsurge.Gabc.createMappingsFromSource(ctxt, this.innerText);
-    score = new exsurge.ChantScore(ctxt, mappings, useDropCap);
-
-    var annotationAttr = this.getAttribute("annotation");
-    if (annotationAttr) {
-      // add an annotation
-      score.annotation = new exsurge.Annotation(ctxt, annotationAttr);
-    }
-    init();
+    setGabc(this.innerText,this.getAttribute("annotation"));
   }
 
   var width = 0;
@@ -78,12 +83,21 @@ ChantVisualElementPrototype.createdCallback = function() {
     if(width === newWidth) return;
     width = newWidth;
     // perform layout on the chant
-    score.performLayoutAsync(ctxt, function() {
-      score.layoutChantLines(ctxt, width, function() {
-        // render the score to svg code
-        _element.innerHTML = score.createSvg(ctxt);
+    var innerHTML = '';
+    var doScoreLayout = function(i) {
+      score[i].performLayoutAsync(ctxt, function() {
+        score[i].layoutChantLines(ctxt, width, function() {
+          // render the score to svg code
+          innerHTML += score[i].createSvg(ctxt);
+          if(score[++i]) {
+            doScoreLayout(i);
+          } else {
+            _element.innerHTML = innerHTML;
+          }
+        });
       });
-    });
+    }
+    doScoreLayout(0);
   }
   var attached = false;
   var init = function() {
