@@ -89,6 +89,10 @@ $(function(){
     d = getFromCalendar(date);
     return !!(d && d.rank === 1);
   }
+  Dates.prototype.notFirstOrSecondClassFeast = function(date) {
+    d = getFromCalendar(date);
+    return !(d && (d.rank === 1 || d.rank === 2));
+  }
   Dates.prototype.feastOfOurLady = function(date) {
     d = getFromCalendar(date);
     return !!(d && d.ol);

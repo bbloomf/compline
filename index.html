@@ -130,14 +130,15 @@ Tu autem in nobis es, Dómine, † et nomen sanctum tuum invocátum est super no
 <!--SHOULD BE PROPER:-->
 <br/><i class='red'>The Cantor then says the verses of the Short Responsory to which all reply after each invocation:</i>
 <div id='in-manus-tuas-choices'>
-<input type='radio' name='in-manus-tuas' value='ordinary' select-date='01/01:easter-4 pentecost+6:advent1-2 12/24:12/31' id='in-manus-tuas-ordinary'/><label for='in-manus-tuas-ordinary'>Throughout the year</label><br/>
-<input type='radio' name='in-manus-tuas' class='radio-advent' select-date='advent1-1:12/23' value='advent' id='in-manus-tuas-advent'/><label for='in-manus-tuas-advent'>Saturday before the First Sunday of Advent until Dec. 23 inclusive</label><br/>
-<input type='radio' name='in-manus-tuas' class='radio-pt' select-date='easter+6:pentecost+5' value='pt' id='in-manus-tuas-pt'/><label for='in-manus-tuas-pt'>Saturday before Low Sunday until Friday in the Octave of Pentecost inclusive</label>
+<input type='radio' name='in-manus-tuas' value='ordinary_full' select-date='01/01:easter-4 pentecost+6:advent1-2 12/24:12/31' id='in-manus-tuas-ordinary'/><label for='in-manus-tuas-ordinary'>Throughout the year</label><br/>
+<input type='radio' name='in-manus-tuas' value='passiontide_full' select-date='easter-15:easter-4' select-day='sunday notFirstOrSecondClassFeast' id='in-manus-tuas-passiontide'/><label for='in-manus-tuas-passiontide'>Passiontide, except First or Second Class Feasts</label><br/>
+<input type='radio' name='in-manus-tuas' class='radio-advent' select-date='advent1-1:12/23' value='advent_full' id='in-manus-tuas-advent'/><label for='in-manus-tuas-advent'>Saturday before the First Sunday of Advent until Dec. 23 inclusive</label><br/>
+<input type='radio' name='in-manus-tuas' class='radio-pt' select-date='easter+6:pentecost+5' value='pt_full' id='in-manus-tuas-pt'/><label for='in-manus-tuas-pt'>Saturday before Low Sunday until Friday in the Octave of Pentecost inclusive</label>
 </div>
-<div class='in-manus-tuas ordinary'>
+<div class='in-manus-tuas passiontide_full' style='display:none'>
 <i class='red'>(In Passiontide, except on a First or Second Class Feast, the Gloria Patri is omitted, and all repeat again immediately “In manus tuas...” in its place)</i>
 </div>
-<chant-gabc id='in-manus-tuas' src='in-manus-tuas/ordinary.gabc'></chant-gabc>
+<chant-gabc id='in-manus-tuas' src='in-manus-tuas/ordinary_full.gabc'></chant-gabc>
 <chant-gabc src='custodi-nos.gabc'></chant-gabc>
 <br/>
 </div>
