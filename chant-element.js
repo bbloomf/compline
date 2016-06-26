@@ -2,7 +2,7 @@
 var ChantVisualElementPrototype = Object.create(HTMLElement.prototype);
 
 ChantVisualElementPrototype.createdCallback = function() {
-  var regexGabcHeader = /((?:[\w-_]+:\s*[^;\r\n]*;\r?\n)+)%%\r?\n/;
+  var regexGabcHeader = /((?:[\w-_]+:\s*[^;\r\n]*;?\r?\n)+)%%\r?\n/;
   var ctxt = new exsurge.ChantContext();
   var _element = this;
   var $elem = $(this);
