@@ -16,7 +16,7 @@ body {
 .i{font-style:italic}
 .sc{font-variant:small-caps}
 .trans {font-size:15px;}
-.versiculum{font-family: 'Versiculum';font-variant:normal;font-size: 140%;color:red;}
+.versiculum{font-family: 'Versiculum';font-variant:normal;font-size: 130%;color:red;}
 @media print {
   .print-hide{
     display:none;
@@ -28,6 +28,6 @@ body {
 tspan[style="font-family:'Exsurge Characters';fill:#f00;"] {
   font-family: 'Versiculum'!important;
   font-variant:normal;
-  font-size: 140%;
+  font-size: 130%;
   text-transform: lowercase;
 }
