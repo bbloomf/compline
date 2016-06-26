@@ -56,6 +56,9 @@ ChantVisualElementPrototype.createdCallback = function() {
       } else if(annotationAttr) {
         score[i].annotation = new exsurge.Annotation(ctxt, annotationAttr);
       }
+      if(gabcHeader && gabcHeader['user-notes']) {
+        score[i].userNotes = gabcHeader['user-notes'];
+      }
     }
     init();
   };
@@ -85,6 +88,9 @@ ChantVisualElementPrototype.createdCallback = function() {
     // perform layout on the chant
     var innerHTML = '';
     var doScoreLayout = function(i) {
+      if(score[i].userNotes) {
+        innerHTML += '<i>'+score[i].userNotes + '</i><br>';
+      }
       score[i].performLayoutAsync(ctxt, function() {
         score[i].layoutChantLines(ctxt, width, function() {
           // render the score to svg code
