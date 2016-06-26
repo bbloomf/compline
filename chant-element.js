@@ -59,6 +59,9 @@ ChantVisualElementPrototype.createdCallback = function() {
       if(gabcHeader && gabcHeader['user-notes']) {
         score[i].userNotes = gabcHeader['user-notes'];
       }
+      if(gabcHeader && gabcHeader.commentary) {
+        score[i].commentary = gabcHeader.commentary;
+      }
     }
     init();
   };
@@ -88,8 +91,14 @@ ChantVisualElementPrototype.createdCallback = function() {
     // perform layout on the chant
     var innerHTML = '';
     var doScoreLayout = function(i) {
+      if(score[i].userNotes || score[i].commentary) {
+        innerHTML += '<br>';
+      }
       if(score[i].userNotes) {
-        innerHTML += '<i>'+score[i].userNotes + '</i><br>';
+        innerHTML += '<i>'+score[i].userNotes + '</i>';
+      }
+      if(score[i].commentary) {
+        innerHTML += '<i style="float:right">'+score[i].commentary + '</i>';
       }
       score[i].performLayoutAsync(ctxt, function() {
         score[i].layoutChantLines(ctxt, width, function() {
