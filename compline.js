@@ -89,9 +89,9 @@ $(function(){
     d = getFromCalendar(date);
     return !!(d && d.rank === 1);
   }
-  Dates.prototype.notFirstOrSecondClassFeast = function(date) {
+  Dates.prototype.firstOrSecondClassFeast = function(date) {
     d = getFromCalendar(date);
-    return !(d && (d.rank === 1 || d.rank === 2));
+    return !!(d && (d.rank === 1 || d.rank === 2));
   }
   Dates.prototype.feastOfOurLady = function(date) {
     d = getFromCalendar(date);
@@ -162,18 +162,27 @@ $(function(){
   window.momentFromString = momentFromString;
   function dateMatches(date,dateRange) {
     var dates = datesForYear(date.year());
-    //                    xxx1222222113333331x45555544466666677777444xxxxx89a
-    var regexDateRange = /(?:((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?))(?::(((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?)))?/g;
+    //                    111xxxx2333333224444442x56666655577777788888555xxxxx9ab
+    var regexDateRange = /(!)?(?:((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?))(?::(((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?)))?/g;
     var matches;
+    var test;
     while(matches = regexDateRange.exec(dateRange)) {
-      var range = [momentFromRegex(date,matches,dates)];
-      if(matches[8]) {
-        range.push(momentFromRegex(date,matches.slice(8),dates))
-        if (date.isBetween(range[0],range[1],'day','[]')) return true;
+      var opposite = matches[1];
+      var range = [momentFromRegex(date,matches.slice(1),dates)];
+      if(matches[9]) {
+        range.push(momentFromRegex(date,matches.slice(9),dates))
+        test = date.isBetween(range[0],range[1],'day','[]');
+        if(opposite) test = !test;
+        if(test) return true;
       } else {
         if (typeof range[0]==='boolean') {
+          if(opposite) range[0] = !range[0];
           if(range[0]) return true;
-        } else if(date.isSame(range[0],'day')) return true;
+        } else {
+          test = date.isSame(range[0],'day');
+          if(opposite) test = !test;
+          if(test) return true;
+        }
       }
     }
     return false;
