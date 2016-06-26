@@ -1,3 +1,1 @@
-The rubric (In Passiontide, except on a First or Second Class Feast, the Gloria Patri is omitted, and all repeat again immediately “In manus tuas...” in its place) at the short responsory could be implemented by having another version of the GABC.
-
 Optional removal of all the selection radio buttons that are based purely on the date.
