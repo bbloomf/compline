@@ -190,14 +190,13 @@ Benedícat et custódiat nos omnípotens et miséricors Dóminus, Pater, et Fíl
 MARIAN ANTIPHON
 <!-- SHOULD BE PROPER -->
 <div id='marian-antiphon-choices'>
-<input type='radio' name='marian-antiphon' class='radio-advent radio-till-feb1' value='alma-redemptoris-mater' id='marian-antiphon-alma'/><label for='marian-antiphon-alma'>Alma Redemptoris Mater <i class='red'>(from Saturday before the First Sunday of Advent until Feb. 1 inclusive)</i></label><br/>
-<input type='radio' name='marian-antiphon' value='alma-redemptoris-mater-solemn' id='marian-antiphon-alma-solemn'/><label for='marian-antiphon-alma-solemn'>Alma Redemptoris Mater (Solemn)</label><br/>
-<input type='radio' name='marian-antiphon' class='radio-feb2-till-spy-wed' value='ave-regina-caelorum' id='marian-antiphon-ave'/><label for='marian-antiphon-ave'>Ave Regina Cælorum <i class='red'>(From February 2 until Wednesday of Holy Week inclusive)</i></label><br/>
-<input type='radio' name='marian-antiphon' value='ave-regina-caelorum-solemn' id='marian-antiphon-ave-solemn'/><label for='marian-antiphon-ave-solemn'>Ave Regina Cælorum (Solemn)</label><br/>
-<input type='radio' name='marian-antiphon' class='radio-pt' value='regina-caeli' id='marian-antiphon-regina'/><label for='marian-antiphon-regina'>Regina Cæli <i class='red'>(from Easter Sunday until Friday in the Octave of Pentecost inclusive)</i></label><br/>
-<input type='radio' name='marian-antiphon' value='regina-caeli-solemn' id='marian-antiphon-regina-solemn'/><label for='marian-antiphon-regina-solemn'>Regina Cæli (Solemn)</label><br/>
-<input type='radio' name='marian-antiphon' value='salve-regina' checked id='marian-antiphon-salve'/><label for='marian-antiphon-salve'>Salve Regina <i class='red'>(from Saturday before Trinity Sunday until Friday before the First Sunday of Advent inclusive)</i></label><br/>
-<input type='radio' name='marian-antiphon' value='salve-regina-solemn' id='marian-antiphon-salve-solemn'/><label for='marian-antiphon-salve-solemn'>Salve Regina (Solemn)</label>
+<select name='marian-antiphon'>
+  <option select-date='advent1-1:12/31 01/01:02/01' value='alma-redemptoris-mater' id='marian-antiphon-alma'>Alma Redemptoris Mater <i class='red'>(from Saturday before the First Sunday of Advent until Feb. 1 inclusive)</i></option>
+  <option select-date='02/02:easter-4' value='ave-regina-caelorum' id='marian-antiphon-ave'>Ave Regina Cælorum <i class='red'>(From February 2 until Wednesday of Holy Week inclusive)</i></option>
+  <option select-date='easter:pentecost+5' value='regina-caeli' id='marian-antiphon-regina'>Regina Cæli <i class='red'>(from Easter Sunday until Friday in the Octave of Pentecost inclusive)</i></option>
+  <option select-date=pentecost+6:advent1-2' value='salve-regina' id='marian-antiphon-salve'>Salve Regina <i class='red'>(from Saturday before Trinity Sunday until Friday before the First Sunday of Advent inclusive)</i></option>
+</select>
+<br/><label><input type='checkbox' id='marian-antiphon-solemn'> Solemn Tone</label>
 </div>
 <div><chant-gabc id='marian-antiphon' src='marian-antiphon/salve-regina.gabc'></chant-gabc></div>
 <br/>

@@ -1,1 +1,2 @@
 Optional removal of all the selection radio buttons that are based purely on the date.
+Fortasse solummodo mutabo eos in dropdowns.  Possum uti "bootstrap" si dropdowns nimis fœdes sunt.

@@ -112,25 +112,20 @@ $(function(){
   function datesForYear(Y) {
     return new Dates(Y);
   }
-  function isTriduum(date) {
-    var easter = EasterDate(date.year());
-    var maundyThursday = moment(easter).subtract(3,'days');
-    return date.isSameOrAfter(maundyThursday) && date.isBefore(easter);
+  Dates.prototype.isTriduum = function(date) {
+    var maundyThursday = moment(this.easter).subtract(3,'days');
+    return date.isSameOrAfter(maundyThursday) && date.isBefore(this.easter);
   }
-  function isPaschalWeek(date) {
-    var easter = EasterDate(date.year());
-    var easterSaturday = moment(easter).add(6,'days');
-    return date.isSameOrAfter(easter) && date.isBefore(easterSaturday);
+  Dates.prototype.isPaschalWeek = function(date) {
+    var easterSaturday = moment(this.easter).add(6,'days');
+    return date.isSameOrAfter(this.easter) && date.isBefore(easterSaturday);
   }
-  function isPaschalTime(date) {
-    var easter = EasterDate(date.year());
-    var pentecostSaturday = moment(easter).add(55,'days');
-    return date.isSameOrAfter(easter) && date.isBefore(pentecostSaturday);
+  Dates.prototype.isPaschalTime = function(date) {
+    var pentecostSaturday = moment(this.easter).add(55,'days');
+    return date.isSameOrAfter(this.easter) && date.isBefore(pentecostSaturday);
   }
-  function isAdvent(date) {
-    var christmas = moment([date.year(),11,25]);
-    var advent1 = moment(christmas).subtract((christmas.day() || 7) + 7*3,'days');
-    return date.isSameOrAfter(moment(advent1).subtract(1,'day')) && date.isSameOrBefore(moment(christmas).subtract(1,'day'));
+  Dates.prototype.isAdvent = function(date) {
+    return date.isSameOrAfter(moment(this.advent1).subtract(1,'day')) && date.isSameOrBefore(moment(this.christmas).subtract(1,'day'));
   }
   function momentFromRegex(date,matches,dates) {
     if(matches[1]) {
@@ -307,6 +302,7 @@ $(function(){
     }
   }
   var setDate = function(date) {
+    var dates = datesForYear(date.year());
     //show and hide [include] and [exclude] elements based on the date
     $('[exclude]').each(function(){
       var $this = $(this);
@@ -316,33 +312,49 @@ $(function(){
       var $this = $(this);
       $this.toggle(dateMatches(date, $this.attr('include')));
     });
-    //select inputs based on date
-    $('input[select-date]').each(function(){
-      var $this = $(this);
-      var selectDay = $this.attr('select-day');
+    var dateMatchesSelectDate = function($elem) {
+      var selectDay = $elem.attr('select-day');
       if(selectDay) {
         selectDay = dateMatches(date, selectDay);
       } else {
         selectDay = true;
       }
-      var matches = dateMatches(date, $this.attr('select-date'));
-      if(matches && selectDay) {
+      var matches = dateMatches(date, $elem.attr('select-date'));
+      return matches && selectDay;
+    }
+    //select inputs based on date
+    $('input[select-date]').each(function(){
+      var $this = $(this);
+      var matches = dateMatchesSelectDate($this);
+      if(matches) {
         $this.prop('checked', true).change();
       } else {
-        var otherInputs = $('input[name=' + $this.attr('name') + ']');
+        var otherInputs = $this.siblings('input[name=' + $this.attr('name') + ']');
         if(otherInputs.length==1 && !otherInputs.is('[select-date]')) {
           otherInputs.prop('checked',true).change();
         }
       }
     });
-    var isPT = isPaschalTime(date);
+    $('option[select-date]').each(function(){
+      var $this = $(this);
+      var matches = dateMatchesSelectDate($this);
+      if(matches) {
+        $this.parent().val($this.val()).change();
+      } else {
+        var otherInputs = $this.siblings('option');
+        if(otherInputs.length==1 && !otherInputs.is('[select-date]')) {
+          $this.parent().val(otherInputs.val()).change();
+        }
+      }
+    });
+    var isPT = dates.isPaschalTime(date);
     var showChooseDay = (date.day() != 0);
-    if(isPT && isPaschalWeek(date)) {
+    if(isPT && dates.isPaschalWeek(date)) {
       showChooseDay = false;
       setPsalms(0,'no-antiphon',true);
       setCanticle('-po');
       $('#weekday').text('Easter ' + days[date.day()]);
-    } else if(isTriduum(date)) {
+    } else if(dates.isTriduum(date)) {
       showChooseDay = false;
       var day = date.day();
       setPsalms('triduum');
@@ -378,15 +390,6 @@ $(function(){
     } else {
       rbWeekday.prop('checked',true);
     }
-    $('input[value="per-annum"]').prop('checked',!isPT).change();
-    if(isAdvent(date)) {
-      $('.radio-advent').prop('checked',true).change();
-    }
-    if(date.isBefore(moment([date.year(), 1, 2]))) {
-      $('.radio-till-feb2').prop('checked',true).change();
-    } else if(date.isBefore(moment(EasterDate(date.year())).subtract(3,'days'))) {
-      $('.radio-feb2-till-spy-wed').prop('checked',true).change();
-    }
     if((day == 0 || day == 6) && $('#te-lucis-Ferial').prop('checked')) {
       $('#te-lucis-Ordinary').prop('checked',true).change();
     }
@@ -404,20 +407,36 @@ $(function(){
       setPsalms(parseInt(this.value), choices.season == 'paschal', true);
     }
   });
+  var loadChant = function(chant,value,id) {
+    var src = chant + '/' + value + '.gabc';
+    setChantSrc($('#'+chant),src);
+    var $div = $('chant-gabc[' + id + ']');
+    if($div.length > 0) {
+      setChantSrc($div,$div.attr(id));
+    }
+    $('div.' + chant).hide();
+    $('div.' + chant + '.' + value).show();
+  }
   var choices = {};
-  $('[id$=-choices] input').change(function(){
+  $('[id$=-choices] input[type=radio]').change(function(){
     var chant = this.name;
     choices[chant] = this.value;
     if(chant=='season') {
       return;
     }
-    var src = chant + '/' + this.value + '.gabc';
-    setChantSrc($('#'+chant),src);
-    var $div = $('chant-gabc[' + this.id + ']');
-    if($div.length > 0) {
-      setChantSrc($div,$div.attr(this.id));
+    loadChant(chant,this.value,this.id)
+  });
+  $('#marian-antiphon-choices select,#marian-antiphon-solemn').change(function(){
+    var $select = $('#marian-antiphon-choices select');
+    var solemn = $('#marian-antiphon-solemn').prop('checked');
+    var chant = 'marian-antiphon';
+    var val = $select.val();
+    var id = $select.find('option[value='+val+']').prop('id');
+    if(solemn) {
+      val += '-solemn';
+      id += '-solemn';
     }
-    $('div.' + chant).hide();
-    $('div.' + chant + '.' + this.value).show();
+    choices[chant] = val;
+    loadChant(chant, val, id);
   });
 });
