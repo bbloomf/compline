@@ -1,1 +1,3 @@
 Optional removal of all the selection radio buttons that are based purely on the date.
+Optional fully notated psalms (make the verse numbers red for this)
+Regional calendars

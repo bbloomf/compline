@@ -434,7 +434,7 @@ var regionalCalendars = {
 "12/8": {title:"On the Immaculate Conception of the Blessed Virgin Mary, Principal Patroness of the United States", rank:1},
 "12/12": {title:"Our Lady of Guadalupe, Patroness of the Americas", rank:3, ol:1},
 "01/04": {title:"St. Elizabeth Ann Seton, Widow", rank:3},
-//"01/22+ifSunday": {title:"Votive Mass for Peace", rank:2},
+"01/22": {title:"Votive Mass for Peace", rank:2, plusOne:"ifSunday"},
 "09/09": {title:"St. Peter Claver Confessor", rank:3, com:"St. Gorgonius Martyr"},
 "09/26": {title:"Ss. Jean, Isaac and Companions Martyrs", rank:3, com:"Ss. Cyprian and Justina, Virgin, Martyrs"},
 "10/25": {title:"St. Isidore Farmer and Confessor", rank:3, com:"Ss. Chrystanthus and Daria Martyrs"},

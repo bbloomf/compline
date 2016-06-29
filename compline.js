@@ -1,4 +1,9 @@
 $(function(){
+  var countryCode;
+  $.getJSON("http://freegeoip.net/json/", function(result){
+      console.info('Country: ' + result.country_name + '\n' + 'Code: ' + result.country_code);
+      countryCode = result.country_code;
+  });
   // the following function is based on one taken from http://www.irt.org/articles/js052/index.htm
   // Y is the year to calculate easter for, e.g., 2017
   function EasterDate(Y) {
@@ -42,7 +47,7 @@ $(function(){
     dateCache[Y] = this;
   }
   function getSunday(date) {
-    var dates = datesForYear(date.year());
+    var dates = datesForMoment(date);
     for(var i = 0; i < CalendarSundays.length; ++i) {
       var test = CalendarSundays[i];
       if(test.on) {
@@ -61,29 +66,44 @@ $(function(){
     }
   }
   function getFromCalendar(date) {
+    if('liturgical' in date) return date.liturgical;
     if(date.day() === 0) {
-      return getSunday(date);
+      return date.liturgical = getSunday(date);
     }
-    if(dateMatches(date,'corpusChristi')) return {title:'Corpus Christi', rank:1};
-    if(dateMatches(date,'sacredHeart')) return {title:'The Most Sacred Heart of Jesus', rank:1};
-    if(dateMatches(date,'easter-3')) return {title:'Maundy Thursday', rank:1};
-    if(dateMatches(date,'easter-2')) return {title:'Good Friday', rank:1};
-    if(dateMatches(date,'easter-1')) return {title:'Holy Saturday', rank:1};
-    if(dateMatches(date,'lent1-4')) return {title:'Ash Wednesday', rank:5}
+    if(dateMatches(date,'corpusChristi')) return date.liturgical = {title:'Corpus Christi', rank:1};
+    if(dateMatches(date,'sacredHeart')) return date.liturgical = {title:'The Most Sacred Heart of Jesus', rank:1};
+    if(dateMatches(date,'easter-3')) return date.liturgical = {title:'Maundy Thursday', rank:1};
+    if(dateMatches(date,'easter-2')) return date.liturgical = {title:'Good Friday', rank:1};
+    if(dateMatches(date,'easter-1')) return date.liturgical = {title:'Holy Saturday', rank:1};
+    if(dateMatches(date,'lent1-4')) return date.liturgical = {title:'Ash Wednesday', rank:5}
+    var options = {};
+    if(regionalCalendars) {
+      var key = date.format('MM/DD'),
+          altKey = moment(date).subtract(1,'day').format('MM/DD');
+      $.each(regionalCalendars, function(name, calendar){
+        if(key in calendar) {
+          options[name] = calendar[key];
+        } else if(altKey in calendar) {
+          var d = calendar[altKey];
+          if(d.plusOne === 'ifSunday' && date.day()===1) options[name] = d;
+        }
+      });
+    }
+    if(Object.keys(options).length) console.info(options);
     if(romanCalendar) {
-      if(date.day()==0) return null;
+      if(date.day()==0) return date.liturgical = null;
       var month = date.month();
       var day = date.date();
       var d = romanCalendar[month][day];
       if(!d && day > 1) {
         d = romanCalendar[month][day-1];
-        if(!d || !d.plus) return null;
-        else if(d.plus === 'ifLeapYear' && !date.isLeapYear()) return null;
-        else if(d.plus === 'ifSunday' && !date.day()===1) return null;
+        if(!d || !d.plus) return date.liturgical = null;
+        else if(d.plusOne === 'ifLeapYear' && !date.isLeapYear()) return date.liturgical = null;
+        else if(d.plusOne === 'ifSunday' && !date.day()===1) return date.liturgical = null;
       }
-      return d;
+      return date.liturgical = d;
     }
-    return null;
+    return date.liturgical = null;
   }
   Dates.prototype.firstClassFeast = function(date) {
     d = getFromCalendar(date);
@@ -109,8 +129,8 @@ $(function(){
   Dates.prototype.sunday = function(date) {
     return date.day() === 0;
   }
-  function datesForYear(Y) {
-    return new Dates(Y);
+  function datesForMoment(moment) {
+    return moment.Dates || (moment.Dates = new Dates(moment.year()));
   }
   Dates.prototype.isTriduum = function(date) {
     var maundyThursday = moment(this.easter).subtract(3,'days');
@@ -148,7 +168,7 @@ $(function(){
     }
   }
   function momentFromString(str,date) {
-    var dates = datesForYear(date.year());
+    var dates = datesForMoment(date);
     //                    xxx1222222113333331x45555544466666677777444xxxxx89a
     var regexDateRange = /(?:((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?))(?::(((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?)))?/g;
     var matches = regexDateRange.exec(str);
@@ -156,7 +176,7 @@ $(function(){
   }
   window.momentFromString = momentFromString;
   function dateMatches(date,dateRange) {
-    var dates = datesForYear(date.year());
+    var dates = datesForMoment(date);
     //                    111xxxx2333333224444442x56666655577777788888555xxxxx9ab
     var regexDateRange = /(!)?(?:((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?))(?::(((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?)))?/g;
     var matches;
@@ -302,7 +322,7 @@ $(function(){
     }
   }
   var setDate = function(date) {
-    var dates = datesForYear(date.year());
+    var dates = datesForMoment(date);
     //show and hide [include] and [exclude] elements based on the date
     $('[exclude]').each(function(){
       var $this = $(this);
