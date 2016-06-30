@@ -72,6 +72,7 @@ $(function(){
     }
     if(dateMatches(date,'corpusChristi')) return date.liturgical = {title:'Corpus Christi', rank:1};
     if(dateMatches(date,'sacredHeart')) return date.liturgical = {title:'The Most Sacred Heart of Jesus', rank:1};
+    if(dateMatches(date,'ascension')) return date.liturgical = {title:'The Ascension of Our Lord', rank:1};
     if(dateMatches(date,'easter-3')) return date.liturgical = {title:'Maundy Thursday', rank:1};
     if(dateMatches(date,'easter-2')) return date.liturgical = {title:'Good Friday', rank:1};
     if(dateMatches(date,'easter-1')) return date.liturgical = {title:'Holy Saturday', rank:1};

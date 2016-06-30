@@ -1,3 +1,5 @@
 Optional removal of all the selection radio buttons that are based purely on the date.
-Optional fully notated psalms (make the verse numbers red for this)
+stored settings
+Optional fully notated psalms
 Regional calendars
+Offline support?
