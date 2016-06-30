@@ -28,18 +28,18 @@ ChantVisualElementPrototype.createdCallback = function() {
     gabc = gabc.replace(/<v>\\([VRA])bar<\/v>/g,function(match,barType) {
       return barType + '/.';
     }).replace(/<\/?sc>/g,'%')
-    .replace(/<\/?b>/g,'*')
-    .replace(/<\/?i>/g,'_')
-    .replace(/(\s)_([^\s*]+)_(\(\))?(\s)/g,"$1^_$2_^$3$4")
-    .replace(/(\([cf][1-4]\)|\s)(\d+\.)(\s\S)/g,"$1^$2^$3")
-    .replace(/<sp>'(?:ae|æ)<\/sp>/g,'ǽ')
-    .replace(/<v>\\greheightstar<\/v>/g,'*');
+      .replace(/<\/?b>/g,'*')
+      .replace(/<\/?i>/g,'_')
+      .replace(/<sp>'(?:ae|æ)<\/sp>/g,'ǽ')
+      .replace(/<v>\\greheightstar<\/v>/g,'*');
     var gabcs = gabc.split(regexGabcHeader);
     if(gabcs.length===1) gabcs.splice(0,'','');
     var limit = (gabcs.length - 1) / 2;
     for(var i=0; i<limit; ++i) {
       var gabcHeader = gabcs[2*i+1].split(/\r?\n/);
-      var gabc = gabcs[2*i+2];
+      var gabc = gabcs[2*i+2]
+        .replace(/(\s)_([^\s*]+)_(\(\))?(\s)/g,"$1^_$2_^$3$4")
+        .replace(/(\([cf][1-4]\)|\s)(\d+\.)(\s\S)/g,"$1^$2^$3");
       mappings[i] = exsurge.Gabc.createMappingsFromSource(ctxt, gabc);
       if(gabcHeader) {
         gabcHeader = gabcHeader.reduce(function(result,line){
