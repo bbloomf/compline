@@ -30,6 +30,8 @@ ChantVisualElementPrototype.createdCallback = function() {
     }).replace(/<\/?sc>/g,'%')
     .replace(/<\/?b>/g,'*')
     .replace(/<\/?i>/g,'_')
+    .replace(/(\s)_([^\s*]+)_(\(\))?(\s)/g,"$1^_$2_^$3$4")
+    .replace(/(\([cf][1-4]\)|\s)(\d+\.)(\s\S)/g,"$1^$2^$3")
     .replace(/<sp>'(?:ae|æ)<\/sp>/g,'ǽ')
     .replace(/<v>\\greheightstar<\/v>/g,'*');
     var gabcs = gabc.split(regexGabcHeader);

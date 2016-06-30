@@ -4,8 +4,21 @@
   font-weight: normal;
   src: url('versiculum.ttf') format('truetype');
 }
+.verses>p {
+  line-height:100%;
+  margin: 6pt 0;
+}
+.verses span.verse-number {
+  float:left;
+  width:25pt;
+  text-align:right;
+  color: #d00;
+}
 .red {
-  color: red;
+  color: #d00;
+}
+[style*="fill:#f00;"] {
+  fill: #d00!important;
 }
 body {
   font-family: 'Crimson Text', serif;
