@@ -1,0 +1,14 @@
+﻿initial-style: 1;
+annotation: 6.;
+%%
+(c4)IN(f) ma(f)nus(f) tu(fg)as(g) Dó(gf)mi(g)ne,(gh..) *(;) Com(h')mén(f)do(gh) spí(g)ri(fd)tum(fg) me(g.)um.(f.) (::)
+<i>Repeat:</i>()  In(f) ma(f)nus...(f) (::)
+
+initial-style: 0;
+%%
+(c4)<v>\Vbar</v> Red(h)e(h)mí(ixhi)sti(h) nos(h) Dó(gh)mi(g)ne,(g'_) (,) De(h)us(g') ve(g)ri(gf)tá(g)tis.(gh..) (::)
+<v>\Rbar</v>() Com(h')mén(f)do(gh) spí(g)ri(fd)tum(fg) me(g.)um.(f.) (::)
+
+initial-style: 0;
+%%
+(c4)<v>\Rbar</v>() In(f) ma(f)nus(f) tu(fg)as(g) Dó(gf)mi(g)ne,(gh..) (;) Com(h')mén(f)do(gh) spí(g)ri(fd)tum(fg) me(g.)um.(f.) (::)

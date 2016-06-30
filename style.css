@@ -1,0 +1,46 @@
+@font-face {
+  font-family: 'Versiculum';
+  font-style: normal;
+  font-weight: normal;
+  src: url('versiculum.ttf') format('truetype');
+}
+.verses>p {
+  line-height:100%;
+  margin: 6pt 0;
+}
+.verses span.verse-number {
+  float:left;
+  width:25pt;
+  text-align:right;
+  color: #d00;
+}
+.red {
+  color: #d00;
+}
+[style*="fill:#f00;"] {
+  fill: #d00!important;
+}
+body {
+  font-family: 'Crimson Text', serif;
+  font-size: 13pt;
+}
+.sans{font-family:Verdana,Helvetica,sans-serif}
+.b{font-weight:700}
+.i{font-style:italic}
+.sc{font-variant:small-caps}
+.trans {font-size:15px;}
+.versiculum{font-family: 'Versiculum';font-variant:normal;font-size: 130%;color:red;}
+@media print {
+  .print-hide{
+    display:none;
+  }
+  body{
+    max-width:8in;
+  }
+}
+tspan[style="font-family:'Exsurge Characters';fill:#f00;"] {
+  font-family: 'Versiculum'!important;
+  font-variant:normal;
+  font-size: 130%;
+  text-transform: lowercase;
+}
