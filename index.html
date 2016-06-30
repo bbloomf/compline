@@ -145,7 +145,7 @@ Tu autem in nobis es, Dómine, † et nomen sanctum tuum invocátum est super no
 <div id="canticle" exclude='easter-3:easter-1'>
 <chant-gabc src='canticle-ant.gabc'></chant-gabc>
 <chant-gabc src='canticle-psalm.gabc'></chant-gabc>
-<div id="verses"><p><span class="verse-number">2.&nbsp;</span><i>Quia</i> vidérunt <b>ó</b>culi <b>me</b>i&nbsp;* salutá<i>re</i> <b>tu</b>um&nbsp;:<br></p><p><span class="verse-number">3.&nbsp;</span><b>Quod</b> pa<b>rá</b>sti&nbsp;* ante fáciem ómnium po<i>pu</i><b>ló</b>rum&nbsp;:<br></p><p><span class="verse-number">4.&nbsp;</span><i>Lumen</i> ad revelati<b>ó</b>nem <b>gén</b><b>ti</b>um,&nbsp;* et glóriam plebis tu<i>æ</i> <b>Is</b>ræl.<br></p><p><span class="verse-number">5.&nbsp;</span><i>Glóri</i>a <b>Pá</b>tri, et <b>Fí</b><b>li</b>o,&nbsp;* et Spirítu<i>i</i> <b>Sán</b>cto.<br></p><p><span class="verse-number">6.&nbsp;</span><i>Sicut</i> érat in princípio, et <b>núnc</b>, et <b>sém</b>per,&nbsp;* et in sǽcula sæculó<i>rum</i>. <b>A</b>men.<br></p></div>
+<div class="verses"><p><span class="verse-number">2.&nbsp;</span><i>Quia</i> vidérunt <b>ó</b>culi <b>me</b>i&nbsp;* salutá<i>re</i> <b>tu</b>um&nbsp;:<br></p><p><span class="verse-number">3.&nbsp;</span><b>Quod</b> pa<b>rá</b>sti&nbsp;* ante fáciem ómnium po<i>pu</i><b>ló</b>rum&nbsp;:<br></p><p><span class="verse-number">4.&nbsp;</span><i>Lumen</i> ad revelati<b>ó</b>nem <b>gén</b><b>ti</b>um,&nbsp;* et glóriam plebis tu<i>æ</i> <b>Is</b>ræl.<br></p><p><span class="verse-number">5.&nbsp;</span><i>Glóri</i>a <b>Pá</b>tri, et <b>Fí</b><b>li</b>o,&nbsp;* et Spirítu<i>i</i> <b>Sán</b>cto.<br></p><p><span class="verse-number">6.&nbsp;</span><i>Sicut</i> érat in princípio, et <b>núnc</b>, et <b>sém</b>per,&nbsp;* et in sǽcula sæculó<i>rum</i>. <b>A</b>men.<br></p></div>
 <chant-gabc src='canticle-ant.gabc'></chant-gabc>
 </div>
 <div exclude='easter-3:easter-1 allSouls'>
@@ -191,15 +191,18 @@ MARIAN ANTIPHON
 <!-- SHOULD BE PROPER -->
 <div id='marian-antiphon-choices'>
 <select name='marian-antiphon'>
-  <option select-date='advent1-1:12/31 01/01:02/01' value='alma-redemptoris-mater' id='marian-antiphon-alma'>Alma Redemptoris Mater <i class='red'>(from Saturday before the First Sunday of Advent until Feb. 1 inclusive)</i></option>
-  <option select-date='02/02:easter-4' value='ave-regina-caelorum' id='marian-antiphon-ave'>Ave Regina Cælorum <i class='red'>(From February 2 until Wednesday of Holy Week inclusive)</i></option>
-  <option select-date='easter:pentecost+5' value='regina-caeli' id='marian-antiphon-regina'>Regina Cæli <i class='red'>(from Easter Sunday until Friday in the Octave of Pentecost inclusive)</i></option>
-  <option select-date=pentecost+6:advent1-2' value='salve-regina' id='marian-antiphon-salve'>Salve Regina <i class='red'>(from Saturday before Trinity Sunday until Friday before the First Sunday of Advent inclusive)</i></option>
+  <option select-date='advent1-1:12/31 01/01:02/01' value='alma-redemptoris-mater' id='marian-antiphon-alma'>Alma Redemptoris Mater</option>
+  <option select-date='02/02:easter-4' value='ave-regina-caelorum' id='marian-antiphon-ave'>Ave Regina Cælorum</option>
+  <option select-date='easter:pentecost+5' value='regina-caeli' id='marian-antiphon-regina'>Regina Cæli</option>
+  <option select-date='pentecost+6:advent1-2' value='salve-regina' id='marian-antiphon-salve'>Salve Regina</option>
 </select>
-<br/><label><input type='checkbox' id='marian-antiphon-solemn'> Solemn Tone</label>
+<label><input type='checkbox' id='marian-antiphon-solemn'>&nbsp;Solemn Tone</label>
+<div class='marian-antiphon alma-redemptoris-mater alma-redemptoris-mater-solemn'><i class='red'>(from Saturday before the First Sunday of Advent until Feb. 1 inclusive)</i></div>
+<div class='marian-antiphon ave-regina-caelorum ave-regina-caelorum-solemn'><i class='red'>(From February 2 until Wednesday of Holy Week inclusive)</i></div>
+<div class='marian-antiphon regina-caeli regina-caeli-solemn'><i class='red'>(from Easter Sunday until Friday in the Octave of Pentecost inclusive)</i></div>
+<div class='marian-antiphon salve-regina salve-regina-solemn'><i class='red'>(from Saturday before Trinity Sunday until Friday before the First Sunday of Advent inclusive)</i></div>
 </div>
 <div><chant-gabc id='marian-antiphon' src='marian-antiphon/salve-regina.gabc'></chant-gabc></div>
-<br/>
 <div class='marian-antiphon alma-redemptoris-mater alma-redemptoris-mater-solemn' style='display:none;'>
 <span include="02/02:advent1-2">
 <i class='red'>During Advent:</i><br/>

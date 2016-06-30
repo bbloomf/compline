@@ -414,9 +414,6 @@ $(function(){
       $('#te-lucis-Ordinary').prop('checked',true).change();
     }
   }
-  $('#date').change(function(){
-    if(this.value) setDate(moment(this.value));
-  }).change();
   var setChantSrc = function($elem,src){
     if(!$elem || $elem.length == 0) return;
     $elem.attr('src',src);
@@ -444,7 +441,7 @@ $(function(){
     if(chant=='season') {
       return;
     }
-    loadChant(chant,this.value,this.id)
+    loadChant(chant,this.value,this.id);
   });
   $('#marian-antiphon-choices select,#marian-antiphon-solemn').change(function(){
     var $select = $('#marian-antiphon-choices select');
@@ -459,4 +456,7 @@ $(function(){
     choices[chant] = val;
     loadChant(chant, val, id);
   });
+  $('#date').change(function(){
+    if(this.value) setDate(moment(this.value));
+  }).change();
 });

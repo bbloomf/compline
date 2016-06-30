@@ -92,7 +92,7 @@ ChantVisualElementPrototype.createdCallback = function() {
     width = newWidth;
     // perform layout on the chant
     var innerHTML = '';
-    var doScoreLayout = function(i) {
+    for(var i = 0; i < score.length; ++i) {
       if(score[i].userNotes || score[i].commentary) {
         innerHTML += '<br>';
       }
@@ -102,19 +102,12 @@ ChantVisualElementPrototype.createdCallback = function() {
       if(score[i].commentary) {
         innerHTML += '<i style="float:right">'+score[i].commentary + '</i>';
       }
-      score[i].performLayoutAsync(ctxt, function() {
-        score[i].layoutChantLines(ctxt, width, function() {
-          // render the score to svg code
-          innerHTML += score[i].createSvg(ctxt);
-          if(score[++i]) {
-            doScoreLayout(i);
-          } else {
-            _element.innerHTML = innerHTML;
-          }
-        });
-      });
+      score[i].performLayout(ctxt);
+      score[i].layoutChantLines(ctxt, width);
+      // render the score to svg code
+      innerHTML += score[i].createSvg(ctxt);
     }
-    doScoreLayout(0);
+    _element.innerHTML = innerHTML;
   }
   var attached = false;
   var init = function() {
