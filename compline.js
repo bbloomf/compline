@@ -1,8 +1,8 @@
 $(function(){
-  var countryCode;
+  var ipGeo;
   $.getJSON("http://freegeoip.net/json/", function(result){
       console.info('Country: ' + result.country_name + '\n' + 'Code: ' + result.country_code);
-      countryCode = result.country_code;
+      ipGeo = result;
   });
   // the following function is based on one taken from http://www.irt.org/articles/js052/index.htm
   // Y is the year to calculate easter for, e.g., 2017
