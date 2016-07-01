@@ -306,7 +306,7 @@ $(function($){
       var html = ant + psalm + data + ant;
       $('#placeholder').empty().append(html);
     };
-    $.get('psalms/'+day+'/psalm-verses'+pt+'.html',gotData).error(function(){
+    $.get('psalms/'+day+'/psalm-verses'+pt+'.html',gotData).fail(function(){
       $.get('psalms/'+day+'/psalm-verses.html',gotData);
     });
   };
