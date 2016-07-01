@@ -1,5 +1,0 @@
-Optional removal of all the selection radio buttons that are based purely on the date.
-stored settings
-Optional fully notated psalms
-Regional calendars
-Offline support?
