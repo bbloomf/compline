@@ -1,6 +1,6 @@
 $(function(){
   var ipGeo;
-  $.getJSON("http://freegeoip.net/json/", function(result){
+  $.getJSON("https://freegeoip.net/json/", function(result){
       console.info('Country: ' + result.country_name + '\n' + 'Code: ' + result.country_code);
       ipGeo = result;
   });
@@ -33,7 +33,7 @@ $(function(){
     this.christmas = moment([Y,11,25]);
     this.advent1 = moment(this.christmas).subtract((this.christmas.day() || 7) + 7*3,'days');
     this.allSouls = moment([Y,10,2]);
-    if(this.allSouls.day() == 0) this.allSouls.add(1,'day');
+    if(this.allSouls.day() === 0) this.allSouls.add(1,'day');
     this.corpusChristi = moment(this.pentecost).add(11,'days');
     this.sacredHeart = moment(this.pentecost).add(19,'days');
     this.christTheKing = moment([Y,9,31]);
@@ -45,7 +45,7 @@ $(function(){
     this.holyFamily = moment(this.epiphany).add(7 - (this.epiphany.day()||1), 'days');
     this.transfiguration = moment([Y,7,6]);
     dateCache[Y] = this;
-  }
+  };
   function getSunday(date) {
     var dates = datesForMoment(date);
     for(var i = 0; i < CalendarSundays.length; ++i) {
@@ -68,15 +68,15 @@ $(function(){
   function getFromCalendar(date) {
     if('liturgical' in date) return date.liturgical;
     if(date.day() === 0) {
-      return date.liturgical = getSunday(date);
+      return (date.liturgical = getSunday(date));
     }
-    if(dateMatches(date,'corpusChristi')) return date.liturgical = {title:'Corpus Christi', rank:1};
-    if(dateMatches(date,'sacredHeart')) return date.liturgical = {title:'The Most Sacred Heart of Jesus', rank:1};
-    if(dateMatches(date,'ascension')) return date.liturgical = {title:'The Ascension of Our Lord', rank:1};
-    if(dateMatches(date,'easter-3')) return date.liturgical = {title:'Maundy Thursday', rank:1};
-    if(dateMatches(date,'easter-2')) return date.liturgical = {title:'Good Friday', rank:1};
-    if(dateMatches(date,'easter-1')) return date.liturgical = {title:'Holy Saturday', rank:1};
-    if(dateMatches(date,'lent1-4')) return date.liturgical = {title:'Ash Wednesday', rank:5}
+    if(dateMatches(date,'corpusChristi')) return (date.liturgical = {title:'Corpus Christi', rank:1});
+    if(dateMatches(date,'sacredHeart')) return (date.liturgical = {title:'The Most Sacred Heart of Jesus', rank:1});
+    if(dateMatches(date,'ascension')) return (date.liturgical = {title:'The Ascension of Our Lord', rank:1});
+    if(dateMatches(date,'easter-3')) return (date.liturgical = {title:'Maundy Thursday', rank:1});
+    if(dateMatches(date,'easter-2')) return (date.liturgical = {title:'Good Friday', rank:1});
+    if(dateMatches(date,'easter-1')) return (date.liturgical = {title:'Holy Saturday', rank:1});
+    if(dateMatches(date,'lent1-4')) return (date.liturgical = {title:'Ash Wednesday', rank:5});
     var options = {};
     if(regionalCalendars) {
       var key = date.format('MM/DD'),
@@ -92,62 +92,62 @@ $(function(){
     }
     if(Object.keys(options).length) console.info(options);
     if(romanCalendar) {
-      if(date.day()==0) return date.liturgical = null;
+      if(date.day()===0) return (date.liturgical = null);
       var month = date.month();
       var day = date.date();
       var d = romanCalendar[month][day];
       if(!d && day > 1) {
         d = romanCalendar[month][day-1];
-        if(!d || !d.plus) return date.liturgical = null;
-        else if(d.plusOne === 'ifLeapYear' && !date.isLeapYear()) return date.liturgical = null;
-        else if(d.plusOne === 'ifSunday' && !date.day()===1) return date.liturgical = null;
+        if(!d || !d.plus) return (date.liturgical = null);
+        else if(d.plusOne === 'ifLeapYear' && !date.isLeapYear()) return (date.liturgical = null);
+        else if(d.plusOne === 'ifSunday' && date.day()!==1) return (date.liturgical = null);
       }
-      return date.liturgical = d;
+      return (date.liturgical = d);
     }
-    return date.liturgical = null;
+    return (date.liturgical = null);
   }
   Dates.prototype.firstClassFeast = function(date) {
     d = getFromCalendar(date);
     return !!(d && d.rank === 1);
-  }
+  };
   Dates.prototype.firstOrSecondClassFeast = function(date) {
     d = getFromCalendar(date);
     return !!(d && (d.rank === 1 || d.rank === 2));
-  }
+  };
   Dates.prototype.feastOfOurLady = function(date) {
     d = getFromCalendar(date);
     return !!(d && d.ol);
-  }
+  };
   Dates.prototype.minorFeast = function(date) {
     d = getFromCalendar(date);
     return (d && d.rank > 1 && d.rank < 5);
-  }
+  };
   Dates.prototype.feria = function(date) {
     d = getFromCalendar(date);
     if(date.day() === 0) return false;
     return !d || d.rank >= 5;
-  }
+  };
   Dates.prototype.sunday = function(date) {
     return date.day() === 0;
-  }
+  };
   function datesForMoment(moment) {
     return moment.Dates || (moment.Dates = new Dates(moment.year()));
   }
   Dates.prototype.isTriduum = function(date) {
     var maundyThursday = moment(this.easter).subtract(3,'days');
     return date.isSameOrAfter(maundyThursday) && date.isBefore(this.easter);
-  }
+  };
   Dates.prototype.isPaschalWeek = function(date) {
     var easterSaturday = moment(this.easter).add(6,'days');
     return date.isSameOrAfter(this.easter) && date.isBefore(easterSaturday);
-  }
+  };
   Dates.prototype.isPaschalTime = function(date) {
     var pentecostSaturday = moment(this.easter).add(55,'days');
     return date.isSameOrAfter(this.easter) && date.isBefore(pentecostSaturday);
-  }
+  };
   Dates.prototype.isAdvent = function(date) {
     return date.isSameOrAfter(moment(this.advent1).subtract(1,'day')) && date.isSameOrBefore(moment(this.christmas).subtract(1,'day'));
-  }
+  };
   function momentFromRegex(date,matches,dates) {
     if(matches[1]) {
       return moment([date.year(), parseInt(matches[2]) - 1, parseInt(matches[3])]);
@@ -182,11 +182,11 @@ $(function(){
     var regexDateRange = /(!)?(?:((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?))(?::(((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?)))?/g;
     var matches;
     var test;
-    while(matches = regexDateRange.exec(dateRange)) {
+    while((matches = regexDateRange.exec(dateRange))) {
       var opposite = matches[1];
       var range = [momentFromRegex(date,matches.slice(1),dates)];
       if(matches[9]) {
-        range.push(momentFromRegex(date,matches.slice(9),dates))
+        range.push(momentFromRegex(date,matches.slice(9),dates));
         test = date.isBetween(range[0],range[1],'day','[]');
         if(opposite) test = !test;
         if(test) return true;
@@ -204,7 +204,7 @@ $(function(){
     return false;
   }
   $.QueryString = (function (a) {
-      if (a == "") return {};
+      if (a === "") return {};
       var b = {};
       for (var i = 0; i < a.length; ++i) {
           var p = a[i].split('=');
@@ -227,7 +227,7 @@ $(function(){
         m.add(days,'days');
       }
       return m.format("YYYY-MM-DD");
-    }
+    };
   };
   var nextDay = function(week) {
     $('#date').val(changeDateBy(week? 7 : 1)).change();
@@ -246,7 +246,7 @@ $(function(){
         nextDay(e.shiftKey);
         break;
     }
-  })
+  });
   var day = date.day();
   var dayName;
   var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -280,7 +280,7 @@ $(function(){
     };
     $('#canticle').empty();
     $.get('canticle-psalm'+type+'.html',gotData);
-  }
+  };
   var setPsalms = function(day,paschalTime,isSunday) {
     var ant = '',
         psalm = '';
@@ -307,7 +307,7 @@ $(function(){
     $.get('psalms/'+day+'/psalm-verses'+pt+'.html',gotData).error(function(){
       $.get('psalms/'+day+'/psalm-verses.html',gotData);
     });
-  }
+  };
   var formattedRank = function(rank) {
     switch(rank) {
       case 1:
@@ -321,7 +321,7 @@ $(function(){
       default:
         return 'Feria';
     }
-  }
+  };
   var setDate = function(date) {
     var dates = datesForMoment(date);
     //show and hide [include] and [exclude] elements based on the date
@@ -342,7 +342,7 @@ $(function(){
       }
       var matches = dateMatches(date, $elem.attr('select-date'));
       return matches && selectDay;
-    }
+    };
     //select inputs based on date
     $('input[select-date]').each(function(){
       var $this = $(this);
@@ -369,7 +369,7 @@ $(function(){
       }
     });
     var isPT = dates.isPaschalTime(date);
-    var showChooseDay = (date.day() != 0);
+    var showChooseDay = (date.day() !== 0);
     if(isPT && dates.isPaschalWeek(date)) {
       showChooseDay = false;
       setPsalms(0,'no-antiphon',true);
@@ -411,12 +411,9 @@ $(function(){
     } else {
       rbWeekday.prop('checked',true);
     }
-    if((day == 0 || day == 6) && $('#te-lucis-Ferial').prop('checked')) {
-      $('#te-lucis-Ordinary').prop('checked',true).change();
-    }
-  }
+  };
   var setChantSrc = function($elem,src){
-    if(!$elem || $elem.length == 0) return;
+    if(!$elem || $elem.length === 0) return;
     $elem.attr('src',src);
     $elem.data('setSrc')(src);
   };
@@ -434,7 +431,7 @@ $(function(){
     }
     $('div.' + chant).hide();
     $('div.' + chant + '.' + value).show();
-  }
+  };
   var choices = {};
   $('[id$=-choices] input[type=radio]').change(function(){
     var chant = this.name;

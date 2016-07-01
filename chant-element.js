@@ -37,7 +37,7 @@ ChantVisualElementPrototype.createdCallback = function() {
     var limit = (gabcs.length - 1) / 2;
     for(var i=0; i<limit; ++i) {
       var gabcHeader = gabcs[2*i+1].split(/\r?\n/);
-      var gabc = gabcs[2*i+2]
+      gabc = gabcs[2*i+2]
         .replace(/(\s)_([^\s*]+)_(\(\))?(\s)/g,"$1^_$2_^$3$4")
         .replace(/(\([cf][1-4]\)|\s)(\d+\.)(\s\S)/g,"$1^$2^$3");
       mappings[i] = exsurge.Gabc.createMappingsFromSource(ctxt, gabc);
@@ -74,7 +74,7 @@ ChantVisualElementPrototype.createdCallback = function() {
       if (request.readyState === 4 && request.status === 200 && $elem.attr('src') === src) {
         setGabc(request.responseText);
       }
-    }
+    };
     request.open("GET", src, true); // true for asynchronous 
     request.send(null);
   });
@@ -108,7 +108,7 @@ ChantVisualElementPrototype.createdCallback = function() {
       innerHTML += score[i].createSvg(ctxt);
     }
     _element.innerHTML = innerHTML;
-  }
+  };
   var attached = false;
   var init = function() {
     doLayout();
@@ -118,12 +118,11 @@ ChantVisualElementPrototype.createdCallback = function() {
       else if (window.attachEvent)
         window.attachEvent('onresize',doLayout);
     }
-  }
-}
+  };
+};
 
 ChantVisualElementPrototype.attachedCallback = function() {
-  
-}
+};
 
 document.registerElement = document.registerElement || function() {};
 // register the custom element

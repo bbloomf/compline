@@ -324,7 +324,7 @@ var weeksBetween = function(a,b) {
     a = momentFromString(a,b);
   }
   return Math.round(moment.duration(b - a).asDays())/7;
-}
+};
 var SundayFeast = function(SundayObject,date,dates) {
   if(SundayObject.feast) return SundayObject.feast;
   return {
@@ -332,8 +332,8 @@ var SundayFeast = function(SundayObject,date,dates) {
       return SundayObject[callback](date,dates);
     }),
     rank: SundayObject.rank || 2
-  }
-}
+  };
+};
 var CalendarSundays = [
   { on: '01/01', feast: romanCalendar[0][1] },
   { before: '01/06', title: 'The Most Holy Name of Jesus'},
@@ -366,7 +366,7 @@ var CalendarSundays = [
   { before: '12/25', title: '%n. Sunday of Advent', rank: 1, n: function(date,dates) { return weeksBetween('advent1', date) + 1; }},
   { on: '12/25', feast: romanCalendar[11][25]},
   { after: '12/25', title: 'Sunday within the Octave of Christmas'}
-]
+];
 
 firstClassSundays = [
 "advent1","advent1+7","advent1+14","advent1+21",
@@ -423,7 +423,7 @@ var regionalCalendars = {
 },
 "Scotland": {
 "11/30": {title:"St. Andrew Apostle, Principal Patron of Scotland", rank:1},
-"01/14": {title:"St. Kentigern Bishop and Confessor", rank:3, com:"St. Hilary Bishop, Confessor and Doctor of the Church", com:"St. Felix Priest and Martyr"},
+"01/14": {title:"St. Kentigern Bishop and Confessor", rank:3, com:["St. Hilary Bishop, Confessor and Doctor of the Church", "St. Felix Priest and Martyr"]},
 "03/10": {title:"St. John Ogilvie Martyr", rank:2, com:"the Forty Holy Martyrs"},
 "03/17": {title:"St. Patrick Bishop and Confessor", rank:2},
 "06/09": {title:"St. Columba Abbot", rank:3, com:"Ss. Primus and Felician Martyrs"},
@@ -440,4 +440,4 @@ var regionalCalendars = {
 "10/25": {title:"St. Isidore Farmer and Confessor", rank:3, com:"Ss. Chrystanthus and Daria Martyrs"},
 "11/13": {title:"St. Frances Xavier Cabrini Virgin", rank:3, com:"St. Didacus Confessor"},
 }
-}
+};
