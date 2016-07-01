@@ -1,4 +1,5 @@
-$(function(){
+$(function($){
+  'use strict';
   var ipGeo;
   $.getJSON("https://freegeoip.net/json/", function(result){
       console.info('Country: ' + result.country_name + '\n' + 'Code: ' + result.country_code);
@@ -107,23 +108,23 @@ $(function(){
     return (date.liturgical = null);
   }
   Dates.prototype.firstClassFeast = function(date) {
-    d = getFromCalendar(date);
+    var d = getFromCalendar(date);
     return !!(d && d.rank === 1);
   };
   Dates.prototype.firstOrSecondClassFeast = function(date) {
-    d = getFromCalendar(date);
+    var d = getFromCalendar(date);
     return !!(d && (d.rank === 1 || d.rank === 2));
   };
   Dates.prototype.feastOfOurLady = function(date) {
-    d = getFromCalendar(date);
+    var d = getFromCalendar(date);
     return !!(d && d.ol);
   };
   Dates.prototype.minorFeast = function(date) {
-    d = getFromCalendar(date);
+    var d = getFromCalendar(date);
     return (d && d.rank > 1 && d.rank < 5);
   };
   Dates.prototype.feria = function(date) {
-    d = getFromCalendar(date);
+    var d = getFromCalendar(date);
     if(date.day() === 0) return false;
     return !d || d.rank >= 5;
   };
@@ -283,7 +284,8 @@ $(function(){
   };
   var setPsalms = function(day,paschalTime,isSunday) {
     var ant = '',
-        psalm = '';
+        psalm = '',
+        pt = '';
     if(day === 'triduum') {
       day = 0;
       pt = '-triduum';
