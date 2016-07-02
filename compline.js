@@ -291,7 +291,7 @@ $(function($){
       pt = '-triduum';
     } else if(day === 'asd') {
       pt = '';
-      psalm = "Psalm 122<br/><chant-gabc src='psalms/"+day+"/psalm"+pt+".gabc'></chant-gabc>";
+      psalm = "<chant-gabc src='psalms/"+day+"/psalm"+pt+".gabc'></chant-gabc>";
     } else {
       pt = paschalTime?'-PT':'';
       ant = paschalTime?
@@ -459,13 +459,13 @@ $(function($){
   $('#date').change(function(){
     if(this.value) setDate(moment(this.value));
   }).change();
-  if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').then(function(registration) {
-    // Registration was successful
-    // console.log('ServiceWorker registration successful with scope: ', registration.scope);
-  }).catch(function(err) {
-    // registration failed :(
-    console.log('ServiceWorker registration failed: ', err);
-  });
-}
+  // if ('serviceWorker' in navigator) {
+  //   navigator.serviceWorker.register('./sw.js').then(function(registration) {
+  //     // Registration was successful
+  //     // console.log('ServiceWorker registration successful with scope: ', registration.scope);
+  //   }).catch(function(err) {
+  //     // registration failed :(
+  //     console.log('ServiceWorker registration failed: ', err);
+  //   });
+  // }
 });
