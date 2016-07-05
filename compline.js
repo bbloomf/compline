@@ -1,5 +1,6 @@
 $(function($){
   'use strict';
+  var fullGregorian = false;
   var ipGeo;
   $.getJSON("https://freegeoip.net/json/", function(result){
       console.info('Country: ' + result.country_name + '\n' + 'Code: ' + result.country_code);
@@ -265,14 +266,19 @@ $(function($){
   // type should be '-po' for paschal octave, '-pt' for paschal time, or '-asd' for all souls' day, or '' for regular
   var currentCanticle = '';
   var setCanticle = function(type) {
+    var antType = type;
+    if(fullGregorian) type += '_full';
     if(type === currentCanticle) return;
     currentCanticle = type;
-    var ant = "<chant-gabc src='canticle-ant"+type+".gabc'></chant-gabc>";
-    if(type==='-pt') type = '';
+    var ant = "<chant-gabc src='canticle-ant"+antType+".gabc'></chant-gabc>";
+    if(antType==='-pt') {
+      antType = '';
+      type = type.slice(3);
+    }
     var psalm = "<chant-gabc src='canticle-psalm"+type+".gabc'></chant-gabc>";
     var gotData = function(data){
       var html = ant + psalm + data;
-      if(type === '-po') {
+      if(antType === '-po') {
         html += "<chant-gabc src='haec-dies.gabc'></chant-gabc>";
       } else {
         html += ant;
@@ -280,25 +286,31 @@ $(function($){
       $('#canticle').empty().append(html);
     };
     $('#canticle').empty();
-    $.get('canticle-psalm'+type+'.html',gotData);
+    if(fullGregorian) {
+      gotData('');
+    } else {
+      $.get('canticle-psalm'+type+'.html',gotData);
+    }
   };
   var setPsalms = function(day,paschalTime,isSunday) {
     var ant = '',
         psalm = '',
-        pt = '';
+        pt = '',
+        full = fullGregorian? '_full' : '';
     if(day === 'triduum') {
       day = 0;
       pt = '-triduum';
+      full = '';
     } else if(day === 'asd') {
       pt = '';
-      psalm = "<chant-gabc src='psalms/"+day+"/psalm"+pt+".gabc'></chant-gabc>";
+      psalm = "<chant-gabc src='psalms/"+day+"/psalm"+pt+full+".gabc'></chant-gabc>";
     } else {
       pt = paschalTime?'-PT':'';
       ant = paschalTime?
         "<chant-gabc src='psalms/ant-PT.gabc'></chant-gabc>" :
         "<chant-gabc src='psalms/"+day+"/ant.gabc'></chant-gabc>";
       if(paschalTime === 'no-antiphon') ant = '';
-      psalm = "<chant-gabc src='psalms/"+day+"/psalm"+pt+".gabc'></chant-gabc>";
+      psalm = "<chant-gabc src='psalms/"+day+"/psalm"+pt+full+".gabc'></chant-gabc>";
       dayName = days[day];
       if(!isSunday) $('#weekday').text(dayName);
     }
@@ -306,9 +318,13 @@ $(function($){
       var html = ant + psalm + data + ant;
       $('#placeholder').empty().append(html);
     };
-    $.get('psalms/'+day+'/psalm-verses'+pt+'.html',gotData).fail(function(){
-      $.get('psalms/'+day+'/psalm-verses.html',gotData);
-    });
+    if(full) {
+      gotData('');
+    } else {
+      $.get('psalms/'+day+'/psalm-verses'+pt+'.html',gotData).fail(function(){
+        $.get('psalms/'+day+'/psalm-verses.html',gotData);
+      });
+    }
   };
   var formattedRank = function(rank) {
     switch(rank) {

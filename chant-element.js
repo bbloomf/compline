@@ -55,7 +55,7 @@ $(function($) {
         }
         if(!(i in useDropCap)) useDropCap[i] = useDropCapAttr;
         score[i] = new exsurge.ChantScore(ctxt, mappings[i], useDropCap[i]);
-        if(gabcHeader && gabcHeader.annotation) {
+        if(gabcHeader && gabcHeader.annotation && useDropCap[i]) {
           score[i].annotation = new exsurge.Annotation(ctxt, gabcHeader.annotation);
         } else if(annotationAttr) {
           score[i].annotation = new exsurge.Annotation(ctxt, annotationAttr);

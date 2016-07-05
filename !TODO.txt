@@ -1,5 +1,5 @@
 Optional removal of all the selection radio buttons that are based purely on the date.
-stored settings
-Optional fully notated psalms
-Regional calendars
+stored settings with config menu in upper right
+Optional fully notated psalms: Add to Config menu in upper right
+Regional calendars: Add to config menu in upper right AND make the feast name into a dropdown whenever there is a different feast for different regions
 Offline support?
