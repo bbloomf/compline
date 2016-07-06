@@ -3110,6 +3110,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'class': this.getCssClasses().trim(),
 	        'text-anchor': this.textAnchor,
 	        'dominant-baseline': this.dominantBaseline,
+	        'dy': this.dy || '',
 	        'style': styleProperties
 	      }, spans);
 	    }
@@ -3347,7 +3348,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var _this10 = _possibleConstructorReturn(this, Object.getPrototypeOf(Annotation).call(this, ctxt, text, ctxt.annotationTextFont, ctxt.annotationTextSize, 'middle'));
 	
 	    _this10.padding = ctxt.staffInterval;
-	    _this10.dominantBaseline = 'hanging'; // so that annotations can be aligned at the top.
+	    _this10.dy = '1.5ex'; // so that annotations can be aligned at the top.
 	    return _this10;
 	  }
 	
