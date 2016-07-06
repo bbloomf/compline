@@ -1,5 +1,7 @@
-Optional removal of all the selection radio buttons that are based purely on the date.
-stored settings with config menu in upper right
-Optional fully notated psalms: Add to Config menu in upper right
-Regional calendars: Add to config menu in upper right
+ Settings Menu
+---Region: United States (dropdown)
+---Pointed/Fully Notated Psalms
+---Show Options Throughout/Calculate Everything Based on Date
+
+Store settings in local storage
 Offline support?
