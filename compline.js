@@ -1,6 +1,7 @@
 $(function($){
   'use strict';
-  var fullGregorian = false;
+  var fullGregorian = false,
+      _currentRegion = '';
   var ipGeo;
   $.getJSON("https://freegeoip.net/json/", function(result){
       console.info('Country: ' + result.country_name + '\n' + 'Code: ' + result.country_code);
@@ -67,6 +68,22 @@ $(function($){
       }
     }
   }
+  function FeriaWithAlternates(alternates,selectedAlternate) {
+    if(alternates && !alternates.length) alternates = undefined;
+    var feria = {title:'Feria', rank: 10};
+    var result = feria;
+    if(alternates && alternates.length) {
+      alternates.unshift(feria);
+      if(selectedAlternate) {
+        result = selectedAlternate;
+        _currentRegion = result.region[0];
+      } else {
+        _currentRegion = '';
+      }
+      result.alternates = alternates;
+    }
+    return result;
+  }
   function getFromCalendar(date) {
     if('liturgical' in date) return date.liturgical;
     if(date.day() === 0) {
@@ -79,34 +96,56 @@ $(function($){
     if(dateMatches(date,'easter-2')) return (date.liturgical = {title:'Good Friday', rank:1});
     if(dateMatches(date,'easter-1')) return (date.liturgical = {title:'Holy Saturday', rank:1});
     if(dateMatches(date,'lent1-4')) return (date.liturgical = {title:'Ash Wednesday', rank:5});
-    var options = {};
+    var options = [];
+    var selectedOption;
     if(regionalCalendars) {
       var key = date.format('MM/DD'),
           altKey = moment(date).subtract(1,'day').format('MM/DD');
-      $.each(regionalCalendars, function(name, calendar){
+      $.each(regionalCalendars, function(region, calendar){
+        var option;
         if(key in calendar) {
-          options[name] = calendar[key];
+          option = calendar[key];
         } else if(altKey in calendar) {
           var d = calendar[altKey];
-          if(d.plusOne === 'ifSunday' && date.day()===1) options[name] = d;
+          if(d.plusOne === 'ifSunday' && date.day()===1) option = d;
+        }
+        if(option) {
+          if(region === _currentRegion) selectedOption = option;
+          option.region = [region];
+          var sameFeast = $.grep(options, function(o,i){
+            return o.title == option.title && o.rank === option.rank;
+          });
+          if(sameFeast.length) {
+            sameFeast[0].region.push(region);
+          } else {
+            options.push(option);
+          }
         }
       });
     }
-    if(Object.keys(options).length) console.info(options);
     if(romanCalendar) {
-      if(date.day()===0) return (date.liturgical = null);
       var month = date.month();
       var day = date.date();
       var d = romanCalendar[month][day];
       if(!d && day > 1) {
         d = romanCalendar[month][day-1];
-        if(!d || !d.plus) return (date.liturgical = null);
-        else if(d.plusOne === 'ifLeapYear' && !date.isLeapYear()) return (date.liturgical = null);
-        else if(d.plusOne === 'ifSunday' && date.day()!==1) return (date.liturgical = null);
+        if(!d || !d.plus) return (date.liturgical = FeriaWithAlternates(options,selectedOption));
+        else if(d.plusOne === 'ifLeapYear' && !date.isLeapYear()) return (date.liturgical = FeriaWithAlternates(options,selectedOption));
+        else if(d.plusOne === 'ifSunday' && date.day()!==1) return (date.liturgical = FeriaWithAlternates(options,selectedOption));
       }
-      return (date.liturgical = d);
+      if(options.length) {
+        options.unshift(d);
+        if(selectedOption) {
+          d = selectedOption;
+          _currentRegion = d.region[0];
+        } else {
+          _currentRegion = '';
+        }
+        d.alternates = options;
+      }
+      if(d) return (date.liturgical = d);
     }
-    return (date.liturgical = null);
+    return (date.liturgical = FeriaWithAlternates(options,selectedOption));
   }
   Dates.prototype.firstClassFeast = function(date) {
     var d = getFromCalendar(date);
@@ -340,8 +379,9 @@ $(function($){
         return 'Feria';
     }
   };
-  var setDate = function(date) {
+  var setDate = function(date,region) {
     var dates = datesForMoment(date);
+    var d = getFromCalendar(date,region);
     //show and hide [include] and [exclude] elements based on the date
     $('[exclude]').each(function(){
       var $this = $(this);
@@ -420,10 +460,20 @@ $(function($){
       setCanticle(isPT?'-pt':'');
     }
     $('.chooseDay').toggle(showChooseDay);
-    var d = getFromCalendar(date);
     var rbWeekday = $('#rbWeekday').prop('value',date.day());
-    if(!d) d = {title:'Feria', rank: 10};
-    $('#feastDay').text(d.title + (d.rank < 5?(' (' + formattedRank(d.rank) + ')'): ''));
+    if(d.alternates) {
+      var selectFeast = $('#selectFeastDay');
+      selectFeast.empty().append(d.alternates.map(function(alt,i){
+        return '<option value="' + (alt.region && alt.region[0] || '') + '">'+
+  alt.title+(alt.rank < 5?(' (' + formattedRank(alt.rank) + ')'): '') + (alt.region?(' ['+alt.region.join(', ')+']'):'')+
+'</option>';
+      }).join(''));
+      selectFeast.val(_currentRegion);
+    } else {
+      $('#feastDay').text(d.title + (d.rank < 5?(' (' + formattedRank(d.rank) + ')'): ''));
+    }
+    $('#feastDay').toggle(!d.alternates);
+    $('#selectFeastDay').toggle(!!d.alternates);
     if(d && d.rank <= 2) {
       $('#rbSunday').prop('checked',true);
     } else {
@@ -472,9 +522,14 @@ $(function($){
     choices[chant] = val;
     loadChant(chant, val, id);
   });
-  $('#date').change(function(){
+  var $date = $('#date');
+  $date.change(function(){
     if(this.value) setDate(moment(this.value));
   }).change();
+  $('#selectFeastDay').change(function(){
+    _currentRegion = this.value;
+    setDate(moment($date.val()));
+  });
   // if ('serviceWorker' in navigator) {
   //   navigator.serviceWorker.register('./sw.js').then(function(registration) {
   //     // Registration was successful

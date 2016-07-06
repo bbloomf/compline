@@ -410,7 +410,7 @@ var regionalCalendars = {
 "03/01": {title:"St. David Bishop and Confessor, Principal Patron of Wales", rank:1},
 "03/12": {title:"St. Gregory I Pope, Confessor and Doctor of the Church", rank:2},
 "04/23": {title:"St. George Martyr, Principal Patron of England", rank:2},
-"05/4": {title:"The Holy Martyrs of England and Wales", rank:3, com:"St. Monica, Widow"},
+"05/04": {title:"The Holy Martyrs of England and Wales", rank:3, com:"St. Monica, Widow"},
 "05/26": {title:"St. Augustine Bishop and Confessor", rank:2, com:"St. Philip Neri Confessor"},
 "06/22": {title:"St. Alban Martyr", rank:3, com:"St. Paulinus Bishop and Confessor"},
 "07/09": {title:"Ss. John Fisher Bishop and Thomas More Martyrs", rank:1},
@@ -431,7 +431,7 @@ var regionalCalendars = {
 "11/16": {title:"St. Margaret Queen, Secondary Patroness of Scotland", rank:2, com:"St. Gertrude Virgin"}
 },
 "United States": {
-"12/8": {title:"On the Immaculate Conception of the Blessed Virgin Mary, Principal Patroness of the United States", rank:1},
+"12/08": {title:"On the Immaculate Conception of the Blessed Virgin Mary, Principal Patroness of the United States", rank:1},
 "12/12": {title:"Our Lady of Guadalupe, Patroness of the Americas", rank:3, ol:1},
 "01/04": {title:"St. Elizabeth Ann Seton, Widow", rank:3},
 "01/22": {title:"Votive Mass for Peace", rank:2, plusOne:"ifSunday"},
