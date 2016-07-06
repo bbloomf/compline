@@ -376,13 +376,13 @@ firstClassSundays = [
 
 
 romanCalendar.regionCodeMap = {
-  "AU": "Australia and New Zealand",
-  "NZ": "Australia and New Zealand",
+  "US": "United States",
   "CA": "Canada",
   "GB-ENG": "England",
   "GB-SCT": "Scotland",
   "GB-WLS": "Wales",
-  "US": "United States"
+  "AU": "Australia and New Zealand",
+  "NZ": "Australia and New Zealand"
 };
 
 // regional calendars:
@@ -394,7 +394,7 @@ var regionalCalendars = {
 "01/22": {title:"Votive Mass for Peace", rank:2, plusOne:"ifSunday"},
 "09/09": {title:"St. Peter Claver Confessor", rank:3, com:"St. Gorgonius Martyr"},
 "09/26": {title:"Ss. Jean, Isaac and Companions Martyrs", rank:3, com:"Ss. Cyprian and Justina, Virgin, Martyrs"},
-"10/25": {title:"St. Isidore Farmer and Confessor", rank:3, com:"Ss. Chrystanthus and Daria Martyrs"},
+"10/25": {title:"St. Isidore Farmer and Confessor", rank:3, com:"Ss. Chrysanthus and Daria Martyrs"},
 "11/13": {title:"St. Frances Xavier Cabrini Virgin", rank:3, com:"St. Didacus Confessor"},
 },
 "Australia and New Zealand": {

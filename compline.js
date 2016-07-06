@@ -590,6 +590,8 @@ $(function($){
   function showHideOptions() {
     var show = showOptions();
     $('input:radio:not(.not-hideable)').parent().toggle(show);
+    $('#marian-antiphon-choices>select').toggle(show);
+    $('.marian-antiphon-name').toggle(!show);
     if(!show) {
       $('input:radio:checked').parent().show();
     }
