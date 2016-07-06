@@ -1,12 +1,55 @@
 $(function($){
   'use strict';
-  var fullGregorian = false,
-      _currentRegion = '';
-  var ipGeo;
-  $.getJSON("https://freegeoip.net/json/", function(result){
+  var _currentRegion = '',
+      localStorage = window.localStorage;
+  try {
+    var mod = '__storage test__';
+    localStorage.setItem(mod, mod);
+    localStorage.removeItem(mod);
+  } catch(e) {
+    localStorage = {};
+  }
+  if(!('region' in localStorage)) localStorage.region = '';
+  if(!('fullNotation' in localStorage)) localStorage.fullNotation = '0';
+  if(!('showOptions' in localStorage)) localStorage.showOptions = '0';
+  if(!('autoSelectRegion' in localStorage)) localStorage.autoSelectRegion = '1';
+  var fullNotation = function(newVal) {
+    if(typeof newVal === 'undefined') return !!parseInt(localStorage.fullNotation);
+    localStorage.fullNotation = newVal? 1 : 0;
+    setPsalms();
+    setCanticle();
+  };
+  var showOptions = function(newVal) {
+    if(typeof newVal === 'undefined') return !!parseInt(localStorage.showOptions);
+    localStorage.showOptions = newVal? 1 : 0;
+    showHideOptions();
+  };
+  var autoSelectRegion = function(newVal) {
+    if(typeof newVal === 'undefined') return !!parseInt(localStorage.autoSelectRegion);
+    localStorage.autoSelectRegion = newVal? 1 : 0;
+    doAutoSelectRegion();
+  };
+
+  function doAutoSelectRegion() {
+    $.getJSON("https://freegeoip.net/json/", function(result){
+      if(result.country_code in romanCalendar.regionCodeMap) {
+        localStorage.region = result.country_code;
+      } else {
+        var test = result.country_code + '-' + result.region_code;
+        if(test in romanCalendar.regionCodeMap) {
+          localStorage.region = test;
+        } else {
+          console.info('Unknown Region:', result);
+        }
+      }
       console.info('Country: ' + result.country_name + '\n' + 'Code: ' + result.country_code);
-      ipGeo = result;
-  });
+      window.ipGeo = ipGeo = result;
+    });
+  }
+  var ipGeo;
+  if(parseInt(localStorage.autoSelectRegion)) {
+    doAutoSelectRegion();
+  }
   // the following function is based on one taken from http://www.irt.org/articles/js052/index.htm
   // Y is the year to calculate easter for, e.g., 2017
   function EasterDate(Y) {
@@ -110,15 +153,17 @@ $(function($){
           if(d.plusOne === 'ifSunday' && date.day()===1) option = d;
         }
         if(option) {
-          if(region === _currentRegion) selectedOption = option;
+          var selectThisOption = (region === _currentRegion || romanCalendar.regionCodeMap[localStorage.region] === region);
           option.region = [region];
           var sameFeast = $.grep(options, function(o,i){
             return o.title == option.title && o.rank === option.rank;
           });
           if(sameFeast.length) {
             sameFeast[0].region.push(region);
+            if(selectThisOption) selectedOption = sameFeast[0];
           } else {
             options.push(option);
+            if(selectThisOption) selectedOption = option;
           }
         }
       });
@@ -305,8 +350,9 @@ $(function($){
   // type should be '-po' for paschal octave, '-pt' for paschal time, or '-asd' for all souls' day, or '' for regular
   var currentCanticle = '';
   var setCanticle = function(type) {
+    type = type || currentCanticle.replace(/_full$/,'');
     var antType = type;
-    if(fullGregorian) type += '_full';
+    if(fullNotation()) type += '_full';
     if(type === currentCanticle) return;
     currentCanticle = type;
     var ant = "<chant-gabc src='canticle-ant"+antType+".gabc'></chant-gabc>";
@@ -325,17 +371,27 @@ $(function($){
       $('#canticle').empty().append(html);
     };
     $('#canticle').empty();
-    if(fullGregorian) {
+    if(fullNotation()) {
       gotData('');
     } else {
       $.get('canticle-psalm'+type+'.html',gotData);
     }
   };
+  var currentPsalms = {};
   var setPsalms = function(day,paschalTime,isSunday) {
+    if(typeof(day) === 'undefined') {
+      day = currentPsalms.day;
+      paschalTime = currentPsalms.paschalTime;
+      isSunday = currentPsalms.isSunday;
+    } else {
+      currentPsalms.day = day;
+      currentPsalms.paschalTime = paschalTime;
+      currentPsalms.isSunday = isSunday;
+    }
     var ant = '',
         psalm = '',
         pt = '',
-        full = fullGregorian? '_full' : '';
+        full = fullNotation()? '_full' : '';
     if(day === 'triduum') {
       day = 0;
       pt = '-triduum';
@@ -479,6 +535,7 @@ $(function($){
     } else {
       rbWeekday.prop('checked',true);
     }
+    showHideOptions();
   };
   var setChantSrc = function($elem,src){
     if(!$elem || $elem.length === 0) return;
@@ -530,6 +587,13 @@ $(function($){
     _currentRegion = this.value;
     setDate(moment($date.val()));
   });
+  function showHideOptions() {
+    var show = showOptions();
+    $('input:radio:not(.not-hideable)').parent().toggle(show);
+    if(!show) {
+      $('input:radio:checked').parent().show();
+    }
+  }
   // if ('serviceWorker' in navigator) {
   //   navigator.serviceWorker.register('./sw.js').then(function(registration) {
   //     // Registration was successful

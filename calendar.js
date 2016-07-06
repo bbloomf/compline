@@ -375,10 +375,28 @@ firstClassSundays = [
 ];
 
 
-
+romanCalendar.regionCodeMap = {
+  "AU": "Australia and New Zealand",
+  "NZ": "Australia and New Zealand",
+  "CA": "Canada",
+  "GB-ENG": "England",
+  "GB-SCT": "Scotland",
+  "GB-WLS": "Wales",
+  "US": "United States"
+};
 
 // regional calendars:
 var regionalCalendars = {
+"United States": {
+"12/08": {title:"On the Immaculate Conception of the Blessed Virgin Mary, Principal Patroness of the United States", rank:1},
+"12/12": {title:"Our Lady of Guadalupe, Patroness of the Americas", rank:3, ol:1},
+"01/04": {title:"St. Elizabeth Ann Seton, Widow", rank:3},
+"01/22": {title:"Votive Mass for Peace", rank:2, plusOne:"ifSunday"},
+"09/09": {title:"St. Peter Claver Confessor", rank:3, com:"St. Gorgonius Martyr"},
+"09/26": {title:"Ss. Jean, Isaac and Companions Martyrs", rank:3, com:"Ss. Cyprian and Justina, Virgin, Martyrs"},
+"10/25": {title:"St. Isidore Farmer and Confessor", rank:3, com:"Ss. Chrystanthus and Daria Martyrs"},
+"11/13": {title:"St. Frances Xavier Cabrini Virgin", rank:3, com:"St. Didacus Confessor"},
+},
 "Australia and New Zealand": {
 "12/03": {title:"St. Francis Xavier Confessor, Principal Patron of All Missions", rank:1},
 "02/01": {title:"St. Brigid Virgin", rank:2, com:"St. Ignatius Bishop and Martyr"},
@@ -405,6 +423,15 @@ var regionalCalendars = {
 "07/09": {title:"Ss. John Fisher Bishop and Thomas More Martyrs", rank:1},
 "10/13": {title:"St. Edward King and Confessor", rank:2},
 },
+"Scotland": {
+"11/30": {title:"St. Andrew Apostle, Principal Patron of Scotland", rank:1},
+"01/14": {title:"St. Kentigern Bishop and Confessor", rank:3, com:["St. Hilary Bishop, Confessor and Doctor of the Church", "St. Felix Priest and Martyr"]},
+"03/10": {title:"St. John Ogilvie Martyr", rank:2, com:"the Forty Holy Martyrs"},
+"03/17": {title:"St. Patrick Bishop and Confessor", rank:2},
+"06/09": {title:"St. Columba Abbot", rank:3, com:"Ss. Primus and Felician Martyrs"},
+"09/16": {title:"St. Ninian Bishop and Confessor", rank:3, com:["St. Cornelius Pope and St. Cyprian Bishop, Martyrs", "Ss. Euphemia Virgin, Lucy and Geminianus Martyrs"]},
+"11/16": {title:"St. Margaret Queen, Secondary Patroness of Scotland", rank:2, com:"St. Gertrude Virgin"}
+},
 "Wales": {
 "12/29": {title:"St. Thomas Bishop and Martyr", rank:1, com:"the V day within the octave of the Nativity of the Lord"},
 "03/01": {title:"St. David Bishop and Confessor, Principal Patron of Wales", rank:1},
@@ -420,24 +447,5 @@ var regionalCalendars = {
 "09/25": {title:"St. Cadoc Bishop and Martyr", rank:3},
 "10/13": {title:"St. Edward King and Confessor", rank:2},
 "11/05": {title:"The Holy Relics", rank:3}
-},
-"Scotland": {
-"11/30": {title:"St. Andrew Apostle, Principal Patron of Scotland", rank:1},
-"01/14": {title:"St. Kentigern Bishop and Confessor", rank:3, com:["St. Hilary Bishop, Confessor and Doctor of the Church", "St. Felix Priest and Martyr"]},
-"03/10": {title:"St. John Ogilvie Martyr", rank:2, com:"the Forty Holy Martyrs"},
-"03/17": {title:"St. Patrick Bishop and Confessor", rank:2},
-"06/09": {title:"St. Columba Abbot", rank:3, com:"Ss. Primus and Felician Martyrs"},
-"09/16": {title:"St. Ninian Bishop and Confessor", rank:3, com:["St. Cornelius Pope and St. Cyprian Bishop, Martyrs", "Ss. Euphemia Virgin, Lucy and Geminianus Martyrs"]},
-"11/16": {title:"St. Margaret Queen, Secondary Patroness of Scotland", rank:2, com:"St. Gertrude Virgin"}
-},
-"United States": {
-"12/08": {title:"On the Immaculate Conception of the Blessed Virgin Mary, Principal Patroness of the United States", rank:1},
-"12/12": {title:"Our Lady of Guadalupe, Patroness of the Americas", rank:3, ol:1},
-"01/04": {title:"St. Elizabeth Ann Seton, Widow", rank:3},
-"01/22": {title:"Votive Mass for Peace", rank:2, plusOne:"ifSunday"},
-"09/09": {title:"St. Peter Claver Confessor", rank:3, com:"St. Gorgonius Martyr"},
-"09/26": {title:"Ss. Jean, Isaac and Companions Martyrs", rank:3, com:"Ss. Cyprian and Justina, Virgin, Martyrs"},
-"10/25": {title:"St. Isidore Farmer and Confessor", rank:3, com:"Ss. Chrystanthus and Daria Martyrs"},
-"11/13": {title:"St. Frances Xavier Cabrini Virgin", rank:3, com:"St. Didacus Confessor"},
 }
 };
