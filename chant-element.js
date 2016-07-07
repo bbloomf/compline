@@ -89,7 +89,7 @@ $(function($) {
 
     var width = 0;
     var doLayout = function() {
-      var newWidth = (_element.parentElement || window.document.body).clientWidth;
+      var newWidth = _element.parentElement.clientWidth || window.document.body.clientWidth;
       if(width === newWidth) return;
       width = newWidth;
       // perform layout on the chant
