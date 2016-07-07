@@ -3110,7 +3110,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'class': this.getCssClasses().trim(),
 	        'text-anchor': this.textAnchor,
 	        'dominant-baseline': this.dominantBaseline,
-	        'dy': this.dy || '',
 	        'style': styleProperties
 	      }, spans);
 	    }
@@ -3348,7 +3347,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var _this10 = _possibleConstructorReturn(this, Object.getPrototypeOf(Annotation).call(this, ctxt, text, ctxt.annotationTextFont, ctxt.annotationTextSize, 'middle'));
 	
 	    _this10.padding = ctxt.staffInterval;
-	    _this10.dy = '1.5ex'; // so that annotations can be aligned at the top.
+	    _this10.dominantBaseline = 'hanging'; // so that annotations can be aligned at the top.
 	    return _this10;
 	  }
 	
@@ -3515,6 +3514,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }for (i = 0; i < this.lyrics.length; i++) {
 	        inner += this.lyrics[i].createSvgFragment(ctxt);
 	      }return QuickSvg.createFragment('g', {
+	        // this.constructor.name will not be the same after being mangled by UglifyJS
 	        'class': 'ChantNotationElement ' + this.constructor.name,
 	        'transform': 'translate(' + this.bounds.x + ',' + 0 + ')'
 	      }, inner);
@@ -4795,7 +4795,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (curr.isClef) ctxt.activeClef = curr;
 	
 	        // line breaks are a special case indicating to stop processing here
-	        if (curr.constructor.name === _Exsurge3.ChantLineBreak.name && width > 0) {
+	        if (curr.constructor === _Exsurge3.ChantLineBreak && width > 0) {
 	          this.justify = curr.justify;
 	          break;
 	        }
@@ -4882,7 +4882,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        if (prevWithLyrics !== null && prevWithLyrics.lyrics[0].allowsConnector() && !prevWithLyrics.lyrics[0].needsConnector) continue;
 	
-	        if (curr.constructor.name === _Exsurge3.ChantLineBreak.name) continue;
+	        if (curr.constructor === _Exsurge3.ChantLineBreak) continue;
 	
 	        // otherwise, we can add space before this element
 	        toJustify.push(curr);
@@ -4971,7 +4971,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        minY = Math.min(minY, notations[i].bounds.y);
 	        maxY = Math.max(maxY, notations[i].bounds.bottom());
 	
-	        if (notations[i].constructor.name === _ExsurgeChant.Custos.name) {
+	        if (notations[i].constructor === _ExsurgeChant.Custos) {
 	          processElementForLedgerLine(notations[i]);
 	          continue;
 	        }
@@ -5907,7 +5907,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    _this4.note = note;
 	    _this4.positionHint = MarkingPositionHint.Default;
-	    _this4.horizontalOffset = 0;
 	    return _this4;
 	  }
 	
@@ -5928,7 +5927,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (Math.abs(staffPosition) % 2 === 1) verticalOffset -= ctxt.staffInterval * .75;
 	      }
 	
-	      this.bounds.x += this.horizontalOffset + this.note.bounds.right() + ctxt.staffInterval / 4.0;
+	      this.bounds.x += this.note.bounds.right() + ctxt.staffInterval / 4.0;
 	      this.bounds.y += verticalOffset;
 	    }
 	  }]);
@@ -6261,7 +6260,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        for (var i = 0; i < items.length; i++) {
 	          var cne = items[i];
 	
-	          if (cne.isAccidental || cne.constructor.name === Signs.Custos.name) continue;
+	          if (cne.isAccidental || cne.constructor === Signs.Custos) continue;
 	
 	          notationWithLyrics = cne;
 	          break;
@@ -6272,7 +6271,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var proposedLyricType;
 	
 	        // if it's not a neume or a TextOnly notation, then make the lyrics a directive
-	        if (!cne.isNeume && cne.constructor.name !== _Exsurge3.TextOnly.name) proposedLyricType = _Exsurge2.LyricType.Directive;
+	        if (!cne.isNeume && cne.constructor !== _Exsurge3.TextOnly) proposedLyricType = _Exsurge2.LyricType.Directive;
 	        // otherwise trye to guess the lyricType for the first lyric anyway
 	        else if (currSyllable === 0 && j === matches.length - 1) proposedLyricType = _Exsurge2.LyricType.SingleSyllable;else if (currSyllable === 0 && j < matches.length - 1) proposedLyricType = _Exsurge2.LyricType.BeginningSyllable;else if (j === matches.length - 1) proposedLyricType = _Exsurge2.LyricType.EndingSyllable;else proposedLyricType = _Exsurge2.LyricType.MiddleSyllable;
 	
@@ -6886,10 +6885,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // position hint. if a user decides to try to put position indicators
 	            // on the double morae (such as 1 or 2), then really the behavior is
 	            // not defined by gabc, so it's on the user to figure it out.
-	            if (note.morae.length > 0 && notes.length) {
-	              var previousNote = notes.slice(-1)[0];
-	              var previousMora = note.morae.slice(-1)[0];
-	              previousMora.note = previousNote;
+	            if (note.morae.length > 0) {
+	              // if we already have one mora, then create another but force a
+	              // an alternative positionHint
+	              haveLookahead = true;
+	              if (Math.abs(note.staffPosition) % 2 === 0) lookahead = '1';else lookahead = '0';
 	            }
 	
 	            mark = new Markings.Mora(ctxt, note);
@@ -7820,11 +7820,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // 1. morae need to be lined up if both notes have morae
 	      // 2. like the podatus, mora on lower note needs to below
 	      //    under certain circumstances
-	      if (this.notes[1].morae.length) {
-	        var morae = this.notes[1].morae;
-	        morae[0].horizontalOffset += this.notes[1].bounds.right() - this.notes[0].bounds.right();
-	        if (this.notes[0].staffPosition - this.notes[1].staffPosition === 1 && Math.abs(this.notes[1].staffPosition % 2) === 1) {
-	          morae.slice(-1)[0].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
+	      for (i = 0; i < this.notes[1].morae.length; i++) {
+	        mark = this.notes[1].morae[i];
+	
+	        if (this.notes[0].staffPosition - this.notes[1].staffPosition === 1 && Math.abs(this.notes[1].staffPosition % 2) === 1) mark.positionHint = _ExsurgeChant.MarkingPositionHint.Below;
+	      }
+	
+	      for (i = 0; i < this.notes[0].morae.length; i++) {
+	
+	        if (hasLowerMora) {
+	          mark = this.notes[0].morae[i];
+	          mark.positionHint = _ExsurgeChant.MarkingPositionHint.Above;
+	          mark.horizontalOffset += this.notes[1].bounds.right() - this.notes[0].bounds.right();
 	        }
 	      }
 	
@@ -8080,15 +8087,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      //      the lower mora should be below
 	      for (i = 0; i < this.notes[0].epismata.length; i++) {
 	        if (this.notes[0].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[0].epismata[i].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
-	      } // The mora on the first (lower) note needs to be below it, if the second note
-	      // is only one pitch above, and the first note is on a line.
-	      if (this.notes[1].staffPosition - this.notes[0].staffPosition === 1 && Math.abs(this.notes[0].staffPosition % 2) === 1) {
-	        if (this.notes[0].morae.length === 1) {
-	          marking = this.notes[0].morae[0];
-	        } else if (this.notes[1].morae.length > 1) {
-	          marking = this.notes[1].morae[0];
+	      } // if this note has two or more (!?) morae then we just leave them be
+	      // since they have already been assigned position hints.
+	      if (this.notes[0].morae.length < 2) {
+	        for (i = 0; i < this.notes[0].morae.length; i++) {
+	          marking = this.notes[0].morae[i];
+	
+	          if (this.notes[1].staffPosition - this.notes[0].staffPosition === 1 && Math.abs(this.notes[0].staffPosition % 2) === 1) marking.positionHint = _ExsurgeChant.MarkingPositionHint.Below;
 	        }
-	        if (marking) marking.positionHint = _ExsurgeChant.MarkingPositionHint.Below;
 	      }
 	
 	      for (i = 0; i < this.notes[1].epismata.length; i++) {

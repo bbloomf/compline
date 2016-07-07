@@ -47,6 +47,7 @@ gulp.task('styles', function() {
 gulp.task('scripts', function(cb) {
   var sources = [
     '*.js',
+    'fallback/exsurge.js',
     '!gulpfile.js'
   ];
 
@@ -59,17 +60,6 @@ gulp.task('scripts', function(cb) {
     cb
   );
 });
-
-gulp.task('exsurge', function(cb) {
-  pump([
-        gulp.src('fallback/exsurge.js', {base: '.'}),
-        $.uglify({mangle: false}),
-        gulp.dest('dist'),
-        $.size({title: 'exsurge'})
-    ],
-    cb
-  );
-})
 
 // Scan Your HTML For Assets & Optimize Them
 gulp.task('html', function() {
@@ -93,7 +83,7 @@ gulp.task('serve:dist', ['default']);
 
 // Build Production Files, the Default Task
 gulp.task('default', ['clean'], function(cb) {
-  runSequence('copy', ['html', 'styles', 'scripts', 'exsurge'], cb);
+  runSequence('copy', ['html', 'styles', 'scripts'], cb);
 });
 
 // Run PageSpeed Insights
