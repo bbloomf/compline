@@ -32,7 +32,7 @@ $(function($) {
       }).replace(/<\/?sc>/g,'%')
         .replace(/<\/?b>/g,'*')
         .replace(/<\/?i>/g,'_')
-        .replace(/<sp>'(?:ae|æ)<\/sp>/g,'ǽ')
+        .replace(/<sp>'(?:ae|æ)<\/sp>/g,'æ') // as long as we're using a font that has a broken ǽ, we will just not accent those characters
         .replace(/<v>\\greheightstar<\/v>/g,'*');
       var gabcs = gabc.split(regexGabcHeader);
       if(gabcs.length===1) gabcs.splice(0,'','');
