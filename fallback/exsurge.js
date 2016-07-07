@@ -5907,6 +5907,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    _this4.note = note;
 	    _this4.positionHint = MarkingPositionHint.Default;
+	    _this4.horizontalOffset = 0;
 	    return _this4;
 	  }
 	
@@ -5927,7 +5928,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (Math.abs(staffPosition) % 2 === 1) verticalOffset -= ctxt.staffInterval * .75;
 	      }
 	
-	      this.bounds.x += this.note.bounds.right() + ctxt.staffInterval / 4.0;
+	      this.bounds.x += this.horizontalOffset + this.note.bounds.right() + ctxt.staffInterval / 4.0;
 	      this.bounds.y += verticalOffset;
 	    }
 	  }]);
@@ -6885,11 +6886,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // position hint. if a user decides to try to put position indicators
 	            // on the double morae (such as 1 or 2), then really the behavior is
 	            // not defined by gabc, so it's on the user to figure it out.
-	            if (note.morae.length > 0) {
-	              // if we already have one mora, then create another but force a
-	              // an alternative positionHint
-	              haveLookahead = true;
-	              if (Math.abs(note.staffPosition) % 2 === 0) lookahead = '1';else lookahead = '0';
+	            if (note.morae.length > 0 && notes.length) {
+	              var previousNote = notes.slice(-1)[0];
+	              var previousMora = note.morae.slice(-1)[0];
+	              previousMora.note = previousNote;
 	            }
 	
 	            mark = new Markings.Mora(ctxt, note);
@@ -7820,18 +7820,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // 1. morae need to be lined up if both notes have morae
 	      // 2. like the podatus, mora on lower note needs to below
 	      //    under certain circumstances
-	      for (i = 0; i < this.notes[1].morae.length; i++) {
-	        mark = this.notes[1].morae[i];
-	
-	        if (this.notes[0].staffPosition - this.notes[1].staffPosition === 1 && Math.abs(this.notes[1].staffPosition % 2) === 1) mark.positionHint = _ExsurgeChant.MarkingPositionHint.Below;
-	      }
-	
-	      for (i = 0; i < this.notes[0].morae.length; i++) {
-	
-	        if (hasLowerMora) {
-	          mark = this.notes[0].morae[i];
-	          mark.positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	          mark.horizontalOffset += this.notes[1].bounds.right() - this.notes[0].bounds.right();
+	      if (this.notes[1].morae.length) {
+	        var morae = this.notes[1].morae;
+	        morae[0].horizontalOffset += this.notes[1].bounds.right() - this.notes[0].bounds.right();
+	        if (this.notes[0].staffPosition - this.notes[1].staffPosition === 1 && Math.abs(this.notes[1].staffPosition % 2) === 1) {
+	          morae.slice(-1)[0].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
 	        }
 	      }
 	
@@ -8087,14 +8080,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	      //      the lower mora should be below
 	      for (i = 0; i < this.notes[0].epismata.length; i++) {
 	        if (this.notes[0].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[0].epismata[i].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
-	      } // if this note has two or more (!?) morae then we just leave them be
-	      // since they have already been assigned position hints.
-	      if (this.notes[0].morae.length < 2) {
-	        for (i = 0; i < this.notes[0].morae.length; i++) {
-	          marking = this.notes[0].morae[i];
-	
-	          if (this.notes[1].staffPosition - this.notes[0].staffPosition === 1 && Math.abs(this.notes[0].staffPosition % 2) === 1) marking.positionHint = _ExsurgeChant.MarkingPositionHint.Below;
+	      } // The mora on the first (lower) note needs to be below it, if the second note
+	      // is only one pitch above, and the first note is on a line.
+	      if (this.notes[1].staffPosition - this.notes[0].staffPosition === 1 && Math.abs(this.notes[0].staffPosition % 2) === 1) {
+	        if (this.notes[0].morae.length === 1) {
+	          marking = this.notes[0].morae[0];
+	        } else if (this.notes[1].morae.length > 1) {
+	          marking = this.notes[1].morae[0];
 	        }
+	        if (marking) marking.positionHint = _ExsurgeChant.MarkingPositionHint.Below;
 	      }
 	
 	      for (i = 0; i < this.notes[1].epismata.length; i++) {
