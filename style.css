@@ -72,3 +72,18 @@ tspan[style="font-family:'Exsurge Characters';fill:#f00;"] {
   font-size: 130%;
   text-transform: lowercase;
 }
+div.options-menu {
+  display: inline-block;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  border: 1px solid #999;
+  border-radius: 4px;
+  padding: 4px;
+  font-family: sans-serif;
+}
+div.options-menu>ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
