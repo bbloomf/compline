@@ -29,10 +29,13 @@ $(function($) {
       score = [];
       gabc = gabc.replace(/<v>\\([VRA])bar<\/v>/g,function(match,barType) {
         return barType + '/.';
-      }).replace(/<\/?sc>/g,'%')
+      }).replace(/(<b>[^<]+)<sp>'(?:oe|œ)<\/sp>/g,'$1œ</b>\u0301<b>') // character doesn't work in the bold version of this font.
+        .replace(/<b><\/b>/g,'')
+        .replace(/<\/?sc>/g,'%')
         .replace(/<\/?b>/g,'*')
         .replace(/<\/?i>/g,'_')
-        .replace(/<sp>'(?:ae|æ)<\/sp>/g,'æ') // as long as we're using a font that has a broken ǽ, we will just not accent those characters
+        .replace(/<sp>'(?:ae|æ)<\/sp>/g,'ǽ')
+        .replace(/<sp>'(?:oe|œ)<\/sp>/g,'œ́')
         .replace(/<v>\\greheightstar<\/v>/g,'*');
       var gabcs = gabc.split(regexGabcHeader);
       if(gabcs.length===1) gabcs.splice(0,'','');
@@ -89,7 +92,7 @@ $(function($) {
 
     var width = 0;
     var doLayout = function() {
-      var newWidth = _element.parentElement.clientWidth || window.document.body.clientWidth;
+      var newWidth = (_element.parentElement && _element.parentElement.clientWidth) || window.document.body.clientWidth;
       if(width === newWidth) return;
       width = newWidth;
       // perform layout on the chant
