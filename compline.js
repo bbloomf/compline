@@ -13,31 +13,61 @@ $(function($){
   if(!('fullNotation' in localStorage)) localStorage.fullNotation = '0';
   if(!('showOptions' in localStorage)) localStorage.showOptions = '0';
   if(!('autoSelectRegion' in localStorage)) localStorage.autoSelectRegion = '1';
-  var fullNotation = function(newVal) {
+  $('#selectRegion').append('<option value="">None</option>'+Object.keys(romanCalendar.regionCodeMap).map(function(code){
+    return '<option value="'+code+'"">'+romanCalendar.regionCodeMap[code]+'</option>';
+  }).join('')).val(localStorage.region);
+  var toggles = {};
+  var fullNotation = toggles.fullNotation = function(newVal) {
     if(typeof newVal === 'undefined') return !!parseInt(localStorage.fullNotation);
+    updateToggle('fullNotation',!!newVal);
     localStorage.fullNotation = newVal? 1 : 0;
     setPsalms();
     setCanticle();
   };
-  var showOptions = function(newVal) {
+  var showOptions = toggles.showOptions = function(newVal) {
     if(typeof newVal === 'undefined') return !!parseInt(localStorage.showOptions);
+    updateToggle('showOptions',!!newVal);
     localStorage.showOptions = newVal? 1 : 0;
     showHideOptions();
   };
-  var autoSelectRegion = function(newVal) {
+  var autoSelectRegion = toggles.autoSelectRegion = function(newVal) {
     if(typeof newVal === 'undefined') return !!parseInt(localStorage.autoSelectRegion);
+    updateToggle('autoSelectRegion',!!newVal);
     localStorage.autoSelectRegion = newVal? 1 : 0;
-    doAutoSelectRegion();
+    if(newVal) doAutoSelectRegion();
   };
-
+  var selectRegion = function(newVal) {
+    if(typeof newVal === 'undefined') return !!parseInt(localStorage.autoSelectRegion);
+    $('#selectRegion').val(newVal);
+    _currentRegion = '';
+    localStorage.region = $('#selectRegion').val();
+  };
+  $('a[href][toggle]').click(function(e){
+    e.preventDefault();
+    var $this = $(this);
+    var toggle = toggles[$this.attr('toggle')];
+    toggle(!toggle());
+  });
+  $('#selectRegion').change(function(e){
+    selectRegion($(this).val());
+  });
+  function updateToggle(toggle,val) {
+    var $toggle = $('a[toggle='+toggle+']');
+    if(typeof val == 'undefined') val = toggles[toggle]();
+    $toggle.text($toggle.attr("toggle-"+val.toString()));
+    if(toggle == 'autoSelectRegion') $('#selectRegion').prop('disabled', val);
+  }
+  $.each(toggles, function(toggle){
+    updateToggle(toggle);
+  });
   function doAutoSelectRegion() {
     $.getJSON("https://freegeoip.net/json/", function(result){
       if(result.country_code in romanCalendar.regionCodeMap) {
-        localStorage.region = result.country_code;
+        selectRegion(result.country_code);
       } else {
         var test = result.country_code + '-' + result.region_code;
         if(test in romanCalendar.regionCodeMap) {
-          localStorage.region = test;
+          selectRegion(test);
         } else {
           console.info('Unknown Region:', result);
         }
@@ -388,6 +418,10 @@ $(function($){
       currentPsalms.paschalTime = paschalTime;
       currentPsalms.isSunday = isSunday;
     }
+    if(typeof day == 'undefined' && typeof paschalTime == 'undefined' && typeof isSunday == 'undefined') return;
+    // Only process if things have changed since the last time this function was called.
+    if(currentPsalms.day == day && currentPsalms.paschalTime == paschalTime && currentPsalms.isSunday == isSunday && currentPsalms.full == fullNotation()) return;
+    currentPsalms.fullNotation = fullNotation();
     var ant = '',
         psalm = '',
         pt = '',
