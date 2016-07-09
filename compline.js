@@ -23,7 +23,6 @@ $(function($){
   }).join('')).val(localStorage.region);
   var $optionsMenu = $('#options-menu');
   $(document.body).click(function(e){
-    console.info(this, e.target);
     var $target = $(e.target);
     if($target.parents().is($optionsMenu)) {
       if(!$target.is('a,input,select')) $optionsMenu.toggleClass('showing');
