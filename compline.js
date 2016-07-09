@@ -11,6 +11,7 @@ $(function($){
   }
   if(!('region' in localStorage)) localStorage.region = '';
   if(!('fullNotation' in localStorage)) localStorage.fullNotation = '0';
+  if(!('fullNotationPrayers' in localStorage)) localStorage.fullNotationPrayers = '0';
   if(!('showOptions' in localStorage)) localStorage.showOptions = '0';
   if(!('autoSelectRegion' in localStorage)) localStorage.autoSelectRegion = '1';
   var usedRegions = {};
@@ -27,6 +28,11 @@ $(function($){
     localStorage.fullNotation = newVal? 1 : 0;
     setPsalms();
     setCanticle();
+  };
+  var fullNotationPrayers = toggles.fullNotationPrayers = function(newVal) {
+    if(typeof newVal === 'undefined') return !!parseInt(localStorage.fullNotationPrayers);
+    updateToggle('fullNotationPrayers',!!newVal);
+    localStorage.fullNotationPrayers = newVal? 1 : 0;
   };
   var showOptions = toggles.showOptions = function(newVal) {
     if(typeof newVal === 'undefined') return !!parseInt(localStorage.showOptions);
@@ -59,7 +65,15 @@ $(function($){
     var $toggle = $('a[toggle='+toggle+']');
     if(typeof val == 'undefined') val = toggles[toggle]();
     $toggle.text($toggle.attr("toggle-"+val.toString()));
-    if(toggle == 'autoSelectRegion') $('#selectRegion').prop('disabled', val);
+    switch(toggle) {
+      case 'autoSelectRegion':
+        $('#selectRegion').prop('disabled', val);
+        break;
+      case 'fullNotationPrayers':
+        $('.notated-prayer').toggle(val);
+        $('.pointed-prayer').toggle(!val);
+        break;
+    }
   }
   $.each(toggles, function(toggle){
     updateToggle(toggle);
