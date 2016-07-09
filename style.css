@@ -100,6 +100,15 @@ div#options-menu>ul {
   max-width: 100%;
   margin: 0;
 }
+div#options-menu>ul a {
+  text-decoration: none;
+}
+div#options-menu>ul a:hover {
+  text-decoration: underline;
+}
+div#options-menu>ul>li:not(:first-child) {
+  margin-top: 12px;
+}
 div#options-menu.showing>ul {
   display: block;
 }
