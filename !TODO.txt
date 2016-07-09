@@ -1,7 +1,1 @@
- Settings Menu
----Region: United States (dropdown)
----Pointed/Fully Notated Psalms
----Show Options Throughout/Calculate Everything Based on Date
-
-Store settings in local storage
 Offline support?
