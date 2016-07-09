@@ -51,6 +51,7 @@
 body {
   font-family: 'Crimson Text', serif;
   font-size: 13pt;
+  margin: 8px;
 }
 .sans{font-family:Verdana,Helvetica,sans-serif}
 .b{font-weight:700}
@@ -75,8 +76,8 @@ tspan[style="font-family:'Exsurge Characters';fill:#f00;"] {
 div#options-menu {
   display: inline-block;
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 8px;
+  right: 8px;
   font-family: sans-serif;
 }
 div#options-menu>svg {
