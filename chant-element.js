@@ -31,9 +31,6 @@ $(function($) {
         return barType + '/.';
       }).replace(/(<b>[^<]+)<sp>'(?:oe|œ)<\/sp>/g,'$1œ</b>\u0301<b>') // character doesn't work in the bold version of this font.
         .replace(/<b><\/b>/g,'')
-        .replace(/<\/?sc>/g,'%')
-        .replace(/<\/?b>/g,'*')
-        .replace(/<\/?i>/g,'_')
         .replace(/<sp>'(?:ae|æ)<\/sp>/g,'ǽ')
         .replace(/<sp>'(?:oe|œ)<\/sp>/g,'œ́')
         .replace(/<v>\\greheightstar<\/v>/g,'*');
@@ -43,6 +40,10 @@ $(function($) {
       for(var i=0; i<limit; ++i) {
         var gabcHeader = gabcs[2*i+1].split(/\r?\n/);
         gabc = gabcs[2*i+2]
+          .replace(/([^c])u([aeiouáéíóú])/g,'$1u{$2}')
+          .replace(/<\/?sc>/g,'%')
+          .replace(/<\/?b>/g,'*')
+          .replace(/<\/?i>/g,'_')
           .replace(/(\s)_([^\s*]+)_(\(\))?(\s)/g,"$1^_$2_^$3$4")
           .replace(/(\([cf][1-4]\)|\s)(\d+\.)(\s\S)/g,"$1^$2^$3");
         mappings[i] = exsurge.Gabc.createMappingsFromSource(ctxt, gabc);
