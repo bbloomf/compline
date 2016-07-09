@@ -73,6 +73,9 @@ tspan[style="font-family:'Exsurge Characters';fill:#f00;"] {
   font-size: 130%;
   text-transform: lowercase;
 }
+select {
+  max-width: 100%;
+}
 div#options-menu {
   display: inline-block;
   position: absolute;
