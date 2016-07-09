@@ -81,6 +81,9 @@ div.options-menu {
   border-radius: 4px;
   padding: 4px;
   font-family: sans-serif;
+  background: #f6f6f6;
+  width: 300px;
+  max-width: 100%;
 }
 div.options-menu>ul {
   list-style-type: none;

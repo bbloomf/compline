@@ -13,8 +13,12 @@ $(function($){
   if(!('fullNotation' in localStorage)) localStorage.fullNotation = '0';
   if(!('showOptions' in localStorage)) localStorage.showOptions = '0';
   if(!('autoSelectRegion' in localStorage)) localStorage.autoSelectRegion = '1';
+  var usedRegions = {};
   $('#selectRegion').append('<option value="">None</option>'+Object.keys(romanCalendar.regionCodeMap).map(function(code){
-    return '<option value="'+code+'"">'+romanCalendar.regionCodeMap[code]+'</option>';
+    var name = romanCalendar.regionCodeMap[code];
+    if(name in usedRegions) return '';
+    usedRegions[name] = '';
+    return '<option value="'+code+'"">'+name+'</option>';
   }).join('')).val(localStorage.region);
   var toggles = {};
   var fullNotation = toggles.fullNotation = function(newVal) {
