@@ -68,7 +68,7 @@ $(function($) {
       return barType + '/.';
     }).replace(/(<b>[^<]+)<sp>'(?:oe|œ)<\/sp>/g,'$1œ</b>\u0301<b>') // character doesn't work in the bold version of this font.
       .replace(/<b><\/b>/g,'')
-      .replace(/<sp>'(?:ae|æ)<\/sp>/g,'æ') // just using æ since the font is subsetted right now and doesn't include the accented character
+      .replace(/<sp>'(?:ae|æ)<\/sp>/g,'ǽ')
       .replace(/<sp>'(?:oe|œ)<\/sp>/g,'œ́')
       .replace(/<v>\\greheightstar<\/v>/g,'*');
     var gabcs = gabc.split(regexGabcHeader);
