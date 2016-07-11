@@ -407,7 +407,7 @@ $(function($){
   // type should be '-po' for paschal octave, '-pt' for paschal time, or '-asd' for all souls' day, or '' for regular
   var currentCanticle = '';
   var setCanticle = function(type) {
-    type = type || currentCanticle.replace(/_full$/,'');
+    type = (typeof type == 'undefined')? currentCanticle.replace(/_full$/,'') : type;
     var antType = type;
     if(fullNotation()) type += '_full';
     if(type === currentCanticle) return;
