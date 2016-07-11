@@ -601,7 +601,7 @@ $(function($){
   var setChantSrc = function($elem,src){
     if(!$elem || $elem.length === 0) return;
     $elem.attr('src',src);
-    $elem.data('setSrc')(src);
+    $elem.get(0).setSrc(src);
   };
   $('input[name=weekday]').change(function(){
     if(this.checked) {

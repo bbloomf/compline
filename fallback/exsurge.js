@@ -2279,10 +2279,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.canvasCtxt.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
 	
-	    this.svgTextMeasurer = QuickSvg.svg(1, 1);
-	    this.svgTextMeasurer.setAttribute('id', "TextMeasurer");
-	    document.querySelector('body').appendChild(this.svgTextMeasurer);
-	
 	    // measure the size of a hyphen for the lyrics
 	    var hyphen = new Lyric(this, "-", LyricType.SingleSyllable);
 	    this.hyphenWidth = hyphen.bounds.width;
@@ -3076,9 +3072,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.bounds.x = 0;
 	      this.bounds.y = 0;
 	      this.bounds.width = this.measureSubstring(ctxt);
-	      this.bounds.height = this.fontSize;
+	      this.bounds.height = this.fontSize * 1.2;
 	      this.origin.x = 0;
-	      this.origin.y = this.fontSize; // TODO: offset to baseline from top
+	      this.origin.y = this.fontSize;
 	    }
 	  }, {
 	    key: 'getCssClasses',
@@ -3241,7 +3237,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else if (this.centerStartIndex >= 0) {
 	          // if we have manually overriden the centering logic for this lyric,
 	          // then always use that.
-	          // svgTextMeasurer still has the current lyric in it...
 	          x1 = this.measureSubstring(ctxt, this.centerStartIndex);
 	          x2 = this.measureSubstring(ctxt, this.centerStartIndex + this.centerLength);
 	          offset = x1 + (x2 - x1) / 2;
@@ -3255,7 +3250,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var result = activeLanguage.findVowelSegment(this.text, 0);
 	
 	            if (result.found === true) {
-	              // svgTextMeasurer still has the current lyric in it...
 	              x1 = this.measureSubstring(ctxt, result.startIndex);
 	              x2 = this.measureSubstring(ctxt, result.startIndex + result.length);
 	              offset = x1 + (x2 - x1) / 2;
