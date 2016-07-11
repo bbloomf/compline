@@ -67,8 +67,8 @@ gulp.task('html', function() {
   
   return gulp.src(['*.html', 'psalms/**/*.html'], {base: '.'})
     // Replace ǽ with æ, since the font we are using right now doesn't look right with the ǽ character,
-    // even when trying to use combining diacritics æ\x0301
-    //.pipe(replace('ǽ','æ'))
+    // even when trying to use combining diacritics æ\u0301
+    .pipe(replace('ǽ','æ'))
     // The bold unicode accent character for producing œ́ doesn't work, so make sure the accent itself isn't bold
     .pipe(replace(/(<b>[^<]+œ)(&#x0301;)/g, '$1</b>$2<b>'))
     // Minify Any HTML
