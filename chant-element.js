@@ -1,13 +1,13 @@
 $(function($) {
   'use strict';
   var regexGabcHeader = /((?:[\w-_]+:\s*[^;\r\n]*;?\r?\n)+)%%\r?\n/;
+  var _width = window.document.body.clientWidth;
   var doLayout = function() {
-    var width = window.document.body.clientWidth;
+    _width = window.document.body.clientWidth;
     $('chant-gabc').each(function(){
-      this.doLayout(width);
+      this.doLayout(_width);
     });
   };
-  var _width = window.document.body.clientWidth;
   if (window.addEventListener) window.addEventListener('resize',doLayout,false);
   else if (window.attachEvent) window.attachEvent('onresize',doLayout);
   // client side support
