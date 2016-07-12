@@ -21,7 +21,8 @@ gulp.task('jshint', function() {
 gulp.task('copy', function() {
   return gulp.src([
     '**/*.gabc',
-    'fonts/*',
+    'fonts/*.woff',
+    'fonts/*.woff2',
     'fallback/*.js',
     '!dist/**/*',
     '!node_modules/**/*'
