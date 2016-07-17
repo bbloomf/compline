@@ -86,7 +86,7 @@ $(function($) {
       mappings[i] = exsurge.Gabc.createMappingsFromSource(ctxt, gabc);
       if(gabcHeader) {
         gabcHeader = gabcHeader.reduce(function(result,line){
-          var match = line.match(/^([\w-_]+):\s*([^;\r\n]*)(?:;|$)/i);
+          var match = line.match(/^%?([\w-_]+):\s*([^;\r\n]*)(?:;|$)/i);
           if(match) result[match[1]] = match[2];
           return result;
         }, {});

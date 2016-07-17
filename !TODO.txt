@@ -1,1 +1,2 @@
 Offline support?
+Translations?
