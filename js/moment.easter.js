@@ -100,8 +100,8 @@ moment.fn.easter = function () {
     return moment.easter(this.year());
 };
 
-if (module !== undefined) {
-    module.exports = moment;
+if (this.module !== undefined) {
+    this.module.exports = moment;
 } else {
     this.moment = moment;
 }

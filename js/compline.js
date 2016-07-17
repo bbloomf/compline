@@ -1,13 +1,7 @@
 requirejs.config({
-  baseUrl: 'js/lib'
+  baseUrl: 'js'
 });
 requirejs(['jquery','moment','calendar','chant-element'], function($,moment,calendar) {
-    //This function is called when scripts/helper/util.js is loaded.
-    //If util.js calls define(), then this function is not fired until
-    //util's dependencies have loaded, and the util argument will hold
-    //the module value for "helper/util".
-});
-$(function($){
   'use strict';
   var _currentRegion = '',
       localStorage = window.localStorage;
@@ -24,8 +18,8 @@ $(function($){
   if(!('showOptions' in localStorage)) localStorage.showOptions = '0';
   if(!('autoSelectRegion' in localStorage)) localStorage.autoSelectRegion = '1';
   var usedRegions = {};
-  $('#selectRegion').append('<option value="">None</option>'+Object.keys(romanCalendar.regionCodeMap).map(function(code){
-    var name = romanCalendar.regionCodeMap[code];
+  $('#selectRegion').append('<option value="">None</option>'+Object.keys(calendar.roman.regionCodeMap).map(function(code){
+    var name = calendar.roman.regionCodeMap[code];
     if(name in usedRegions) return '';
     usedRegions[name] = '';
     return '<option value="'+code+'"">'+name+'</option>';
@@ -98,11 +92,11 @@ $(function($){
   });
   function doAutoSelectRegion() {
     $.getJSON("https://freegeoip.net/json/", function(result){
-      if(result.country_code in romanCalendar.regionCodeMap) {
+      if(result.country_code in calendar.roman.regionCodeMap) {
         selectRegion(result.country_code);
       } else {
         var test = result.country_code + '-' + result.region_code;
-        if(test in romanCalendar.regionCodeMap) {
+        if(test in calendar.roman.regionCodeMap) {
           selectRegion(test);
         } else {
           console.info('Unknown Region:', result);
@@ -115,245 +109,6 @@ $(function($){
   var ipGeo;
   if(parseInt(localStorage.autoSelectRegion)) {
     doAutoSelectRegion();
-  }
-  // the following function is based on one taken from http://www.irt.org/articles/js052/index.htm
-  // Y is the year to calculate easter for, e.g., 2017
-  function EasterDate(Y) {
-    var C = Math.floor(Y/100);
-    var N = Y - 19*Math.floor(Y/19);
-    var K = Math.floor((C - 17)/25);
-    var I = C - Math.floor(C/4) - Math.floor((C - K)/3) + 19*N + 15;
-    I = I - 30*Math.floor((I/30));
-    I = I - Math.floor(I/28)*(1 - Math.floor(I/28)*Math.floor(29/(I + 1))*Math.floor((21 - N)/11));
-    var J = Y + Math.floor(Y/4) + I + 2 - C + Math.floor(C/4);
-    J = J - 7*Math.floor(J/7);
-    var L = I - J;
-    var M = 3 + Math.floor((L + 40)/44);
-    var D = L + 28 - 31*Math.floor(M/4);
-
-    return moment([Y,M-1,D]);
-  }
-  var dateCache = {};
-  var Dates = function(Y) {
-    if(Y in dateCache) return dateCache[Y];
-    this.year = Y;
-    this.easter = EasterDate(Y);
-    this.septuagesima = moment(this.easter).subtract(7*9,'days');
-    this.lent1 = moment(this.septuagesima).add(7*3,'days');
-    this.ascension = moment(this.easter).add(39,'days');
-    this.pentecost = moment(this.easter).add(49,'days');
-    this.christmas = moment([Y,11,25]);
-    this.advent1 = moment(this.christmas).subtract((this.christmas.day() || 7) + 7*3,'days');
-    this.allSouls = moment([Y,10,2]);
-    if(this.allSouls.day() === 0) this.allSouls.add(1,'day');
-    this.corpusChristi = moment(this.pentecost).add(11,'days');
-    this.sacredHeart = moment(this.pentecost).add(19,'days');
-    this.christTheKing = moment([Y,9,31]);
-    this.christTheKing.subtract(this.christTheKing.day(),'days');
-    this.sevenDolors = moment([Y,8,15]);
-    this.epiphany = moment([Y,0,6]);
-    // The Feast of the Holy Family is on the Sunday following Epiphany, unless Epiphany falls on a Sunday,
-    // in which case The Holy Family will be on the Saturday following.
-    this.holyFamily = moment(this.epiphany).add(7 - (this.epiphany.day()||1), 'days');
-    this.transfiguration = moment([Y,7,6]);
-    dateCache[Y] = this;
-  };
-  function getSunday(date) {
-    var dates = datesForMoment(date);
-    for(var i = 0; i < CalendarSundays.length; ++i) {
-      var test = CalendarSundays[i];
-      if(test.on) {
-        if(date.isSame(momentFromString(test.on,date))) {
-          return SundayFeast(test,date,dates);
-        }
-      } else if(test.before) {
-        if(date.isBefore(momentFromString(test.before,date))) {
-          return SundayFeast(test,date,dates);
-        }
-      } else if(test.after) {
-        if(date.isAfter(momentFromString(test.after,date))) {
-          return SundayFeast(test,date,dates);
-        }
-      }
-    }
-  }
-  function FeriaWithAlternates(alternates,selectedAlternate) {
-    if(alternates && !alternates.length) alternates = undefined;
-    var feria = {title:'Feria', rank: 10};
-    var result = feria;
-    if(alternates && alternates.length) {
-      alternates.unshift(feria);
-      if(selectedAlternate) {
-        result = selectedAlternate;
-        _currentRegion = result.region[0];
-      } else {
-        _currentRegion = '';
-      }
-      result.alternates = alternates;
-    }
-    return result;
-  }
-  function getFromCalendar(date) {
-    if('liturgical' in date) return date.liturgical;
-    if(date.day() === 0) {
-      return (date.liturgical = getSunday(date));
-    }
-    if(dateMatches(date,'corpusChristi')) return (date.liturgical = {title:'Corpus Christi', rank:1});
-    if(dateMatches(date,'sacredHeart')) return (date.liturgical = {title:'The Most Sacred Heart of Jesus', rank:1});
-    if(dateMatches(date,'ascension')) return (date.liturgical = {title:'The Ascension of Our Lord', rank:1});
-    if(dateMatches(date,'easter-3')) return (date.liturgical = {title:'Maundy Thursday', rank:1});
-    if(dateMatches(date,'easter-2')) return (date.liturgical = {title:'Good Friday', rank:1});
-    if(dateMatches(date,'easter-1')) return (date.liturgical = {title:'Holy Saturday', rank:1});
-    if(dateMatches(date,'lent1-4')) return (date.liturgical = {title:'Ash Wednesday', rank:5});
-    var options = [];
-    var selectedOption;
-    if(regionalCalendars) {
-      var key = date.format('MM/DD'),
-          altKey = moment(date).subtract(1,'day').format('MM/DD');
-      $.each(regionalCalendars, function(region, calendar){
-        var option;
-        if(key in calendar) {
-          option = calendar[key];
-        } else if(altKey in calendar) {
-          var d = calendar[altKey];
-          if(d.plusOne === 'ifSunday' && date.day()===1) option = d;
-        }
-        if(option) {
-          var selectThisOption = (region === _currentRegion || romanCalendar.regionCodeMap[localStorage.region] === region);
-          option.region = [region];
-          var sameFeast = $.grep(options, function(o,i){
-            return o.title == option.title && o.rank === option.rank;
-          });
-          if(sameFeast.length) {
-            sameFeast[0].region.push(region);
-            if(selectThisOption) selectedOption = sameFeast[0];
-          } else {
-            options.push(option);
-            if(selectThisOption) selectedOption = option;
-          }
-        }
-      });
-    }
-    if(romanCalendar) {
-      var month = date.month();
-      var day = date.date();
-      var d = romanCalendar[month][day];
-      if(!d && day > 1) {
-        d = romanCalendar[month][day-1];
-        if(!d || !d.plus) return (date.liturgical = FeriaWithAlternates(options,selectedOption));
-        else if(d.plusOne === 'ifLeapYear' && !date.isLeapYear()) return (date.liturgical = FeriaWithAlternates(options,selectedOption));
-        else if(d.plusOne === 'ifSunday' && date.day()!==1) return (date.liturgical = FeriaWithAlternates(options,selectedOption));
-      }
-      if(options.length) {
-        options.unshift(d);
-        if(selectedOption) {
-          d = selectedOption;
-          _currentRegion = d.region[0];
-        } else {
-          _currentRegion = '';
-        }
-        d.alternates = options;
-      }
-      if(d) return (date.liturgical = d);
-    }
-    return (date.liturgical = FeriaWithAlternates(options,selectedOption));
-  }
-  Dates.prototype.firstClassFeast = function(date) {
-    var d = getFromCalendar(date);
-    return !!(d && d.rank === 1);
-  };
-  Dates.prototype.firstOrSecondClassFeast = function(date) {
-    var d = getFromCalendar(date);
-    return !!(d && (d.rank === 1 || d.rank === 2));
-  };
-  Dates.prototype.feastOfOurLady = function(date) {
-    var d = getFromCalendar(date);
-    return !!(d && d.ol);
-  };
-  Dates.prototype.minorFeast = function(date) {
-    var d = getFromCalendar(date);
-    return (d && d.rank > 1 && d.rank < 5);
-  };
-  Dates.prototype.feria = function(date) {
-    var d = getFromCalendar(date);
-    if(date.day() === 0) return false;
-    return !d || d.rank >= 5;
-  };
-  Dates.prototype.sunday = function(date) {
-    return date.day() === 0;
-  };
-  function datesForMoment(moment) {
-    return moment.Dates || (moment.Dates = new Dates(moment.year()));
-  }
-  Dates.prototype.isTriduum = function(date) {
-    var maundyThursday = moment(this.easter).subtract(3,'days');
-    return date.isSameOrAfter(maundyThursday) && date.isBefore(this.easter);
-  };
-  Dates.prototype.isPaschalWeek = function(date) {
-    var easterSaturday = moment(this.easter).add(6,'days');
-    return date.isSameOrAfter(this.easter) && date.isBefore(easterSaturday);
-  };
-  Dates.prototype.isPaschalTime = function(date) {
-    var pentecostSaturday = moment(this.easter).add(55,'days');
-    return date.isSameOrAfter(this.easter) && date.isBefore(pentecostSaturday);
-  };
-  Dates.prototype.isAdvent = function(date) {
-    return date.isSameOrAfter(moment(this.advent1).subtract(1,'day')) && date.isSameOrBefore(moment(this.christmas).subtract(1,'day'));
-  };
-  function momentFromRegex(date,matches,dates) {
-    if(matches[1]) {
-      return moment([date.year(), parseInt(matches[2]) - 1, parseInt(matches[3])]);
-    } else if(matches[5] in dates) {
-      var d = dates[matches[5]]||[0];
-      if(typeof d === 'function') return dates[matches[5]](date);
-      var m = moment(d);
-      if(matches[7]) {
-        var days = parseInt(matches[7]) || 0;
-        if(matches[6] == '-') {
-          days *= -1;
-        }
-        m.add(days, 'days');
-      }
-      return m;
-    } else {
-      console.info('date not found: ' + matches[5]);
-      return moment('');
-    }
-  }
-  function momentFromString(str,date) {
-    var dates = datesForMoment(date);
-    //                    xxx1222222113333331x45555544466666677777444xxxxx89a
-    var regexDateRange = /(?:((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?))(?::(((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?)))?/g;
-    var matches = regexDateRange.exec(str);
-    return momentFromRegex(date,matches,dates);
-  }
-  window.momentFromString = momentFromString;
-  function dateMatches(date,dateRange) {
-    var dates = datesForMoment(date);
-    //                    111xxxx2333333224444442x56666655577777788888555xxxxx9ab
-    var regexDateRange = /(!)?(?:((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?))(?::(((\d\d)\/(\d\d))|((\w+)(?:([+-])(\d+))?)))?/g;
-    var matches;
-    var test;
-    while((matches = regexDateRange.exec(dateRange))) {
-      var opposite = matches[1];
-      var range = [momentFromRegex(date,matches.slice(1),dates)];
-      if(matches[9]) {
-        range.push(momentFromRegex(date,matches.slice(9),dates));
-        test = date.isBetween(range[0],range[1],'day','[]');
-        if(opposite) test = !test;
-        if(test) return true;
-      } else {
-        if (typeof range[0]==='boolean') {
-          if(opposite) range[0] = !range[0];
-          if(range[0]) return true;
-        } else {
-          test = date.isSame(range[0],'day');
-          if(opposite) test = !test;
-          if(test) return true;
-        }
-      }
-    }
-    return false;
   }
   $.QueryString = (function (a) {
       if (a === "") return {};
@@ -506,25 +261,25 @@ $(function($){
     }
   };
   var setDate = function(date,region) {
-    var dates = datesForMoment(date);
-    var d = getFromCalendar(date,region);
+    var dates = calendar.datesForMoment(date);
+    var d = calendar.getFeastForDate(date,region);
     //show and hide [include] and [exclude] elements based on the date
     $('[exclude]').each(function(){
       var $this = $(this);
-      $this.toggle(!dateMatches(date, $this.attr('exclude')));
+      $this.toggle(!calendar.dateMatches(date, $this.attr('exclude')));
     });
     $('[include]').each(function(){
       var $this = $(this);
-      $this.toggle(dateMatches(date, $this.attr('include')));
+      $this.toggle(calendar.dateMatches(date, $this.attr('include')));
     });
     var dateMatchesSelectDate = function($elem) {
       var selectDay = $elem.attr('select-day');
       if(selectDay) {
-        selectDay = dateMatches(date, selectDay);
+        selectDay = calendar.dateMatches(date, selectDay);
       } else {
         selectDay = true;
       }
-      var matches = dateMatches(date, $elem.attr('select-date'));
+      var matches = calendar.dateMatches(date, $elem.attr('select-date'));
       return matches && selectDay;
     };
     //select inputs based on date
@@ -576,7 +331,7 @@ $(function($){
           break;
       }
       $('#weekday').text(name);
-    } else if(dateMatches(date,'allSouls')) {
+    } else if(calendar.dateMatches(date,'allSouls')) {
       showChooseDay = false;
       $('#weekday').text('All Souls Day');
       setPsalms('asd');
@@ -674,5 +429,5 @@ $(function($){
   //     // registration failed :(
   //     console.log('ServiceWorker registration failed: ', err);
   //   });
-  // }
+  // }    
 });
