@@ -1,7 +1,7 @@
-requirejs.config({
+require.config({
   baseUrl: 'js'
 });
-requirejs(['jquery','moment','calendar','chant-element'], function($,moment,calendar) {
+require(['jquery','moment','calendar','chant-element'], function($,moment,calendar) {
   'use strict';
   var _currentRegion = '',
       localStorage = window.localStorage;

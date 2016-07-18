@@ -1,5 +1,5 @@
 define(['moment','moment.easter'], function(moment){
-'use strict'
+'use strict';
 //from https://en.wikipedia.org/wiki/General_Roman_Calendar_of_1960
 //rank:5 is commemoration
   var romanCalendar = [
@@ -679,5 +679,5 @@ return {
   dateMatches: dateMatches,
   datesForMoment: datesForMoment,
   getFeastForDate: getFeastForDate
-}
+};
 });

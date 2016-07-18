@@ -1,6 +1,6 @@
 'use strict';
 
-var moment;
+var moment, require;
 if (require !== undefined) {
     moment = require('moment');
 } else {
