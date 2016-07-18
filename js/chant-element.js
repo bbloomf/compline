@@ -1,4 +1,4 @@
-$(function($) {
+define(['jquery','exsurge'], function($,exsurge) {
   'use strict';
   var regexGabcHeader = /((?:[\w-_]+:\s*[^;\r\n]*;?\r?\n)+)%%\r?\n/;
   var _width = window.document.body.clientWidth;

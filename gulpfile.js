@@ -12,7 +12,7 @@ var pump = require('pump');
 
 // Lint JavaScript
 gulp.task('jshint', function() {
-  return gulp.src(['*.js', '!gulpfile.js'])
+  return gulp.src(['js/compline.js', 'js/chant-element.js', 'js/calendar.js'])
     .pipe($.jshint())
     .pipe($.jshint.reporter('jshint-stylish'));
 });
@@ -23,7 +23,6 @@ gulp.task('copy', function() {
     '**/*.gabc',
     'fonts/*.woff',
     'fonts/*.woff2',
-    'fallback/*.js',
     '!dist/**/*',
     '!node_modules/**/*'
   ], {
@@ -48,9 +47,7 @@ gulp.task('styles', function() {
 // Concatenate And Minify JavaScript
 gulp.task('scripts', function(cb) {
   var sources = [
-    '*.js',
-    'fallback/exsurge.js',
-    '!gulpfile.js'
+    'js/*.js'
   ];
 
   pump([
