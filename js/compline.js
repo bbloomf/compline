@@ -74,7 +74,6 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     var $this = $(this);
     var toggle = toggles[$this.attr('toggle')];
     toggle(this.checked);
-    console.info($this.attr('toggle'),this.checked)
   });
   $('#selectRegion').change(function(e){
     selectRegion($(this).val());
