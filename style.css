@@ -46,7 +46,7 @@ body {
   font-size: 13pt;
   margin: 8px;
 }
-.sans{font-family:Verdana,Helvetica,sans-serif}
+.sans{font-family: sans-serif;}
 .versiculum{font-family: 'Versiculum';font-variant:normal;font-size: 130%;color:#d00;}
 @media print {
   .print-hide{

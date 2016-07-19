@@ -14,6 +14,7 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   }
   if(!('region' in localStorage)) localStorage.region = '';
   if(!('fullNotation' in localStorage)) localStorage.fullNotation = '0';
+  if(!('fullNotationChapter' in localStorage)) localStorage.fullNotationChapter = '1';
   if(!('fullNotationPrayers' in localStorage)) localStorage.fullNotationPrayers = '0';
   if(!('showOptions' in localStorage)) localStorage.showOptions = '0';
   if(!('autoSelectRegion' in localStorage)) localStorage.autoSelectRegion = '1';
@@ -28,7 +29,7 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   $(document.body).click(function(e){
     var $target = $(e.target);
     if($target.parents().is($optionsMenu)) {
-      if(!$target.is('a,input,select')) $optionsMenu.toggleClass('showing');
+      if(!$target.is('a,input,select,label')) $optionsMenu.toggleClass('showing');
     } else {
       $optionsMenu.removeClass('showing');  
     }
@@ -40,6 +41,11 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     localStorage.fullNotation = newVal? 1 : 0;
     setPsalms();
     setCanticle();
+  };
+  var fullNotationChapter = toggles.fullNotationChapter = function(newVal) {
+    if(typeof newVal === 'undefined') return !!parseInt(localStorage.fullNotationChapter);
+    updateToggle('fullNotationChapter',!!newVal);
+    localStorage.fullNotationChapter = newVal? 1 : 0;
   };
   var fullNotationPrayers = toggles.fullNotationPrayers = function(newVal) {
     if(typeof newVal === 'undefined') return !!parseInt(localStorage.fullNotationPrayers);
@@ -64,19 +70,21 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     _currentRegion = '';
     localStorage.region = $('#selectRegion').val();
   };
-  $('a[href][toggle]').click(function(e){
-    e.preventDefault();
+  $('input[toggle]').change(function(e){
     var $this = $(this);
     var toggle = toggles[$this.attr('toggle')];
-    toggle(!toggle());
+    toggle(this.checked);
+    console.info($this.attr('toggle'),this.checked)
   });
   $('#selectRegion').change(function(e){
     selectRegion($(this).val());
   });
   function updateToggle(toggle,val) {
-    var $toggle = $('a[toggle='+toggle+']');
-    if(typeof val == 'undefined') val = toggles[toggle]();
-    $toggle.text($toggle.attr("toggle-"+val.toString()));
+    if(typeof val === 'undefined') {
+      var $toggle = $('input[toggle='+toggle+']');
+      val = toggles[toggle]();
+      $toggle.prop('checked',val);
+    }
     switch(toggle) {
       case 'autoSelectRegion':
         $('#selectRegion').prop('disabled', val);
@@ -84,6 +92,10 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       case 'fullNotationPrayers':
         $('.notated-prayer').toggle(val);
         $('.pointed-prayer').toggle(!val);
+        break;
+      case 'fullNotationChapter':
+        $('.notated-chapter').toggle(val);
+        $('.pointed-chapter').toggle(!val);
         break;
     }
   }
