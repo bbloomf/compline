@@ -35,7 +35,8 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
     var width = this._width = newWidth;
     // perform layout on the chant
     var innerHTML = '';
-    for(var i = 0; i < score.length; ++i) {
+    var _element = this;
+    var doScoreLayout = function(i) {
       if(score[i].userNotes || score[i].commentary) {
         innerHTML += '<br>';
       }
@@ -45,12 +46,18 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
       if(score[i].commentary) {
         innerHTML += '<i style="float:right">'+score[i].commentary + '</i>';
       }
-      score[i].performLayout(ctxt);
-      score[i].layoutChantLines(ctxt, width);
-      // render the score to svg code
-      innerHTML += score[i].createSvg(ctxt);
+      score[i].performLayoutAsync(ctxt, function() {
+        score[i].layoutChantLines(ctxt, width);
+        // render the score to svg code
+        innerHTML += score[i].createSvg(ctxt);
+        if(score[++i]) {
+          doScoreLayout(i);
+        } else {
+          _element.innerHTML = innerHTML;
+        }
+      });
     }
-    this.innerHTML = innerHTML;
+    doScoreLayout(0);
   };
   ChantVisualElementPrototype.setGabc = function(gabc, annotationAttr) {
     var useDropCap = [];
