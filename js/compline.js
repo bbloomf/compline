@@ -1,6 +1,3 @@
-require.config({
-  baseUrl: 'js'
-});
 require(['jquery','moment','calendar','chant-element'], function($,moment,calendar) {
   'use strict';
   var _currentRegion = '',
