@@ -21,6 +21,7 @@ gulp.task('jshint', function() {
 gulp.task('copy', function() {
   return gulp.src([
     '**/*.gabc',
+    'js/require.js',
     'fonts/*.woff',
     'fonts/*.woff2',
     '!dist/**/*',
@@ -44,8 +45,39 @@ gulp.task('styles', function() {
     .pipe($.size({title: 'styles'}));
 });
 
+// Build one javascript file:
+gulp.task('scripts', function() {
+  var requirejs = require('requirejs');
+
+  requirejs.optimize({
+    'findNestedDependencies': true,
+    'baseUrl': './js/',
+    'name': 'compline',
+    'optimize': 'none',
+    'out': './dist/js/compline.js',
+    'wrap': true,
+    // 'onModuleBundleComplete': function(data) {
+    //   var fs = require('fs'),
+    //     amdclean = require('amdclean'),
+    //     outputFile = data.path;
+
+    //   fs.writeFileSync(outputFile, amdclean.clean({
+    //     'wrap': {
+    //       // This string is prepended to the file
+    //       'start': ';(function() {\n',
+    //       // This string is appended to the file
+    //       'end': '\n}());'
+    //     },
+    //     removeUseStricts: false,
+    //     shimOverrides: { jquery: 'jQuery' },
+    //     'filePath': outputFile
+    //   }));
+    //}
+  });
+});
+
 // Concatenate And Minify JavaScript
-gulp.task('scripts', function(cb) {
+gulp.task('scripts_old', function(cb) {
   var sources = [
     'js/*.js'
   ];
@@ -64,6 +96,7 @@ gulp.task('scripts', function(cb) {
 gulp.task('html', function() {
   
   return gulp.src(['*.html', 'psalms/**/*.html'], {base: '.'})
+    // .pipe(replace(/data-main="([^"]+?)(?:\.js)?"\s+src="[^"]+\/require.js"/,'src="$1.js"'))
     // Replace ǽ with æ, since the font we are using right now doesn't look right with the ǽ character,
     // even when trying to use combining diacritics æ\u0301
     // .pipe(replace('ǽ','æ'))
