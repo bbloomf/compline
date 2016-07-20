@@ -53,7 +53,7 @@ gulp.task('scripts', function() {
     'findNestedDependencies': true,
     'baseUrl': './js/',
     'name': 'compline',
-    'optimize': 'none',
+    'optimize': 'uglify2',
     'out': './dist/js/compline.js',
     'wrap': true,
     // 'onModuleBundleComplete': function(data) {
