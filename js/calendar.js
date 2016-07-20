@@ -503,15 +503,12 @@ define(['moment','moment.easter'], function(moment){
       alternates.unshift(feria);
       if(selectedAlternate) {
         result = selectedAlternate;
-        _currentRegion = result.region[0];
-      } else {
-        _currentRegion = '';
       }
       result.alternates = alternates;
     }
     return result;
   }
-  function getFeastForDate(date) {
+  function getFeastForDate(date,currentRegion) {
     if('feast' in date) return date.feast;
     if(date.day() === 0) {
       return (date.feast = getSunday(date));
@@ -537,7 +534,7 @@ define(['moment','moment.easter'], function(moment){
           if(d.plusOne === 'ifSunday' && date.day()===1) option = d;
         }
         if(option) {
-          var selectThisOption = (region === _currentRegion || romanCalendar.regionCodeMap[localStorage.region] === region);
+          var selectThisOption = (region === currentRegion || romanCalendar.regionCodeMap[localStorage.region] === region);
           option.region = [region];
           var sameFeast = $.grep(options, function(o,i){
             return o.title == option.title && o.rank === option.rank;
@@ -566,9 +563,6 @@ define(['moment','moment.easter'], function(moment){
         options.unshift(d);
         if(selectedOption) {
           d = selectedOption;
-          _currentRegion = d.region[0];
-        } else {
-          _currentRegion = '';
         }
         d.alternates = options;
       }

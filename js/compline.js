@@ -1,7 +1,6 @@
 require(['jquery','moment','calendar','chant-element'], function($,moment,calendar) {
   'use strict';
-  var _currentRegion = '',
-      localStorage = window.localStorage;
+  var localStorage = window.localStorage;
   try {
     var mod = '__storage test__';
     localStorage.setItem(mod, mod);
@@ -64,7 +63,6 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   var selectRegion = function(newVal) {
     if(typeof newVal === 'undefined') return !!parseInt(localStorage.autoSelectRegion);
     $('#selectRegion').val(newVal);
-    _currentRegion = '';
     localStorage.region = $('#selectRegion').val();
   };
   $('input[toggle]').change(function(e){
@@ -315,8 +313,10 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
         }
       }
     });
+    var setPsalmsLater = false;
     var isPT = dates.isPaschalTime(date);
     var showChooseDay = (date.day() !== 0);
+    var rbWeekday = $('#rbWeekday').prop('value',date.day());
     if(isPT && dates.isPaschalWeek(date)) {
       showChooseDay = false;
       setPsalms(0,'no-antiphon',true);
@@ -345,11 +345,16 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       setPsalms('asd');
       setCanticle('-asd');
     } else {
-      setPsalms(date.day(),isPT);
+      if(d && d.rank <= 2) {
+        $('#rbSunday').prop('checked',true);
+        setPsalms(0,isPT);
+      } else {
+        rbWeekday.prop('checked',true);
+        setPsalms(date.day(),isPT);
+      }
       setCanticle(isPT?'-pt':'');
     }
     $('.chooseDay').toggle(showChooseDay);
-    var rbWeekday = $('#rbWeekday').prop('value',date.day());
     if(d.alternates) {
       var selectFeast = $('#selectFeastDay');
       selectFeast.empty().append(d.alternates.map(function(alt,i){
@@ -357,17 +362,17 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   alt.title+(alt.rank < 5?(' (' + formattedRank(alt.rank) + ')'): '') + (alt.region?(' ['+alt.region.join(', ')+']'):'')+
 '</option>';
       }).join(''));
+      var _currentRegion = '';
+      var alt = d.alternates.filter(function(alt){
+        return alt.region && alt.region.indexOf(localStorage.region)>=0;
+      });
+      if(alt.length) _currentRegion = alt[0].region[0];
       selectFeast.val(_currentRegion);
     } else {
       $('#feastDay').text(d.title + (d.rank < 5?(' (' + formattedRank(d.rank) + ')'): ''));
     }
     $('#feastDay').toggle(!d.alternates);
     $('#selectFeastDay').toggle(!!d.alternates);
-    if(d && d.rank <= 2) {
-      $('#rbSunday').prop('checked',true);
-    } else {
-      rbWeekday.prop('checked',true);
-    }
     showHideOptions();
   };
   var setChantSrc = function($elem,src){
@@ -414,11 +419,10 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   });
   var $date = $('#date');
   $date.change(function(){
-    if(this.value) setDate(moment(this.value));
+    if(this.value) setDate(moment(this.value), localStorage.region);
   }).change();
   $('#selectFeastDay').change(function(){
-    _currentRegion = this.value;
-    setDate(moment($date.val()));
+    setDate(moment($date.val()), this.value);
   });
   function showHideOptions() {
     var show = showOptions();
