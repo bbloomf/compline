@@ -1,18 +1,11 @@
-'use strict';
-
-var moment, require;
-if (require !== undefined) {
-    moment = require('moment');
-} else {
-    moment = this.moment;
-}
-
+define(['moment'],function(moment){
 // I found this algorithm on
 // http://www.merlyn.demon.co.uk/estralgs.txt
 //
 // Given by
 // Al Petrofsky, San Mateo County, California, U.S.A., E-mail 2009-05-22
 moment.easter = function Easter20ops(year) {
+    'use strict';
     /*jslint bitwise: true, vars: true */
     var a = (year / 100 | 0) * 1483 - (year / 400 | 0) * 2225 + 2613;
     var b = ((year % 19 * 3510 + (a / 25 | 0) * 319) / 330 | 0) % 29;
@@ -100,8 +93,4 @@ moment.fn.easter = function () {
     return moment.easter(this.year());
 };
 
-if (this.module !== undefined) {
-    this.module.exports = moment;
-} else {
-    this.moment = moment;
-}
+});
