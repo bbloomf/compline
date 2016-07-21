@@ -205,19 +205,17 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     }
   };
   var currentPsalms = {};
-  var setPsalms = function(day,paschalTime,isSunday) {
+  var setPsalms = function(day,paschalTime) {
     if(typeof(day) === 'undefined') {
       day = currentPsalms.day;
       paschalTime = currentPsalms.paschalTime;
-      isSunday = currentPsalms.isSunday;
     } else {
       currentPsalms.day = day;
       currentPsalms.paschalTime = paschalTime;
-      currentPsalms.isSunday = isSunday;
     }
-    if(typeof day == 'undefined' && typeof paschalTime == 'undefined' && typeof isSunday == 'undefined') return;
+    if(typeof day == 'undefined' && typeof paschalTime == 'undefined') return;
     // Only process if things have changed since the last time this function was called.
-    if(currentPsalms.day == day && currentPsalms.paschalTime == paschalTime && currentPsalms.isSunday == isSunday && currentPsalms.full == fullNotation()) return;
+    if(currentPsalms.day == day && currentPsalms.paschalTime == paschalTime && currentPsalms.full == fullNotation()) return;
     currentPsalms.fullNotation = fullNotation();
     var ant = '',
         psalm = '',
@@ -238,7 +236,6 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       if(paschalTime === 'no-antiphon') ant = '';
       psalm = "<chant-gabc src='psalms/"+day+"/psalm"+pt+full+".gabc'></chant-gabc>";
       dayName = days[day];
-      if(!isSunday) $('#weekday').text(dayName);
     }
     var gotData = function(data){
       var html = ant + psalm + data + ant;
@@ -289,15 +286,15 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       return matches && selectDay;
     };
     //select inputs based on date
-    $('input[select-date]').each(function(){
+    $('button[select-date]').each(function(){
       var $this = $(this);
       var matches = dateMatchesSelectDate($this);
       if(matches) {
-        $this.prop('checked', true).change();
+        $this.click();
       } else {
-        var otherInputs = $this.siblings('input[name=' + $this.attr('name') + ']');
+        var otherInputs = $this.siblings('button[type=radio]');
         if(otherInputs.length==1 && !otherInputs.is('[select-date]')) {
-          otherInputs.prop('checked',true).change();
+          otherInputs.click();
         }
       }
     });
@@ -313,13 +310,12 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
         }
       }
     });
-    var setPsalmsLater = false;
     var isPT = dates.isPaschalTime(date);
     var showChooseDay = (date.day() !== 0);
     var rbWeekday = $('#rbWeekday').prop('value',date.day());
     if(isPT && dates.isPaschalWeek(date)) {
       showChooseDay = false;
-      setPsalms(0,'no-antiphon',true);
+      setPsalms(0,'no-antiphon');
       setCanticle('-po');
       $('#weekday').text('Easter ' + days[date.day()]);
     } else if(dates.isTriduum(date)) {
@@ -345,13 +341,12 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       setPsalms('asd');
       setCanticle('-asd');
     } else {
-      if(d && d.rank <= 2) {
-        $('#rbSunday').prop('checked',true);
-        setPsalms(0,isPT);
+      if(showChooseDay && d && d.rank <= 2) {
+        $('#rbSunday').click();
       } else {
-        rbWeekday.prop('checked',true);
-        setPsalms(date.day(),isPT);
+        rbWeekday.click();
       }
+      $('#weekday').text(days[date.day()]);
       setCanticle(isPT?'-pt':'');
     }
     $('.chooseDay').toggle(showChooseDay);
@@ -380,11 +375,6 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     $elem.attr('src',src);
     $elem.get(0).setSrc(src);
   };
-  $('input[name=weekday]').change(function(){
-    if(this.checked) {
-      setPsalms(parseInt(this.value), choices.season == 'paschal', true);
-    }
-  });
   var loadChant = function(chant,value,id) {
     var src = chant + '/' + value + '.gabc';
     setChantSrc($('#'+chant),src);
@@ -402,9 +392,13 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     $parent.children().removeClass('active');
     $this.addClass('active');
     var chant = $parent.attr('name');
-    choices[chant] = this.value;
-    if(chant=='season') return;
-    loadChant(chant,this.value,this.id);
+    if(chant === 'weekday') {
+      setPsalms(parseInt(this.value), choices.season == 'paschal');
+    } else {
+      choices[chant] = this.value;
+      if(chant=='season') return;
+      loadChant(chant,this.value,this.id);
+    }
   })
   $('[id$=-choices] input[type=radio]').change(function(){
     var chant = this.name;
@@ -436,12 +430,9 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   });
   function showHideOptions() {
     var show = showOptions();
-    $('input:radio:not(.not-hideable)').parent().toggle(show);
+    $(document.body).toggleClass('show-all-options',show);
     $('#marian-antiphon-choices>select').toggle(show);
     $('.marian-antiphon-name').toggle(!show);
-    if(!show) {
-      $('input:radio:checked').parent().show();
-    }
   }
   // if ('serviceWorker' in navigator) {
   //   navigator.serviceWorker.register('./sw.js').then(function(registration) {

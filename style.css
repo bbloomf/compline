@@ -108,11 +108,23 @@ div#options-menu.showing>ul {
 div#options-menu.showing>svg {
   display: none;
 }
+.btn-group-vertical:not(.not-hideable)>button {
+  display: none;
+}
+.btn-group-vertical:not(.not-hideable)>button.active,
+.show-all-options .btn-group-vertical:not(.not-hideable)>button {
+  display: block;
+}
+body:not(.show-all-options) .btn-group-vertical:not(.not-hideable)>button.active {
+  border-radius: 4px;
+}
 .btn-group-vertical {
   margin-bottom: 4px;
+  max-width: 100%;
 }
 .btn-group-vertical .btn {
   text-align: left;
+  white-space: normal;
 }
 div.h {
   margin-top: 10px;

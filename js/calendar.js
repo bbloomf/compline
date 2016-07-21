@@ -169,7 +169,7 @@ define(['moment','moment.easter'], function(moment){
       "24": {title:"Commemoration of St. Christina Virgin and Martyr"},
       "25": {title:"St. James Apostle", rank:2, com:"St. Christopher Martyr"},
       "26": {title:"St. Anne Mother of the Blessed Virgin Mary", rank:2},
-      "27": {title:"St. Pantaleon Martyr", rank:5},
+      "27": {title:"Commemoration of St. Pantaleon Martyr", rank:5},
       "28": {title:"Ss. Nazarius and Celsus Martyrs, Victor I Pope and Martyr, and St. Innocent I Pope and Confessor", rank:3},
       "29": {title:"St. Martha Virgin", rank:3, com:"Ss. Felix, Simplicius, Faustinus, and Beatrice Martyrs"},
       "30": {title:"Commemoration of Ss. Abdon and Sennen Martyrs", rank:5},
