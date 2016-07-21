@@ -399,7 +399,7 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       if(chant=='season') return;
       loadChant(chant,this.value,this.id);
     }
-  })
+  });
   $('[id$=-choices] input[type=radio]').change(function(){
     var chant = this.name;
     choices[chant] = this.value;
