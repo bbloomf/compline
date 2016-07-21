@@ -396,6 +396,16 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     $('div.' + chant + '.' + value).show();
   };
   var choices = {};
+  $('.btn-group-vertical button[type=radio]').click(function(){
+    var $this = $(this);
+    var $parent = $this.parent();
+    $parent.children().removeClass('active');
+    $this.addClass('active');
+    var chant = $parent.attr('name');
+    choices[chant] = this.value;
+    if(chant=='season') return;
+    loadChant(chant,this.value,this.id);
+  })
   $('[id$=-choices] input[type=radio]').change(function(){
     var chant = this.name;
     choices[chant] = this.value;

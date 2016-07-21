@@ -1,3 +1,4 @@
+@import url(bootstrap.css);
 @font-face {
   font-family: 'Versiculum';
   font-style: normal;
@@ -106,4 +107,13 @@ div#options-menu.showing>ul {
 }
 div#options-menu.showing>svg {
   display: none;
+}
+.btn-group-vertical {
+  margin-bottom: 4px;
+}
+.btn-group-vertical .btn {
+  text-align: left;
+}
+div.h {
+  margin-top: 10px;
 }

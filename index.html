@@ -24,11 +24,10 @@
 <input type='date' id='date'><br/>
 <span id='feastDay'></span>
 <select id='selectFeastDay' style='display:none'></select><br/>
-<label><span class='chooseDay'><input type='radio' class='not-hideable' name='weekday' id='rbWeekday' checked></span><!--
---><span id='weekday'></span> at Compline</label><br/>
-<span class='chooseDay'>
-<label><input type='radio' class='not-hideable' name='weekday' value='0' id='rbSunday'>Sunday at Compline (First or Second Class Feast)</label><br/><br/>
-</span>
+<div class="btn-group-vertical not-hideable" name="weekday" role="group">
+  <button type='radio' class="btn btn-lg btn-default active" id='rbWeekday'><span id='weekday'></span> at Compline</button>
+  <button type='radio' class="btn btn-lg btn-default chooseDay" value='0' id='rbSunday'>Sunday at Compline (First or Second Class Feast)</button>
+</div>
 <div include='easter-3' class='red'>
 On Holy Thursday, Compline is said after the stripping of the altars, with candles extinguished and without singing.
 </div>
@@ -40,19 +39,22 @@ Compline is not said tonight.<br/>
 In private recitation, compline is said as follows:
 </div>
 <div id='officiant-choices'>
-<label><input type='radio' class='not-hideable' name='officiant' value='priest' id='officiant-priest'/>Officiant is a Priest or Deacon<br/></label>
-<label><input type='radio' class='not-hideable' name='officiant' value='no-priest' checked id='officiant-no-priest'/>No Priest or Deacon present<br/></label>
+<div class='h'>Officiant:</div>
+<div class="btn-group-vertical not-hideable" name="officiant" role="group">
+  <button type='radio' value="priest" class="btn btn-lg btn-default" id='officiant-priest'>Officiant is a Priest or Deacon</button>
+  <button type='radio' value="no-priest" class="btn btn-lg btn-default active" id='officiant-no-priest'>No Priest or Deacon present</button>
+</div>
 </div>
 <div exclude='easter-3:easter-1 allSouls'>
-Season:
-<div id='season-choices'>
-<label><input type='radio' name='season' value='per-annum' checked id='season-per-annum'/>Throughout the year<br/></label>
-<label><input type='radio' name='season' select-date='easter:pentecost+5' value='paschal' id='season-paschal'/>Paschal Time<br/></label>
+<div class='h'>Season:</div>
+<div id='season-choices' class="btn-group-vertical" name="season" role="group">
+  <button type='radio' value='per-annum' class="btn btn-lg btn-default active" id='season-per-annum'>Throughout the year</button>
+  <button type='radio' value='paschal' select-date='easter:pentecost+5' class="btn btn-lg btn-default" id='season-paschal'>Paschal Time</button>
 </div>
 <div class='officiant no-priest'>
 <i class='red'>In the absence of a priest or deacon, the Lector says “Dómine” below so as to invoke Our Lord directly for the blessing.</i>
 </div>
-<i class='red'>Lector:</i>
+<div><i class='red'>Lector:</i></div>
 <chant-gabc officiant-priest='jube-domne.gabc' officiant-no-priest='jube-domine.gabc' src='jube-domine.gabc'></chant-gabc>
 <i class='red'>The Officiant gives the blessing:</i>
 <chant-gabc src='blessing.gabc'></chant-gabc>
@@ -107,24 +109,24 @@ Afterwards there is added aloud, without</i> Orémus<i class='red'>, the collect
 </div>
 <div exclude='easter-3:easter+5 allSouls'>
 <span class='red'><i>The Officiant then intones the Hymn </i>Te lucis<i> which is sung in one of the tones given below.  All bow slightly for the first three stanzas of the third verse.</i></span>
-<div id='te-lucis-choices'>
-<label><input type='radio' name='te-lucis' value='Ordinary' select-day='sunday minorFeast' select-date='01/14:lent1-2 pentecost+15:advent1-2' id='te-lucis-Ordinary'/>Ordinary Sundays and Minor Feasts <i class='red'>(from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i><br/></label>
-<label><input type='radio' name='te-lucis' checked select-day='feria' select-date='01/14:lent1-2 pentecost+15:advent1-2' value='Ferial' id='te-lucis-Ferial'/>Ferial <i class='red'>(Ferial days from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i><br/></label>
-<label><input type='radio' name='te-lucis' value='Solemn' select-date='firstClassFeast' id='te-lucis-Solemn'/>Solemn <i class='red'>(All First class feasts lacking a proper tone at any time of the year)</i><br/></label>
-<label><input type='radio' name='te-lucis' value='Our-Lady' select-date='feastOfOurLady' id='te-lucis-Our-Lady'/>Our Lady <i class='red'>(All feasts of the Blessed Virgin Mary, except the Seven Sorrows, of whatever rank at any time of the year)</i><br/></label>
-<label><input type='radio' name='te-lucis' class='radio-advent' select-date='advent1-1:12/23' value='Advent' id='te-lucis-Advent'/>Advent <i class='red'>(All days except first class feasts from Saturday before the First Sunday of Advent until December 23 inclusive)</i><br/></label>
-<label><input type='radio' name='te-lucis' value='Christmas' select-date='12/24:01/04' id='te-lucis-Christmas'/>Christmas <i class='red'>(All days from December 24 until January 4 inclusive)</i><br/></label>
-<label><input type='radio' name='te-lucis' value='Epiphany' select-date='01/05:01/13' id='te-lucis-Epiphany'/>Epiphany <i class='red'>(All days from January 5 until January 13 inclusive)</i><br/></label>
-<label><input type='radio' name='te-lucis' value='Holy-Family' select-date='holyFamily' id='te-lucis-Holy-Family'/>Holy Family <i class='red'>(On the Feast of the Holy Family)</i><br/></label>
-<label><input type='radio' name='te-lucis' class='radio-lent' select-date='lent1-1:easter-16' value='Lent' id='te-lucis-Lent'/>Lent <i class='red'>(On Sundays, Ferial Days, and Second Class Feasts from Saturday before First Sunday of Lent until Friday before Passion Sunday inclusive)</i><br/></label>
-<label><input type='radio' name='te-lucis' value='Passiontide' select-date='easter-15:easter-4' select-day='!firstClassFeast' id='te-lucis-Passiontide'/>Passiontide <i class='red'>(On Sundays, Ferial Days, and Second Class Feasts from the Saturday before the First Sunday of Passiontide until Wednesday of Holy Week)</i><br/></label>
-<label><input type='radio' name='te-lucis' value='Seven-Dolors' select-date='sevenDolors' id='te-lucis-Seven-Dolors'/>Seven Sorrows <i class='red'>(Feast of the Seven Sorrows of the Blessed Mother)</i><br/></label>
-<label><input type='radio' name='te-lucis' class='radio-pt' select-date='easter+6:easter+37' value='Easter' id='te-lucis-Easter'/>Easter <i class='red'>(On all days, except First Class Feasts, from the Saturday before Low Sunday until the Tuesday after the Fifth Sunday after Easter inclusive)</i><br/></label>
-<label><input type='radio' name='te-lucis' value='Ascension' select-date='easter+38:pentecost-2' id='te-lucis-Ascension'/>Ascension <i class='red'>(On all days, except First Class Feasts beside the Ascension, from Wesdnesday before the Ascension until the Friday before Pentecost inclusive)</i><br/></label>
-<label><input type='radio' name='te-lucis' value='Transfiguration' select-date='transfiguration' id='te-lucis-Transfiguration'/>Transfiguration <i class='red'>(On the Feast of the Transfiguration)</i><br/></label>
-<label><input type='radio' name='te-lucis' value='Pentecost' select-date='pentecost-1:pentecost+5' id='te-lucis-Pentecost'/>Pentecost <i class='red'>(On all days from the Vigil of Pentecost until the Friday in the Octave of Pentecost)</i><br/></label>
-<label><input type='radio' name='te-lucis' value='Christ-the-King' select-date='christTheKing' id='te-lucis-Christ-the-King'/>Christ the King <i class='red'>(On the Feast of Christ the King)</i><br/></label>
-<label><input type='radio' name='te-lucis' value='Sacred-Heart' select-date='sacredHeart' id='te-lucis-Sacred-Heart'/>Sacred Heart <i class='red'>(On the Feast of the Sacred Heart of Jesus)</i><br/></label>
+<div id='te-lucis-choices' class="btn-group-vertical" name="te-lucis" role="group">
+  <button type='radio' class='btn btn-lg btn-default' value='Ordinary' select-day='sunday minorFeast' select-date='01/14:lent1-2 pentecost+15:advent1-2' id='te-lucis-Ordinary'/>Ordinary Sundays and Minor Feasts <i class='red'>(from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default active' value='Ferial' select-day='feria' select-date='01/14:lent1-2 pentecost+15:advent1-2' id='te-lucis-Ferial'/>Ferial <i class='red'>(Ferial days from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='Solemn' select-date='firstClassFeast' id='te-lucis-Solemn'/>Solemn <i class='red'>(All First class feasts lacking a proper tone at any time of the year)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='Our-Lady' select-date='feastOfOurLady' id='te-lucis-Our-Lady'/>Our Lady <i class='red'>(All feasts of the Blessed Virgin Mary, except the Seven Sorrows, of whatever rank at any time of the year)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='Advent' select-date='advent1-1:12/23' id='te-lucis-Advent'/>Advent <i class='red'>(All days except first class feasts from Saturday before the First Sunday of Advent until December 23 inclusive)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='Christmas' select-date='12/24:01/04' id='te-lucis-Christmas'/>Christmas <i class='red'>(All days from December 24 until January 4 inclusive)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='Epiphany' select-date='01/05:01/13' id='te-lucis-Epiphany'/>Epiphany <i class='red'>(All days from January 5 until January 13 inclusive)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='Holy-Family' select-date='holyFamily' id='te-lucis-Holy-Family'/>Holy Family <i class='red'>(On the Feast of the Holy Family)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='Lent' select-date='lent1-1:easter-16' id='te-lucis-Lent'/>Lent <i class='red'>(On Sundays, Ferial Days, and Second Class Feasts from Saturday before First Sunday of Lent until Friday before Passion Sunday inclusive)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='Passiontide' select-date='easter-15:easter-4' select-day='!firstClassFeast' id='te-lucis-Passiontide'/>Passiontide <i class='red'>(On Sundays, Ferial Days, and Second Class Feasts from the Saturday before the First Sunday of Passiontide until Wednesday of Holy Week)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='Seven-Dolors' select-date='sevenDolors' id='te-lucis-Seven-Dolors'/>Seven Sorrows <i class='red'>(Feast of the Seven Sorrows of the Blessed Mother)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='Easter' select-date='easter+6:easter+37' id='te-lucis-Easter'/>Easter <i class='red'>(On all days, except First Class Feasts, from the Saturday before Low Sunday until the Tuesday after the Fifth Sunday after Easter inclusive)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='Ascension' select-date='easter+38:pentecost-2' id='te-lucis-Ascension'/>Ascension <i class='red'>(On all days, except First Class Feasts beside the Ascension, from Wesdnesday before the Ascension until the Friday before Pentecost inclusive)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='Transfiguration' select-date='transfiguration' id='te-lucis-Transfiguration'/>Transfiguration <i class='red'>(On the Feast of the Transfiguration)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='Pentecost' select-date='pentecost-1:pentecost+5' id='te-lucis-Pentecost'/>Pentecost <i class='red'>(On all days from the Vigil of Pentecost until the Friday in the Octave of Pentecost)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='Christ-the-King' select-date='christTheKing' id='te-lucis-Christ-the-King'/>Christ the King <i class='red'>(On the Feast of Christ the King)</i><br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='Sacred-Heart' select-date='sacredHeart' id='te-lucis-Sacred-Heart'/>Sacred Heart <i class='red'>(On the Feast of the Sacred Heart of Jesus)</i><br/></label>
 </div>
 <chant-gabc id='te-lucis' src='te-lucis/Ferial.gabc'></chant-gabc>
 <i class='red'>The Officiant then says the Chapter:</i>
@@ -137,12 +139,12 @@ Tu autem in nobis es, Dómine,&nbsp;<span class='red'>†</span> et nomen sanctu
 <div class='notated-chapter'>
 <chant-gabc src="chapter.gabc"></chant-gabc>
 </div>
-<br/><i class='red'>The Cantor then says the verses of the Short Responsory to which all reply after each invocation:</i>
-<div id='in-manus-tuas-choices'>
-<label><input type='radio' name='in-manus-tuas' value='ordinary_full' select-date='01/01:easter-4 pentecost+6:advent1-2 12/24:12/31' id='in-manus-tuas-ordinary'/>Throughout the year<br/></label>
-<label><input type='radio' name='in-manus-tuas' value='passiontide_full' select-date='easter-15:easter-4' select-day='sunday !firstOrSecondClassFeast' id='in-manus-tuas-passiontide'/>Passiontide, except First or Second Class Feasts<br/></label>
-<label><input type='radio' name='in-manus-tuas' class='radio-advent' select-date='advent1-1:12/23' value='advent_full' id='in-manus-tuas-advent'/>Saturday before the First Sunday of Advent until Dec. 23 inclusive<br/></label>
-<label><input type='radio' name='in-manus-tuas' class='radio-pt' select-date='easter+6:pentecost+5' value='pt_full' id='in-manus-tuas-pt'/>Saturday before Low Sunday until Friday in the Octave of Pentecost inclusive<br/></label>
+<div><i class='red'>The Cantor then says the verses of the Short Responsory to which all reply after each invocation:</i></div>
+<div id='in-manus-tuas-choices' class="btn-group-vertical" name="in-manus-tuas" role="group">
+  <button type='radio' class='btn btn-lg btn-default' value='ordinary_full' select-date='01/01:easter-4 pentecost+6:advent1-2 12/24:12/31' id='in-manus-tuas-ordinary'/>Throughout the year<br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='passiontide_full' select-date='easter-15:easter-4' select-day='sunday !firstOrSecondClassFeast' id='in-manus-tuas-passiontide'/>Passiontide, except First or Second Class Feasts<br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='advent_full' select-date='advent1-1:12/23' id='in-manus-tuas-advent'/>Saturday before the First Sunday of Advent until Dec. 23 inclusive<br/></label>
+  <button type='radio' class='btn btn-lg btn-default' value='pt_full' select-date='easter+6:pentecost+5' id='in-manus-tuas-pt'/>Saturday before Low Sunday until Friday in the Octave of Pentecost inclusive<br/></label>
 </div>
 <div class='in-manus-tuas passiontide_full' style='display:none'>
 <i class='red'>(In Passiontide, except on a First or Second Class Feast, the Gloria Patri is omitted, and all repeat again immediately “In manus tuas...” in its place)</i>
