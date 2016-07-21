@@ -61,7 +61,7 @@ define(['moment','moment.easter'], function(moment){
       "10": {title:"The Forty Holy Martyrs", rank:3},
       "12": {title:"St. Gregory I Pope, Confessor, and Doctor of the Church", rank:3},
       "17": {title:"St. Patrick Bishop and Confessor", rank:3},
-      "18 ": {title:"St.Cyril Bishop of Jerusalem, Confessor, and Doctor of the Church", rank:3},
+      "18": {title:"St.Cyril Bishop of Jerusalem, Confessor, and Doctor of the Church", rank:3},
       "19": {title:"St. Joseph, Spouse of the Blessed Virgin Mary, Confessor, and Patron of the Universal Church", rank:1},
       "21": {title:"St. Benedict Abbot", rank:3},
       "24": {title:"St. Gabriel the Archangel", rank:3},
@@ -553,11 +553,15 @@ define(['moment','moment.easter'], function(moment){
       var month = date.month();
       var day = date.date();
       var d = romanCalendar[month][day];
-      if(!d && day > 1) {
-        d = romanCalendar[month][day-1];
-        if(!d || !d.plus) return (date.feast = FeriaWithAlternates(options,selectedOption));
-        else if(d.plusOne === 'ifLeapYear' && !date.isLeapYear()) return (date.feast = FeriaWithAlternates(options,selectedOption));
-        else if(d.plusOne === 'ifSunday' && date.day()!==1) return (date.feast = FeriaWithAlternates(options,selectedOption));
+      if(!d) {
+        if(day > 1) {
+          d = romanCalendar[month][day-1];
+          if(!d || !d.plus) return (date.feast = FeriaWithAlternates(options,selectedOption));
+          else if(d.plusOne === 'ifLeapYear' && !date.isLeapYear()) return (date.feast = FeriaWithAlternates(options,selectedOption));
+          else if(d.plusOne === 'ifSunday' && date.day()!==1) return (date.feast = FeriaWithAlternates(options,selectedOption));
+        } else {
+          return (date.feast = FeriaWithAlternates(options,selectedOption));
+        }
       }
       if(options.length) {
         options.unshift(d);
