@@ -349,7 +349,7 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       $('#weekday').text(days[date.day()]);
       setCanticle(isPT?'-pt':'');
     }
-    $('.chooseDay').toggle(showChooseDay);
+    $(document.body).toggleClass('hide-choose-day',!showChooseDay);
     if(d.alternates) {
       var selectFeast = $('#selectFeastDay');
       selectFeast.empty().append(d.alternates.map(function(alt,i){
@@ -357,7 +357,7 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   alt.title+(alt.rank < 5?(' (' + formattedRank(alt.rank) + ')'): '') + (alt.region?(' ['+alt.region.join(', ')+']'):'')+
 '</option>';
       }).join(''));
-      var _currentRegion = '';
+      var _currentRegion = region;
       var alt = d.alternates.filter(function(alt){
         return alt.region && alt.region.indexOf(localStorage.region)>=0;
       });
