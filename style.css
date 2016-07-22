@@ -26,6 +26,13 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+    font-family: 'Crimson Text';
+    src: url('fonts/crimson-semibold-webfont.woff2') format('woff2'),
+         url('fonts/crimson-semibold-webfont.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
 .verses>p {
   line-height:100%;
   margin: 6pt 0;
@@ -115,6 +122,9 @@ body.hide-most-options .btn-group-vertical:not(.not-hideable)>button {
 body.hide-most-options .btn-group-vertical:not(.not-hideable)>button.active {
   display: block;
   border-radius: 4px;
+  font-weight: normal;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .btn-group-vertical {
   margin-bottom: 4px;
@@ -123,6 +133,12 @@ body.hide-most-options .btn-group-vertical:not(.not-hideable)>button.active {
 .btn-group-vertical .btn {
   text-align: left;
   white-space: normal;
+}
+.btn-group-vertical .btn.active {
+  font-weight: 600;
+  padding-top: 12px;
+  padding-bottom: 8px;
+  border-color: #777;
 }
 div.h {
   margin-top: 10px;
