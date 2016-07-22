@@ -208,7 +208,7 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   var setPsalms = function(day,paschalTime) {
     if(typeof(day) === 'undefined') {
       day = currentPsalms.day;
-      paschalTime = currentPsalms.paschalTime;
+      paschalTime = paschalTime || currentPsalms.paschalTime;
     } else {
       currentPsalms.day = day;
       currentPsalms.paschalTime = paschalTime;
@@ -396,17 +396,12 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       setPsalms(parseInt(this.value), choices.season == 'paschal');
     } else {
       choices[chant] = this.value;
-      if(chant=='season') return;
-      loadChant(chant,this.value,this.id);
+      if(chant=='season') {
+        setPsalms(undefined, this.value == 'paschal');
+      } else {
+        loadChant(chant,this.value,this.id);
+      }
     }
-  });
-  $('[id$=-choices] input[type=radio]').change(function(){
-    var chant = this.name;
-    choices[chant] = this.value;
-    if(chant=='season') {
-      return;
-    }
-    loadChant(chant,this.value,this.id);
   });
   $('#marian-antiphon-choices select,#marian-antiphon-solemn').change(function(){
     var $select = $('#marian-antiphon-choices select');
