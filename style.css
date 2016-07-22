@@ -108,14 +108,11 @@ div#options-menu.showing>ul {
 div#options-menu.showing>svg {
   display: none;
 }
-.btn-group-vertical:not(.not-hideable)>button {
+body.hide-most-options .btn-group-vertical:not(.not-hideable)>button {
   display: none;
 }
-.btn-group-vertical:not(.not-hideable)>button.active,
-.show-all-options .btn-group-vertical:not(.not-hideable)>button {
+body.hide-most-options .btn-group-vertical:not(.not-hideable)>button.active {
   display: block;
-}
-body:not(.show-all-options) .btn-group-vertical:not(.not-hideable)>button.active {
   border-radius: 4px;
 }
 .btn-group-vertical {

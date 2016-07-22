@@ -430,7 +430,7 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   });
   function showHideOptions() {
     var show = showOptions();
-    $(document.body).toggleClass('show-all-options',show);
+    $(document.body).toggleClass('hide-most-options',!show);
     $('#marian-antiphon-choices>select').toggle(show);
     $('.marian-antiphon-name').toggle(!show);
   }
