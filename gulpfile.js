@@ -35,14 +35,21 @@ gulp.task('copy', function() {
 
 // Compile and Automatically Prefix Stylesheets
 gulp.task('styles', function() {
+  var requirejs = require('requirejs');
 
-  return gulp.src([
-    '*.css'
-  ])
-    // Concatenate And Minify Styles
-    .pipe($.if('*.css', $.csso()))
-    .pipe(gulp.dest('dist'))
-    .pipe($.size({title: 'styles'}));
+  requirejs.optimize({
+    cssIn: "style.css",
+    out: "dist/style.css",
+    optimizeCss: "standard"
+  });
+
+  // return gulp.src([
+  //   'dist/*.css'
+  // ])
+  //   // Concatenate And Minify Styles
+  //   .pipe($.if('*.css', $.csso()))
+  //   .pipe(gulp.dest('dist'))
+  //   .pipe($.size({title: 'styles'}));
 });
 
 // Build one javascript file:
