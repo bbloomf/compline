@@ -71,6 +71,7 @@ div#options-menu {
   position: absolute;
   top: 8px;
   right: 8px;
+  z-index: 3;
 }
 div#options-menu>svg {
   width: 25px;
