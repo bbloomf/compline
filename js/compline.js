@@ -357,9 +357,9 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   alt.title+(alt.rank < 5?(' (' + formattedRank(alt.rank) + ')'): '') + (alt.region?(' ['+alt.region.join(', ')+']'):'')+
 '</option>';
       }).join(''));
-      var _currentRegion = region;
+      var _currentRegion = "";
       var alt = d.alternates.filter(function(alt){
-        return alt.region && alt.region.indexOf(localStorage.region)>=0;
+        return alt.region && alt.region.indexOf(region)>=0;
       });
       if(alt.length) _currentRegion = alt[0].region[0];
       selectFeast.val(_currentRegion);
