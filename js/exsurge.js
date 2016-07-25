@@ -7864,7 +7864,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      //    under certain circumstances
 	      if (this.notes[1].morae.length) {
 	        var morae = this.notes[1].morae;
-	        morae[0].horizontalOffset += this.notes[1].bounds.right() - this.notes[0].bounds.right();
+	        if (morae.length > 1) morae[0].horizontalOffset += this.notes[1].bounds.right() - this.notes[0].bounds.right();
 	        if (this.notes[0].staffPosition - this.notes[1].staffPosition === 1 && Math.abs(this.notes[1].staffPosition % 2) === 1) {
 	          morae.slice(-1)[0].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
 	        }
@@ -8575,7 +8575,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	
 	      // 1. episema on lower notes should be below, upper note above
-	      // 2. morae: fixme: implement
+	      // 2. like the podatus, mora on lower note needs to below
+	      //    under certain circumstances
+	      if (this.notes[2].morae.length) {
+	        var morae = this.notes[2].morae;
+	        if (morae.length > 1) morae[0].horizontalOffset += this.notes[2].bounds.right() - this.notes[1].bounds.right();
+	        if (this.notes[1].staffPosition - this.notes[2].staffPosition === 1 && Math.abs(this.notes[2].staffPosition % 2) === 1) {
+	          morae.slice(-1)[0].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
+	        }
+	      }
+	
 	      for (i = 0; i < this.notes[0].epismata.length; i++) {
 	        marking = this.notes[0].epismata[i];
 	
