@@ -1992,7 +1992,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.ChantNotationElement = exports.Annotation = exports.DropCap = exports.Lyric = exports.LyricType = exports.TextElement = exports.CurlyBraceVisualizer = exports.RoundBraceVisualizer = exports.GlyphVisualizer = exports.VirgaLineVisualizer = exports.NeumeLineVisualizer = exports.DividerLineVisualizer = exports.ChantLayoutElement = exports.ChantContext = exports.QuickSvg = exports.GlyphCode = undefined;
+	exports.ChantNotationElement = exports.Annotation = exports.DropCap = exports.Lyric = exports.LyricType = exports.TextElement = exports.CurlyBraceVisualizer = exports.RoundBraceVisualizer = exports.GlyphVisualizer = exports.VirgaLineVisualizer = exports.NeumeLineVisualizer = exports.DividerLineVisualizer = exports.ChantLayoutElement = exports.ChantContext = exports.TextMeasuringStrategy = exports.QuickSvg = exports.GlyphCode = undefined;
 	
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
@@ -2218,14 +2218,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	};
 	
+	var TextMeasuringStrategy = exports.TextMeasuringStrategy = {
+	  // shapes
+	  Svg: 0,
+	  Canvas: 1
+	};
+	
 	/*
 	 * ChantContext
 	 */
 	
 	var ChantContext = exports.ChantContext = function () {
 	  function ChantContext() {
+	    var textMeasuringStrategy = arguments.length <= 0 || arguments[0] === undefined ? TextMeasuringStrategy.Svg : arguments[0];
+	
 	    _classCallCheck(this, ChantContext);
 	
+	    this.textMeasuringStrategy = textMeasuringStrategy;
 	    this.defs = {};
 	
 	    // font styles
@@ -2278,6 +2287,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.pixelRatio = dpr / bsr;
 	
 	    this.canvasCtxt.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
+	
+	    if (textMeasuringStrategy === TextMeasuringStrategy.Svg) {
+	      this.svgTextMeasurer = QuickSvg.svg(1, 1);
+	      this.svgTextMeasurer.setAttribute('id', "TextMeasurer");
+	      document.querySelector('body').appendChild(this.svgTextMeasurer);
+	    }
 	
 	    // measure the size of a hyphen for the lyrics
 	    var hyphen = new Lyric(this, "-", LyricType.SingleSyllable);
@@ -3071,10 +3086,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      this.bounds.x = 0;
 	      this.bounds.y = 0;
-	      this.bounds.width = this.measureSubstring(ctxt);
-	      this.bounds.height = this.fontSize * 1.2;
+	
 	      this.origin.x = 0;
-	      this.origin.y = this.fontSize;
+	
+	      if (ctxt.textMeasuringStrategy === TextMeasuringStrategy.Svg) {
+	        var xml = '<svg xmlns="http://www.w3.org/2000/svg">' + this.createSvgFragment(ctxt) + '</svg>';
+	        var doc = new DOMParser().parseFromString(xml, 'application/xml');
+	
+	        while (ctxt.svgTextMeasurer.firstChild) {
+	          ctxt.svgTextMeasurer.firstChild.remove();
+	        }ctxt.svgTextMeasurer.appendChild(ctxt.svgTextMeasurer.ownerDocument.importNode(doc.documentElement, true).firstChild);
+	
+	        var bbox = ctxt.svgTextMeasurer.firstChild.getBBox();
+	        this.bounds.width = bbox.width;
+	        this.bounds.height = bbox.height;
+	        this.origin.y = -bbox.y; // offset to baseline from top
+	      } else if (ctxt.textMeasuringStrategy === TextMeasuringStrategy.Canvas) {
+	          this.bounds.width = this.measureSubstring(ctxt);
+	          this.bounds.height = this.fontSize * 1.2;
+	          this.origin.y = this.fontSize;
+	        }
 	    }
 	  }, {
 	    key: 'getCssClasses',
@@ -3237,8 +3268,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else if (this.centerStartIndex >= 0) {
 	          // if we have manually overriden the centering logic for this lyric,
 	          // then always use that.
-	          x1 = this.measureSubstring(ctxt, this.centerStartIndex);
-	          x2 = this.measureSubstring(ctxt, this.centerStartIndex + this.centerLength);
+	          if (ctxt.textMeasuringStrategy === TextMeasuringStrategy.Svg) {
+	            // svgTextMeasurer still has the current lyric in it...
+	            x1 = ctxt.svgTextMeasurer.firstChild.getSubStringLength(0, this.centerStartIndex);
+	            x2 = ctxt.svgTextMeasurer.firstChild.getSubStringLength(0, this.centerStartIndex + this.centerLength);
+	          } else if (ctxt.textMeasuringStrategy === TextMeasuringStrategy.Canvas) {
+	            x1 = this.measureSubstring(ctxt, this.centerStartIndex);
+	            x2 = this.measureSubstring(ctxt, this.centerStartIndex + this.centerLength);
+	          }
 	          offset = x1 + (x2 - x1) / 2;
 	        } else {
 	
@@ -3250,8 +3287,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var result = activeLanguage.findVowelSegment(this.text, 0);
 	
 	            if (result.found === true) {
-	              x1 = this.measureSubstring(ctxt, result.startIndex);
-	              x2 = this.measureSubstring(ctxt, result.startIndex + result.length);
+	              if (ctxt.textMeasuringStrategy === TextMeasuringStrategy.Svg) {
+	                // svgTextMeasurer still has the current lyric in it...
+	                x1 = ctxt.svgTextMeasurer.firstChild.getSubStringLength(0, result.startIndex);
+	                x2 = ctxt.svgTextMeasurer.firstChild.getSubStringLength(0, result.startIndex + result.length);
+	              } else if (ctxt.textMeasuringStrategy === TextMeasuringStrategy.Canvas) {
+	                x1 = this.measureSubstring(ctxt, result.startIndex);
+	                x2 = this.measureSubstring(ctxt, result.startIndex + result.length);
+	              }
 	              offset = x1 + (x2 - x1) / 2;
 	            }
 	          }
@@ -7123,12 +7166,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'splitWords',
 	    value: function splitWords(gabcNotations) {
-	      // split the notations on whitespace boundaries, unless the space is inside
-	      // of parentheses. Prior to doing that, we replace all whitespace with
-	      // spaces, which prevents tabs and newlines from ending up in the notation
-	      // data.
-	      gabcNotations = gabcNotations.trim().replace(/\s/g, ' ');
-	      return gabcNotations.split(/ +(?=[^\)]*(?:\(|$))/g);
+	      // split the notations on whitespace boundaries, as long as the space
+	      // immediately follows a set of parentheses. Prior to doing that, we replace
+	      // all whitespace with spaces, which prevents tabs and newlines from ending
+	      // up in the notation data.
+	      gabcNotations = gabcNotations.trim().replace(/\s/g, ' ').replace(/\) (?=[^\)]*(?:\(|$))/g, ')\n');
+	      return gabcNotations.split(/\n/g);
 	    }
 	  }, {
 	    key: 'parseSource',
@@ -8608,7 +8651,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      var glyph1, glyph3;
 	
-	      if (note1.liquescent === _Exsurge3.LiquescentType.InitioDebilis) glyph1 = _Exsurge2.GlyphCode.TerminatingDesLiquescent;else glyph1 = _Exsurge2.GlyphCode.PunctumQuadratum;
+	      if (note1.liquescent === _Exsurge3.LiquescentType.InitioDebilis) glyph1 = _Exsurge2.GlyphCode.TerminatingDesLiquescent;else if (note1.shape === _Exsurge3.NoteShape.Quilisma) glyph1 = _Exsurge2.GlyphCode.Quilisma;else glyph1 = _Exsurge2.GlyphCode.PunctumQuadratum;
 	
 	      if (note3.liquescent & _Exsurge3.LiquescentType.Small) glyph3 = _Exsurge2.GlyphCode.TerminatingDesLiquescent;else if (note3.liquescent & _Exsurge3.LiquescentType.Ascending) glyph3 = _Exsurge2.GlyphCode.PunctumQuadratumAscLiquescent;else if (note3.liquescent & _Exsurge3.LiquescentType.Descending) glyph3 = _Exsurge2.GlyphCode.PunctumQuadratumDesLiquescent;else glyph3 = _Exsurge2.GlyphCode.PunctumQuadratum;
 	

@@ -111,7 +111,7 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
     this.doLayout(_width);
   };
   ChantVisualElementPrototype.createdCallback = function() {
-    var ctxt = new exsurge.ChantContext();
+    var ctxt = new exsurge.ChantContext(exsurge.TextMeasuringStrategy.Canvas);
 
     ctxt.lyricTextFont = "'Crimson Text', serif";
     ctxt.lyricTextSize *= 1.2;
