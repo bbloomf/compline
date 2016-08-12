@@ -333,16 +333,21 @@ define(['moment','moment.easter'], function(moment){
       title: SundayObject.title.replace(/%([a-z])/g, function(match,callback) {
         return SundayObject[callback](date,dates);
       }),
+      key: SundayObject.title.replace(/%([a-z])/g, function(match,callback) {
+        return SundayObject[callback](date,dates);
+      }),
       rank: SundayObject.rank || 2
     };
   };
   var CalendarSundays = [
-    { on: '01/01', feast: romanCalendar[0][1] },
-    { before: '01/06', title: 'The Most Holy Name of Jesus'},
-    { on: '01/06', feast: romanCalendar[0][6] },
-    { before: 'septuagesima', title: '%n. Sunday after Epiphany', n: function(date,dates) {return Math.ceil(weeksBetween('epiphany', date)); }},
-    { before: 'lent1', title: '%t', t: function(date,dates) {return (['Septua','Sexa','Quinqua'])[weeksBetween('septuagesima', date)]+'gesima'; }},
-    { before: 'easter', title: '%t', t: function(date, dates) {
+    { on: '01/01', feast: romanCalendar[0][1], key: 'jan1' },
+    { before: '01/06', title: 'The Most Holy Name of Jesus', key: 'nat2'},
+    { on: '01/06', feast: romanCalendar[0][6], key: 'epi'},
+    { before: 'septuagesima', title: '%n. Sunday after Epiphany', key: 'epi%n', n: function(date,dates) {return Math.ceil(weeksBetween('epiphany', date)); }},
+    { before: 'lent1', title: '%tgesima', key: '%t', t: function(date,dates) {return (['Septua','Sexa','Quinqua'])[weeksBetween('septuagesima', date)]; }},
+    { before: 'easter', title: '%t', key: 'quad%n', n: function(date, dates) {
+      return 1 + weeksBetween('lent1', date);
+    }, t: function(date, dates) {
         var weeksSinceLent1 = weeksBetween('lent1', date);
         switch(weeksSinceLent1) {
           case 0:
@@ -354,20 +359,25 @@ define(['moment','moment.easter'], function(moment){
         }
       }
     },
-    { on: 'easter', title: 'Easter Sunday', rank: 1 },
-    { before: 'ascension', title: '%n. Sunday after Easter', n: function(date,dates) { return weeksBetween('easter', date); }},
-    { on: 'pentecost', title: 'Pentecost', rank: 1 },
-    { before: 'pentecost', title: 'Sunday After the Ascension'},
-    { before: 'advent1', title: '%t', t: function(date,dates) {
+    { on: 'easter', title: 'Easter Sunday', rank: 1, key: 'pasc0' },
+    { before: 'ascension', title: '%n. Sunday after Easter', key: 'pasc%n', n: function(date,dates) { return weeksBetween('easter', date); }},
+    { before: 'pentecost', title: 'Sunday After the Ascension', key: 'pasc6'},
+    { on: 'pentecost', title: 'Pentecost', rank: 1, key: 'pent0' },
+    { before: 'advent1', title: '%t', key: '%k', k: function(date,dates) {
+      var weeksSincePentecost = weeksBetween('pentecost', date);
+      var weeksSinceLastWeekOfOctober = weeksBetween('10/25',date);
+      if(weeksSinceLastWeekOfOctober>=0 && weeksSinceLastWeekOfOctober<1) return 'ChristusRex';
+      return 'pent' + weeksSincePentecost;
+    }, t: function(date,dates) {
       var weeksSincePentecost = weeksBetween('pentecost', date);
       if(weeksSincePentecost === 1) return 'Trinity Sunday';
       var weeksSinceLastWeekOfOctober = weeksBetween('10/25',date);
       if(weeksSinceLastWeekOfOctober>=0 && weeksSinceLastWeekOfOctober<1) return 'Our Lord Jesus Christ the King';
       return weeksSincePentecost + '. Sunday after Pentecost';
     }},
-    { before: '12/25', title: '%n. Sunday of Advent', rank: 1, n: function(date,dates) { return weeksBetween('advent1', date) + 1; }},
-    { on: '12/25', feast: romanCalendar[11][25]},
-    { after: '12/25', title: 'Sunday within the Octave of Christmas'}
+    { before: '12/25', title: '%n. Sunday of Advent', rank: 1, key: 'adv%n', n: function(date,dates) { return weeksBetween('advent1', date) + 1; }},
+    { on: '12/25', feast: romanCalendar[11][25], key: ['NatMD','NatMane','NatInterdiu']},
+    { after: '12/25', title: 'Sunday within the Octave of Christmas', key:'nat1'}
   ];
 
   var firstClassSundays = [
@@ -513,13 +523,13 @@ define(['moment','moment.easter'], function(moment){
     if(date.day() === 0) {
       return (date.feast = getSunday(date));
     }
-    if(dateMatches(date,'corpusChristi')) return (date.feast = {title:'Corpus Christi', rank:1});
-    if(dateMatches(date,'sacredHeart')) return (date.feast = {title:'The Most Sacred Heart of Jesus', rank:1});
-    if(dateMatches(date,'ascension')) return (date.feast = {title:'The Ascension of Our Lord', rank:1});
+    if(dateMatches(date,'corpusChristi')) return (date.feast = {title:'Corpus Christi', rank:1, key: 'CorpusChristi'});
+    if(dateMatches(date,'sacredHeart')) return (date.feast = {title:'The Most Sacred Heart of Jesus', rank:1, key: 'SCJ'});
+    if(dateMatches(date,'ascension')) return (date.feast = {title:'The Ascension of Our Lord', rank:1, key: 'asc'});
     if(dateMatches(date,'easter-3')) return (date.feast = {title:'Maundy Thursday', rank:1});
     if(dateMatches(date,'easter-2')) return (date.feast = {title:'Good Friday', rank:1});
     if(dateMatches(date,'easter-1')) return (date.feast = {title:'Holy Saturday', rank:1});
-    if(dateMatches(date,'lent1-4')) return (date.feast = {title:'Ash Wednesday', rank:5});
+    if(dateMatches(date,'lent1-4')) return (date.feast = {title:'Ash Wednesday', rank:5, key: 'AshWed'});
     var options = [];
     var selectedOption;
     if(regionalCalendars) {
