@@ -1992,7 +1992,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.ChantNotationElement = exports.Annotation = exports.DropCap = exports.Lyric = exports.LyricType = exports.TextElement = exports.CurlyBraceVisualizer = exports.RoundBraceVisualizer = exports.GlyphVisualizer = exports.VirgaLineVisualizer = exports.NeumeLineVisualizer = exports.DividerLineVisualizer = exports.ChantLayoutElement = exports.ChantContext = exports.TextMeasuringStrategy = exports.QuickSvg = exports.GlyphCode = undefined;
+	exports.ChantNotationElement = exports.Annotations = exports.Annotation = exports.DropCap = exports.AboveLinesText = exports.Lyric = exports.LyricType = exports.TextElement = exports.CurlyBraceVisualizer = exports.RoundBraceVisualizer = exports.GlyphVisualizer = exports.VirgaLineVisualizer = exports.NeumeLineVisualizer = exports.DividerLineVisualizer = exports.ChantLayoutElement = exports.ChantContext = exports.TextMeasuringStrategy = exports.QuickSvg = exports.GlyphCode = undefined;
 	
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
@@ -2242,6 +2242,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.lyricTextFont = "'Palatino Linotype', 'Book Antiqua', Palatino, serif";
 	    this.lyricTextColor = "#000";
 	
+	    this.alTextSize = this.lyricTextSize;
+	    this.alTextFont = this.lyricTextFont;
+	    this.alTextColor = this.lyricTextColor;
+	    this.alTextStyle = '_';
+	
 	    this.dropCapTextSize = 64;
 	    this.dropCapTextFont = this.lyricTextFont;
 	    this.dropCapTextColor = this.lyricTextColor;
@@ -2249,6 +2254,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.annotationTextSize = 13;
 	    this.annotationTextFont = this.lyricTextFont;
 	    this.annotationTextColor = this.lyricTextColor;
+	
+	    this.minLedgerSeparation = 2; // multiple of staffInterval
 	
 	    // everything depends on the scale of the punctum
 	    this.glyphPunctumWidth = _Exsurge2.Glyphs.PunctumQuadratum.bounds.width;
@@ -2764,14 +2771,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var width = this.bounds.width;
 	      var y, dx, dy;
 	
+	      dx = width / 6;
+	      dy = this.bounds.height * 3;
 	      if (this.isAbove) {
 	        y = this.bounds.bottom();
-	        dx = width / 6;
-	        dy = -width / 6;
+	        dy = -dy;
 	      } else {
 	        y = this.bounds.y;
-	        dx = width / 6;
-	        dy = width / 6;
 	      }
 	
 	      //Calculate Control Points of path,
@@ -2909,6 +2915,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	var redMarkup = "^";
 	var smallCapsMarkup = "%";
 	
+	var fontStyleDictionary = {
+	  "*": 'font-weight:bold;',
+	  "_": 'font-style:italic;',
+	  "^": 'fill:#f00;', // SVG text color is set by the fill property
+	  "%": "font-variant:small-caps;font-feature-settings:'smcp';-webkit-font-feature-settings:'smcp';"
+	};
+	
 	function MarkupStackFrame(symbol, startIndex, properties) {
 	  this.symbol = symbol;
 	  this.startIndex = startIndex;
@@ -2916,25 +2929,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	
 	MarkupStackFrame.createStackFrame = function (symbol, startIndex) {
-	
-	  var properties = "";
-	
-	  switch (symbol) {
-	    case boldMarkup:
-	      properties = 'font-weight:bold;';
-	      break;
-	    case italicMarkup:
-	      properties = 'font-style:italic;';
-	      break;
-	    case redMarkup:
-	      properties = 'fill:#f00;'; // SVG text color is set by the fill property
-	      break;
-	    case smallCapsMarkup:
-	      properties = "font-variant:small-caps;font-feature-settings:'smcp';-webkit-font-feature-settings:'smcp';";
-	      break;
-	  }
-	
-	  return new MarkupStackFrame(symbol, startIndex, properties);
+	  return new MarkupStackFrame(symbol, startIndex, fontStyleDictionary[symbol] || "");
 	};
 	
 	// for escaping html strings before they go into the svgs
@@ -3007,7 +3002,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        that.spans.push(new TextSpan(spanText, properties));
 	      };
 	
-	      var markupRegex = /(\*|_|\^|%|[ARVarv]\/\.)/g;
+	      var markupRegex = /\*|_|\^|%|([ARVarv])\/\./g;
 	
 	      var match = null;
 	      while (match = markupRegex.exec(text)) {
@@ -3015,8 +3010,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var markupSymbol = match[0];
 	
 	        // non-matching symbols first
-	        if (markupSymbol === "A/." || markupSymbol === "R/." || markupSymbol === "V/." || markupSymbol === "a/." || markupSymbol === "r/." || markupSymbol === "v/.") {
-	          closeSpan(text[match.index] + ".", "font-family:'Exsurge Characters';fill:#f00;");
+	        if (match[1]) {
+	          closeSpan(match[1] + ".", "font-family:'Exsurge Characters';fill:#f00;");
 	        } else if (markupStack.length === 0) {
 	          // otherwise we're dealing with matching markup delimeters
 	          // if this is our first markup frame, then just create an inline for preceding text and push the stack frame
@@ -3080,9 +3075,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'recalculateMetrics',
 	    value: function recalculateMetrics(ctxt) {
-	
-	      this.bounds.x = 0;
-	      this.bounds.y = 0;
 	
 	      this.bounds.x = 0;
 	      this.bounds.y = 0;
@@ -3152,7 +3144,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'y': this.bounds.y,
 	        'class': this.getCssClasses().trim(),
 	        'text-anchor': this.textAnchor,
-	        'dominant-baseline': this.dominantBaseline,
+	        //'dominant-baseline': this.dominantBaseline, // hanging baseline doesn't work in Safari
 	        'style': styleProperties
 	      }, spans);
 	    }
@@ -3186,7 +3178,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // save the original text in case we need to later use the lyric
 	    // in a dropcap...
 	
-	    var _this8 = _possibleConstructorReturn(this, Object.getPrototypeOf(Lyric).call(this, ctxt, text, ctxt.lyricTextFont, ctxt.lyricTextSize, 'start'));
+	    var _this8 = _possibleConstructorReturn(this, Object.getPrototypeOf(Lyric).call(this, ctxt, (ctxt.lyricTextStyle || '') + text, ctxt.lyricTextFont, ctxt.lyricTextSize, 'start'));
 	
 	    _this8.originalText = text;
 	
@@ -3361,8 +3353,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return Lyric;
 	}(TextElement);
 	
-	var DropCap = exports.DropCap = function (_TextElement2) {
-	  _inherits(DropCap, _TextElement2);
+	var AboveLinesText = exports.AboveLinesText = function (_TextElement2) {
+	  _inherits(AboveLinesText, _TextElement2);
+	
+	  /**
+	   * @param {String} text
+	   */
+	
+	  function AboveLinesText(ctxt, text) {
+	    _classCallCheck(this, AboveLinesText);
+	
+	    var _this9 = _possibleConstructorReturn(this, Object.getPrototypeOf(AboveLinesText).call(this, ctxt, (ctxt.alTextStyle || '') + text, ctxt.alTextFont, ctxt.alTextSize, 'start'));
+	
+	    _this9.padding = ctxt.staffInterval / 2;
+	    return _this9;
+	  }
+	
+	  _createClass(AboveLinesText, [{
+	    key: 'getCssClasses',
+	    value: function getCssClasses() {
+	      return "aboveLinesText " + _get(Object.getPrototypeOf(AboveLinesText.prototype), 'getCssClasses', this).call(this);
+	    }
+	  }]);
+	
+	  return AboveLinesText;
+	}(TextElement);
+	
+	var DropCap = exports.DropCap = function (_TextElement3) {
+	  _inherits(DropCap, _TextElement3);
 	
 	  /**
 	   * @param {String} text
@@ -3371,10 +3389,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function DropCap(ctxt, text) {
 	    _classCallCheck(this, DropCap);
 	
-	    var _this9 = _possibleConstructorReturn(this, Object.getPrototypeOf(DropCap).call(this, ctxt, text, ctxt.dropCapTextFont, ctxt.dropCapTextSize, 'middle'));
+	    var _this10 = _possibleConstructorReturn(this, Object.getPrototypeOf(DropCap).call(this, ctxt, text, (ctxt.dropCapTextStyle || '') + ctxt.dropCapTextFont, ctxt.dropCapTextSize, 'middle'));
 	
-	    _this9.padding = ctxt.staffInterval * 2;
-	    return _this9;
+	    _this10.padding = ctxt.staffInterval * 2;
+	    return _this10;
 	  }
 	
 	  _createClass(DropCap, [{
@@ -3387,8 +3405,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return DropCap;
 	}(TextElement);
 	
-	var Annotation = exports.Annotation = function (_TextElement3) {
-	  _inherits(Annotation, _TextElement3);
+	var Annotation = exports.Annotation = function (_TextElement4) {
+	  _inherits(Annotation, _TextElement4);
 	
 	  /**
 	   * @param {String} text
@@ -3397,11 +3415,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Annotation(ctxt, text) {
 	    _classCallCheck(this, Annotation);
 	
-	    var _this10 = _possibleConstructorReturn(this, Object.getPrototypeOf(Annotation).call(this, ctxt, text, ctxt.annotationTextFont, ctxt.annotationTextSize, 'middle'));
+	    var _this11 = _possibleConstructorReturn(this, Object.getPrototypeOf(Annotation).call(this, ctxt, (ctxt.annotationTextStyle || '') + text, ctxt.annotationTextFont, ctxt.annotationTextSize, 'middle'));
 	
-	    _this10.padding = ctxt.staffInterval;
-	    _this10.dominantBaseline = 'hanging'; // so that annotations can be aligned at the top.
-	    return _this10;
+	    _this11.padding = ctxt.staffInterval;
+	    _this11.dominantBaseline = 'hanging'; // so that annotations can be aligned at the top.
+	    return _this11;
 	  }
 	
 	  _createClass(Annotation, [{
@@ -3414,28 +3432,108 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return Annotation;
 	}(TextElement);
 	
-	var ChantNotationElement = exports.ChantNotationElement = function (_ChantLayoutElement8) {
-	  _inherits(ChantNotationElement, _ChantLayoutElement8);
+	var Annotations = exports.Annotations = function (_ChantLayoutElement8) {
+	  _inherits(Annotations, _ChantLayoutElement8);
+	
+	  /**
+	   * @param {String} text
+	   */
+	
+	  function Annotations(ctxt) {
+	    _classCallCheck(this, Annotations);
+	
+	    var _this12 = _possibleConstructorReturn(this, Object.getPrototypeOf(Annotations).call(this));
+	
+	    for (var _len = arguments.length, texts = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	      texts[_key - 1] = arguments[_key];
+	    }
+	
+	    _this12.annotations = texts.map(function (text) {
+	      return new Annotation(ctxt, text);
+	    });
+	    _this12.padding = Math.max.apply(null, _this12.annotations.map(function (annotation) {
+	      return annotation.padding;
+	    }));
+	    return _this12;
+	  }
+	
+	  _createClass(Annotations, [{
+	    key: 'updateBounds',
+	    value: function updateBounds(multiplier) {
+	      if (!multiplier) multiplier = 1;
+	      for (var i = 0; i < this.annotations.length; ++i) {
+	        var annotation = this.annotations[i];
+	        annotation.bounds.x += this.bounds.x * multiplier;
+	        annotation.bounds.y += this.bounds.y * multiplier;
+	      }
+	    }
+	  }, {
+	    key: 'recalculateMetrics',
+	    value: function recalculateMetrics(ctxt) {
+	      this.bounds.x = 0;
+	      this.bounds.y = 0;
+	
+	      this.bounds.width = 0;
+	      this.bounds.height = 0;
+	
+	      this.origin.x = 0;
+	      this.origin.y = 0;
+	
+	      for (var i = 0; i < this.annotations.length; ++i) {
+	        var annotation = this.annotations[i];
+	        annotation.recalculateMetrics(ctxt);
+	        this.bounds.width = Math.max(this.bounds.width, annotation.bounds.width);
+	        annotation.bounds.y += this.bounds.height;
+	        this.bounds.height += annotation.bounds.height / 1.4;
+	        this.origin.y = this.origin.y || annotation.origin.y;
+	      }
+	    }
+	  }, {
+	    key: 'draw',
+	    value: function draw(ctxt) {
+	      this.updateBounds();
+	      this.annotations.forEach(function (annotation) {
+	        annotation.draw(ctxt);
+	      });
+	      this.updateBounds(-1);
+	    }
+	  }, {
+	    key: 'createSvgFragment',
+	    value: function createSvgFragment(ctxt) {
+	      this.updateBounds();
+	      var result = this.annotations.map(function (annotation) {
+	        return annotation.createSvgFragment(ctxt);
+	      }).join('');
+	      this.updateBounds(-1);
+	      return result;
+	    }
+	  }]);
+	
+	  return Annotations;
+	}(ChantLayoutElement);
+	
+	var ChantNotationElement = exports.ChantNotationElement = function (_ChantLayoutElement9) {
+	  _inherits(ChantNotationElement, _ChantLayoutElement9);
 	
 	  function ChantNotationElement() {
 	    _classCallCheck(this, ChantNotationElement);
 	
 	    //double
 	
-	    var _this11 = _possibleConstructorReturn(this, Object.getPrototypeOf(ChantNotationElement).call(this));
+	    var _this13 = _possibleConstructorReturn(this, Object.getPrototypeOf(ChantNotationElement).call(this));
 	
-	    _this11.leadingSpace = 0.0;
-	    _this11.trailingSpace = -1; // if less than zero, this is automatically calculated at layout time
-	    _this11.keepWithNext = false;
-	    _this11.needsLayout = true;
+	    _this13.leadingSpace = 0.0;
+	    _this13.trailingSpace = -1; // if less than zero, this is automatically calculated at layout time
+	    _this13.keepWithNext = false;
+	    _this13.needsLayout = true;
 	
-	    _this11.lyrics = [];
+	    _this13.lyrics = [];
 	
-	    _this11.score = null; // the ChantScore
-	    _this11.line = null; // the ChantLine
+	    _this13.score = null; // the ChantScore
+	    _this13.line = null; // the ChantLine
 	
-	    _this11.visualizers = [];
-	    return _this11;
+	    _this13.visualizers = [];
+	    return _this13;
 	  }
 	
 	  _createClass(ChantNotationElement, [{
@@ -3485,7 +3583,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'addVisualizer',
 	    value: function addVisualizer(chantLayoutElement) {
-	      if (this.bounds.isEmpty()) this.bounds = chantLayoutElement.bounds.clone();else this.bounds.union(chantLayoutElement.bounds);
+	      if (!chantLayoutElement.ignoreBounds) {
+	        if (this.bounds.isEmpty()) this.bounds = chantLayoutElement.bounds.clone();else this.bounds.union(chantLayoutElement.bounds);
+	      }
 	
 	      this.visualizers.push(chantLayoutElement);
 	    }
@@ -3519,6 +3619,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      for (var i = 0; i < this.lyrics.length; i++) {
 	        this.lyrics[i].recalculateMetrics(ctxt);
+	      }if (this.alText) for (i = 0; i < this.alText.length; i++) {
+	        this.alText[i].recalculateMetrics(ctxt);
 	      }
 	    }
 	
@@ -3566,6 +3668,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        inner += this.visualizers[i].createSvgFragment(ctxt);
 	      }for (i = 0; i < this.lyrics.length; i++) {
 	        inner += this.lyrics[i].createSvgFragment(ctxt);
+	      }if (this.alText) for (i = 0; i < this.alText.length; i++) {
+	        inner += this.alText[i].createSvgFragment(ctxt);
 	      }return QuickSvg.createFragment('g', {
 	        // this.constructor.name will not be the same after being mangled by UglifyJS
 	        'class': 'ChantNotationElement ' + this.constructor.name,
@@ -3788,6 +3892,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this2.octave = octave;
 	    _this2.defaultAccidental = defaultAccidental;
 	    _this2.activeAccidental = defaultAccidental;
+	    _this2.keepWithNext = true;
 	    return _this2;
 	  }
 	
@@ -4279,6 +4384,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return fragment;
 	    }
 	  }, {
+	    key: 'createSvgForEachLine',
+	    value: function createSvgForEachLine(ctxt) {
+	
+	      var fragment = "",
+	          fragmentDefs = "";
+	
+	      // create defs section
+	      for (var def in ctxt.defs) {
+	        if (ctxt.defs.hasOwnProperty(def)) fragmentDefs += ctxt.defs[def];
+	      }fragmentDefs = _Exsurge2.QuickSvg.createFragment('defs', {}, fragmentDefs);
+	      var top = 0;
+	      for (var i = 0; i < this.lines.length; i++) {
+	        var lineFragment = fragmentDefs + this.lines[i].createSvgFragment(ctxt, top);
+	        var height = this.lines[i].bounds.height + ctxt.staffInterval * 1.5;
+	        lineFragment = _Exsurge2.QuickSvg.createFragment('g', {}, lineFragment);
+	        lineFragment = _Exsurge2.QuickSvg.createFragment('svg', {
+	          'xmlns': 'http://www.w3.org/2000/svg',
+	          'version': '1.1',
+	          'xmlns:xlink': 'http://www.w3.org/1999/xlink',
+	          'class': 'ChantScore',
+	          'width': this.bounds.width,
+	          'height': height
+	        }, lineFragment);
+	        fragment += lineFragment;
+	        top += height;
+	      }
+	      return fragment;
+	    }
+	  }, {
 	    key: 'unserializeFromJson',
 	    value: function unserializeFromJson(data) {
 	      this.autoColoring = data['auto-coloring'];
@@ -4483,8 +4617,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this.nextLine = null;
 	    _this.previousLine = null; // for layout assistance
 	
-	    _this.lyricLineHeights = []; // height of each text line
-	    _this.lyricLineBaselines = []; // offsets from the top of the text line to the baseline
+	    _this.lyricLineHeight = 0; // height of each text line
+	    _this.lyricLineBaseline = 0; // offsets from the top of the text line to the baseline
+	    _this.numLyricLines = 0; // maximum count of lyrics on the same syllable
 	
 	    // fixme: make these configurable values from the score
 	    _this.spaceAfterNotations = 0; // the space between the notation bounds and the first text track
@@ -4510,8 +4645,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.notationBounds.union(this.startingClef.bounds);
 	
 	      // reset the lyric line offsets before we [re]calculate them now
-	      this.lyricLineHeights = [];
-	      this.lyricLineBaselines = [];
+	      this.lyricLineHeight = 0;
+	      this.lyricLineBaseline = 0;
+	      this.numLyricLines = 0;
+	
+	      this.altLineHeight = 0;
+	      this.altLineBaseline = 0;
+	      this.numAltLines = 0;
 	
 	      for (i = this.notationsStartIndex; i < lastIndex; i++) {
 	        notation = notations[i];
@@ -4519,48 +4659,59 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.notationBounds.union(notation.bounds);
 	
 	        // keep track of lyric line offsets
-	        for (j = 0; j < notation.lyrics.length; j++) {
-	          if (this.lyricLineHeights.length < j + 1) {
-	            this.lyricLineHeights.push(0);
-	            this.lyricLineBaselines.push(0);
-	          }
+	        if (this.numLyricLines === 0 && notation.hasLyrics()) {
+	          if (notation.lyrics[0].bounds.height > this.lyricLineHeight) this.lyricLineHeight = notation.lyrics[0].bounds.height;
+	          if (notation.lyrics[0].origin.y > this.lyricLineBaseline) this.lyricLineBaseline = notation.lyrics[0].origin.y;
+	          if (notation.lyrics.length > this.numLyricLines) this.numLyricLines = notation.lyrics.length;
+	        }
 	
-	          this.lyricLineHeights[j] = Math.max(this.lyricLineHeights[j], notation.lyrics[j].bounds.height);
-	          this.lyricLineBaselines[j] = Math.max(this.lyricLineBaselines[j], notation.lyrics[j].origin.y);
+	        if (this.numAltLines === 0 && notation.alText) {
+	          if (notation.alText[0].bounds.height > this.altLineHeight) this.altLineHeight = notation.alText[0].bounds.height;
+	          if (notation.alText[0].origin.y > this.altLineBaseline) this.altLineBaseline = notation.alText[0].origin.y;
+	          if (notation.alText.length > this.numAltLines) this.numAltLines = notation.alText.length;
 	        }
 	      }
 	
 	      if (this.custos) this.notationBounds.union(this.custos.bounds);
 	
-	      // finalize the lyrics placement
+	      // add any braces to the notationBounds as well
+	      for (i = 0; i < this.braces.length; i++) {
+	        this.notationBounds.union(this.braces[i].bounds);
+	      } // finalize the lyrics placement
 	      for (i = this.notationsStartIndex; i < lastIndex; i++) {
 	        notation = notations[i];
 	
 	        var offset = this.notationBounds.y + this.notationBounds.height;
 	
 	        for (var j = 0; j < notation.lyrics.length; j++) {
-	          notation.lyrics[j].bounds.y = offset + this.lyricLineBaselines[j];
-	          offset += this.lyricLineHeights[j];
+	          notation.lyrics[j].bounds.y = offset + this.lyricLineBaseline;
+	          offset += this.lyricLineHeight;
+	        }
+	
+	        if (notation.alText) {
+	          offset = this.notationBounds.y;
+	          for (j = 0; j < notation.alText.length; j++) {
+	            offset -= this.altLineHeight;
+	            notation.alText[j].bounds.y = offset + this.altLineBaseline;
+	          }
 	        }
 	      }
 	
-	      // add any braces to the notationBounds as well
-	      for (i = 0; i < this.braces.length; i++) {
-	        this.notationBounds.union(this.braces[i].bounds);
-	      }var totalHeight = this.notationBounds.height;
+	      if (this.startingClef.hasLyrics()) {
+	        offset = this.notationBounds.y + this.notationBounds.height;
+	        for (j = 0; j < this.startingClef.lyrics.length; j++) {
+	          this.startingClef.lyrics[j].bounds.y = offset + this.lyricLineBaseline;
+	          offset += this.lyricLineHeight;
+	        }
+	      }
 	
-	      // add up the lyric line heights to get the total height of the chant line
-	      for (i = 0; i < this.lyricLineHeights.length; i++) {
-	        totalHeight += this.lyricLineHeights[i];
-	      } // dropCap and the annotations
+	      // dropCap and the annotations
 	      if (this.notationsStartIndex === 0) {
 	
 	        if (this.score.dropCap !== null) {
 	
 	          var dropCapY;
-	          if (this.lyricLineHeights.length > 0) {
-	            dropCapY = this.notationBounds.y + this.notationBounds.height + this.lyricLineBaselines[0];
-	          } else dropCapY = this.notationBounds.y + this.notationBounds.height;
+	          dropCapY = this.notationBounds.y + this.notationBounds.height + this.lyricLineBaseline + this.altLineHeight * this.numAltLines - this.altLineHeight * this.numAltLines;
 	
 	          // drop caps and annotations are drawn from their center, so aligning them
 	          // horizontally is as easy as this.staffLeft / 2
@@ -4572,10 +4723,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	          // annotations use dominant-baseline to align text to the top
 	          this.score.annotation.bounds.x = this.staffLeft / 2;
 	          this.score.annotation.bounds.y = -ctxt.staffInterval * 3;
+	          if (this.score.dropCap !== null) {
+	            var lowestPossibleAnnotationY = this.score.dropCap.bounds.y - this.score.annotation.bounds.height - this.score.dropCap.fontSize * 0.65;
+	            // if the annotation would overlap with the drop cap, move the annotation higher.
+	            // otherwise, center the annotation in the vertical space between the top of the drop cap and the top of the staff.
+	            if (lowestPossibleAnnotationY < this.score.annotation.bounds.y) {
+	              this.score.annotation.bounds.y = lowestPossibleAnnotationY;
+	            } else {
+	              this.score.annotation.bounds.y = (this.score.annotation.bounds.y + lowestPossibleAnnotationY) / 2;
+	            }
+	            var yDiff = this.score.annotation.bounds.y - this.notationBounds.y;
+	            if (yDiff < 0) {
+	              this.notationBounds.y = this.score.annotation.bounds.y;
+	              this.notationBounds.height -= yDiff;
+	            }
+	          }
+	          this.score.annotation.bounds.y += this.score.annotation.origin.y * 0.65;
 	        }
 	      }
 	
-	      this.notationBounds.height += ctxt.lyricTextSize;
+	      // add up the lyric line heights to get the total height of the chant line
+	      this.notationBounds.height += this.lyricLineHeight * this.numLyricLines + this.altLineHeight * this.numAltLines;
+	      var totalHeight = this.notationBounds.height;
+	      this.notationBounds.y -= this.altLineHeight * this.numAltLines;
 	
 	      this.bounds.x = 0;
 	      this.bounds.y = this.notationBounds.y;
@@ -4649,6 +4819,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'createSvgFragment',
 	    value: function createSvgFragment(ctxt) {
+	      var top = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+	
 	      var inner = "";
 	
 	      // add the chant lines
@@ -4710,7 +4882,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      return _Exsurge2.QuickSvg.createFragment('g', {
 	        'class': 'chantLine',
-	        'transform': 'translate(' + this.bounds.x + ',' + this.bounds.y + ')'
+	        'transform': 'translate(' + this.bounds.x + ',' + (this.bounds.y - top) + ')'
 	      }, inner);
 	    }
 	
@@ -4758,7 +4930,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function buildFromChantNotationIndex(ctxt, newElementStart, width) {
 	
 	      // todo: reset / clear the children we have in case they have data
-	      var notations = this.score.notations;
+	      var notations = this.score.notations,
+	          beginningLyrics = null,
+	          prev = null,
+	          prevWithLyrics = null;
 	      this.notationsStartIndex = newElementStart;
 	      this.numNotationsOnLine = 0;
 	
@@ -4777,6 +4952,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (this.score.annotation !== null) padding = Math.max(padding, this.score.annotation.bounds.width + this.score.annotation.padding * 4);
 	
 	        this.staffLeft += padding;
+	      } else {
+	        prev = notations[newElementStart - 1];
+	        if (prev.constructor === _ExsurgeChant.DoubleBar && prev.hasLyrics() && (prev.lyrics.length > 1 || !prev.lyrics[0].text.match(/^(i\.?)+j\.?/))) {
+	          beginningLyrics = prev.lyrics.map(function (lyric) {
+	            var newLyric = new _Exsurge2.Lyric(ctxt, lyric.originalText, lyric.lyricType);
+	            newLyric.elidesToNext = lyric.elidesToNext;
+	            // Hide the original lyric by setting its bounds.y to an extremely high number.
+	            // If the chant is re-laid out, this value will be recalculated so that it won't stay hidden.
+	            lyric.bounds.y = Number.MAX_SAFE_INTEGER;
+	            return newLyric;
+	          });
+	          var minX = beginningLyrics.map(function (l) {
+	            return l.bounds.x;
+	          }).reduce(function (a, b) {
+	            return a < b ? a : b;
+	          });
+	          beginningLyrics.forEach(function (l) {
+	            l.bounds.x -= minX;
+	          });
+	        }
 	      }
 	
 	      // set up the clef...
@@ -4793,9 +4988,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.startingClef.performLayout(ctxt);
 	      this.startingClef.bounds.x = this.staffLeft;
 	
-	      var curr = this.startingClef,
-	          prev = null,
-	          prevWithLyrics = null;
+	      var curr = this.startingClef;
+	
+	      if (beginningLyrics) {
+	        curr.lyrics = beginningLyrics;
+	      }
 	
 	      // estimate how much space we have available to us
 	      var rightNotationBoundary = this.staffRight - _Exsurge4.Glyphs.CustosLong.bounds.width * ctxt.glyphScaling - ctxt.intraNeumeSpacing * 4; // possible custos on the line
@@ -4813,9 +5010,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        curr = notations[i];
 	
 	        var actualRightBoundary;
-	        if (i === lastNotationIndex) {
+	        if (i === lastNotationIndex || curr.constructor === _ExsurgeChant.Custos || prev.constructor === _ExsurgeChant.Custos && curr.isDivider) {
 	          // on the last notation of the score, we don't need a custos or trailing space, so we use staffRight as the
 	          // right boundary.
+	          // Also, if the current notation is a divider and the previous was a custos, we don't need extra space
+	          // because if the following notation won't fit, we can switch the order and use the custos as the end-of-the-line custos
 	          actualRightBoundary = this.staffRight;
 	        } else if (i === lastNotationIndex - 1) {
 	          // on the penultimate notation, make sure there is at least enough room for whichever takes up less space,
@@ -4830,6 +5029,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // if it doesn't fit, we finish up here.
 	        var fitsOnLine = this.positionNotationElement(ctxt, prevWithLyrics, prev, curr, actualRightBoundary);
 	        if (fitsOnLine === false) {
+	
+	          // first check for elements that cannot begin a system: dividers and custodes
+	          while (this.numNotationsOnLine > 0 && (curr.isDivider || curr.constructor === _ExsurgeChant.Custos)) {
+	            curr = notations[--i];
+	            this.numNotationsOnLine--;
+	          }
 	
 	          // check for an end brace in the curr element
 	          var braceEndIndex = curr.notes && curr.notes.reduce(function (result, n, i) {
@@ -4867,7 +5072,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	          for (j = i - 1; j > this.notationsStartIndex; j--) {
 	            var cne = notations[j];
 	
-	            if (cne.keepWithNext === true || j === i - 1 && curr.isDivider) this.numNotationsOnLine--;else break;
+	            if (cne.keepWithNext === true) this.numNotationsOnLine--;else break;
+	          }
+	
+	          if (notations[j].isDivider && notations[j - 1].constructor === _ExsurgeChant.Custos) {
+	            // reverse the order: put the divider first, and end the line with the custos.
+	            prevWithLyrics = null;
+	            for (i = j - 2; i >= this.notationsStartIndex; i--) {
+	              if (notations[i].hasLyrics()) {
+	                prevWithLyrics = notations[i];
+	                break;
+	              }
+	            }
+	            this.positionNotationElement(ctxt, prevWithLyrics, notations[j - 2], notations[j], this.staffRight);
+	            this.custos = notations[j - 1];
+	            this.custos.bounds.x = this.staffRight - this.custos.bounds.width - this.custos.leadingSpace;
 	          }
 	
 	          // we are at the end of the line!
@@ -4886,23 +5105,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }
 	
-	      // create the automatic custos at the end of the line if there are neumes left in the notations
-	      for (i = this.notationsStartIndex + this.numNotationsOnLine; i < notations.length; i++) {
-	        var notation = notations[i];
+	      if (!this.custos) {
+	        // create the automatic custos at the end of the line if there are neumes left in the notations
+	        for (i = this.notationsStartIndex + this.numNotationsOnLine; i < notations.length; i++) {
+	          var notation = notations[i];
 	
-	        if (notation.isNeume) {
+	          if (notation.isNeume) {
 	
-	          this.custos = new _ExsurgeChant.Custos(true);
-	          ctxt.currNotationIndex = i - 1; // make sure the context knows where the custos is
-	          this.custos.performLayout(ctxt);
+	            this.custos = new _ExsurgeChant.Custos(true);
+	            ctxt.currNotationIndex = i - 1; // make sure the context knows where the custos is
+	            this.custos.performLayout(ctxt);
 	
-	          // Put the custos at the very end of the line
-	          this.custos.bounds.x = this.staffRight - this.custos.bounds.width - this.custos.leadingSpace;
+	            // Put the custos at the very end of the line
+	            this.custos.bounds.x = this.staffRight - this.custos.bounds.width - this.custos.leadingSpace;
+	            // nothing more to see here...
+	            break;
+	          }
+	        }
+	      }
 	
-	          // nothing more to see here...
+	      // find the final lyric and mark it as connecting if needed.
+	      var lastWithLyrics = null;
+	      for (i = this.notationsStartIndex + this.numNotationsOnLine - 1; i >= this.notationsStartIndex; --i) {
+	        if (notations[i].hasLyrics()) {
+	          lastWithLyrics = notations[i];
 	          break;
 	        }
 	      }
+	      if (lastWithLyrics && lastWithLyrics.lyrics[0].allowsConnector()) lastWithLyrics.lyrics[0].setNeedsConnector(true);
 	
 	      // if the provided width is less than zero, then set the width of the line
 	      // based on the last notation
@@ -4949,7 +5179,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      if (this.custos) extraSpace -= this.custos.bounds.width + this.custos.leadingSpace;
 	
-	      if (extraSpace <= 0) return;
+	      if (extraSpace === 0) return;
 	
 	      var prev = null,
 	          curr = null,
@@ -4969,6 +5199,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        if (curr.constructor === _Exsurge3.ChantLineBreak) continue;
 	
+	        if (curr === this.custos) continue;
+	
 	        // otherwise, we can add space before this element
 	        toJustify.push(curr);
 	      }
@@ -4981,6 +5213,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      for (i = this.notationsStartIndex; i < lastIndex; i++) {
 	
 	        curr = notations[i];
+	
+	        if (curr === this.custos) continue;
 	
 	        if (toJustifyIndex < toJustify.length && toJustify[toJustifyIndex] === curr) {
 	          offset += increment;
@@ -5021,9 +5255,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          if (staffPosition > 0) staffPosition = staffPosition - (staffPosition - 1) % 2;else staffPosition = staffPosition - (staffPosition + 1) % 2;
 	
 	          // if we have a ledger line close by, then average out the distance between the two
-	          var minLedgerSeperation = ctxt.staffInterval * 5;
+	          var minLedgerSeparation = ctxt.staffInterval * ctxt.minLedgerSeparation;
 	
-	          if (_this2.ledgerLines.length > 0 && _this2.ledgerLines[_this2.ledgerLines.length - 1].x2 + minLedgerSeperation >= x1) {
+	          if (_this2.ledgerLines.length > 0 && _this2.ledgerLines[_this2.ledgerLines.length - 1].x2 + minLedgerSeparation >= x1) {
 	
 	            // average out the distance
 	            var half = (x1 - _this2.ledgerLines[_this2.ledgerLines.length - 1].x2) / 2;
@@ -5053,26 +5287,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // ledger lines and to smooth out epismata
 	      for (var i = this.notationsStartIndex; i < lastIndex; i++) {
 	
-	        minY = Math.min(minY, notations[i].bounds.y);
-	        maxY = Math.max(maxY, notations[i].bounds.bottom());
+	        var neume = notations[i];
 	
-	        if (notations[i].constructor === _ExsurgeChant.Custos) {
-	          processElementForLedgerLine(notations[i]);
+	        minY = Math.min(minY, neume.bounds.y);
+	        maxY = Math.max(maxY, neume.bounds.bottom());
+	
+	        if (neume.constructor === _ExsurgeChant.Custos) {
+	          processElementForLedgerLine(neume);
 	          continue;
 	        }
 	
+	        // if the AboveLinesText would extend beyond the right edge of the staff, right align it instead
+	        if (neume.alText) {
+	          for (var j = 0; j < neume.alText.length; j++) {
+	            neume.alText[j].bounds.x = neume.hasLyrics() ? neume.lyrics[j].bounds.x : 0;
+	            var beyondStaffRight = neume.bounds.x + neume.alText[j].bounds.right() - this.staffRight;
+	            if (beyondStaffRight > 0) neume.alText[j].bounds.x -= beyondStaffRight;
+	          }
+	        }
+	
 	        // if it's not a neume then just skip here
-	        if (!notations[i].isNeume) continue;
+	        if (!neume.isNeume) continue;
 	
-	        var neume = notations[i];
-	
-	        for (var j = 0; j < neume.notes.length; j++) {
+	        for (j = 0; j < neume.notes.length; j++) {
 	          var k,
 	              note = neume.notes[j];
 	
 	          processElementForLedgerLine(note, neume.bounds.x, neume.bounds.y);
 	
 	          // blend epismata as we're able
+	          if (note.epismata.length === 0) epismata = [];
 	          for (k = 0; k < note.epismata.length; k++) {
 	
 	            var episema = note.epismata[k];
@@ -5084,11 +5328,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (epismata.length > 0) spaceBetweenEpismata = neume.bounds.x + episema.bounds.x - (epismata[epismata.length - 1].note.neume.bounds.x + epismata[epismata.length - 1].bounds.right());
 	
 	            // we try to blend the episema if we're able.
-	            if (epismata.length === 0 || epismata[epismata.length - 1].positionHint !== episema.positionHint || epismata[epismata.length - 1].terminating === true || epismata[epismata.length - 1].alignment === _ExsurgeChant2.HorizontalEpisemaAlignment.Left || episema.alignment === _ExsurgeChant2.HorizontalEpisemaAlignment.Right || spaceBetweenEpismata > ctxt.intraNeumeSpacing * 2) {
+	            if (epismata.length === 0 || epismata[epismata.length - 1].positionHint !== episema.positionHint || epismata[epismata.length - 1].terminating === true || epismata[epismata.length - 1].alignment === _ExsurgeChant2.HorizontalEpisemaAlignment.Left || epismata[epismata.length - 1].alignment === _ExsurgeChant2.HorizontalEpisemaAlignment.Center || episema.alignment === _ExsurgeChant2.HorizontalEpisemaAlignment.Right || episema.alignment === _ExsurgeChant2.HorizontalEpisemaAlignment.Center || spaceBetweenEpismata > ctxt.intraNeumeSpacing * 2 && note.glyphVisualizer.glyphCode !== _Exsurge2.GlyphCode.None) {
 	
 	              // start a new set of epismata to potentially blend
-	              epismata = [];
-	              epismata.push(episema);
+	              epismata = [episema];
 	            } else {
 	              // blend all previous with this one
 	              var newY;
@@ -5103,6 +5346,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	              // extend the last episema to meet the new one
 	              var newWidth = neume.bounds.x + episema.bounds.x - (epismata[epismata.length - 1].note.neume.bounds.x + epismata[epismata.length - 1].bounds.x);
+	              if (newWidth < 0) {
+	                newWidth *= -1;
+	                epismata[epismata.length - 1].bounds.x -= newWidth;
+	              }
 	              epismata[epismata.length - 1].bounds.width = newWidth;
 	
 	              epismata.push(episema);
@@ -5199,14 +5446,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (maxRight > rightNotationBoundary) return false;else return true;
 	      }
 	
-	      // if the curr notation has no lyrics, then we force the prev notation
-	      // with lyrics to have syllable connectors.
+	      // if the curr notation has no lyrics, then simply check whether there is enough room
 	      if (curr.hasLyrics() === false) {
-	
-	        for (i = 0; i < prevWithLyrics.lyrics.length; i++) {
-	
-	          if (prevWithLyrics.lyrics[i] !== null && prevWithLyrics.lyrics[i].allowsConnector()) prevWithLyrics.lyrics[i].setNeedsConnector(true);
-	        }
 	
 	        if (curr.bounds.right() + curr.trailingSpace < rightNotationBoundary) return true;else return false;
 	      }
@@ -5237,7 +5478,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              right += prevWithLyrics.lyrics[i].widthWithConnector - prevWithLyrics.lyrics[i].widthWithoutConnector;
 	            } else right += ctxt.minLyricWordSpacing;
 	
-	            prevLyricRightMax = Math.max(prevLyricRightMax, right);
+	            if (right > prevLyricRight) prevLyricRightMax = right;
 	          }
 	
 	          if (i < curr.lyrics.length && curr.lyrics[i] !== null) {
@@ -5292,15 +5533,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }
 	
-	      if (curr.bounds.right() + curr.trailingSpace < rightNotationBoundary && curr.getLyricRight(0) <= this.staffRight) return true;
+	      if (curr.bounds.right() + curr.trailingSpace < rightNotationBoundary && curr.getLyricRight(0) <= this.staffRight) {
+	        if (prev.isAccidental) {
+	          // move the previous accidental up next to the current note:
+	          prev.bounds.x = curr.bounds.x - prev.bounds.width - prev.trailingSpace;
+	        }
+	        return true;
+	      }
 	
 	      // if we made it this far, then the element won't fit on this line.
-	      // set the position of the current element to the beginning of a chant line,
-	      // and mark the previous lyric as connecting if needed.
-	      // curr.bounds.x = this.startingClef.bounds.right();
-	
-	      if (prevWithLyrics.hasLyrics() && prevWithLyrics.lyrics[0].allowsConnector()) prevWithLyrics.lyrics[0].setNeedsConnector(true);
-	
 	      return false;
 	    }
 	  }]);
@@ -5394,6 +5635,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var neume = ctxt.findNextNeume();
 	
 	        if (neume) this.staffPosition = ctxt.activeClef.pitchToStaffPosition(neume.notes[0].pitch);
+	
+	        // in case there was a weird fa/do clef change, let's sanitize the staffPosition by making sure it is
+	        // within reasonable bounds
+	        while (this.staffPosition < -6) {
+	          this.staffPosition += 7;
+	        }while (this.staffPosition > 6) {
+	          this.staffPosition -= 7;
+	        }
 	      }
 	
 	      var glyph = new _Exsurge2.GlyphVisualizer(ctxt, Custos.getGlyphCode(this.staffPosition));
@@ -5853,9 +6102,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var y = 0,
 	          step;
 	      var minDistanceAway = ctxt.staffInterval * 0.4; // min distance from neume
+	      var glyphCode = this.note.glyphVisualizer.glyphCode;
 	
 	      if (this.positionHint === MarkingPositionHint.Below) {
 	        y = this.note.bounds.bottom() + minDistanceAway; // the highest the line could be at
+	        if (glyphCode === _Exsurge2.GlyphCode.None) // correction for episema under the second note of a porrectus
+	          y += ctxt.staffInterval;
 	        step = Math.floor(y / ctxt.staffInterval);
 	
 	        // if it's an odd step, that means we're on a staff line,
@@ -5872,21 +6124,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      y = step * ctxt.staffInterval;
 	
-	      var glyphCode = this.note.glyphVisualizer.glyphCode;
 	      var width;
+	      var x = this.note.bounds.x;
 	
 	      // The porrectus requires special handling of the note width,
 	      // otherwise the width is just that of the note itself
-	      if (glyphCode === _Exsurge2.GlyphCode.Porrectus1 || glyphCode === _Exsurge2.GlyphCode.Porrectus2 || glyphCode === _Exsurge2.GlyphCode.Porrectus3 || glyphCode === _Exsurge2.GlyphCode.Porrectus4) width = ctxt.staffInterval;else width = this.note.bounds.width;
-	
-	      var x = this.note.bounds.x;
+	      if (glyphCode === _Exsurge2.GlyphCode.Porrectus1 || glyphCode === _Exsurge2.GlyphCode.Porrectus2 || glyphCode === _Exsurge2.GlyphCode.Porrectus3 || glyphCode === _Exsurge2.GlyphCode.Porrectus4) width = ctxt.staffInterval;else if (glyphCode === _Exsurge2.GlyphCode.None) {
+	        width = ctxt.staffInterval;
+	        x -= width;
+	      } else {
+	        width = this.note.bounds.width;
+	      }
 	
 	      // also, the position hint can affect the x/width of the episema
 	      if (this.alignment === HorizontalEpisemaAlignment.Left) {
 	        width *= .80;
 	      } else if (this.alignment === HorizontalEpisemaAlignment.Center) {
-	        x += width * .20;
-	        width *= .60;
+	        x += width * .10;
+	        width *= .80;
 	      } else if (this.alignment === HorizontalEpisemaAlignment.Right) {
 	        x += width * .20;
 	        width *= .80;
@@ -5941,29 +6196,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function performLayout(ctxt) {
 	
 	      var glyphCode;
-	
-	      // fixme: this positioning logic doesn't work for the ictus on a virga apparently...?
+	      // we have to place the ictus futher from the note in some cases to avoid a collision with an episema on the same note:
+	      var staffPosition = this.note.staffPosition;
+	      var placeFurtherFromNote = this.note.epismata.length > 0 && this.note.epismata[0].positionHint === this.positionHint;
+	      var horizontalOffset = this.note.bounds.width / 2;
+	      var verticalOffset = 0;
+	      var shortOffset = 1;
 	
 	      if (this.positionHint === MarkingPositionHint.Above) {
 	        glyphCode = _Exsurge2.GlyphCode.VerticalEpisemaAbove;
+	        if (placeFurtherFromNote) {
+	          if (staffPosition % 2 === 0) ++staffPosition;
+	        } else shortOffset = 0.9;
+	        verticalOffset = -ctxt.staffInterval * (staffPosition % 2 ? shortOffset : 1.5);
 	      } else {
 	        glyphCode = _Exsurge2.GlyphCode.VerticalEpisemaBelow;
-	      }
-	
-	      var staffPosition = this.note.staffPosition;
-	
-	      var horizontalOffset = this.note.bounds.width / 2;
-	      var verticalOffset = 0;
-	
-	      switch (glyphCode) {
-	        case _Exsurge2.GlyphCode.VerticalEpisemaAbove:
-	          if (staffPosition % 2 === 0) verticalOffset -= ctxt.staffInterval * 1.5;else verticalOffset -= ctxt.staffInterval * .9;
-	          break;
-	
-	        case _Exsurge2.GlyphCode.VerticalEpisemaBelow:
-	        default:
-	          if (staffPosition % 2 === 0) verticalOffset += ctxt.staffInterval * 1.5;else verticalOffset += ctxt.staffInterval * .8;
-	          break;
+	        if (placeFurtherFromNote) {
+	          if (staffPosition % 2 === 0) --staffPosition;
+	        } else shortOffset = 0.8;
+	        verticalOffset = ctxt.staffInterval * (staffPosition % 2 ? shortOffset : 1.5);
 	      }
 	
 	      this.setGlyph(ctxt, glyphCode);
@@ -6122,6 +6373,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	// reusable reg exps
 	var __syllablesRegex = /(?=.)((?:[^(])*)(?:\(?([^)]*)\)?)?/g;
+	var __altRegex = /<alt>(.*?)<\/alt>/g;
 	var __notationsRegex = /z0|z|Z|::|:|;|,|`|c1|c2|c3|c4|f3|f4|cb3|cb4|\/\/|\/| |\!|-?[a-mA-M][oOwWvVrRsxy#~\+><_\.'012345]*(?:\[[^\]]*\]?)*/g;
 	
 	// for the brace string inside of [ and ] in notation data
@@ -6129,7 +6381,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//  1. o or u, to indicate over or under
 	//  2. b, cb, or cba, to indicate the brace type
 	//  3. 0 or 1 to indicate the attachment point
-	//  4. {}( or ) to indicate opening/closing (this group will be null if the metric version is used)
+	//  4. { or } to indicate opening/closing (this group will be null if the metric version is used)
 	//  5. a float indicating the millimeter length of the brace (not supported yet)
 	var __braceSpecRegex = /([ou])(b|cb|cba):([01])(?:([{}])|;(\d*(?:\.\d+)?)mm)/;
 	
@@ -6324,13 +6576,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var matches = [];
 	      var notations = [];
 	      var currSyllable = 0;
+	      var makeAlText = function makeAlText(text) {
+	        return new _Exsurge2.AboveLinesText(ctxt, text);
+	      };
 	
 	      while (match = __syllablesRegex.exec(word)) {
 	        matches.push(match);
 	      }for (var j = 0; j < matches.length; j++) {
 	        var match = matches[j];
 	
-	        var lyricText = match[1].trim();
+	        var lyricText = match[1].trim().replace(/~/g, ' ');
+	        var alText = lyricText.match(__altRegex);
 	        var notationData = match[2];
 	
 	        var items = this.parseNotations(ctxt, notationData);
@@ -6339,11 +6595,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        notations = notations.concat(items);
 	
-	        if (lyricText === '') continue;
+	        if (alText) {
+	          for (var i = 0; i < alText.length; ++i) {
+	            var index = lyricText.indexOf(alText[i]);
+	            lyricText = lyricText.slice(0, index) + lyricText.slice(index + alText[i].length);
+	            alText[i] = alText[i].slice(5, -6); // trim <alt> and </alt>
+	          }
+	        }
+	        if (lyricText === '' && !alText) continue;
 	
-	        // add the lyrics to the first notation that makes sense...
+	        // add the lyrics and/or alText to the first notation that makes sense...
 	        var notationWithLyrics = null;
-	        for (var i = 0; i < items.length; i++) {
+	        for (i = 0; i < items.length; i++) {
 	          var cne = items[i];
 	
 	          if (cne.isAccidental || cne.constructor === Signs.Custos) continue;
@@ -6353,6 +6616,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	
 	        if (notationWithLyrics === null) return notations;
+	
+	        if (alText) notationWithLyrics.alText = alText.map(makeAlText);
+	
+	        if (lyricText === '') continue;
 	
 	        var proposedLyricType;
 	
@@ -6440,7 +6707,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        text = text.substring(0, text.length - 1);
 	      }
 	
-	      if (text === "*" || text === "†") lyricType = _Exsurge2.LyricType.Directive;
+	      if (text.match(/^(?:[*†]+|i+j|\d+)\.?$/)) lyricType = _Exsurge2.LyricType.Directive;
 	
 	      var lyric = new _Exsurge2.Lyric(ctxt, text, lyricType);
 	      lyric.elidesToNext = elides;
@@ -6472,11 +6739,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	          var neumes = _this.createNeumesFromNotes(ctxt, notes, trailingSpace);
 	          for (var i = 0; i < neumes.length; i++) {
 	            notations.push(neumes[i]);
-	          } // reset the trailing space
-	          trailingSpace = -1;
-	
-	          notes = [];
+	          }notes = [];
 	        }
+	
+	        // reset the trailing space
+	        trailingSpace = -1;
 	
 	        // then, if we're passed a notation, let's add it
 	        // also, perform chant logic here
@@ -6585,7 +6852,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              // custos
 	              var custos = new Signs.Custos();
 	
-	              custos.staffPosition = this.gabcHeightToExsurgeHeight(data[0]);
+	              custos.staffPosition = this.gabcHeightToExsurgeHeight(atom[0]);
 	
 	              addNotation(custos);
 	            } else if (atom.length > 1 && (atom[1] === 'x' || atom[1] === 'y' || atom[1] === '#')) {
@@ -6662,7 +6929,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          if (includePrevNote === false) currNoteIndex--;
 	
 	          neume.keepWithNext = true;
-	          neume.trailingSpace = ctxt.intraNeumeSpacing;
+	          if (notes[currNoteIndex + 1].shape === _Exsurge3.NoteShape.Quilisma) neume.trailingSpace = 0;else neume.trailingSpace = ctxt.intraNeumeSpacing;
 	        }
 	
 	        return unknownState;
@@ -6682,11 +6949,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	        neume: function neume() {
 	          return new Neumes.Punctum();
 	        },
-	        handle: function handle(currNote, prevNote) {
+	        handle: function handle(currNote, prevNote, notesRemaining) {
 	
-	          if (currNote.staffPosition > prevNote.staffPosition) return podatusState;else if (currNote.staffPosition < prevNote.staffPosition) {
-	            if (currNote.shape === _Exsurge3.NoteShape.Inclinatum) return climacusState;else return clivisState;
-	          } else return distrophaState;
+	          if (currNote.shape) {
+	            var neume = new Neumes.Punctum();
+	            var state = createNeume(neume, false);
+	            // if the current note is on a space within the staff AND the previous note is on the line below AND the previous note has a mora,
+	            // then we went the trailing space at its default of intraNeumeSpacing to prevent the dot from running up into the current note.
+	            // Otherwise, we want no trailing space.
+	            if (currNote.staffPosition > prevNote.staffPosition && (currNote.staffPosition % 2 === 1 || prevNote.staffPosition !== currNote.staffPosition - 1 || !prevNote.morae || prevNote.morae.length === 0)) neume.trailingSpace = 0;
+	            return state;
+	          }
+	
+	          if (currNote.staffPosition > prevNote.staffPosition) {
+	            if (currNote.ictus) currNote.ictus.positionHint = Markings.MarkingPositionHint.Above;
+	            return podatusState;
+	          } else if (currNote.staffPosition < prevNote.staffPosition) {
+	            if (prevNote.ictus) prevNote.ictus.positionHint = Markings.MarkingPositionHint.Above;
+	            if (currNote.shape === _Exsurge3.NoteShape.Inclinatum) return climacusState;else {
+	              return clivisState;
+	            }
+	          } else if (prevNote.morae && prevNote.morae.length) {
+	            return createNeume(new Neumes.Punctum(), false);
+	          } else {
+	            return distrophaState;
+	          }
 	        }
 	      };
 	
@@ -6714,9 +7001,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	              prevNote.shapeModifiers |= _Exsurge3.NoteShapeModifiers.Descending;
 	              return createNeume(new Neumes.Clivis(), true);
 	            }
-	          } else
+	          } else {
 	            // stand alone oriscus
-	            return createNeume(new Neumes.Oriscus(), true);
+	            var neume = new Neumes.Oriscus(),
+	                state = createNeume(neume, false);
+	            // if the current note is on a space within the staff AND the previous note is on the line below AND the previous note has a mora,
+	            // then we went the trailing space at its default of intraNeumeSpacing to prevent the dot from running up into the current note.
+	            // Otherwise, we want no trailing space.
+	            if (currNote.staffPosition > prevNote.staffPosition && (currNote.staffPosition % 2 === 1 || prevNote.staffPosition !== currNote.staffPosition - 1 || !prevNote.morae || prevNote.morae.length === 0)) neume.trailingSpace = 0;
+	            return state;
+	          }
 	        }
 	      };
 	
@@ -6727,6 +7021,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        handle: function handle(currNote, prevNote) {
 	
 	          if (currNote.staffPosition > prevNote.staffPosition) {
+	            if (currNote.ictus) currNote.ictus.positionHint = Markings.MarkingPositionHint.Above;
+	            if (prevNote.ictus) prevNote.ictus.positionHint = Markings.MarkingPositionHint.Below;
 	
 	            if (prevNote.shape === _Exsurge3.NoteShape.Oriscus) return salicusState;else return scandicusState;
 	          } else if (currNote.staffPosition < prevNote.staffPosition) {
@@ -6741,7 +7037,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 	        handle: function handle(currNote, prevNote) {
 	
-	          if (currNote.shape === _Exsurge3.NoteShape.Default && currNote.staffPosition > prevNote.staffPosition) return porrectusState;else return createNeume(new Neumes.Clivis(), false);
+	          if (currNote.shape === _Exsurge3.NoteShape.Default && currNote.staffPosition > prevNote.staffPosition) {
+	            if (currNote.ictus) currNote.ictus.positionHint = Markings.MarkingPositionHint.Above;
+	            return porrectusState;
+	          } else return createNeume(new Neumes.Clivis(), false);
 	        }
 	      };
 	
@@ -6850,7 +7149,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return new Neumes.Distropha();
 	        },
 	        handle: function handle(currNote, prevNote) {
-	          if (currNote.staffPosition === prevNote.staffPosition) return tristrophaState;else return createNeume(new Neumes.Apostropha(), false, false);
+	          if (currNote.staffPosition === prevNote.staffPosition) {
+	            if (prevNote.morae && prevNote.morae.length) {
+	              return createNeume(new Neumes.Distropha(), false);
+	            } else {
+	              return tristrophaState;
+	            }
+	          } else return createNeume(new Neumes.Apostropha(), false, false);
 	        }
 	      };
 	
@@ -6898,7 +7203,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var prevNote = currNoteIndex > 0 ? notes[currNoteIndex - 1] : null;
 	        var currNote = notes[currNoteIndex];
 	
-	        state = state.handle(currNote, prevNote);
+	        state = state.handle(currNote, prevNote, notes.length - 1 - currNoteIndex);
 	
 	        // if we are on the last note, then try to create a neume if we need to.
 	        if (currNoteIndex === notes.length - 1 && state !== unknownState) createNeume(state.neume(), true);
@@ -7020,7 +7325,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	          case '\'':
 	            mark = new Markings.Ictus(ctxt, note);
-	            if (haveLookahead && lookahead === '1') mark.positionHint = Markings.MarkingPositionHint.Above;else if (haveLookahead && lookahead === '0') mark.positionHint = Markings.MarkingPositionHint.Below;
+	            if (haveLookahead && lookahead === '1') mark.positionHint = Markings.MarkingPositionHint.Above;else if (haveLookahead && lookahead === '0') mark.positionHint = Markings.MarkingPositionHint.Below;else if (note.shape === _Exsurge3.NoteShape.Virga) // ictus on a virga goes above by default:
+	              mark.positionHint = Markings.MarkingPositionHint.Above;
 	
 	            note.ictus = mark;
 	            break;
@@ -7038,8 +7344,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (note.shape === _Exsurge3.NoteShape.Stropha) {
 	              // if we're already a stropha, that means this is gabc's
 	              // quick stropha feature (e.g., gsss). create a new note
+	              var newNote = new _Exsurge3.Note();
+	              newNote.staffPosition = note.staffPosition;
+	              newNote.pitch = note.pitch;
 	              notes.push(note);
-	              note = new _Exsurge3.Note();
+	              note = newNote;
 	              episemaNoteIndex++; // since a new note was added, increase the index here
 	            }
 	
@@ -7051,8 +7360,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (note.shape === _Exsurge3.NoteShape.Virga) {
 	              // if we're already a stropha, that means this is gabc's
 	              // quick virga feature (e.g., gvvv). create a new note
+	              var _newNote = new _Exsurge3.Note();
+	              _newNote.staffPosition = note.staffPosition;
+	              _newNote.pitch = note.pitch;
 	              notes.push(note);
-	              note = new _Exsurge3.Note();
+	              note = _newNote;
 	              episemaNoteIndex++; // since a new note was added, increase the index here
 	            }
 	
@@ -7118,6 +7430,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }
 	
+	      if (this.needToEndBrace && !note.braceStart && !note.braceEnd) {
+	        note.braceEnd = new Markings.BracePoint(note, this.needToEndBrace.isAbove, this.needToEndBrace.shape, this.needToEndBrace.attachment === Markings.BraceAttachment.Left ? Markings.BraceAttachment.Right : Markings.BraceAttachment.Left);
+	        delete this.needToEndBrace;
+	      }
+	
 	      notes.push(note);
 	    }
 	
@@ -7152,11 +7469,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	          break;
 	      }
 	
-	      var attachmentPoint = results[3] === '0' ? Markings.BraceAttachment.Left : Markings.BraceAttachment.Right;
+	      var attachmentPoint = results[3] === '1' ? Markings.BraceAttachment.Left : Markings.BraceAttachment.Right;
 	      var brace = null;
 	      var type;
 	
-	      if (results[4] === '{') note.braceStart = new Markings.BracePoint(note, above, shape, attachmentPoint);else note.braceEnd = new Markings.BracePoint(note, above, shape, attachmentPoint);
+	      if (results[4] === '{' || results[5]) note.braceStart = new Markings.BracePoint(note, above, shape, attachmentPoint);else note.braceEnd = new Markings.BracePoint(note, above, shape, attachmentPoint);
+	
+	      // just have the next note end a brace that uses length;
+	      if (results[5]) this.needToEndBrace = note.braceStart;
 	    }
 	
 	    // takes raw gabc text source and parses it into words. For example, passing
@@ -7314,6 +7634,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.x = startingX;
 	    this.lastNote = null;
 	    this.lineIsHanging = false;
+	    this.minX = 0;
 	  }
 	
 	  // used to start a hanging line on the left of the next note
@@ -7322,9 +7643,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(NeumeBuilder, [{
 	    key: 'lineFrom',
 	    value: function lineFrom(note) {
-	      this.lastNote = note;
-	      this.lineIsHanging = true;
-	
+	      var previousNotation = this.ctxt.notations[this.ctxt.currNotationIndex - 1];
+	      if (this.x === 0 && previousNotation && previousNotation.trailingSpace === 0) {
+	        this.lastNote = previousNotation.notes.slice(-1)[0];
+	        this.minX = -this.ctxt.neumeLineWeight;
+	      } else {
+	        this.lastNote = note;
+	        this.lineIsHanging = true;
+	      }
 	      return this;
 	    }
 	
@@ -7348,9 +7674,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (needsLine) {
 	        var line = new _Exsurge2.NeumeLineVisualizer(this.ctxt, this.lastNote, note, this.lineIsHanging);
 	        this.neume.addVisualizer(line);
-	        line.bounds.x = this.x - line.bounds.width;
+	        line.bounds.x = Math.max(this.minX, this.x - line.bounds.width);
 	
-	        if (!noteAlignsRight) this.x -= line.bounds.width;
+	        if (!noteAlignsRight) this.x = line.bounds.x;
 	      }
 	
 	      // if this is the first note of a right aligned glyph (probably an initio debilis),
@@ -7541,7 +7867,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      if (needsLine) {
 	        var line = new _Exsurge2.NeumeLineVisualizer(this.ctxt, this.lastNote, start, this.lineIsHanging);
-	        this.x -= line.bounds.width;
+	        this.x = Math.max(0, this.x - line.bounds.width);
 	        line.bounds.x = this.x;
 	        this.neume.addVisualizer(line);
 	      }
@@ -7676,6 +8002,113 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function build(ctxt) {
 	      return new NeumeBuilder(ctxt, this);
 	    }
+	  }, {
+	    key: 'positionEpismata',
+	    value: function positionEpismata(note, position) {
+	      var mark, i;
+	      for (i = 0; i < note.epismata.length; i++) {
+	        if (note.epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) note.epismata[i].positionHint = position;
+	      }return note.epismata.length;
+	    }
+	  }, {
+	    key: 'positionEpismataAbove',
+	    value: function positionEpismataAbove(note) {
+	      return this.positionEpismata(note, _ExsurgeChant.MarkingPositionHint.Above);
+	    }
+	  }, {
+	    key: 'positionEpismataBelow',
+	    value: function positionEpismataBelow(note) {
+	      return this.positionEpismata(note, _ExsurgeChant.MarkingPositionHint.Below);
+	    }
+	  }, {
+	    key: 'positionPodatusEpismata',
+	    value: function positionPodatusEpismata(bottomNote, topNote) {
+	      // 1. episema on lower note by default be below, upper note above
+	      this.positionEpismataBelow(bottomNote);
+	      this.positionEpismataAbove(topNote);
+	    }
+	  }, {
+	    key: 'positionPodatusMorae',
+	    value: function positionPodatusMorae(bottomNote, topNote) {
+	      var mark;
+	
+	      // The mora on the first (lower) note needs to be below it, if the second note
+	      // is only one pitch above, and the first note is on a line.
+	      if (topNote.staffPosition - bottomNote.staffPosition === 1 && Math.abs(bottomNote.staffPosition % 2) === 1) {
+	        if (bottomNote.morae.length === 1) {
+	          mark = bottomNote.morae[0];
+	        } else if (topNote.morae.length > 1) {
+	          mark = topNote.morae[0];
+	        }
+	        if (mark) mark.positionHint = _ExsurgeChant.MarkingPositionHint.Below;
+	      }
+	
+	      // if there is a mora on the first note but not on the second, and the neume
+	      // continues with a punctum higher than the second note, we need to adjust
+	      // the space after the neume so that it follows immediately with no gap
+	      if (bottomNote.morae.length > 0 && topNote.morae.length === 0) {
+	        bottomNote.morae[0].ignoreBounds = true;
+	      }
+	    }
+	    // for any subclasses that begin with a podatus, they can call this from their own positionMarkings()
+	
+	  }, {
+	    key: 'positionPodatusMarkings',
+	    value: function positionPodatusMarkings(bottomNote, topNote) {
+	      this.positionPodatusEpismata(bottomNote, topNote);
+	      this.positionPodatusMorae(bottomNote, topNote);
+	    }
+	
+	    // just like a clivis, but the first note of the three also works like the second note of the clivis:
+	    // episema below, unless the middle note also has an episema
+	
+	  }, {
+	    key: 'positionTorculusMarkings',
+	    value: function positionTorculusMarkings(firstNote, secondNote, thirdNote) {
+	      var hasTopEpisema = this.positionClivisMarkings(secondNote, thirdNote);
+	      hasTopEpisema = this.positionEpismata(firstNote, hasTopEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below) && hasTopEpisema;
+	      return hasTopEpisema;
+	    }
+	  }, {
+	    key: 'positionClivisMorae',
+	    value: function positionClivisMorae(firstNote, secondNote) {
+	      // 1. morae need to be lined up if both notes have morae
+	      if (secondNote.morae.length) {
+	        var morae = secondNote.morae;
+	        if (morae.length > 1) morae[0].horizontalOffset += secondNote.bounds.right() - firstNote.bounds.right();
+	        if (firstNote.staffPosition - secondNote.staffPosition === 1 && Math.abs(secondNote.staffPosition % 2) === 1) {
+	          morae.slice(-1)[0].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'positionClivisEpismata',
+	    value: function positionClivisEpismata(firstNote, secondNote) {
+	      var hasTopEpisema = this.positionEpismataAbove(firstNote);
+	      this.positionEpismata(secondNote, hasTopEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below);
+	      return hasTopEpisema;
+	    }
+	  }, {
+	    key: 'positionClivisMarkings',
+	    value: function positionClivisMarkings(firstNote, secondNote) {
+	      this.positionClivisMorae(firstNote, secondNote);
+	      return this.positionClivisEpismata(firstNote, secondNote);
+	    }
+	  }, {
+	    key: 'positionPorrectusMarkings',
+	    value: function positionPorrectusMarkings(firstNote, secondNote, thirdNote) {
+	      // episemata on first and second note work like a clivis,
+	      // the second note should have its episema below, unless the first note also has an episema.
+	      this.positionClivisEpismata(firstNote, secondNote);
+	      this.positionPodatusMarkings(secondNote, thirdNote);
+	    }
+	  }, {
+	    key: 'positionPorrectusFlexusMarkings',
+	    value: function positionPorrectusFlexusMarkings(first, second, third, fourth) {
+	      var hasTopEpisema = this.positionEpismataAbove(first);
+	      hasTopEpisema = this.positionClivisMarkings(third, fourth) || hasTopEpisema;
+	      this.positionEpismata(second, hasTopEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below);
+	    }
 	
 	    // subclasses can override this in order to correctly place markings in a neume specific way
 	
@@ -7763,20 +8196,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Bivirga, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      var marking, i, j;
-	
-	      for (i = 0; i < this.notes.length; i++) {
-	        var positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	
-	        // logic here is this: if first episema is default position, place it above.
-	        // then place the second one (if there is one) opposite of the first.
-	        for (j = 0; j < this.notes[i].epismata.length; j++) {
-	          if (this.notes[i].epismata[j].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[i].epismata[j].positionHint = positionHint;else positionHint = this.notes[i].epismata[j].positionHint;
-	
-	          // now place the next one in the opposite position
-	          positionHint = positionHint === _ExsurgeChant.MarkingPositionHint.Above ? _ExsurgeChant.MarkingPositionHint.Below : _ExsurgeChant.MarkingPositionHint.Above;
-	        }
-	      }
+	      this.positionEpismataAbove(this.notes[0]);
+	      this.positionEpismataAbove(this.notes[1]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -7812,20 +8233,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Trivirga, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      var marking, i, j;
-	
-	      for (i = 0; i < this.notes.length; i++) {
-	        var positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	
-	        // logic here is this: if first episema is default position, place it above.
-	        // then place the second one (if there is one) opposite of the first.
-	        for (j = 0; j < this.notes[i].epismata.length; j++) {
-	          if (this.notes[i].epismata[j].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[i].epismata[j].positionHint = positionHint;else positionHint = this.notes[i].epismata[j].positionHint;
-	
-	          // now place the next one in the opposite position
-	          positionHint = positionHint === _ExsurgeChant.MarkingPositionHint.Above ? _ExsurgeChant.MarkingPositionHint.Below : _ExsurgeChant.MarkingPositionHint.Above;
-	        }
-	      }
+	      this.positionEpismataAbove(this.notes[0]);
+	      this.positionEpismataAbove(this.notes[1]);
+	      this.positionEpismataAbove(this.notes[2]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -7860,11 +8270,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function positionMarkings() {
 	
 	      for (var i = 0; i < this.notes.length; i++) {
-	        for (var j = 0; j < this.notes[i].epismata.length; j++) {
-	          var mark = this.notes[i].epismata[j];
-	
-	          if (mark.positionHint === _ExsurgeChant.MarkingPositionHint.Default) mark.positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	        }
+	        this.positionEpismataAbove(this.notes[i]);
 	      }
 	    }
 	  }, {
@@ -7872,7 +8278,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function performLayout(ctxt) {
 	      _get(Object.getPrototypeOf(Climacus.prototype), 'performLayout', this).call(this, ctxt);
 	
-	      this.build(ctxt).virgaAt(this.notes[0]).advanceBy(ctxt.intraNeumeSpacing / 2).withInclinati(this.notes.slice(1));
+	      this.build(ctxt).virgaAt(this.notes[0]).advanceBy(ctxt.intraNeumeSpacing).withInclinati(this.notes.slice(1));
 	
 	      this.finishLayout(ctxt);
 	    }
@@ -7898,32 +8304,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Clivis, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	
-	      var hasLowerMora = false;
-	      var mark, i;
-	
-	      // 1. morae need to be lined up if both notes have morae
-	      // 2. like the podatus, mora on lower note needs to below
-	      //    under certain circumstances
-	      if (this.notes[1].morae.length) {
-	        var morae = this.notes[1].morae;
-	        if (morae.length > 1) morae[0].horizontalOffset += this.notes[1].bounds.right() - this.notes[0].bounds.right();
-	        if (this.notes[0].staffPosition - this.notes[1].staffPosition === 1 && Math.abs(this.notes[1].staffPosition % 2) === 1) {
-	          morae.slice(-1)[0].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
-	        }
-	      }
-	
-	      for (i = 0; i < this.notes[0].epismata.length; i++) {
-	        mark = this.notes[0].epismata[i];
-	
-	        if (mark.positionHint === _ExsurgeChant.MarkingPositionHint.Default) mark.positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	      }
-	
-	      for (i = 0; i < this.notes[1].epismata.length; i++) {
-	        mark = this.notes[1].epismata[i];
-	
-	        if (mark.positionHint === _ExsurgeChant.MarkingPositionHint.Default) mark.positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	      }
+	      this.positionClivisMarkings(this.notes[0], this.notes[1]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -7962,19 +8343,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Distropha, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	
-	      for (var i = 0; i < this.notes.length; i++) {
-	        var positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	
-	        // logic here is this: if first episema is default position, place it above.
-	        // then place the second one (if there is one) opposite of the first.
-	        for (var j = 0; j < this.notes[i].epismata.length; j++) {
-	          if (this.notes[i].epismata[j].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[i].epismata[j].positionHint = positionHint;else positionHint = this.notes[i].epismata[j].positionHint;
-	
-	          // now place the next one in the opposite position
-	          positionHint = positionHint === _ExsurgeChant.MarkingPositionHint.Above ? _ExsurgeChant.MarkingPositionHint.Below : _ExsurgeChant.MarkingPositionHint.Above;
-	        }
-	      }
+	      this.positionEpismataAbove(this.notes[0]);
+	      this.positionEpismataAbove(this.notes[1]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -8007,16 +8377,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Oriscus, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      var positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	
-	      // logic here is this: if first episema is default position, place it above.
-	      // then place the second one (if there is one) opposite of the first.
-	      for (var i = 0; i < this.notes[0].epismata.length; i++) {
-	        if (this.notes[0].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[0].epismata[i].positionHint = positionHint;else positionHint = this.notes[0].epismata[i].positionHint;
-	
-	        // now place the next one in the opposite position
-	        positionHint = positionHint === _ExsurgeChant.MarkingPositionHint.Above ? _ExsurgeChant.MarkingPositionHint.Below : _ExsurgeChant.MarkingPositionHint.Above;
-	      }
+	      this.positionEpismataAbove(this.notes[0]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -8122,6 +8483,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(PesSubpunctis, [{
+	    key: 'positionMarkings',
+	    value: function positionMarkings() {
+	      this.positionPodatusEpismata(this.notes[0], this.notes[1]);
+	      for (var i = 2; i < this.notes.length; ++i) {
+	        this.positionEpismataAbove(this.notes[i]);
+	      }
+	    }
+	  }, {
 	    key: 'performLayout',
 	    value: function performLayout(ctxt) {
 	      _get(Object.getPrototypeOf(PesSubpunctis.prototype), 'performLayout', this).call(this, ctxt);
@@ -8157,28 +8526,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Podatus, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      var marking, i;
-	
-	      // 1. episema on lower note by default be below, upper note above
-	      // 2. morae:
-	      //   a. if podatus difference is 1 and lower note is on a line,
-	      //      the lower mora should be below
-	      for (i = 0; i < this.notes[0].epismata.length; i++) {
-	        if (this.notes[0].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[0].epismata[i].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
-	      } // The mora on the first (lower) note needs to be below it, if the second note
-	      // is only one pitch above, and the first note is on a line.
-	      if (this.notes[1].staffPosition - this.notes[0].staffPosition === 1 && Math.abs(this.notes[0].staffPosition % 2) === 1) {
-	        if (this.notes[0].morae.length === 1) {
-	          marking = this.notes[0].morae[0];
-	        } else if (this.notes[1].morae.length > 1) {
-	          marking = this.notes[1].morae[0];
-	        }
-	        if (marking) marking.positionHint = _ExsurgeChant.MarkingPositionHint.Below;
-	      }
-	
-	      for (i = 0; i < this.notes[1].epismata.length; i++) {
-	        if (this.notes[1].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[1].epismata[i].positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	      }
+	      this.positionPodatusMarkings(this.notes[0], this.notes[1]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -8209,6 +8557,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(Porrectus, [{
+	    key: 'positionMarkings',
+	    value: function positionMarkings() {
+	      this.positionPorrectusMarkings(this.notes[0], this.notes[1], this.notes[2]);
+	    }
+	  }, {
 	    key: 'performLayout',
 	    value: function performLayout(ctxt) {
 	      _get(Object.getPrototypeOf(Porrectus.prototype), 'performLayout', this).call(this, ctxt);
@@ -8245,6 +8598,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(PorrectusFlexus, [{
+	    key: 'positionMarkings',
+	    value: function positionMarkings() {
+	      this.positionPorrectusFlexusMarkings(this.notes[0], this.notes[1], this.notes[2], this.notes[3]);
+	    }
+	  }, {
 	    key: 'performLayout',
 	    value: function performLayout(ctxt) {
 	      _get(Object.getPrototypeOf(PorrectusFlexus.prototype), 'performLayout', this).call(this, ctxt);
@@ -8315,17 +8673,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Punctum, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      var marking, i;
-	      var positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	
-	      // logic here is this: if first episema is default position, place it above.
-	      // then place the second one (if there is one) opposite of the first.
-	      for (i = 0; i < this.notes[0].epismata.length; i++) {
-	        if (this.notes[0].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[0].epismata[i].positionHint = positionHint;else positionHint = this.notes[0].epismata[i].positionHint;
-	
-	        // now place the next one in the opposite position
-	        positionHint = positionHint === _ExsurgeChant.MarkingPositionHint.Above ? _ExsurgeChant.MarkingPositionHint.Below : _ExsurgeChant.MarkingPositionHint.Above;
-	      }
+	      this.positionEpismataAbove(this.notes[0]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -8369,14 +8717,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Salicus, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      var marking, i, j;
-	
 	      // by default place episema below
 	      // fixme: is this correct?
-	      for (i = 0; i < this.notes.length; i++) {
-	        for (j = 0; j < this.notes[i].epismata.length; j++) {
-	          if (this.notes[i].epismata[j].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[i].epismata[j].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
-	        }
+	      for (var i = 0; i < this.notes.length; i++) {
+	        this.positionEpismataBelow(this.notes[i]);
 	      }
 	    }
 	  }, {
@@ -8425,15 +8769,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(SalicusFlexus, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      var marking, i, j;
-	
-	      // by default place episema below
-	      // fixme: is this correct?
-	      for (i = 0; i < this.notes.length; i++) {
-	        for (j = 0; j < this.notes[i].epismata.length; j++) {
-	          if (this.notes[i].epismata[j].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[i].epismata[j].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
-	        }
-	      }
+	      var hasTopEpisema = this.positionTorculusMarkings(this.notes[1], this.notes[2], this.notes[3]);
+	      this.positionEpismata(this.notes[0], hasTopEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -8486,17 +8823,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Scandicus, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      var marking, i;
-	
-	      // by default place first note epismata below
-	      for (i = 0; i < this.notes[0].epismata.length; i++) {
-	        if (this.notes[0].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[0].epismata[i].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
-	      }var positionHint = this.notes[2].shape === _Exsurge3.NoteShape.Virga ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below;
-	      for (i = 0; i < this.notes[1].epismata.length; i++) {
-	        if (this.notes[1].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[1].epismata[i].positionHint = positionHint;
-	      } // by default place third note epismata above
-	      for (i = 0; i < this.notes[2].epismata.length; i++) {
-	        if (this.notes[2].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[2].epismata[i].positionHint = _ExsurgeChant.MarkingPositionHint.Above;
+	      if (this.notes[2].shape === _Exsurge3.NoteShape.Virga) {
+	        this.positionPodatusMarkings(this.notes[0], this.notes[1]);
+	        this.positionEpismataAbove(this.notes[2]);
+	      } else {
+	        this.positionEpismataBelow(this.notes[0]);
+	        this.positionPodatusMarkings(this.notes[1], this.notes[2]);
 	      }
 	    }
 	
@@ -8543,20 +8875,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(ScandicusFlexus, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      var marking, i;
-	
-	      // by default place first note epismata below
-	      for (i = 0; i < this.notes[0].epismata.length; i++) {
-	        if (this.notes[0].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[0].epismata[i].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
-	      }var positionHint = this.notes[2].shape === _Exsurge3.NoteShape.Virga ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below;
-	      for (i = 0; i < this.notes[1].epismata.length; i++) {
-	        if (this.notes[1].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[1].epismata[i].positionHint = positionHint;
-	      } // by default place third note epismata above
-	      for (i = 0; i < this.notes[2].epismata.length; i++) {
-	        if (this.notes[2].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[2].epismata[i].positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	      } // by default place fourth note epismata above
-	      for (i = 0; i < this.notes[3].epismata.length; i++) {
-	        if (this.notes[3].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[3].epismata[i].positionHint = _ExsurgeChant.MarkingPositionHint.Above;
+	      if (this.notes[2].shape === _Exsurge3.NoteShape.Virga) {
+	        this.positionPodatusMarkings(this.notes[0], this.notes[1]);
+	        this.positionClivisMarkings(this.notes[2], this.notes[3]);
+	      } else {
+	        this.positionEpismataBelow(this.notes[0]);
+	        this.positionPodatusMarkings(this.notes[1], this.notes[2]);
+	        this.positionEpismataAbove(this.notes[3]);
 	      }
 	    }
 	  }, {
@@ -8603,42 +8928,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Torculus, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      var marking, i;
-	      var hasMiddleEpisema = false;
-	
-	      // first do the middle note to see if we should try to move
-	      // epismata on the other two lower notes
-	      for (i = 0; i < this.notes[1].epismata.length; i++) {
-	        marking = this.notes[1].epismata[i];
-	
-	        if (marking.positionHint === _ExsurgeChant.MarkingPositionHint.Default) {
-	          marking.positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	          hasMiddleEpisema = true;
-	        }
-	      }
-	
-	      // 1. episema on lower notes should be below, upper note above
-	      // 2. like the podatus, mora on lower note needs to below
-	      //    under certain circumstances
-	      if (this.notes[2].morae.length) {
-	        var morae = this.notes[2].morae;
-	        if (morae.length > 1) morae[0].horizontalOffset += this.notes[2].bounds.right() - this.notes[1].bounds.right();
-	        if (this.notes[1].staffPosition - this.notes[2].staffPosition === 1 && Math.abs(this.notes[2].staffPosition % 2) === 1) {
-	          morae.slice(-1)[0].positionHint = _ExsurgeChant.MarkingPositionHint.Below;
-	        }
-	      }
-	
-	      for (i = 0; i < this.notes[0].epismata.length; i++) {
-	        marking = this.notes[0].epismata[i];
-	
-	        if (marking.positionHint === _ExsurgeChant.MarkingPositionHint.Default) marking.positionHint = hasMiddleEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below;
-	      }
-	
-	      for (i = 0; i < this.notes[2].epismata.length; i++) {
-	        marking = this.notes[2].epismata[i];
-	
-	        if (marking.positionHint === _ExsurgeChant.MarkingPositionHint.Default) marking.positionHint = hasMiddleEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below;
-	      }
+	      this.positionTorculusMarkings(this.notes[0], this.notes[1], this.notes[2]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -8681,39 +8971,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(TorculusResupinus, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      var marking, i;
-	      var hasMiddleEpisema = false;
-	
-	      // first do the middle note to see if we should try to move
-	      // epismata on the other two lower notes
-	      for (i = 0; i < this.notes[1].epismata.length; i++) {
-	        marking = this.notes[1].epismata[i];
-	
-	        if (marking.positionHint === _ExsurgeChant.MarkingPositionHint.Default) {
-	          marking.positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	          hasMiddleEpisema = true;
-	        }
-	      }
-	
-	      // 1. episema on lower notes should be below, upper note above
-	      // 2. morae: fixme: implement
-	      for (i = 0; i < this.notes[0].epismata.length; i++) {
-	        marking = this.notes[0].epismata[i];
-	
-	        if (marking.positionHint === _ExsurgeChant.MarkingPositionHint.Default) marking.positionHint = hasMiddleEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below;
-	      }
-	
-	      for (i = 0; i < this.notes[2].epismata.length; i++) {
-	        marking = this.notes[2].epismata[i];
-	
-	        if (marking.positionHint === _ExsurgeChant.MarkingPositionHint.Default) marking.positionHint = hasMiddleEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below;
-	      }
-	
-	      for (i = 0; i < this.notes[3].epismata.length; i++) {
-	        marking = this.notes[3].epismata[i];
-	
-	        if (marking.positionHint === _ExsurgeChant.MarkingPositionHint.Default) marking.positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	      }
+	      this.positionPorrectusMarkings(this.notes[1], this.notes[2], this.notes[3]);
+	      this.positionClivisEpismata(this.notes[1], this.notes[0]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -8759,45 +9018,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(TorculusResupinusFlexus, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      var marking, i;
-	      var hasMiddleEpisema = false;
-	
-	      // first do the middle note to see if we should try to move
-	      // epismata on the other two lower notes
-	      for (i = 0; i < this.notes[1].epismata.length; i++) {
-	        marking = this.notes[1].epismata[i];
-	
-	        if (marking.positionHint === _ExsurgeChant.MarkingPositionHint.Default) {
-	          marking.positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	          hasMiddleEpisema = true;
-	        }
-	      }
-	
-	      // 1. episema on lower notes should be below, upper note above
-	      // 2. morae: fixme: implement
-	      for (i = 0; i < this.notes[0].epismata.length; i++) {
-	        marking = this.notes[0].epismata[i];
-	
-	        if (marking.positionHint === _ExsurgeChant.MarkingPositionHint.Default) marking.positionHint = hasMiddleEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below;
-	      }
-	
-	      for (i = 0; i < this.notes[2].epismata.length; i++) {
-	        marking = this.notes[2].epismata[i];
-	
-	        if (marking.positionHint === _ExsurgeChant.MarkingPositionHint.Default) marking.positionHint = hasMiddleEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below;
-	      }
-	
-	      for (i = 0; i < this.notes[3].epismata.length; i++) {
-	        marking = this.notes[3].epismata[i];
-	
-	        if (marking.positionHint === _ExsurgeChant.MarkingPositionHint.Default) marking.positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	      }
-	
-	      for (i = 0; i < this.notes[4].epismata.length; i++) {
-	        marking = this.notes[4].epismata[i];
-	
-	        if (marking.positionHint === _ExsurgeChant.MarkingPositionHint.Default) marking.positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	      }
+	      this.positionPorrectusFlexusMarkings(this.notes[1], this.notes[2], this.notes[3], this.notes[4]);
+	      this.positionClivisEpismata(this.notes[1], this.notes[0]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -8853,20 +9075,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Tristropha, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      var marking, i, j;
-	
-	      for (i = 0; i < this.notes.length; i++) {
-	        var positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	
-	        // logic here is this: if first episema is default position, place it above.
-	        // then place the second one (if there is one) opposite of the first.
-	        for (j = 0; j < this.notes[i].epismata.length; j++) {
-	          if (this.notes[i].epismata[j].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[i].epismata[j].positionHint = positionHint;else positionHint = this.notes[i].epismata[j].positionHint;
-	
-	          // now place the next one in the opposite position
-	          positionHint = positionHint === _ExsurgeChant.MarkingPositionHint.Above ? _ExsurgeChant.MarkingPositionHint.Below : _ExsurgeChant.MarkingPositionHint.Above;
-	        }
-	      }
+	      this.positionEpismataAbove(this.notes[0]);
+	      this.positionEpismataAbove(this.notes[1]);
+	      this.positionEpismataAbove(this.notes[2]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -8899,16 +9110,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Virga, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      var positionHint = _ExsurgeChant.MarkingPositionHint.Above;
-	
-	      // logic here is this: if first episema is default position, place it above.
-	      // then place the second one (if there is one) opposite of the first.
-	      for (var i = 0; i < this.notes[0].epismata.length; i++) {
-	        if (this.notes[0].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[0].epismata[i].positionHint = positionHint;else positionHint = this.notes[0].epismata[i].positionHint;
-	
-	        // now place the next one in the opposite position
-	        positionHint = positionHint === _ExsurgeChant.MarkingPositionHint.Above ? _ExsurgeChant.MarkingPositionHint.Below : _ExsurgeChant.MarkingPositionHint.Above;
-	      }
+	      this.positionEpismataAbove(this.notes[0]);
 	    }
 	  }, {
 	    key: 'performLayout',
