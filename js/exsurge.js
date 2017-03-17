@@ -230,7 +230,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      score.performLayout(ctxt, function () {
 	        score.layoutChantLines(ctxt, width, function () {
 	          // render the score to svg code
-	          _element.innerHTML = score.createSvgFragment(ctxt);
+	          _element.appendElement(score.createSvgNode(ctxt));
 	        });
 	      });
 	    };
@@ -242,7 +242,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  document.registerElement = document.registerElement || function () {};
 	  // register the custom element
-	  var ChantVisualElement = document.registerElement('chant-visual', {
+	  document.registerElement('chant-visual', {
 	    prototype: ChantVisualElementPrototype
 	  });
 	}
@@ -765,8 +765,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    wordExceptions["euge"] = ["eu", "ge"];
 	    wordExceptions["seu"] = ["seu"];
 	
-	    _this.vowels = ['a', 'e', 'i', 'o', 'u', 'á', 'é', 'í', 'ó', 'ú', 'æ', 'œ', 'ǽ', // no accented œ in unicode?
-	    'y']; // y is treated as a vowel; not native to Latin but useful for words borrowed from Greek
+	    _this.vowels = ['a', 'e', 'i', 'o', 'u', 'á', 'é', 'í', 'ó', 'ú', 'ä', 'ë', 'ï', 'ö', 'ü', 'ā', 'ē', 'ī', 'ō', 'ū', 'ă', 'ĕ', 'ĭ', 'ŏ', 'ŭ', 'å', 'e̊', 'o̊', 'ů', 'æ', 'œ', 'ǽ', // no accented œ in unicode?
+	    'y', 'ý', 'ÿ']; // y is treated as a vowel; not native to Latin but useful for words borrowed from Greek
 	
 	    _this.vowelsThatMightBeConsonants = ['i', 'u'];
 	
@@ -1992,7 +1992,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.ChantNotationElement = exports.Annotations = exports.Annotation = exports.DropCap = exports.AboveLinesText = exports.Lyric = exports.LyricType = exports.TextElement = exports.CurlyBraceVisualizer = exports.RoundBraceVisualizer = exports.GlyphVisualizer = exports.VirgaLineVisualizer = exports.NeumeLineVisualizer = exports.DividerLineVisualizer = exports.ChantLayoutElement = exports.ChantContext = exports.TextMeasuringStrategy = exports.QuickSvg = exports.GlyphCode = undefined;
+	exports.ChantNotationElement = exports.Annotations = exports.Annotation = exports.DropCap = exports.AboveLinesText = exports.Lyric = exports.LyricArray = exports.LyricType = exports.TextElement = exports.CurlyBraceVisualizer = exports.RoundBraceVisualizer = exports.GlyphVisualizer = exports.VirgaLineVisualizer = exports.NeumeLineVisualizer = exports.DividerLineVisualizer = exports.ChantLayoutElement = exports.ChantContext = exports.TextMeasuringStrategy = exports.QuickSvg = exports.GlyphCode = undefined;
 	
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 	
@@ -2172,13 +2172,56 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return node;
 	  },
 	
+	  nodesForGlyph: function nodesForGlyph(glyph) {
+	    var nodes = [];
+	    for (var i = 0; i < glyph.paths.length; ++i) {
+	      var path = glyph.paths[i];
+	      nodes.push(QuickSvg.createNode(path.data ? 'path' : 'g', {
+	        d: path.data || undefined,
+	        fill: path.type === 'negative' ? '#fff' : undefined
+	      }));
+	    }
+	    return nodes;
+	  },
+	
+	  createNode: function createNode(name, attributes, children) {
+	    var node = document.createElementNS(this.ns, name);
+	    if (attributes && attributes.source) {
+	      node.source = attributes.source;
+	      delete attributes.source;
+	    }
+	    for (var attr in attributes) {
+	      if (attributes.hasOwnProperty(attr) && typeof attributes[attr] !== 'undefined') {
+	        var val = attributes[attr];
+	        var match = attr.match(/^([^:]+):([^:]+)$/);
+	        if (match) {
+	          node.setAttributeNS(this[match[1]], match[2], val);
+	        } else {
+	          node.setAttribute(attr, val);
+	        }
+	      }
+	    }
+	    if (children) {
+	      if (typeof children === 'string') {
+	        node.textContent = children;
+	      } else if (children.constructor === [].constructor) {
+	        for (var i = 0; i < children.length; ++i) {
+	          node.appendChild(children[i]);
+	        }
+	      } else {
+	        node.appendChild(children);
+	      }
+	    }
+	    return node;
+	  },
+	
 	  createFragment: function createFragment(name, attributes, child) {
 	    if (child === undefined || child === null) child = '';
 	
 	    var fragment = '<' + name + ' ';
 	
 	    for (var attr in attributes) {
-	      if (attributes.hasOwnProperty(attr)) fragment += attr + '="' + attributes[attr] + '" ';
+	      if (attributes.hasOwnProperty(attr) && typeof attributes[attr] !== 'undefined') fragment += attr + '="' + attributes[attr] + '" ';
 	    }
 	
 	    fragment += '>' + child + '</' + name + '>';
@@ -2236,9 +2279,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    this.textMeasuringStrategy = textMeasuringStrategy;
 	    this.defs = {};
+	    this.defsNode = QuickSvg.createNode('defs');
 	
 	    // font styles
-	    this.lyricTextSize = 16; // in points?
+	    this.lyricTextSize = 16; // in pixels
 	    this.lyricTextFont = "'Palatino Linotype', 'Book Antiqua', Palatino, serif";
 	    this.lyricTextColor = "#000";
 	
@@ -2261,19 +2305,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.glyphPunctumWidth = _Exsurge2.Glyphs.PunctumQuadratum.bounds.width;
 	    this.glyphPunctumHeight = _Exsurge2.Glyphs.PunctumQuadratum.bounds.height;
 	
-	    // fixme: for now, we just set these using the glyph scales as noted above, presuming a
-	    // staff line size of 0.5 in. Really what we should do is scale the punctum size based
-	    // on the text metrics, right? 1 punctum ~ x height size?
-	    this.glyphScaling = 1.0 / 16.0;
-	
-	    this.staffInterval = this.glyphPunctumWidth * this.glyphScaling;
-	
-	    // setup the line weights for the various elements.
-	    // we
-	    this.staffLineWeight = Math.round(this.glyphPunctumWidth * this.glyphScaling / 8);
-	    this.neumeLineWeight = this.staffLineWeight; // the weight of connecting lines in the glyphs.
-	    this.dividerLineWeight = this.neumeLineWeight; // of quarter bar, half bar, etc.
-	    this.episemaLineWeight = this.neumeLineWeight; // of horizontal episemae
+	    // max space to add between notations when justifying, in multiples of this.staffInterval
+	    this.maxExtraSpaceInStaffIntervals = 1;
 	
 	    // for keeping track of the clef
 	    this.activeClef = null;
@@ -2296,21 +2329,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.canvasCtxt.setTransform(this.pixelRatio, 0, 0, this.pixelRatio, 0, 0);
 	
 	    if (textMeasuringStrategy === TextMeasuringStrategy.Svg) {
-	      this.svgTextMeasurer = QuickSvg.svg(1, 1);
+	      this.svgTextMeasurer = QuickSvg.svg(0, 0);
 	      this.svgTextMeasurer.setAttribute('id', "TextMeasurer");
-	      document.querySelector('body').appendChild(this.svgTextMeasurer);
+	      this.svgTextMeasurer.setAttribute('style', "position:absolute");
+	      document.body.insertBefore(this.svgTextMeasurer, document.body.firstChild);
 	    }
-	
-	    // measure the size of a hyphen for the lyrics
-	    var hyphen = new Lyric(this, "-", LyricType.SingleSyllable);
-	    this.hyphenWidth = hyphen.bounds.width;
-	
-	    this.minLyricWordSpacing = this.hyphenWidth;
-	
-	    this.intraNeumeSpacing = this.staffInterval / 2.0;
 	
 	    // for connecting neume syllables...
 	    this.syllableConnector = '-';
+	
+	    // fixme: for now, we just set these using the glyph scales as noted above, presuming a
+	    // staff line size of 0.5 in. Really what we should do is scale the punctum size based
+	    // on the text metrics, right? 1 punctum ~ x height size?
+	    this.setGlyphScaling(1.0 / 16.0);
+	
+	    // minimum space between puncta of different syllables, in multiples of this.intraNeumeSpacing
+	    this.intraSyllabicMultiplier = 2.5;
 	
 	    this.drawGuides = false;
 	    this.drawDebuggingBounds = true;
@@ -2346,6 +2380,53 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(ChantContext, [{
+	    key: 'createStyleCss',
+	    value: function createStyleCss() {
+	      var textStyles = ['lyric', 'aboveLinesText', 'dropCap', 'annotation'];
+	      var style = '';
+	      for (var i = 0; i < textStyles.length; ++i) {
+	        var key = i === 1 ? 'al' : textStyles[i],
+	            color = this[key + 'TextColor'],
+	            font = this[key + 'TextFont'],
+	            size = this[key + 'TextSize'];
+	        style += '.' + textStyles[i] + '{fill:' + color + ';font-family:' + font + ';font-size:' + size + 'px;font-kerning:normal}';
+	      }
+	      return style;
+	    }
+	  }, {
+	    key: 'createStyleNode',
+	    value: function createStyleNode() {
+	      var node = QuickSvg.createNode('style', {});
+	      node.textContent = this.createStyleCss(this);
+	      return node;
+	    }
+	  }, {
+	    key: 'createStyle',
+	    value: function createStyle() {
+	      return '<style>' + this.createStyleCss(this) + '</style>';
+	    }
+	  }, {
+	    key: 'setGlyphScaling',
+	    value: function setGlyphScaling(glyphScaling) {
+	      this.glyphScaling = glyphScaling;
+	
+	      this.staffInterval = this.glyphPunctumWidth * this.glyphScaling;
+	
+	      // setup the line weights for the various elements.
+	      this.staffLineWeight = Math.round(this.glyphPunctumWidth * this.glyphScaling / 8);
+	      this.neumeLineWeight = this.staffLineWeight; // the weight of connecting lines in the glyphs.
+	      this.dividerLineWeight = this.neumeLineWeight; // of quarter bar, half bar, etc.
+	      this.episemaLineWeight = this.neumeLineWeight; // of horizontal episemae
+	
+	      // measure the size of a hyphen for the lyrics
+	      var hyphen = new Lyric(this, this.syllableConnector, LyricType.SingleSyllable);
+	      this.hyphenWidth = hyphen.bounds.width;
+	
+	      this.minLyricWordSpacing = this.hyphenWidth;
+	
+	      this.intraNeumeSpacing = this.staffInterval / 2.0;
+	    }
+	  }, {
 	    key: 'calculateHeightFromStaffPosition',
 	    value: function calculateHeightFromStaffPosition(staffPosition) {
 	      return -staffPosition * this.staffInterval;
@@ -2422,6 +2503,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'draw',
 	    value: function draw(ctxt) {}
 	
+	    // returns svg element
+	
+	  }, {
+	    key: 'createSvgNode',
+	    value: function createSvgNode(ctxt) {
+	      throw "ChantLayout Elements must implement createSvgNode(ctxt)";
+	    }
+	
 	    // returns svg code for the element, used for printing support
 	
 	  }, {
@@ -2473,6 +2562,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      canvasCtxt.moveTo(this.bounds.x - this.origin.x, this.bounds.y);
 	      canvasCtxt.lineTo(this.bounds.x - this.origin.x, this.bounds.y + this.bounds.height);
 	      canvasCtxt.stroke();
+	    }
+	  }, {
+	    key: 'createSvgNode',
+	    value: function createSvgNode(ctxt) {
+	
+	      return QuickSvg.createNode('rect', {
+	        'x': this.bounds.x,
+	        'y': this.bounds.y,
+	        'width': ctxt.dividerLineWeight,
+	        'height': this.bounds.height,
+	        'fill': ctxt.dividerLineColor,
+	        'class': 'dividerLine'
+	      });
 	    }
 	  }, {
 	    key: 'createSvgFragment',
@@ -2556,6 +2658,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      canvasCtxt.stroke();
 	    }
 	  }, {
+	    key: 'createSvgNode',
+	    value: function createSvgNode(ctxt) {
+	
+	      return QuickSvg.createNode('rect', {
+	        'x': this.bounds.x,
+	        'y': this.bounds.y,
+	        'width': ctxt.neumeLineWeight,
+	        'height': this.bounds.height,
+	        'fill': ctxt.neumeLineColor,
+	        'class': 'neumeLine'
+	      });
+	    }
+	  }, {
 	    key: 'createSvgFragment',
 	    value: function createSvgFragment(ctxt) {
 	
@@ -2612,6 +2727,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      canvasCtxt.stroke();
 	    }
 	  }, {
+	    key: 'createSvgNode',
+	    value: function createSvgNode(ctxt) {
+	
+	      return QuickSvg.createNode('rect', {
+	        'x': this.bounds.x,
+	        'y': this.bounds.y,
+	        'width': ctxt.neumeLineWeight,
+	        'height': this.bounds.height,
+	        'fill': ctxt.neumeLineColor,
+	        'class': 'neumeLine'
+	      });
+	    }
+	  }, {
 	    key: 'createSvgFragment',
 	    value: function createSvgFragment(ctxt) {
 	
@@ -2663,6 +2791,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	          'class': 'glyph',
 	          transform: 'scale(' + ctxt.glyphScaling + ')'
 	        }, glyphSrc);
+	
+	        ctxt.defsNode.appendChild(QuickSvg.createNode('g', {
+	          id: this.glyphCode,
+	          'class': 'glyph',
+	          transform: 'scale(' + ctxt.glyphScaling + ')'
+	        }, QuickSvg.nodesForGlyph(this.glyph)));
 	      }
 	
 	      this.align = this.glyph.align;
@@ -2700,10 +2834,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	      canvasCtxt.translate(-x, -y);
 	    }
 	  }, {
+	    key: 'createSvgNode',
+	    value: function createSvgNode(ctxt, source) {
+	      return QuickSvg.createNode('use', {
+	        source: source,
+	        'source-index': source.sourceIndex,
+	        'xlink:href': '#' + this.glyphCode,
+	        x: this.bounds.x + this.origin.x,
+	        y: this.bounds.y + this.origin.y
+	      });
+	    }
+	  }, {
 	    key: 'createSvgFragment',
-	    value: function createSvgFragment(ctxt) {
-	
+	    value: function createSvgFragment(ctxt, source) {
 	      return QuickSvg.createFragment('use', {
+	        'source-index': source.sourceIndex,
 	        'xlink:href': '#' + this.glyphCode,
 	        x: this.bounds.x + this.origin.x,
 	        y: this.bounds.y + this.origin.y
@@ -2730,9 +2875,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	    _this5.isAbove = isAbove;
-	    _this5.braceHeight = ctxt.staffInterval / 2;
+	    _this5.braceHeight = 3 * ctxt.staffInterval / 2;
 	
-	    _this5.bounds = new _Exsurge.Rect(x1, y, x2 - x1, _this5.braceHeight);
+	    _this5.bounds = new _Exsurge.Rect(x1, isAbove ? y - _this5.braceHeight : y, x2 - x1, _this5.braceHeight);
 	
 	    _this5.origin.x = 0;
 	    _this5.origin.y = 0;
@@ -2740,6 +2885,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(RoundBraceVisualizer, [{
+	    key: 'createSvgNode',
+	    value: function createSvgNode(ctxt) {
+	      var node = QuickSvg.createNode('path', {
+	        'd': this.generatePathString(),
+	        'stroke': ctxt.neumeLineColor,
+	        'stroke-width': ctxt.staffLineWeight + 'px',
+	        'fill': 'none',
+	        'class': 'brace'
+	      });
+	
+	      if (this.acuteAccent) {
+	
+	        return QuickSvg.createNode('g', {
+	          'class': 'accentedBrace'
+	        }, [node, this.acuteAccent.createSvgNode(ctxt)]);
+	      } else return node;
+	    }
+	  }, {
 	    key: 'createSvgFragment',
 	    value: function createSvgFragment(ctxt) {
 	      var fragment = QuickSvg.createFragment('path', {
@@ -2772,7 +2935,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var y, dx, dy;
 	
 	      dx = width / 6;
-	      dy = this.bounds.height * 3;
+	      dy = this.bounds.height;
 	      if (this.isAbove) {
 	        y = this.bounds.bottom();
 	        dy = -dy;
@@ -2840,6 +3003,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	
 	  _createClass(CurlyBraceVisualizer, [{
+	    key: 'createSvgNode',
+	    value: function createSvgNode(ctxt) {
+	      var node = QuickSvg.createNode('path', {
+	        'd': this.generatePathString(),
+	        'stroke': ctxt.neumeLineColor,
+	        'stroke-width': ctxt.staffLineWeight + 'px',
+	        'fill': 'none',
+	        'class': 'brace'
+	      });
+	
+	      if (this.acuteAccent) {
+	
+	        return QuickSvg.createNode('g', {
+	          'class': 'accentedBrace'
+	        }, [node, this.acuteAccent.createSvgFragment(ctxt)]);
+	      } else return node;
+	    }
+	  }, {
 	    key: 'createSvgFragment',
 	    value: function createSvgFragment(ctxt) {
 	      var fragment = QuickSvg.createFragment('path', {
@@ -2943,7 +3124,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var TextElement = exports.TextElement = function (_ChantLayoutElement7) {
 	  _inherits(TextElement, _ChantLayoutElement7);
 	
-	  function TextElement(ctxt, text, fontFamily, fontSize, textAnchor) {
+	  function TextElement(ctxt, text, fontFamily, fontSize, textAnchor, sourceIndex) {
 	    _classCallCheck(this, TextElement);
 	
 	    // set these to some sane values for now...
@@ -2960,6 +3141,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _this7.fontFamily = fontFamily;
 	    _this7.fontSize = fontSize;
 	    _this7.textAnchor = textAnchor;
+	    _this7.sourceIndex = sourceIndex;
 	    _this7.dominantBaseline = 'baseline'; // default placement
 	
 	    _this7.generateSpansFromText(ctxt, text);
@@ -3053,7 +3235,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (length === 0) return 0;
 	      if (!length) length = Infinity;
 	      var canvasCtxt = ctxt.canvasCtxt;
-	      var baseFont = this.fontSize + "px " + this.fontFamily;
 	      var width = 0;
 	      var subStringLength = 0;
 	      for (var i = 0; i < this.spans.length; i++) {
@@ -3063,7 +3244,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (span.properties.indexOf('font-style:italic;') >= 0) font += 'italic ';
 	        if (span.properties.indexOf("font-variant:small-caps;") >= 0) font += 'small-caps ';
 	        if (span.properties.indexOf('font-weight:bold;') >= 0) font += 'bold ';
-	        font += baseFont;
+	        var match = span.properties.match(/(?:^|;)\s*font-size:([^;]+)(?:$|;)/);
+	        if (match) {
+	          font += match[1] + ' ';
+	        } else {
+	          font += this.fontSize + 'px ';
+	        }
+	        match = span.properties.match(/(?:^|;)\s*font-family:([^;]+)(?:$|;)/);
+	        if (match) {
+	          font += match[1];
+	        } else {
+	          font += this.fontFamily;
+	        }
 	        canvasCtxt.font = font;
 	        var metrics = canvasCtxt.measureText(myText, this.bounds.x, this.bounds.y);
 	        width += metrics.width;
@@ -3082,12 +3274,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.origin.x = 0;
 	
 	      if (ctxt.textMeasuringStrategy === TextMeasuringStrategy.Svg) {
-	        var xml = '<svg xmlns="http://www.w3.org/2000/svg">' + this.createSvgFragment(ctxt) + '</svg>';
-	        var doc = new DOMParser().parseFromString(xml, 'application/xml');
-	
 	        while (ctxt.svgTextMeasurer.firstChild) {
 	          ctxt.svgTextMeasurer.firstChild.remove();
-	        }ctxt.svgTextMeasurer.appendChild(ctxt.svgTextMeasurer.ownerDocument.importNode(doc.documentElement, true).firstChild);
+	        }ctxt.svgTextMeasurer.appendChild(this.createSvgNode(ctxt));
+	        ctxt.svgTextMeasurer.appendChild(ctxt.createStyleNode());
 	
 	        var bbox = ctxt.svgTextMeasurer.firstChild.getBBox();
 	        this.bounds.width = bbox.width;
@@ -3124,6 +3314,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }, {
+	    key: 'createSvgNode',
+	    value: function createSvgNode(ctxt) {
+	
+	      var spans = [];
+	
+	      for (var i = 0; i < this.spans.length; i++) {
+	        var options = {};
+	
+	        if (this.spans[i].properties) options['style'] = this.spans[i].properties;
+	
+	        spans.push(QuickSvg.createNode('tspan', options, this.spans[i].text));
+	      }
+	
+	      var styleProperties = this.getExtraStyleProperties(ctxt);
+	
+	      return QuickSvg.createNode('text', {
+	        'source': this,
+	        'source-index': this.sourceIndex,
+	        'x': this.bounds.x,
+	        'y': this.bounds.y,
+	        'class': this.getCssClasses().trim(),
+	        'text-anchor': this.textAnchor,
+	        //'dominant-baseline': this.dominantBaseline, // hanging baseline doesn't work in Safari
+	        'style': styleProperties
+	      }, spans);
+	    }
+	  }, {
 	    key: 'createSvgFragment',
 	    value: function createSvgFragment(ctxt) {
 	
@@ -3137,9 +3354,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        spans += QuickSvg.createFragment('tspan', options, TextElement.escapeForTspan(this.spans[i].text));
 	      }
 	
-	      var styleProperties = "font-family:" + this.fontFamily + ";font-size:" + this.fontSize + "px" + ";font-kerning:normal;" + this.getExtraStyleProperties(ctxt);
+	      var styleProperties = this.getExtraStyleProperties(ctxt);
 	
 	      return QuickSvg.createFragment('text', {
+	        'source-index': this.sourceIndex,
 	        'x': this.bounds.x,
 	        'y': this.bounds.y,
 	        'class': this.getCssClasses().trim(),
@@ -3169,18 +3387,57 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Directive: 4 // for asterisks, "ij." elements, or other performance notes.
 	};
 	
+	var LyricArray = exports.LyricArray = {
+	  getLeft: function getLeft(lyricArray) {
+	    if (lyricArray.length === 0) return NaN;
+	
+	    var x = Number.MAX_VALUE;
+	    for (var i = 0; i < lyricArray.length; i++) {
+	      if (lyricArray[i]) x = Math.min(x, lyricArray[i].notation.bounds.x + lyricArray[i].bounds.x);
+	    }
+	
+	    return x;
+	  },
+	
+	  getRight: function getRight(lyricArray) {
+	    if (lyricArray.length === 0) return NaN;
+	
+	    var x = Number.MIN_VALUE;
+	    for (var i = 0; i < lyricArray.length; i++) {
+	      if (lyricArray[i]) x = Math.max(x, lyricArray[i].notation.bounds.x + lyricArray[i].bounds.x + lyricArray[i].bounds.width);
+	    }
+	
+	    return x;
+	  },
+	
+	  mergeIn: function mergeIn(lyricArray, newLyrics) {
+	    for (var i = 0; i < newLyrics.length; ++i) {
+	      if (newLyrics[i].originalText) lyricArray[i] = newLyrics[i];
+	    }
+	  },
+	
+	  setNotation: function setNotation(lyricArray, notation) {
+	    notation.lyrics = lyricArray;
+	    for (var i = 0; i < lyricArray.length; ++i) {
+	      lyricArray[i].notation = notation;
+	    }
+	  }
+	};
+	
 	var Lyric = exports.Lyric = function (_TextElement) {
 	  _inherits(Lyric, _TextElement);
 	
-	  function Lyric(ctxt, text, lyricType) {
+	  function Lyric(ctxt, text, lyricType, notation, sourceIndex) {
 	    _classCallCheck(this, Lyric);
 	
 	    // save the original text in case we need to later use the lyric
 	    // in a dropcap...
 	
-	    var _this8 = _possibleConstructorReturn(this, Object.getPrototypeOf(Lyric).call(this, ctxt, (ctxt.lyricTextStyle || '') + text, ctxt.lyricTextFont, ctxt.lyricTextSize, 'start'));
+	    var _this8 = _possibleConstructorReturn(this, Object.getPrototypeOf(Lyric).call(this, ctxt, (ctxt.lyricTextStyle || '') + text, ctxt.lyricTextFont, ctxt.lyricTextSize, 'start', sourceIndex));
 	
 	    _this8.originalText = text;
+	
+	    _this8.notation = notation;
 	
 	    if (typeof lyricType === 'undefined' || lyricType === null || lyricType === "") _this8.lyricType = LyricType.SingleSyllable;else _this8.lyricType = lyricType;
 	
@@ -3231,6 +3488,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.lastSpanText = "";
 	        this.lastSpanTextWithConnector = "";
 	      }
+	    }
+	  }, {
+	    key: 'getLeft',
+	    value: function getLeft() {
+	      return this.notation.bounds.x + this.bounds.x;
+	    }
+	  }, {
+	    key: 'getRight',
+	    value: function getRight(index) {
+	      return this.notation.bounds.x + this.bounds.x + this.bounds.width;
 	    }
 	  }, {
 	    key: 'recalculateMetrics',
@@ -3303,8 +3570,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'generateDropCap',
 	    value: function generateDropCap(ctxt) {
-	
-	      var dropCap = new DropCap(ctxt, this.originalText.substring(0, 1));
+	      if (this.dropCap) return this.dropCap;
+	      var dropCap = this.dropCap = new DropCap(ctxt, this.originalText.substring(0, 1), this.sourceIndex);
+	      this.sourceIndex++;
 	
 	      // if the dropcap is a single character syllable (vowel) that is the
 	      // beginning of the word, then we use a hyphen in place of the lyric text
@@ -3340,6 +3608,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return props;
 	    }
 	  }, {
+	    key: 'createSvgNode',
+	    value: function createSvgNode(ctxt) {
+	      if (this.spans.length > 0) {
+	        if (this.needsConnector) this.spans[this.spans.length - 1].text = this.lastSpanTextWithConnector;else this.spans[this.spans.length - 1].text = this.lastSpanText;
+	      }
+	
+	      return _get(Object.getPrototypeOf(Lyric.prototype), 'createSvgNode', this).call(this, ctxt);
+	    }
+	  }, {
 	    key: 'createSvgFragment',
 	    value: function createSvgFragment(ctxt) {
 	      if (this.spans.length > 0) {
@@ -3360,10 +3637,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {String} text
 	   */
 	
-	  function AboveLinesText(ctxt, text) {
+	  function AboveLinesText(ctxt, text, sourceIndex) {
 	    _classCallCheck(this, AboveLinesText);
 	
-	    var _this9 = _possibleConstructorReturn(this, Object.getPrototypeOf(AboveLinesText).call(this, ctxt, (ctxt.alTextStyle || '') + text, ctxt.alTextFont, ctxt.alTextSize, 'start'));
+	    var _this9 = _possibleConstructorReturn(this, Object.getPrototypeOf(AboveLinesText).call(this, ctxt, (ctxt.alTextStyle || '') + text, ctxt.alTextFont, ctxt.alTextSize, 'start', sourceIndex));
 	
 	    _this9.padding = ctxt.staffInterval / 2;
 	    return _this9;
@@ -3386,10 +3663,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {String} text
 	   */
 	
-	  function DropCap(ctxt, text) {
+	  function DropCap(ctxt, text, sourceIndex) {
 	    _classCallCheck(this, DropCap);
 	
-	    var _this10 = _possibleConstructorReturn(this, Object.getPrototypeOf(DropCap).call(this, ctxt, text, (ctxt.dropCapTextStyle || '') + ctxt.dropCapTextFont, ctxt.dropCapTextSize, 'middle'));
+	    var _this10 = _possibleConstructorReturn(this, Object.getPrototypeOf(DropCap).call(this, ctxt, text, (ctxt.dropCapTextStyle || '') + ctxt.dropCapTextFont, ctxt.dropCapTextSize, 'middle', sourceIndex));
 	
 	    _this10.padding = ctxt.staffInterval * 2;
 	    return _this10;
@@ -3498,6 +3775,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.updateBounds(-1);
 	    }
 	  }, {
+	    key: 'createSvgNode',
+	    value: function createSvgNode(ctxt) {
+	      this.updateBounds();
+	      var result = this.annotations.map(function (annotation) {
+	        return annotation.createSvgNode(ctxt);
+	      });
+	      this.updateBounds(-1);
+	      return result;
+	    }
+	  }, {
 	    key: 'createSvgFragment',
 	    value: function createSvgFragment(ctxt) {
 	      this.updateBounds();
@@ -3542,12 +3829,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.lyrics.length !== 0) return true;else return false;
 	    }
 	  }, {
-	    key: 'getLyricLeft',
-	    value: function getLyricLeft(index) {
-	      // warning: no error checking on index or on whether lyric[index] is valid
-	      return this.bounds.x + this.lyrics[index].bounds.x;
-	    }
-	  }, {
 	    key: 'getAllLyricsLeft',
 	    value: function getAllLyricsLeft() {
 	      if (this.lyrics.length === 0) return this.bounds.right();
@@ -3558,12 +3839,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	
 	      return this.bounds.x + x;
-	    }
-	  }, {
-	    key: 'getLyricRight',
-	    value: function getLyricRight(index) {
-	      // warning: no error checking on index or on whether lyric[index] is valid
-	      return this.bounds.x + this.lyrics[index].bounds.x + this.lyrics[index].bounds.width;
 	    }
 	  }, {
 	    key: 'getAllLyricsRight',
@@ -3611,7 +3886,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'performLayout',
 	    value: function performLayout(ctxt) {
 	
-	      if (this.trailingSpace < 0) this.trailingSpace = ctxt.intraNeumeSpacing * 4;
+	      if (this.trailingSpace < 0) this.trailingSpace = ctxt.intraNeumeSpacing * ctxt.intraSyllabicMultiplier;
 	
 	      // reset the bounds and the staff notations before doing a layout
 	      this.visualizers = [];
@@ -3660,12 +3935,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }canvasCtxt.translate(-this.bounds.x, 0);
 	    }
 	  }, {
+	    key: 'createSvgNode',
+	    value: function createSvgNode(ctxt) {
+	      var inner = [];
+	
+	      for (var i = 0; i < this.visualizers.length; i++) {
+	        inner.push(this.visualizers[i].createSvgNode(ctxt, this));
+	      }if (inner.length) {
+	        inner = [QuickSvg.createNode('g', { class: 'Notations' }, inner)];
+	      }
+	
+	      for (i = 0; i < this.lyrics.length; i++) {
+	        inner.push(this.lyrics[i].createSvgNode(ctxt));
+	      }if (this.alText) for (i = 0; i < this.alText.length; i++) {
+	        inner.push(this.alText[i].createSvgNode(ctxt));
+	      }return QuickSvg.createNode('g', {
+	        'source': this,
+	        // this.constructor.name will not be the same after being mangled by UglifyJS
+	        'class': 'ChantNotationElement ' + this.constructor.name,
+	        'transform': 'translate(' + this.bounds.x + ',' + 0 + ')'
+	      }, inner);
+	    }
+	  }, {
 	    key: 'createSvgFragment',
 	    value: function createSvgFragment(ctxt) {
 	      var inner = "";
 	
 	      for (var i = 0; i < this.visualizers.length; i++) {
-	        inner += this.visualizers[i].createSvgFragment(ctxt);
+	        inner += this.visualizers[i].createSvgFragment(ctxt, this);
 	      }for (i = 0; i < this.lyrics.length; i++) {
 	        inner += this.lyrics[i].createSvgFragment(ctxt);
 	      }if (this.alText) for (i = 0; i < this.alText.length; i++) {
@@ -3820,7 +4117,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    // various markings that can exist on a note, organized by type
 	    // for faster access and simpler code logic
-	    _this.epismata = [];
+	    _this.episemata = [];
 	    _this.morae = []; // silly to have an array of these, but gabc allows multiple morae per note!
 	
 	    // these are set on the note when they are needed, otherwise, they're undefined
@@ -3865,12 +4162,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.glyphVisualizer.draw(ctxt);
 	    }
 	  }, {
+	    key: 'createSvgNode',
+	    value: function createSvgNode(ctxt) {
+	
+	      this.glyphVisualizer.bounds.x = this.bounds.x;
+	      this.glyphVisualizer.bounds.y = this.bounds.y;
+	      return this.glyphVisualizer.createSvgNode(ctxt, this);
+	    }
+	  }, {
 	    key: 'createSvgFragment',
 	    value: function createSvgFragment(ctxt) {
 	
 	      this.glyphVisualizer.bounds.x = this.bounds.x;
 	      this.glyphVisualizer.bounds.y = this.bounds.y;
-	      return this.glyphVisualizer.createSvgFragment(ctxt);
+	      return this.glyphVisualizer.createSvgFragment(ctxt, this);
 	    }
 	  }]);
 	
@@ -4119,11 +4424,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	// source can be any object type. in the case of gabc, source is a text
 	// string that maps to a gabc word (e.g.: "no(g)bis(fg)").
 	// notations is an array of ChantNotationElements
-	exports.ChantMapping = function ChantMapping(source, notations) {
+	exports.ChantMapping = function ChantMapping(source, notations, sourceIndex) {
 	  _classCallCheck(this, ChantMapping);
 	
 	  this.source = source;
 	  this.notations = notations;
+	  this.sourceIndex = sourceIndex;
 	};
 	
 	/*
@@ -4168,13 +4474,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'updateNotations',
 	    value: function updateNotations(ctxt) {
 	
-	      var i;
+	      var i, j, mapping, notation;
 	
 	      // flatten all mappings into one array for N(0) access to notations
 	      this.notations = [];
 	      for (i = 0; i < this.mappings.length; i++) {
-	        this.notations = this.notations.concat(this.mappings[i].notations);
-	      } // find the starting clef...
+	        mapping = this.mappings[i];
+	        for (j = 0; j < mapping.notations.length; j++) {
+	          notation = mapping.notations[j];
+	          notation.score = this;
+	          notation.mapping = mapping;
+	          this.notations.push(notation);
+	        }
+	      }
+	
+	      // find the starting clef...
 	      // start with a default clef in case the notations don't provide one.
 	      this.startingClef = null;
 	      var defaultClef = new DoClef(1, 2);
@@ -4358,6 +4672,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }canvasCtxt.translate(-this.bounds.x, -this.bounds.y);
 	    }
 	  }, {
+	    key: 'createSvgNode',
+	    value: function createSvgNode(ctxt) {
+	
+	      // create defs section
+	      var node = [ctxt.defsNode.cloneNode(true)];
+	      node[0].appendChild(ctxt.createStyleNode());
+	
+	      for (var i = 0; i < this.lines.length; i++) {
+	        node.push(this.lines[i].createSvgNode(ctxt));
+	      }node = _Exsurge2.QuickSvg.createNode('g', {}, node);
+	
+	      node = _Exsurge2.QuickSvg.createNode('svg', {
+	        'xmlns': 'http://www.w3.org/2000/svg',
+	        'version': '1.1',
+	        'class': 'ChantScore',
+	        'width': this.bounds.width,
+	        'height': this.bounds.height,
+	        'viewBox': [0, 0, this.bounds.width, this.bounds.height].join(' ')
+	      }, node);
+	
+	      return node;
+	    }
+	  }, {
 	    key: 'createSvg',
 	    value: function createSvg(ctxt) {
 	
@@ -4366,7 +4703,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // create defs section
 	      for (var def in ctxt.defs) {
 	        if (ctxt.defs.hasOwnProperty(def)) fragment += ctxt.defs[def];
-	      }fragment = _Exsurge2.QuickSvg.createFragment('defs', {}, fragment);
+	      }fragment += ctxt.createStyle();
+	
+	      fragment = _Exsurge2.QuickSvg.createFragment('defs', {}, fragment);
 	
 	      for (var i = 0; i < this.lines.length; i++) {
 	        fragment += this.lines[i].createSvgFragment(ctxt);
@@ -4384,6 +4723,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return fragment;
 	    }
 	  }, {
+	    key: 'createSvgNodeForEachLine',
+	    value: function createSvgNodeForEachLine(ctxt) {
+	
+	      var node = [];
+	
+	      var top = 0;
+	      for (var i = 0; i < this.lines.length; i++) {
+	        var lineFragment = [ctxt.defsNode.cloneNode(true), this.lines[i].createSvgNode(ctxt, top)];
+	        lineFragment[0].appendChild(ctxt.createStyleNode());
+	        var height = this.lines[i].bounds.height + ctxt.staffInterval * 1.5;
+	        lineFragment = _Exsurge2.QuickSvg.createNode('g', {}, lineFragment);
+	        lineFragment = _Exsurge2.QuickSvg.createNode('svg', {
+	          'xmlns': 'http://www.w3.org/2000/svg',
+	          'version': '1.1',
+	          'class': 'ChantScore',
+	          'width': this.bounds.width,
+	          'height': height,
+	          'viewBox': [0, 0, this.bounds.width, height].join(' ')
+	        }, lineFragment);
+	        node.push(lineFragment);
+	        top += height;
+	      }
+	      return node;
+	    }
+	  }, {
 	    key: 'createSvgForEachLine',
 	    value: function createSvgForEachLine(ctxt) {
 	
@@ -4393,7 +4757,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // create defs section
 	      for (var def in ctxt.defs) {
 	        if (ctxt.defs.hasOwnProperty(def)) fragmentDefs += ctxt.defs[def];
-	      }fragmentDefs = _Exsurge2.QuickSvg.createFragment('defs', {}, fragmentDefs);
+	      }fragmentDefs += ctxt.createStyle();
+	
+	      fragmentDefs = _Exsurge2.QuickSvg.createFragment('defs', {}, fragmentDefs);
 	      var top = 0;
 	      for (var i = 0; i < this.lines.length; i++) {
 	        var lineFragment = fragmentDefs + this.lines[i].createSvgFragment(ctxt, top);
@@ -4624,6 +4990,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // fixme: make these configurable values from the score
 	    _this.spaceAfterNotations = 0; // the space between the notation bounds and the first text track
 	    _this.spaceBetweenTextTracks = 0; // spacing between each text track
+	
+	    _this.lastLyrics = [];
 	    return _this;
 	  }
 	
@@ -4817,6 +5185,75 @@ return /******/ (function(modules) { // webpackBootstrap
 	      canvasCtxt.translate(-this.bounds.x, -this.bounds.y);
 	    }
 	  }, {
+	    key: 'createSvgNode',
+	    value: function createSvgNode(ctxt) {
+	      var top = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+	
+	      var inner = [];
+	
+	      // add the chant lines
+	      var i,
+	          x1 = this.staffLeft,
+	          x2 = this.staffRight;
+	
+	      // create the staff lines
+	      for (i = -3; i <= 3; i += 2) {
+	
+	        inner.push(_Exsurge2.QuickSvg.createNode('line', {
+	          'x1': x1,
+	          'y1': ctxt.staffInterval * i,
+	          'x2': x2,
+	          'y2': ctxt.staffInterval * i,
+	          'stroke': ctxt.staffLineColor,
+	          'stroke-width': ctxt.staffLineWeight,
+	          'class': 'staffLine'
+	        }));
+	      }
+	
+	      // create the ledger lines
+	      for (i = 0; i < this.ledgerLines.length; i++) {
+	
+	        var ledgerLine = this.ledgerLines[i];
+	        var y = ctxt.calculateHeightFromStaffPosition(ledgerLine.staffPosition);
+	
+	        inner.push(_Exsurge2.QuickSvg.createNode('line', {
+	          'x1': ledgerLine.x1,
+	          'y1': y,
+	          'x2': ledgerLine.x2,
+	          'y2': y,
+	          'stroke': ctxt.staffLineColor,
+	          'stroke-width': ctxt.staffLineWeight,
+	          'class': 'ledgerLine'
+	        }));
+	      }
+	
+	      // add any braces
+	      for (i = 0; i < this.braces.length; i++) {
+	        inner.push(this.braces[i].createSvgNode(ctxt));
+	      } // dropCap and the annotations
+	      if (this.notationsStartIndex === 0) {
+	
+	        if (this.score.dropCap !== null) inner.push(this.score.dropCap.createSvgNode(ctxt));
+	
+	        if (this.score.annotation !== null) inner = inner.concat(this.score.annotation.createSvgNode(ctxt));
+	      }
+	
+	      inner.push(this.startingClef.createSvgNode(ctxt));
+	
+	      var notations = this.score.notations;
+	      var lastIndex = this.notationsStartIndex + this.numNotationsOnLine;
+	
+	      // add all of the notations
+	      for (i = this.notationsStartIndex; i < lastIndex; i++) {
+	        inner.push(notations[i].createSvgNode(ctxt));
+	      }if (this.custos) inner.push(this.custos.createSvgNode(ctxt));
+	
+	      return _Exsurge2.QuickSvg.createNode('g', {
+	        'class': 'chantLine',
+	        'transform': 'translate(' + this.bounds.x + ',' + (this.bounds.y - top) + ')'
+	      }, inner);
+	    }
+	  }, {
 	    key: 'createSvgFragment',
 	    value: function createSvgFragment(ctxt) {
 	      var top = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
@@ -4933,7 +5370,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var notations = this.score.notations,
 	          beginningLyrics = null,
 	          prev = null,
-	          prevWithLyrics = null;
+	          prevLyrics = [];
 	      this.notationsStartIndex = newElementStart;
 	      this.numNotationsOnLine = 0;
 	
@@ -4991,11 +5428,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var curr = this.startingClef;
 	
 	      if (beginningLyrics) {
-	        curr.lyrics = beginningLyrics;
+	        _Exsurge2.LyricArray.setNotation(beginningLyrics, curr);
 	      }
 	
 	      // estimate how much space we have available to us
-	      var rightNotationBoundary = this.staffRight - _Exsurge4.Glyphs.CustosLong.bounds.width * ctxt.glyphScaling - ctxt.intraNeumeSpacing * 4; // possible custos on the line
+	      var rightNotationBoundary = this.staffRight - _Exsurge4.Glyphs.CustosLong.bounds.width * ctxt.glyphScaling; // possible custos on the line
 	
 	      // iterate through the notations, fittng what we can on this line
 	      var i,
@@ -5004,7 +5441,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      for (i = newElementStart; i <= lastNotationIndex; i++) {
 	
-	        if (curr.hasLyrics()) prevWithLyrics = curr;
+	        if (curr.hasLyrics()) _Exsurge2.LyricArray.mergeIn(this.lastLyrics, curr.lyrics);
 	
 	        prev = curr;
 	        curr = notations[i];
@@ -5027,7 +5464,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        // try to fit the curr element on this line.
 	        // if it doesn't fit, we finish up here.
-	        var fitsOnLine = this.positionNotationElement(ctxt, prevWithLyrics, prev, curr, actualRightBoundary);
+	        var fitsOnLine = this.positionNotationElement(ctxt, this.lastLyrics, prev, curr, actualRightBoundary);
 	        if (fitsOnLine === false) {
 	
 	          // first check for elements that cannot begin a system: dividers and custodes
@@ -5072,19 +5509,75 @@ return /******/ (function(modules) { // webpackBootstrap
 	          for (j = i - 1; j > this.notationsStartIndex; j--) {
 	            var cne = notations[j];
 	
-	            if (cne.keepWithNext === true) this.numNotationsOnLine--;else break;
+	            // if the line break is allowed (cne.allowLineBreakBeforeNext), keep this number of notations around so we can check during justification
+	            // whether there would be too much space introduced between
+	            if (cne.keepWithNext === true) {
+	              if (cne.allowLineBreakBeforeNext && !this.maxNumNotationsOnLine) this.maxNumNotationsOnLine = this.numNotationsOnLine;
+	              this.numNotationsOnLine--;
+	            } else break;
+	          }
+	
+	          // if for some reason not a single notation can fit on the line, we'd better put it on anyway, to avoid an infinite loop:
+	          if (this.numNotationsOnLine === 0) numNotationsOnLine = 1;
+	
+	          // determine the neumes we can space apart, if we do end up justifying
+	          this.toJustify = [];
+	          curr = null;
+	          var lastIndex = this.notationsStartIndex + this.numNotationsOnLine;
+	          for (i = this.notationsStartIndex; i < lastIndex; i++) {
+	
+	            prev = curr;
+	            curr = notations[i];
+	
+	            if (prev !== null) _Exsurge2.LyricArray.mergeIn(prevLyrics, prev.lyrics);
+	
+	            if (prev !== null && prev.keepWithNext === true) continue;
+	
+	            if (prevLyrics.length && prevLyrics[0].allowsConnector() && curr.hasLyrics()) continue;
+	
+	            if (curr.constructor === _Exsurge3.ChantLineBreak) continue;
+	
+	            if (curr === this.custos) continue;
+	
+	            if (i === 0 && this.score.useDropCap && curr.hasLyrics()) continue;
+	
+	            // otherwise, we can add space before this element
+	            this.toJustify.push(curr);
+	          }
+	
+	          if (this.maxNumNotationsOnLine) {
+	            // Check whether we should squeeze some extra notations on the line to avoid too much space after justification:
+	            // Check how much space we would have without the extra notations
+	            var extraSpace = this.staffRight;
+	
+	            if (this.numNotationsOnLine > 0) {
+	              var last = notations[lastIndex - 1];
+	
+	              if (prevLyrics) extraSpace -= Math.max(_Exsurge2.LyricArray.getRight(prevLyrics), last.bounds.right() + last.trailingSpace);else extraSpace -= last.bounds.right() + last.trailingSpace;
+	
+	              extraSpace -= _Exsurge4.Glyphs.CustosLong.bounds.width * ctxt.glyphScaling;
+	
+	              if (extraSpace / this.toJustify.length > ctxt.staffInterval * ctxt.maxExtraSpaceInStaffIntervals) {
+	                this.numNotationsOnLine = this.maxNumNotationsOnLine;
+	                delete this.maxNumNotationsOnLine;
+	              } else {
+	                this.lastLyrics = prevLyrics;
+	              }
+	            }
+	          } else {
+	            this.lastLyrics = prevLyrics;
 	          }
 	
 	          if (notations[j].isDivider && notations[j - 1].constructor === _ExsurgeChant.Custos) {
 	            // reverse the order: put the divider first, and end the line with the custos.
-	            prevWithLyrics = null;
+	            prevLyrics = [];
 	            for (i = j - 2; i >= this.notationsStartIndex; i--) {
 	              if (notations[i].hasLyrics()) {
-	                prevWithLyrics = notations[i];
+	                _Exsurge2.LyricArray.mergeIn(prevLyrics, notations[i].lyrics);
 	                break;
 	              }
 	            }
-	            this.positionNotationElement(ctxt, prevWithLyrics, notations[j - 2], notations[j], this.staffRight);
+	            this.positionNotationElement(ctxt, prevLyrics, notations[j - 2], notations[j], this.staffRight);
 	            this.custos = notations[j - 1];
 	            this.custos.bounds.x = this.staffRight - this.custos.bounds.width - this.custos.leadingSpace;
 	          }
@@ -5104,6 +5597,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          break;
 	        }
 	      }
+	
+	      if (curr.chantLine === this && curr.hasLyrics()) _Exsurge2.LyricArray.mergeIn(this.lastLyrics, curr.lyrics);
 	
 	      if (!this.custos) {
 	        // create the automatic custos at the end of the line if there are neumes left in the notations
@@ -5125,18 +5620,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	
 	      // find the final lyric and mark it as connecting if needed.
-	      var lastWithLyrics = null;
-	      for (i = this.notationsStartIndex + this.numNotationsOnLine - 1; i >= this.notationsStartIndex; --i) {
-	        if (notations[i].hasLyrics()) {
-	          lastWithLyrics = notations[i];
-	          break;
-	        }
+	      i = 0;
+	      while (this.lastLyrics && this.lastLyrics[i]) {
+	        if (this.lastLyrics[i].allowsConnector()) this.lastLyrics[i].setNeedsConnector(true);
+	        ++i;
 	      }
-	      if (lastWithLyrics && lastWithLyrics.lyrics[0].allowsConnector()) lastWithLyrics.lyrics[0].setNeedsConnector(true);
 	
 	      // if the provided width is less than zero, then set the width of the line
 	      // based on the last notation
-	      var last = notations[this.notationsStartIndex + this.numNotationsOnLine - 1];
+	      last = notations[this.notationsStartIndex + this.numNotationsOnLine - 1];
 	      if (width <= 0) {
 	        this.staffRight = last.bounds.right();
 	        this.justify = false;
@@ -5156,7 +5648,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function justifyElements() {
 	
 	      var i;
-	      var toJustify = [];
+	      var toJustify = this.toJustify || [];
 	      var notations = this.score.notations;
 	      var lastIndex = this.notationsStartIndex + this.numNotationsOnLine;
 	
@@ -5165,48 +5657,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      if (this.numNotationsOnLine > 0) {
 	        var last = notations[lastIndex - 1],
-	            lastWithLyrics = null;
+	            lastLyrics = this.lastLyrics;
 	
-	        for (i = lastIndex - 1; i >= this.notationsStartIndex; i--) {
-	          if (notations[i].hasLyrics()) {
-	            lastWithLyrics = notations[i];
-	            break;
-	          }
-	        }
-	
-	        if (lastWithLyrics) extraSpace = this.staffRight - Math.max(lastWithLyrics.getAllLyricsRight(), last.bounds.right() + last.trailingSpace);else extraSpace = this.staffRight - (last.bounds.right() + last.trailingSpace);
+	        if (lastLyrics) extraSpace = this.staffRight - Math.max(_Exsurge2.LyricArray.getRight(lastLyrics), last.bounds.right() + last.trailingSpace);else extraSpace = this.staffRight - (last.bounds.right() + last.trailingSpace);
 	      }
 	
 	      if (this.custos) extraSpace -= this.custos.bounds.width + this.custos.leadingSpace;
 	
 	      if (extraSpace === 0) return;
 	
-	      var prev = null,
-	          curr = null,
-	          prevWithLyrics = null;
-	
-	      // first pass: determine the neumes we can space apart
-	      for (i = this.notationsStartIndex; i < lastIndex; i++) {
-	
-	        if (curr !== null && curr.hasLyrics()) prevWithLyrics = curr;
-	
-	        prev = curr;
-	        curr = notations[i];
-	
-	        if (prev !== null && prev.keepWithNext === true) continue;
-	
-	        if (prevWithLyrics !== null && prevWithLyrics.lyrics[0].allowsConnector() && !prevWithLyrics.lyrics[0].needsConnector) continue;
-	
-	        if (curr.constructor === _Exsurge3.ChantLineBreak) continue;
-	
-	        if (curr === this.custos) continue;
-	
-	        // otherwise, we can add space before this element
-	        toJustify.push(curr);
-	      }
-	
 	      if (toJustify.length === 0) return;
 	
+	      var curr = null;
 	      var offset = 0;
 	      var increment = extraSpace / toJustify.length;
 	      var toJustifyIndex = 0;
@@ -5277,14 +5739,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      };
 	
-	      var epismata = []; // keep track of epismata in case we can connect some
+	      var episemata = []; // keep track of episemata in case we can connect some
 	      var startBrace = null,
 	          startBraceNotationIndex = 0;
 	      var minY = Number.MAX_VALUE,
 	          maxY = Number.MIN_VALUE; // for braces
 	
 	      // make a final pass over all of the notes to add any necessary
-	      // ledger lines and to smooth out epismata
+	      // ledger lines and to smooth out episemata
 	      for (var i = this.notationsStartIndex; i < lastIndex; i++) {
 	
 	        var neume = notations[i];
@@ -5315,44 +5777,44 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	          processElementForLedgerLine(note, neume.bounds.x, neume.bounds.y);
 	
-	          // blend epismata as we're able
-	          if (note.epismata.length === 0) epismata = [];
-	          for (k = 0; k < note.epismata.length; k++) {
+	          // blend episemata as we're able
+	          if (note.episemata.length === 0) episemata = [];
+	          for (k = 0; k < note.episemata.length; k++) {
 	
-	            var episema = note.epismata[k];
+	            var episema = note.episemata[k];
 	
-	            var spaceBetweenEpismata = 0;
+	            var spaceBetweenEpisemata = 0;
 	
-	            // calculate the distance between the last epismata and this one...
-	            // lots of code for a simple: currEpismata.left - prevEpismata.right
-	            if (epismata.length > 0) spaceBetweenEpismata = neume.bounds.x + episema.bounds.x - (epismata[epismata.length - 1].note.neume.bounds.x + epismata[epismata.length - 1].bounds.right());
+	            // calculate the distance between the last episemata and this one...
+	            // lots of code for a simple: currEpisemata.left - prevEpisemata.right
+	            if (episemata.length > 0) spaceBetweenEpisemata = neume.bounds.x + episema.bounds.x - (episemata[episemata.length - 1].note.neume.bounds.x + episemata[episemata.length - 1].bounds.right());
 	
 	            // we try to blend the episema if we're able.
-	            if (epismata.length === 0 || epismata[epismata.length - 1].positionHint !== episema.positionHint || epismata[epismata.length - 1].terminating === true || epismata[epismata.length - 1].alignment === _ExsurgeChant2.HorizontalEpisemaAlignment.Left || epismata[epismata.length - 1].alignment === _ExsurgeChant2.HorizontalEpisemaAlignment.Center || episema.alignment === _ExsurgeChant2.HorizontalEpisemaAlignment.Right || episema.alignment === _ExsurgeChant2.HorizontalEpisemaAlignment.Center || spaceBetweenEpismata > ctxt.intraNeumeSpacing * 2 && note.glyphVisualizer.glyphCode !== _Exsurge2.GlyphCode.None) {
+	            if (episemata.length === 0 || episemata[episemata.length - 1].positionHint !== episema.positionHint || episemata[episemata.length - 1].terminating === true || episemata[episemata.length - 1].alignment === _ExsurgeChant2.HorizontalEpisemaAlignment.Left || episemata[episemata.length - 1].alignment === _ExsurgeChant2.HorizontalEpisemaAlignment.Center || episema.alignment === _ExsurgeChant2.HorizontalEpisemaAlignment.Right || episema.alignment === _ExsurgeChant2.HorizontalEpisemaAlignment.Center || spaceBetweenEpisemata > ctxt.intraNeumeSpacing * 2 && note.glyphVisualizer.glyphCode !== _Exsurge2.GlyphCode.None) {
 	
-	              // start a new set of epismata to potentially blend
-	              epismata = [episema];
+	              // start a new set of episemata to potentially blend
+	              episemata = [episema];
 	            } else {
 	              // blend all previous with this one
 	              var newY;
 	
-	              if (episema.positionHint === _ExsurgeChant2.MarkingPositionHint.Below) newY = Math.max(episema.bounds.y, epismata[epismata.length - 1].bounds.y);else newY = Math.min(episema.bounds.y, epismata[epismata.length - 1].bounds.y);
+	              if (episema.positionHint === _ExsurgeChant2.MarkingPositionHint.Below) newY = Math.max(episema.bounds.y, episemata[episemata.length - 1].bounds.y);else newY = Math.min(episema.bounds.y, episemata[episemata.length - 1].bounds.y);
 	
 	              if (episema.bounds.y !== newY) episema.bounds.y = newY;else {
-	                for (var l = 0; l < epismata.length; l++) {
-	                  epismata[l].bounds.y = newY;
+	                for (var l = 0; l < episemata.length; l++) {
+	                  episemata[l].bounds.y = newY;
 	                }
 	              }
 	
 	              // extend the last episema to meet the new one
-	              var newWidth = neume.bounds.x + episema.bounds.x - (epismata[epismata.length - 1].note.neume.bounds.x + epismata[epismata.length - 1].bounds.x);
+	              var newWidth = neume.bounds.x + episema.bounds.x - (episemata[episemata.length - 1].note.neume.bounds.x + episemata[episemata.length - 1].bounds.x);
 	              if (newWidth < 0) {
 	                newWidth *= -1;
-	                epismata[epismata.length - 1].bounds.x -= newWidth;
+	                episemata[episemata.length - 1].bounds.x -= newWidth;
 	              }
-	              epismata[epismata.length - 1].bounds.width = newWidth;
+	              episemata[episemata.length - 1].bounds.width = newWidth;
 	
-	              epismata.push(episema);
+	              episemata.push(episema);
 	            }
 	          }
 	
@@ -5419,7 +5881,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  }, {
 	    key: 'positionNotationElement',
-	    value: function positionNotationElement(ctxt, prevWithLyrics, prev, curr, rightNotationBoundary) {
+	    value: function positionNotationElement(ctxt, prevLyrics, prev, curr, rightNotationBoundary) {
 	
 	      var i;
 	
@@ -5429,7 +5891,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      // if the previous notation has no lyrics, then we simply make sure the
 	      // current notation with lyrics is in the bounds of the line
-	      if (prevWithLyrics === null) {
+	      if (prevLyrics.length === 0) {
 	
 	        var maxRight = curr.bounds.right() + curr.trailingSpace;
 	
@@ -5438,9 +5900,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	          curr.lyrics[i].setNeedsConnector(false); // we hope for the best!
 	
-	          if (curr.getLyricLeft(i) < 0) curr.bounds.x += -curr.getLyricLeft(i);
+	          if (curr.lyrics[i].getLeft() < 0) curr.bounds.x += -curr.lyrics[i].getLeft();
 	
-	          maxRight = Math.max(maxRight, curr.getLyricRight(i));
+	          maxRight = Math.max(maxRight, curr.lyrics[i].getRight());
 	        }
 	
 	        if (maxRight > rightNotationBoundary) return false;else return true;
@@ -5453,87 +5915,53 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	
 	      // if we have multiple lyrics on the current or the previous notation,
-	      // then we simplify the process. We don't try to eliminate syllable
-	      // connectors but we require them on every syllable in the previous
-	      // notation that permits a connector.
-	      //
-	      // A nice (but probably tricky) enhancement would be to combine lyrics
-	      // when possible, taking into consideration hyphenation of each syllable!
-	      var lyricCount = Math.max(prevWithLyrics.lyrics.length, curr.lyrics.length);
+	      // we will have to run several passes over each set of lyrics:
 	
-	      if (lyricCount > 1) {
-	
-	        var prevLyricRightMax = Number.MIN_VALUE;
-	        var currLyricLeftMin = Number.MAX_VALUE;
-	        var currLyricRightMax = Number.MIN_VALUE;
-	
-	        for (i = 0; i < lyricCount; i++) {
-	
-	          if (i < prevWithLyrics.lyrics.length && prevWithLyrics.lyrics[i] !== null) {
-	
-	            var right = prevWithLyrics.getLyricRight(i);
-	
-	            if (prevWithLyrics.lyrics[i].allowsConnector()) {
-	              prevWithLyrics.lyrics[i].setNeedsConnector(true);
-	              right += prevWithLyrics.lyrics[i].widthWithConnector - prevWithLyrics.lyrics[i].widthWithoutConnector;
-	            } else right += ctxt.minLyricWordSpacing;
-	
-	            if (right > prevLyricRight) prevLyricRightMax = right;
+	      // on the first pass, we will check the absolute left-most placement of the new syllables
+	      // we will make additional passes until everything is stable
+	      do {
+	        var hasShifted = false;
+	        var atLeastOneWithoutConnector = false;
+	        for (i = 0; i < curr.lyrics.length; i++) {
+	          if (!curr.lyrics[i].originalText) continue;
+	          if (i < prevLyrics.length && prevLyrics[i] !== null) {
+	            var prevLyricRight = prevLyrics[i].getRight();
 	          }
 	
-	          if (i < curr.lyrics.length && curr.lyrics[i] !== null) {
-	            currLyricLeftMin = Math.min(currLyricLeftMin, curr.getLyricLeft(i));
-	            currLyricRightMax = Math.max(currLyricRightMax, curr.getLyricRight(i));
+	          curr.lyrics[i].setNeedsConnector(false); // we hope for the best!
+	          var currLyricLeft = curr.lyrics[i].getLeft();
+	          if (!prevLyrics[i] || prevLyrics[i].allowsConnector() === false) {
+	            // No connector needed, but include space between words if necessary!
+	            if (prevLyricRight + ctxt.minLyricWordSpacing > currLyricLeft) {
+	              // push the current element over a bit.
+	              curr.bounds.x += prevLyricRight + ctxt.minLyricWordSpacing - currLyricLeft;
+	              hasShifted = true;
+	            }
+	          } else {
+	            // we may need a connector yet...
+	            if (prevLyricRight + 0.1 > currLyricLeft) {
+	              // in this case, the lyric elements actually overlap.
+	              // so nope, no connector needed. instead, we just place the lyrics together
+	              // fixme: for better text layout, we could actually use the kerning values
+	              // between the prev and curr lyric elements!
+	              curr.bounds.x += prevLyricRight - currLyricLeft;
+	              atLeastOneWithoutConnector = true;
+	              hasShifted = prevLyricRight - currLyricLeft > 0.5;
+	            } else {
+	              // bummer, looks like we couldn't merge the syllables together. Better add a connector...
+	              prevLyrics[i].setNeedsConnector(true);
+	              prevLyricRight = prevLyrics[i].getRight();
+	
+	              if (prevLyricRight > currLyricLeft) {
+	                curr.bounds.x += prevLyricRight - currLyricLeft;
+	                hasShifted = true;
+	              }
+	            }
 	          }
 	        }
+	      } while (curr.lyrics.length > 1 && hasShifted && atLeastOneWithoutConnector);
 	
-	        // if the lyrics overlap, then we need to shift over the current element a bit
-	        if (prevLyricRightMax > currLyricLeftMin) {
-	          curr.bounds.x += prevLyricRightMax - currLyricLeftMin;
-	          currLyricRightMax += prevLyricRightMax - currLyricLeftMin;
-	        }
-	
-	        if (curr.bounds.right() < rightNotationBoundary && currLyricRightMax <= this.staffRight) return true;else {
-	          curr.bounds.x = 0;
-	          return false;
-	        }
-	      }
-	
-	      // handling single lyric lines is a little more nuanced, since we carefully
-	      // eliminate syllable connectors when we're able...
-	      curr.lyrics[0].setNeedsConnector(false); // we hope for the best!
-	
-	      var currLyricLeft = curr.getLyricLeft(0);
-	      var prevLyricRight = prevWithLyrics.getLyricRight(0);
-	
-	      if (prevWithLyrics.lyrics[0].allowsConnector() === false) {
-	
-	        // No connector needed, but include space between words if necessary!
-	        if (prevLyricRight + ctxt.minLyricWordSpacing > currLyricLeft) {
-	          // push the current element over a bit.
-	          curr.bounds.x += prevLyricRight + ctxt.minLyricWordSpacing - currLyricLeft;
-	        }
-	      } else {
-	
-	        // we may need a connector yet...
-	
-	        if (prevLyricRight > currLyricLeft) {
-	          // in this case, the lyric elements actually overlap.
-	          // so nope, no connector needed. instead, we just place the lyrics together
-	          // fixme: for better text layout, we could actually use the kerning values
-	          // between the prev and curr lyric elements!
-	          curr.bounds.x += prevLyricRight - currLyricLeft;
-	        } else {
-	
-	          // bummer, looks like we couldn't merge the syllables together. Better add a connector...
-	          prevWithLyrics.lyrics[0].setNeedsConnector(true);
-	          prevLyricRight = prevWithLyrics.getLyricRight(0);
-	
-	          if (prevLyricRight > currLyricLeft) curr.bounds.x += prevLyricRight - currLyricLeft;
-	        }
-	      }
-	
-	      if (curr.bounds.right() + curr.trailingSpace < rightNotationBoundary && curr.getLyricRight(0) <= this.staffRight) {
+	      if (curr.bounds.right() + curr.trailingSpace < rightNotationBoundary && curr.lyrics[0].getRight() <= this.staffRight) {
 	        if (prev.isAccidental) {
 	          // move the previous accidental up next to the current note:
 	          prev.bounds.x = curr.bounds.x - prev.bounds.width - prev.trailingSpace;
@@ -6096,8 +6524,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      // following logic helps to keep the episemae away from staff lines if they get too close
 	      // the placement is based on a review of the Vatican and solesmes editions, which
-	      // seem to always place the epismata centered between staff lines. Probably helps
-	      // for visual layout, rather than letting epismata be at various heights.
+	      // seem to always place the episemata centered between staff lines. Probably helps
+	      // for visual layout, rather than letting episemata be at various heights.
 	
 	      var y = 0,
 	          step;
@@ -6156,6 +6584,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.origin.y = 0;
 	    }
 	  }, {
+	    key: 'createSvgNode',
+	    value: function createSvgNode(ctxt) {
+	
+	      return _Exsurge2.QuickSvg.createNode('rect', {
+	        'x': this.bounds.x,
+	        'y': this.bounds.y,
+	        'width': this.bounds.width,
+	        'height': this.bounds.height,
+	        'fill': ctxt.neumeLineColor,
+	        'class': 'horizontalEpisema'
+	      });
+	    }
+	  }, {
 	    key: 'createSvgFragment',
 	    value: function createSvgFragment(ctxt) {
 	
@@ -6198,7 +6639,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var glyphCode;
 	      // we have to place the ictus futher from the note in some cases to avoid a collision with an episema on the same note:
 	      var staffPosition = this.note.staffPosition;
-	      var placeFurtherFromNote = this.note.epismata.length > 0 && this.note.epismata[0].positionHint === this.positionHint;
+	      var placeFurtherFromNote = this.note.episemata.length > 0 && this.note.episemata[0].positionHint === this.positionHint;
 	      var horizontalOffset = this.note.bounds.width / 2;
 	      var verticalOffset = 0;
 	      var shortOffset = 1;
@@ -6374,7 +6815,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// reusable reg exps
 	var __syllablesRegex = /(?=.)((?:[^(])*)(?:\(?([^)]*)\)?)?/g;
 	var __altRegex = /<alt>(.*?)<\/alt>/g;
-	var __notationsRegex = /z0|z|Z|::|:|;|,|`|c1|c2|c3|c4|f3|f4|cb3|cb4|\/\/|\/| |\!|-?[a-mA-M][oOwWvVrRsxy#~\+><_\.'012345]*(?:\[[^\]]*\]?)*/g;
+	var __notationsRegex = /z0|z|Z|::|:|;|,|`|[cf][1-4]|cb3|cb4|\/\/|\/| |\!|-?[a-mA-M][oOwWvVrRsxy#~\+><_\.'012345]*(?:\[[^\]]*\]?)*/g;
 	
 	// for the brace string inside of [ and ] in notation data
 	// the capturing groups are:
@@ -6504,7 +6945,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      var index = 0,
 	          j,
-	          k;
+	          k,
+	          l,
+	          sourceIndex = 0,
+	          wordLength = 0,
+	          mapping;
 	
 	      ctxt.activeClef = _Exsurge3.Clef.default();
 	
@@ -6514,14 +6959,44 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var resultCode = results[i][0];
 	        var resultValues = results[i][1];
 	
+	        if (index > 0) sourceIndex = mappings[index - 1].sourceIndex + mappings[index - 1].source.length + 1;
 	        if (resultCode === '=') {
-	          // skip over ones that haven't changed, but updating the clef as we go
+	          var sourceIndexDiff = sourceIndex - mappings[index].sourceIndex;
+	          // skip over ones that haven't changed, but updating the clef and source index as we go
 	          for (j = 0; j < resultValues.length; j++, index++) {
-	            for (k = 0; k < mappings[index].notations.length; k++) {
+	            mapping = mappings[index];
+	            mapping.sourceIndex += sourceIndexDiff;
+	            for (k = 0; k < mapping.notations.length; k++) {
 	              // notify the notation that its dependencies are no longer valid
-	              mappings[index].notations[k].resetDependencies();
+	              mapping.notations[k].resetDependencies();
 	
-	              if (mappings[index].notations[k].isClef) ctxt.activeClef = mappings[index].notations[k];
+	              if (mapping.notations[k].isClef) ctxt.activeClef = mappings[index].notations[k];
+	
+	              // update source index and automatic braces
+	              if (mapping.notations[k].notes) {
+	                for (l = 0; l < mapping.notations[k].notes.length; ++l) {
+	                  var note = mapping.notations[k].notes[l];
+	                  note.sourceIndex += sourceIndexDiff;
+	                  if (note.braceEnd && note.braceEnd.automatic) delete note.braceEnd;
+	                  if (this.needToEndBrace && !note.braceStart && !note.braceEnd) {
+	                    note.braceEnd = new Markings.BracePoint(note, this.needToEndBrace.isAbove, this.needToEndBrace.shape, this.needToEndBrace.attachment === Markings.BraceAttachment.Left ? Markings.BraceAttachment.Right : Markings.BraceAttachment.Left);
+	                    note.braceEnd.automatic = true;
+	                    delete this.needToEndBrace;
+	                  } else if (note.braceStart && note.braceStart.automatic) {
+	                    this.needToEndBrace = note.braceStart;
+	                  }
+	                }
+	              }
+	              if (sourceIndexDiff) {
+	                for (l = 0; l < mapping.notations[k].lyrics.length; ++l) {
+	                  mapping.notations[k].lyrics[l].sourceIndex += sourceIndexDiff;
+	                }
+	                if (mapping.notations[k].alText) {
+	                  for (l = 0; l < mapping.notations[k].alText.length; ++l) {
+	                    mapping.notations[k].alText[l].sourceIndex += sourceIndexDiff;
+	                  }
+	                }
+	              }
 	            }
 	          }
 	        } else if (resultCode === '-') {
@@ -6531,11 +7006,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else if (resultCode === '+') {
 	          // insert new ones
 	          for (j = 0; j < resultValues.length; j++) {
-	            var mapping = this.createMappingFromWord(ctxt, resultValues[j]);
+	            wordLength = resultValues[j].length + 1;
+	            mapping = this.createMappingFromWord(ctxt, resultValues[j], sourceIndex);
 	
 	            for (k = 0; k < mapping.notations.length; k++) {
 	              if (mapping.notations[k].isClef) ctxt.activeClef = mapping.notations[k];
 	            }mappings.splice(index++, 0, mapping);
+	            sourceIndex += wordLength;
 	          }
 	        }
 	      }
@@ -6551,13 +7028,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'createMappingsFromWords',
 	    value: function createMappingsFromWords(ctxt, words) {
 	      var mappings = [];
+	      var sourceIndex = 0,
+	          wordLength = 0;
 	
 	      for (var i = 0; i < words.length; i++) {
+	        sourceIndex += wordLength;
+	        wordLength = words[i].length + 1;
 	        var word = words[i].trim();
 	
 	        if (word === '') continue;
 	
-	        var mapping = this.createMappingFromWord(ctxt, word);
+	        var mapping = this.createMappingFromWord(ctxt, word, sourceIndex);
 	
 	        if (mapping) mappings.push(mapping);
 	      }
@@ -6571,13 +7052,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  }, {
 	    key: 'createMappingFromWord',
-	    value: function createMappingFromWord(ctxt, word) {
+	    value: function createMappingFromWord(ctxt, word, sourceIndex) {
 	
 	      var matches = [];
 	      var notations = [];
 	      var currSyllable = 0;
-	      var makeAlText = function makeAlText(text) {
-	        return new _Exsurge2.AboveLinesText(ctxt, text);
+	      var makeAlText = function makeAlText(text, sourceIndex) {
+	        return new _Exsurge2.AboveLinesText(ctxt, text, sourceIndex);
 	      };
 	
 	      while (match = __syllablesRegex.exec(word)) {
@@ -6585,21 +7066,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }for (var j = 0; j < matches.length; j++) {
 	        var match = matches[j];
 	
-	        var lyricText = match[1].trim().replace(/~/g, ' ');
+	        var lyricText = match[1].replace(/^\s+/, '').replace(/~/g, ' ');
 	        var alText = lyricText.match(__altRegex);
 	        var notationData = match[2];
 	
-	        var items = this.parseNotations(ctxt, notationData);
+	        var items = this.parseNotations(ctxt, notationData, sourceIndex + match.index + match[1].length + 1);
 	
 	        if (items.length === 0) continue;
 	
-	        notations = notations.concat(items);
-	
-	        if (alText) {
+	        for (var k = 0; k < items.length; ++k) {
+	          notations.push(items[k]);
+	        }if (alText) {
 	          for (var i = 0; i < alText.length; ++i) {
 	            var index = lyricText.indexOf(alText[i]);
 	            lyricText = lyricText.slice(0, index) + lyricText.slice(index + alText[i].length);
-	            alText[i] = alText[i].slice(5, -6); // trim <alt> and </alt>
+	            alText[i] = makeAlText(alText[i].slice(5, -6), sourceIndex + index + 5); // trim <alt> and </alt>
 	          }
 	        }
 	        if (lyricText === '' && !alText) continue;
@@ -6617,7 +7098,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        if (notationWithLyrics === null) return notations;
 	
-	        if (alText) notationWithLyrics.alText = alText.map(makeAlText);
+	        if (alText) notationWithLyrics.alText = alText;
 	
 	        if (lyricText === '') continue;
 	
@@ -6633,21 +7114,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // also, new words reset the accidentals, per the Solesmes style (see LU xviij)
 	        if (proposedLyricType === _Exsurge2.LyricType.BeginningSyllable || proposedLyricType === _Exsurge2.LyricType.SingleSyllable) ctxt.activeClef.resetAccidentals();
 	
-	        var lyrics = this.createSyllableLyrics(ctxt, lyricText, proposedLyricType);
+	        var lyrics = this.createSyllableLyrics(ctxt, lyricText, proposedLyricType, notationWithLyrics, sourceIndex + match.index);
 	
 	        if (lyrics === null || lyrics.length === 0) continue;
 	
 	        notationWithLyrics.lyrics = lyrics;
 	      }
 	
-	      return new _Exsurge3.ChantMapping(word, notations);
+	      return new _Exsurge3.ChantMapping(word, notations, sourceIndex);
 	    }
 	
 	    // returns an array of lyrics (an array because each syllable can have multiple lyrics)
 	
 	  }, {
 	    key: 'createSyllableLyrics',
-	    value: function createSyllableLyrics(ctxt, text, proposedLyricType) {
+	    value: function createSyllableLyrics(ctxt, text, proposedLyricType, notation, sourceIndex) {
 	
 	      var lyrics = [];
 	
@@ -6657,6 +7138,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	      for (var i = 0; i < lyricTexts.length; i++) {
 	
 	        var lyricText = lyricTexts[i];
+	
+	        if (i > 0) {
+	          if (lyricText.match(/\s$/)) {
+	            lyricText = lyricText.replace(/s+$/, '');
+	            proposedLyricType = _Exsurge2.LyricType.EndingSyllable;
+	          } else {
+	            proposedLyricType = _Exsurge2.LyricType.MiddleSyllable;
+	          }
+	        }
 	
 	        // gabc allows lyrics to indicate the centering part of the text by
 	        // using braces to indicate how to center the lyric. So a lyric can
@@ -6677,7 +7167,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          } else centerStartIndex = -1; // if there's no closing bracket, don't enable centering
 	        }
 	
-	        var lyric = this.makeLyric(ctxt, lyricText, proposedLyricType);
+	        var lyric = this.makeLyric(ctxt, lyricText, proposedLyricType, notation, sourceIndex);
 	
 	        // if we have manual lyric centering, then set it now
 	        if (centerStartIndex >= 0) {
@@ -6687,12 +7177,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        lyrics.push(lyric);
 	      }
-	
+	      notation.lyrics = lyrics;
 	      return lyrics;
 	    }
 	  }, {
 	    key: 'makeLyric',
-	    value: function makeLyric(ctxt, text, lyricType) {
+	    value: function makeLyric(ctxt, text, lyricType, notation, sourceIndex) {
 	
 	      if (text.length > 1 && text[text.length - 1] === '-') {
 	        if (lyricType === _Exsurge2.LyricType.EndingSyllable) lyricType = _Exsurge2.LyricType.MiddleSyllable;else if (lyricType === _Exsurge2.LyricType.SingleSyllable) lyricType = _Exsurge2.LyricType.BeginningSyllable;
@@ -6709,7 +7199,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      if (text.match(/^(?:[*†]+|i+j|\d+)\.?$/)) lyricType = _Exsurge2.LyricType.Directive;
 	
-	      var lyric = new _Exsurge2.Lyric(ctxt, text, lyricType);
+	      var lyric = new _Exsurge2.Lyric(ctxt, text, lyricType, notation, sourceIndex);
 	      lyric.elidesToNext = elides;
 	
 	      return lyric;
@@ -6720,7 +7210,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  }, {
 	    key: 'parseNotations',
-	    value: function parseNotations(ctxt, data) {
+	    value: function parseNotations(ctxt, data, sourceIndex) {
 	      var _this = this;
 	
 	      // if there is no data, then this must be a text only object
@@ -6748,7 +7238,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // then, if we're passed a notation, let's add it
 	        // also, perform chant logic here
 	        if (notation !== null) {
-	
+	          notation.sourceIndex = sourceIndex;
 	          if (notation.isClef) {
 	            ctxt.activeClef = notation;
 	          } else if (notation.isAccidental) ctxt.activeClef.activeAccidental = notation;else if (notation.resetsAccidentals) ctxt.activeClef.resetAccidentals();
@@ -6762,7 +7252,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (atoms === null) return notations;
 	
 	      for (var i = 0; i < atoms.length; i++) {
-	
+	        sourceIndex += atoms[i - 1] && atoms[i - 1].length || 0;
 	        var atom = atoms[i];
 	
 	        // handle the clefs and dividers here
@@ -6798,6 +7288,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	          case "c4":
 	            addNotation(ctxt.activeClef = new _Exsurge3.DoClef(3, 2));
+	            break;
+	
+	          case "f1":
+	            addNotation(ctxt.activeClef = new _Exsurge3.FaClef(-3, 2));
+	            break;
+	
+	          case "f2":
+	            addNotation(ctxt.activeClef = new _Exsurge3.FaClef(-1, 2));
 	            break;
 	
 	          case "f3":
@@ -6872,8 +7370,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	              }
 	
 	              var noteArray = [];
-	              this.createNoteFromData(ctxt, ctxt.activeClef, atom, noteArray);
+	              this.createNoteFromData(ctxt, ctxt.activeClef, atom, noteArray, sourceIndex);
 	              var accidental = new Signs.Accidental(noteArray[0].staffPosition, accidentalType);
+	              accidental.sourceIndex = sourceIndex;
 	              accidental.trailingSpace = ctxt.intraNeumeSpacing * 2;
 	
 	              ctxt.activeClef.activeAccidental = accidental;
@@ -6882,7 +7381,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } else {
 	
 	              // looks like it's a note
-	              this.createNoteFromData(ctxt, ctxt.activeClef, atom, notes);
+	              this.createNoteFromData(ctxt, ctxt.activeClef, atom, notes, sourceIndex);
 	            }
 	            break;
 	        }
@@ -6929,7 +7428,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	          if (includePrevNote === false) currNoteIndex--;
 	
 	          neume.keepWithNext = true;
-	          if (notes[currNoteIndex + 1].shape === _Exsurge3.NoteShape.Quilisma) neume.trailingSpace = 0;else neume.trailingSpace = ctxt.intraNeumeSpacing;
+	          if (notes[currNoteIndex + 1].shape === _Exsurge3.NoteShape.Quilisma) neume.trailingSpace = 0;else {
+	            neume.trailingSpace = ctxt.intraNeumeSpacing;
+	            neume.allowLineBreakBeforeNext = true;
+	          }
 	        }
 	
 	        return unknownState;
@@ -7215,7 +7717,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (finalTrailingSpace >= 0) {
 	          neumes[neumes.length - 1].trailingSpace = finalTrailingSpace;
 	
-	          if (finalTrailingSpace > ctxt.intraNeumeSpacing) neumes[neumes.length - 1].keepWithNext = false;else neumes[neumes.length - 1].keepWithNext = true;
+	          if (finalTrailingSpace > ctxt.intraNeumeSpacing) neumes[neumes.length - 1].keepWithNext = false;else if (finalTrailingSpace === ctxt.intraNeumeSpacing) neumes[neumes.length - 1].allowLineBreakBeforeNext = neumes[neumes.length - 1].keepWithNext = true;else neumes[neumes.length - 1].keepWithNext = true;
 	        }
 	      }
 	
@@ -7226,9 +7728,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  }, {
 	    key: 'createNoteFromData',
-	    value: function createNoteFromData(ctxt, clef, data, notes) {
+	    value: function createNoteFromData(ctxt, clef, data, notes, sourceIndex) {
 	
 	      var note = new _Exsurge3.Note();
+	      note.sourceIndex = sourceIndex;
 	
 	      if (data.length < 1) throw 'Invalid note data: ' + data;
 	
@@ -7298,10 +7801,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	              if (lookahead === '0') mark.positionHint = Markings.MarkingPositionHint.Below;else if (lookahead === '1') mark.positionHint = Markings.MarkingPositionHint.Above;else if (lookahead === '2') mark.terminating = true; // episema terminates
 	              else if (lookahead === '3') mark.alignment = Markings.HorizontalEpisemaAlignment.Left;else if (lookahead === '4') mark.alignment = Markings.HorizontalEpisemaAlignment.Center;else if (lookahead === '5') mark.alignment = Markings.HorizontalEpisemaAlignment.Right;else break;
 	
-	              // the gabc definition for epismata is so convoluted...
-	              // - double underscores create epismata over multiple notes.
+	              // the gabc definition for episemata is so convoluted...
+	              // - double underscores create episemata over multiple notes.
 	              // - unless the _ has a 0, 1, 3, 4, or 5 modifier, which means
-	              //   another underscore puts a second epismata on the same note
+	              //   another underscore puts a second episema on the same note
 	              // - (when there's a 2 lookahead, then this is treated as an
 	              //   unmodified underscore, so another underscore would be
 	              //   added to previous notes
@@ -7314,10 +7817,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	
 	            // since gabc allows consecutive underscores which is a shortcut to
-	            // apply the epismata to previous notes, we keep track of that here
+	            // apply the episemata to previous notes, we keep track of that here
 	            // in order to add the new episema to the correct note.
 	
-	            if (episemaNote) episemaNote.epismata.push(mark);
+	            if (episemaNote) episemaNote.episemata.push(mark);
 	
 	            if (episemaNote === note && episemaHadModifier) episemaNote = note;else if (episemaNoteIndex >= 0 && notes.length > 0) episemaNote = notes[--episemaNoteIndex];
 	
@@ -7345,6 +7848,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              // if we're already a stropha, that means this is gabc's
 	              // quick stropha feature (e.g., gsss). create a new note
 	              var newNote = new _Exsurge3.Note();
+	              newNote.sourceIndex = sourceIndex + i;
 	              newNote.staffPosition = note.staffPosition;
 	              newNote.pitch = note.pitch;
 	              notes.push(note);
@@ -7361,6 +7865,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              // if we're already a stropha, that means this is gabc's
 	              // quick virga feature (e.g., gvvv). create a new note
 	              var _newNote = new _Exsurge3.Note();
+	              _newNote.sourceIndex = sourceIndex + i;
 	              _newNote.staffPosition = note.staffPosition;
 	              _newNote.pitch = note.pitch;
 	              notes.push(note);
@@ -7432,6 +7937,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      if (this.needToEndBrace && !note.braceStart && !note.braceEnd) {
 	        note.braceEnd = new Markings.BracePoint(note, this.needToEndBrace.isAbove, this.needToEndBrace.shape, this.needToEndBrace.attachment === Markings.BraceAttachment.Left ? Markings.BraceAttachment.Right : Markings.BraceAttachment.Left);
+	        note.braceEnd.automatic = true;
 	        delete this.needToEndBrace;
 	      }
 	
@@ -7476,7 +7982,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (results[4] === '{' || results[5]) note.braceStart = new Markings.BracePoint(note, above, shape, attachmentPoint);else note.braceEnd = new Markings.BracePoint(note, above, shape, attachmentPoint);
 	
 	      // just have the next note end a brace that uses length;
-	      if (results[5]) this.needToEndBrace = note.braceStart;
+	      if (results[5]) {
+	        note.braceStart.automatic = true;
+	        this.needToEndBrace = note.braceStart;
+	      }
 	    }
 	
 	    // takes raw gabc text source and parses it into words. For example, passing
@@ -7521,6 +8030,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      var syllables = [];
 	      var matches = [];
+	
+	      syllables.wordLength = gabcWord.length;
 	
 	      while (match = __syllablesRegex.exec(gabcWord)) {
 	        matches.push(match);
@@ -7962,9 +8473,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var note = this.notes[i];
 	        var j;
 	
-	        for (j = 0; j < note.epismata.length; j++) {
-	          note.epismata[j].performLayout(ctxt);
-	          this.addVisualizer(note.epismata[j]);
+	        for (j = 0; j < note.episemata.length; j++) {
+	          note.episemata[j].performLayout(ctxt);
+	          this.addVisualizer(note.episemata[j]);
 	        }
 	
 	        for (j = 0; j < note.morae.length; j++) {
@@ -8003,29 +8514,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return new NeumeBuilder(ctxt, this);
 	    }
 	  }, {
-	    key: 'positionEpismata',
-	    value: function positionEpismata(note, position) {
+	    key: 'positionEpisemata',
+	    value: function positionEpisemata(note, position) {
 	      var mark, i;
-	      for (i = 0; i < note.epismata.length; i++) {
-	        if (note.epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) note.epismata[i].positionHint = position;
-	      }return note.epismata.length;
+	      for (i = 0; i < note.episemata.length; i++) {
+	        if (note.episemata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) note.episemata[i].positionHint = position;
+	      }return note.episemata.length;
 	    }
 	  }, {
-	    key: 'positionEpismataAbove',
-	    value: function positionEpismataAbove(note) {
-	      return this.positionEpismata(note, _ExsurgeChant.MarkingPositionHint.Above);
+	    key: 'positionEpisemataAbove',
+	    value: function positionEpisemataAbove(note) {
+	      return this.positionEpisemata(note, _ExsurgeChant.MarkingPositionHint.Above);
 	    }
 	  }, {
-	    key: 'positionEpismataBelow',
-	    value: function positionEpismataBelow(note) {
-	      return this.positionEpismata(note, _ExsurgeChant.MarkingPositionHint.Below);
+	    key: 'positionEpisemataBelow',
+	    value: function positionEpisemataBelow(note) {
+	      return this.positionEpisemata(note, _ExsurgeChant.MarkingPositionHint.Below);
 	    }
 	  }, {
-	    key: 'positionPodatusEpismata',
-	    value: function positionPodatusEpismata(bottomNote, topNote) {
+	    key: 'positionPodatusEpisemata',
+	    value: function positionPodatusEpisemata(bottomNote, topNote) {
 	      // 1. episema on lower note by default be below, upper note above
-	      this.positionEpismataBelow(bottomNote);
-	      this.positionEpismataAbove(topNote);
+	      this.positionEpisemataBelow(bottomNote);
+	      this.positionEpisemataAbove(topNote);
 	    }
 	  }, {
 	    key: 'positionPodatusMorae',
@@ -8055,7 +8566,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'positionPodatusMarkings',
 	    value: function positionPodatusMarkings(bottomNote, topNote) {
-	      this.positionPodatusEpismata(bottomNote, topNote);
+	      this.positionPodatusEpisemata(bottomNote, topNote);
 	      this.positionPodatusMorae(bottomNote, topNote);
 	    }
 	
@@ -8066,7 +8577,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'positionTorculusMarkings',
 	    value: function positionTorculusMarkings(firstNote, secondNote, thirdNote) {
 	      var hasTopEpisema = this.positionClivisMarkings(secondNote, thirdNote);
-	      hasTopEpisema = this.positionEpismata(firstNote, hasTopEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below) && hasTopEpisema;
+	      hasTopEpisema = this.positionEpisemata(firstNote, hasTopEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below) && hasTopEpisema;
 	      return hasTopEpisema;
 	    }
 	  }, {
@@ -8082,32 +8593,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }, {
-	    key: 'positionClivisEpismata',
-	    value: function positionClivisEpismata(firstNote, secondNote) {
-	      var hasTopEpisema = this.positionEpismataAbove(firstNote);
-	      this.positionEpismata(secondNote, hasTopEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below);
+	    key: 'positionClivisEpisemata',
+	    value: function positionClivisEpisemata(firstNote, secondNote) {
+	      var hasTopEpisema = this.positionEpisemataAbove(firstNote);
+	      this.positionEpisemata(secondNote, hasTopEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below);
 	      return hasTopEpisema;
 	    }
 	  }, {
 	    key: 'positionClivisMarkings',
 	    value: function positionClivisMarkings(firstNote, secondNote) {
 	      this.positionClivisMorae(firstNote, secondNote);
-	      return this.positionClivisEpismata(firstNote, secondNote);
+	      return this.positionClivisEpisemata(firstNote, secondNote);
 	    }
 	  }, {
 	    key: 'positionPorrectusMarkings',
 	    value: function positionPorrectusMarkings(firstNote, secondNote, thirdNote) {
 	      // episemata on first and second note work like a clivis,
 	      // the second note should have its episema below, unless the first note also has an episema.
-	      this.positionClivisEpismata(firstNote, secondNote);
+	      this.positionClivisEpisemata(firstNote, secondNote);
 	      this.positionPodatusMarkings(secondNote, thirdNote);
 	    }
 	  }, {
 	    key: 'positionPorrectusFlexusMarkings',
 	    value: function positionPorrectusFlexusMarkings(first, second, third, fourth) {
-	      var hasTopEpisema = this.positionEpismataAbove(first);
+	      var hasTopEpisema = this.positionEpisemataAbove(first);
 	      hasTopEpisema = this.positionClivisMarkings(third, fourth) || hasTopEpisema;
-	      this.positionEpismata(second, hasTopEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below);
+	      this.positionEpisemata(second, hasTopEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below);
 	    }
 	
 	    // subclasses can override this in order to correctly place markings in a neume specific way
@@ -8141,8 +8652,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      // logic here is this: if first episema is default position, place it above.
 	      // then place the second one (if there is one) opposite of the first.
-	      for (var i = 0; i < this.notes[0].epismata.length; i++) {
-	        if (this.notes[0].epismata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[0].epismata[i].positionHint = positionHint;else positionHint = this.notes[0].epismata[i].positionHint;
+	      for (var i = 0; i < this.notes[0].episemata.length; i++) {
+	        if (this.notes[0].episemata[i].positionHint === _ExsurgeChant.MarkingPositionHint.Default) this.notes[0].episemata[i].positionHint = positionHint;else positionHint = this.notes[0].episemata[i].positionHint;
 	
 	        // now place the next one in the opposite position
 	        positionHint = positionHint === _ExsurgeChant.MarkingPositionHint.Above ? _ExsurgeChant.MarkingPositionHint.Below : _ExsurgeChant.MarkingPositionHint.Above;
@@ -8196,8 +8707,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Bivirga, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      this.positionEpismataAbove(this.notes[0]);
-	      this.positionEpismataAbove(this.notes[1]);
+	      this.positionEpisemataAbove(this.notes[0]);
+	      this.positionEpisemataAbove(this.notes[1]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -8233,9 +8744,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Trivirga, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      this.positionEpismataAbove(this.notes[0]);
-	      this.positionEpismataAbove(this.notes[1]);
-	      this.positionEpismataAbove(this.notes[2]);
+	      this.positionEpisemataAbove(this.notes[0]);
+	      this.positionEpisemataAbove(this.notes[1]);
+	      this.positionEpisemataAbove(this.notes[2]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -8270,7 +8781,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function positionMarkings() {
 	
 	      for (var i = 0; i < this.notes.length; i++) {
-	        this.positionEpismataAbove(this.notes[i]);
+	        this.positionEpisemataAbove(this.notes[i]);
 	      }
 	    }
 	  }, {
@@ -8343,8 +8854,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Distropha, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      this.positionEpismataAbove(this.notes[0]);
-	      this.positionEpismataAbove(this.notes[1]);
+	      this.positionEpisemataAbove(this.notes[0]);
+	      this.positionEpisemataAbove(this.notes[1]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -8377,7 +8888,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Oriscus, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      this.positionEpismataAbove(this.notes[0]);
+	      this.positionEpisemataAbove(this.notes[0]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -8485,9 +8996,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(PesSubpunctis, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      this.positionPodatusEpismata(this.notes[0], this.notes[1]);
+	      this.positionPodatusEpisemata(this.notes[0], this.notes[1]);
 	      for (var i = 2; i < this.notes.length; ++i) {
-	        this.positionEpismataAbove(this.notes[i]);
+	        this.positionEpisemataAbove(this.notes[i]);
 	      }
 	    }
 	  }, {
@@ -8673,7 +9184,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Punctum, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      this.positionEpismataAbove(this.notes[0]);
+	      this.positionEpisemataAbove(this.notes[0]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -8720,7 +9231,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // by default place episema below
 	      // fixme: is this correct?
 	      for (var i = 0; i < this.notes.length; i++) {
-	        this.positionEpismataBelow(this.notes[i]);
+	        this.positionEpisemataBelow(this.notes[i]);
 	      }
 	    }
 	  }, {
@@ -8770,7 +9281,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
 	      var hasTopEpisema = this.positionTorculusMarkings(this.notes[1], this.notes[2], this.notes[3]);
-	      this.positionEpismata(this.notes[0], hasTopEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below);
+	      this.positionEpisemata(this.notes[0], hasTopEpisema ? _ExsurgeChant.MarkingPositionHint.Above : _ExsurgeChant.MarkingPositionHint.Below);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -8825,9 +9336,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function positionMarkings() {
 	      if (this.notes[2].shape === _Exsurge3.NoteShape.Virga) {
 	        this.positionPodatusMarkings(this.notes[0], this.notes[1]);
-	        this.positionEpismataAbove(this.notes[2]);
+	        this.positionEpisemataAbove(this.notes[2]);
 	      } else {
-	        this.positionEpismataBelow(this.notes[0]);
+	        this.positionEpisemataBelow(this.notes[0]);
 	        this.positionPodatusMarkings(this.notes[1], this.notes[2]);
 	      }
 	    }
@@ -8879,9 +9390,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.positionPodatusMarkings(this.notes[0], this.notes[1]);
 	        this.positionClivisMarkings(this.notes[2], this.notes[3]);
 	      } else {
-	        this.positionEpismataBelow(this.notes[0]);
+	        this.positionEpisemataBelow(this.notes[0]);
 	        this.positionPodatusMarkings(this.notes[1], this.notes[2]);
-	        this.positionEpismataAbove(this.notes[3]);
+	        this.positionEpisemataAbove(this.notes[3]);
 	      }
 	    }
 	  }, {
@@ -8972,7 +9483,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
 	      this.positionPorrectusMarkings(this.notes[1], this.notes[2], this.notes[3]);
-	      this.positionClivisEpismata(this.notes[1], this.notes[0]);
+	      this.positionClivisEpisemata(this.notes[1], this.notes[0]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -9019,7 +9530,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
 	      this.positionPorrectusFlexusMarkings(this.notes[1], this.notes[2], this.notes[3], this.notes[4]);
-	      this.positionClivisEpismata(this.notes[1], this.notes[0]);
+	      this.positionClivisEpisemata(this.notes[1], this.notes[0]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -9075,9 +9586,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Tristropha, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      this.positionEpismataAbove(this.notes[0]);
-	      this.positionEpismataAbove(this.notes[1]);
-	      this.positionEpismataAbove(this.notes[2]);
+	      this.positionEpisemataAbove(this.notes[0]);
+	      this.positionEpisemataAbove(this.notes[1]);
+	      this.positionEpisemataAbove(this.notes[2]);
 	    }
 	  }, {
 	    key: 'performLayout',
@@ -9110,7 +9621,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Virga, [{
 	    key: 'positionMarkings',
 	    value: function positionMarkings() {
-	      this.positionEpismataAbove(this.notes[0]);
+	      this.positionEpisemataAbove(this.notes[0]);
 	    }
 	  }, {
 	    key: 'performLayout',
