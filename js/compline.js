@@ -243,7 +243,7 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     };
     if(full) {
       gotData('');
-    } else {
+    } else if(typeof(day) !== 'undefined') {
       $.get('psalms/'+day+'/psalm-verses'+pt+'.html',gotData).fail(function(){
         $.get('psalms/'+day+'/psalm-verses.html',gotData);
       });
