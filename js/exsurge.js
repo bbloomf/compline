@@ -1828,11 +1828,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    "bounds": {
 	      "x": 0,
 	      "y": 0,
-	      "width": 70,
+	      "width": 100,
 	      "height": 105.546
 	    },
 	    "origin": {
-	      "x": 35,
+	      "x": 50,
 	      "y": 53.164062
 	    },
 	    "align": "left"
@@ -2300,6 +2300,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.annotationTextColor = this.lyricTextColor;
 	
 	    this.minLedgerSeparation = 2; // multiple of staffInterval
+	    this.minSpaceAboveStaff = 1; // multiple of staffInterval
+	    this.minSpaceBelowStaff = 2; // multiple of staffInterval
 	
 	    // everything depends on the scale of the punctum
 	    this.glyphPunctumWidth = _Exsurge2.Glyphs.PunctumQuadratum.bounds.width;
@@ -3184,12 +3186,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        that.spans.push(new TextSpan(spanText, properties));
 	      };
 	
-	      var markupRegex = /\*|_|\^|%|([ARVarv])\/\./g;
+	      var markupRegex = /([ARVarv])\/\.|([*_^%])(?=(?:(.+?)\2)?)/g;
 	
 	      var match = null;
 	      while (match = markupRegex.exec(text)) {
 	
-	        var markupSymbol = match[0];
+	        var markupSymbol = match[2];
 	
 	        // non-matching symbols first
 	        if (match[1]) {
@@ -3197,6 +3199,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        } else if (markupStack.length === 0) {
 	          // otherwise we're dealing with matching markup delimeters
 	          // if this is our first markup frame, then just create an inline for preceding text and push the stack frame
+	          if (markupSymbol === '*' && !match[3]) // we are only strict with the asterisk, because there are cases when it needs to be displayed rather than count as a markup symbol
+	            continue;
 	          closeSpan(text.substring(spanStartIndex, match.index));
 	          markupStack.push(MarkupStackFrame.createStackFrame(markupSymbol, match.index));
 	        } else {
@@ -3213,13 +3217,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	            continue;
 	          } else {
 	            // group open
+	            if (markupSymbol === '*' && !match[3]) continue;
 	            closeSpan(text.substring(spanStartIndex, match.index));
 	            markupStack.push(MarkupStackFrame.createStackFrame(markupSymbol, match.index));
 	          }
 	        }
 	
 	        // advance the start index past the current markup
-	        spanStartIndex = match.index + markupSymbol.length;
+	        spanStartIndex = match.index + match[0].length;
 	      }
 	
 	      // if we finished matches, and there is still some text left, create one final run
@@ -3275,7 +3280,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      if (ctxt.textMeasuringStrategy === TextMeasuringStrategy.Svg) {
 	        while (ctxt.svgTextMeasurer.firstChild) {
-	          ctxt.svgTextMeasurer.firstChild.remove();
+	          ctxt.svgTextMeasurer.removeChild(ctxt.svgTextMeasurer.firstChild);
 	        }ctxt.svgTextMeasurer.appendChild(this.createSvgNode(ctxt));
 	        ctxt.svgTextMeasurer.appendChild(ctxt.createStyleNode());
 	
@@ -3542,20 +3547,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	          // just center the text.
 	          if (this.lyricType !== LyricType.Directive) {
 	
-	            // Non-directive elements are lined up to the chant notation based on vowel segments,
-	            var result = activeLanguage.findVowelSegment(this.text, 0);
+	            // only consider text content after the last space (if any)
+	            var startIndex = this.text.lastIndexOf(' ') + 1;
 	
-	            if (result.found === true) {
-	              if (ctxt.textMeasuringStrategy === TextMeasuringStrategy.Svg) {
-	                // svgTextMeasurer still has the current lyric in it...
-	                x1 = ctxt.svgTextMeasurer.firstChild.getSubStringLength(0, result.startIndex);
-	                x2 = ctxt.svgTextMeasurer.firstChild.getSubStringLength(0, result.startIndex + result.length);
-	              } else if (ctxt.textMeasuringStrategy === TextMeasuringStrategy.Canvas) {
-	                x1 = this.measureSubstring(ctxt, result.startIndex);
-	                x2 = this.measureSubstring(ctxt, result.startIndex + result.length);
-	              }
-	              offset = x1 + (x2 - x1) / 2;
+	            // unless there are no text characters following the space:
+	            if (startIndex > 0 && !this.text.slice(startIndex).match(/[a-záéíóúýäëïöüÿàèìòùỳāēīōūȳăĕĭŏŭ]/i)) {
+	              startIndex = 0;
 	            }
+	
+	            // Non-directive elements are lined up to the chant notation based on vowel segments,
+	            var result = activeLanguage.findVowelSegment(this.text, startIndex);
+	
+	            if (result.found !== true) {
+	              var match = this.text.slice(startIndex).match(/[a-z]+/i);
+	              if (match) {
+	                result.startIndex = startIndex + match.index;
+	                result.length = match[0].length;
+	              } else {
+	                result.startIndex = startIndex;
+	                result.length = this.text.length - startIndex;
+	              }
+	            }
+	            if (ctxt.textMeasuringStrategy === TextMeasuringStrategy.Svg) {
+	              // svgTextMeasurer still has the current lyric in it...
+	              x1 = ctxt.svgTextMeasurer.firstChild.getSubStringLength(0, result.startIndex);
+	              x2 = ctxt.svgTextMeasurer.firstChild.getSubStringLength(0, result.startIndex + result.length);
+	            } else if (ctxt.textMeasuringStrategy === TextMeasuringStrategy.Canvas) {
+	              x1 = this.measureSubstring(ctxt, result.startIndex);
+	              x2 = this.measureSubstring(ctxt, result.startIndex + result.length);
+	            }
+	            offset = x1 + (x2 - x1) / 2;
 	          }
 	        }
 	
@@ -5001,7 +5022,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      // start off with a rectangle that holds at least the four staff lines
 	      // we fudge the 3 to 3.1 so that the svg doesn't crop off the upper/lower staff lines...
-	      this.notationBounds = new _Exsurge.Rect(this.staffLeft, -3.1 * ctxt.staffInterval, this.staffRight - this.staffLeft, 6.2 * ctxt.staffInterval);
+	      this.notationBounds = new _Exsurge.Rect(this.staffLeft, -(3.1 + ctxt.minSpaceAboveStaff) * ctxt.staffInterval, this.staffRight - this.staffLeft, (6.2 + ctxt.minSpaceAboveStaff) * ctxt.staffInterval);
 	
 	      // run through all the elements of the line and calculate the bounds of the notations,
 	      // as well as the bounds of each text track we will use
@@ -5111,7 +5132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	
 	      // add up the lyric line heights to get the total height of the chant line
-	      this.notationBounds.height += this.lyricLineHeight * this.numLyricLines + this.altLineHeight * this.numAltLines;
+	      this.notationBounds.height += Math.max(ctxt.minSpaceBelowStaff * ctxt.staffInterval, this.lyricLineHeight * this.numLyricLines + this.altLineHeight * this.numAltLines);
 	      var totalHeight = this.notationBounds.height;
 	      this.notationBounds.y -= this.altLineHeight * this.numAltLines;
 	
@@ -5439,9 +5460,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          j,
 	          lastNotationIndex = notations.length - 1;
 	
-	      for (i = newElementStart; i <= lastNotationIndex; i++) {
+	      if (curr.hasLyrics()) _Exsurge2.LyricArray.mergeIn(this.lastLyrics, curr.lyrics);
 	
-	        if (curr.hasLyrics()) _Exsurge2.LyricArray.mergeIn(this.lastLyrics, curr.lyrics);
+	      for (i = newElementStart; i <= lastNotationIndex; i++) {
 	
 	        prev = curr;
 	        curr = notations[i];
@@ -5508,6 +5529,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	          // check if the prev elements want to be kept with this one
 	          for (j = i - 1; j > this.notationsStartIndex; j--) {
 	            var cne = notations[j];
+	            curr = notations[j + 1];
+	
+	            // curr is the first notation on the next line
+	            // cne is the last notation on the previous line
+	
+	            // force any notations starting with a quilisma to be kept with the previous notation:
+	            if (curr && curr.notes && curr.notes[0].shape === _Exsurge3.NoteShape.Quilisma) {
+	              this.numNotationsOnLine--;
+	              continue;
+	            }
 	
 	            // if the line break is allowed (cne.allowLineBreakBeforeNext), keep this number of notations around so we can check during justification
 	            // whether there would be too much space introduced between
@@ -5521,29 +5552,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          if (this.numNotationsOnLine === 0) numNotationsOnLine = 1;
 	
 	          // determine the neumes we can space apart, if we do end up justifying
-	          this.toJustify = [];
-	          curr = null;
-	          var lastIndex = this.notationsStartIndex + this.numNotationsOnLine;
-	          for (i = this.notationsStartIndex; i < lastIndex; i++) {
-	
-	            prev = curr;
-	            curr = notations[i];
-	
-	            if (prev !== null) _Exsurge2.LyricArray.mergeIn(prevLyrics, prev.lyrics);
-	
-	            if (prev !== null && prev.keepWithNext === true) continue;
-	
-	            if (prevLyrics.length && prevLyrics[0].allowsConnector() && curr.hasLyrics()) continue;
-	
-	            if (curr.constructor === _Exsurge3.ChantLineBreak) continue;
-	
-	            if (curr === this.custos) continue;
-	
-	            if (i === 0 && this.score.useDropCap && curr.hasLyrics()) continue;
-	
-	            // otherwise, we can add space before this element
-	            this.toJustify.push(curr);
-	          }
+	          curr = this.findNeumesToJustify(prevLyrics);
 	
 	          if (this.maxNumNotationsOnLine) {
 	            // Check whether we should squeeze some extra notations on the line to avoid too much space after justification:
@@ -5551,9 +5560,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var extraSpace = this.staffRight;
 	
 	            if (this.numNotationsOnLine > 0) {
-	              var last = notations[lastIndex - 1];
+	              var last = notations[this.notationsStartIndex + this.numNotationsOnLine - 1];
 	
-	              if (prevLyrics) extraSpace -= Math.max(_Exsurge2.LyricArray.getRight(prevLyrics), last.bounds.right() + last.trailingSpace);else extraSpace -= last.bounds.right() + last.trailingSpace;
+	              if (prevLyrics.length) extraSpace -= Math.max(_Exsurge2.LyricArray.getRight(prevLyrics), last.bounds.right() + last.trailingSpace);else extraSpace -= last.bounds.right() + last.trailingSpace;
 	
 	              extraSpace -= _Exsurge4.Glyphs.CustosLong.bounds.width * ctxt.glyphScaling;
 	
@@ -5586,6 +5595,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	          break;
 	        }
 	
+	        if (curr.hasLyrics()) _Exsurge2.LyricArray.mergeIn(this.lastLyrics, curr.lyrics);
+	
 	        curr.chantLine = this;
 	        this.numNotationsOnLine++;
 	
@@ -5594,11 +5605,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // line breaks are a special case indicating to stop processing here
 	        if (curr.constructor === _Exsurge3.ChantLineBreak && width > 0) {
 	          this.justify = curr.justify;
+	          if (this.justify) this.findNeumesToJustify(prevLyrics);
 	          break;
 	        }
 	      }
-	
-	      if (curr.chantLine === this && curr.hasLyrics()) _Exsurge2.LyricArray.mergeIn(this.lastLyrics, curr.lyrics);
 	
 	      if (!this.custos) {
 	        // create the automatic custos at the end of the line if there are neumes left in the notations
@@ -5634,14 +5644,71 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.justify = false;
 	      } else if (this.notationsStartIndex + this.numNotationsOnLine === notations.length) {
 	        // this is the last chant line.
-	        this.justify = true;
 	        this.justify = last.isDivider && (this.staffRight - last.bounds.right()) / this.staffRight < .1;
 	      }
 	
 	      // Justify the line if we need to
 	      if (this.justify === true) this.justifyElements();
 	
+	      this.centerDividers();
+	
 	      this.finishLayout(ctxt);
+	    }
+	  }, {
+	    key: 'centerDividers',
+	    value: function centerDividers() {
+	      var lastIndex = this.notationsStartIndex + this.numNotationsOnLine,
+	          curr;
+	      for (var i = this.notationsStartIndex; i < lastIndex; i++) {
+	        curr = this.score.notations[i];
+	
+	        if (curr && curr.isDivider) {
+	          var prev = this.score.notations[i - 1];
+	          var next = i + 1 === lastIndex ? this.custos : this.score.notations[i + 1];
+	          if (prev && next) {
+	            var oldBoundsX = curr.bounds.x;
+	            curr.bounds.x = (prev.bounds.right() + next.bounds.x - curr.bounds.width) / 2;
+	            if (curr.hasLyrics()) {
+	              var offset = oldBoundsX - curr.bounds.x;
+	              for (var j = curr.lyrics.length - 1; j >= 0; j--) {
+	                curr.lyrics[j].bounds.x += offset;
+	              }
+	            }
+	          }
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'findNeumesToJustify',
+	    value: function findNeumesToJustify(prevLyrics) {
+	      this.toJustify = [];
+	      var prev,
+	          curr = null,
+	          lastIndex = this.notationsStartIndex + this.numNotationsOnLine;
+	      for (var i = this.notationsStartIndex; i <= lastIndex; i++) {
+	
+	        prev = curr;
+	        curr = this.score.notations[i];
+	
+	        if (!curr) continue;
+	
+	        if (prev !== null) {
+	          _Exsurge2.LyricArray.mergeIn(prevLyrics, prev.lyrics);
+	          if (prev.keepWithNext === true) continue;
+	        }
+	
+	        if (prevLyrics.length && prevLyrics[0].allowsConnector() && curr.hasLyrics()) continue;
+	
+	        if (curr.constructor === _Exsurge3.ChantLineBreak) continue;
+	
+	        if (curr === this.custos) continue;
+	
+	        if (i === 0 && this.score.useDropCap && curr.hasLyrics()) continue;
+	
+	        // otherwise, we can add space before this element
+	        this.toJustify.push(curr);
+	      }
+	      return prev;
 	    }
 	  }, {
 	    key: 'justifyElements',
@@ -5656,10 +5723,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var extraSpace = 0;
 	
 	      if (this.numNotationsOnLine > 0) {
-	        var last = notations[lastIndex - 1],
-	            lastLyrics = this.lastLyrics;
+	        var last = notations[lastIndex - 1];
 	
-	        if (lastLyrics) extraSpace = this.staffRight - Math.max(_Exsurge2.LyricArray.getRight(lastLyrics), last.bounds.right() + last.trailingSpace);else extraSpace = this.staffRight - (last.bounds.right() + last.trailingSpace);
+	        if (this.lastLyrics.length) extraSpace = this.staffRight - Math.max(_Exsurge2.LyricArray.getRight(this.lastLyrics), last.bounds.right() + last.trailingSpace);else extraSpace = this.staffRight - (last.bounds.right() + last.trailingSpace);
 	      }
 	
 	      if (this.custos) extraSpace -= this.custos.bounds.width + this.custos.leadingSpace;
@@ -5889,6 +5955,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // irrespective of lyrics.
 	      curr.bounds.x = prev.bounds.right() + prev.trailingSpace;
 	
+	      if (curr.hasLyrics() && prev.hasLyrics() && (prev.lyrics[0].lyricType === _Exsurge2.LyricType.SingleSyllable || prev.lyrics[0].lyricType === _Exsurge2.LyricType.EndingSyllable) && (curr.lyrics[0].lyricType === _Exsurge2.LyricType.SingleSyllable || curr.lyrics[0].lyricType === _Exsurge2.LyricType.BeginningSyllable)) {
+	        curr.bounds.x += ctxt.intraNeumeSpacing * ctxt.intraSyllabicMultiplier;
+	      }
+	
 	      // if the previous notation has no lyrics, then we simply make sure the
 	      // current notation with lyrics is in the bounds of the line
 	      if (prevLyrics.length === 0) {
@@ -5924,8 +5994,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var atLeastOneWithoutConnector = false;
 	        for (i = 0; i < curr.lyrics.length; i++) {
 	          if (!curr.lyrics[i].originalText) continue;
-	          if (i < prevLyrics.length && prevLyrics[i] !== null) {
-	            var prevLyricRight = prevLyrics[i].getRight();
+	          var prevLyricRight = 0;
+	          if (i < prevLyrics.length && prevLyrics[i]) {
+	            prevLyricRight = prevLyrics[i].getRight();
 	          }
 	
 	          curr.lyrics[i].setNeedsConnector(false); // we hope for the best!
@@ -6242,7 +6313,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.addVisualizer(line0);
 	
 	      var line1 = new _Exsurge2.DividerLineVisualizer(ctxt, -3, 3);
-	      line1.bounds.x = ctxt.intraNeumeSpacing * 2;
+	      line1.bounds.x = ctxt.intraNeumeSpacing * 2 - line1.bounds.width;
 	      this.addVisualizer(line1);
 	
 	      this.origin.x = this.bounds.width / 2;
@@ -6636,13 +6707,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'performLayout',
 	    value: function performLayout(ctxt) {
 	
-	      var glyphCode;
+	      var glyphCode = this.note.glyphVisualizer.glyphCode;
 	      // we have to place the ictus futher from the note in some cases to avoid a collision with an episema on the same note:
 	      var staffPosition = this.note.staffPosition;
 	      var placeFurtherFromNote = this.note.episemata.length > 0 && this.note.episemata[0].positionHint === this.positionHint;
-	      var horizontalOffset = this.note.bounds.width / 2;
+	      var horizontalOffset;
 	      var verticalOffset = 0;
 	      var shortOffset = 1;
+	
+	      // The porrectus requires special handling of the note width,
+	      // otherwise the width is just that of the note itself
+	      if (glyphCode === _Exsurge2.GlyphCode.Porrectus1 || glyphCode === _Exsurge2.GlyphCode.Porrectus2 || glyphCode === _Exsurge2.GlyphCode.Porrectus3 || glyphCode === _Exsurge2.GlyphCode.Porrectus4) horizontalOffset = ctxt.staffInterval / 2;else if (glyphCode === _Exsurge2.GlyphCode.None) {
+	        horizontalOffset = -ctxt.staffInterval / 2;
+	      } else {
+	        horizontalOffset = this.note.bounds.width / 2;
+	      }
 	
 	      if (this.positionHint === MarkingPositionHint.Above) {
 	        glyphCode = _Exsurge2.GlyphCode.VerticalEpisemaAbove;
@@ -6684,7 +6763,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    _this4.note = note;
 	    _this4.positionHint = MarkingPositionHint.Default;
-	    _this4.horizontalOffset = 0;
+	    _this4.horizontalOffset = ctxt.staffInterval / 2 + _this4.origin.x;
 	    return _this4;
 	  }
 	
@@ -6697,15 +6776,55 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.setStaffPosition(ctxt, staffPosition);
 	
 	      var verticalOffset = 0;
-	      if (this.positionHint === MarkingPositionHint.Above) {
-	        if (staffPosition % 2 === 0) verticalOffset -= ctxt.staffInterval + ctxt.staffInterval * .75;else verticalOffset -= ctxt.staffInterval * .75;
-	      } else if (this.positionHint === MarkingPositionHint.Below) {
-	        if (staffPosition % 2 === 0) verticalOffset += ctxt.staffInterval + ctxt.staffInterval * .75;else verticalOffset += ctxt.staffInterval * .75;
-	      } else {
-	        if (Math.abs(staffPosition) % 2 === 1) verticalOffset -= ctxt.staffInterval * .75;
+	      if (this.horizontalOffset === ctxt.staffInterval / 2 + this.origin.x) {
+	        // First, we need to find the next note in the neume.
+	        var noteIndex = this.note.neume.notes.indexOf(this.note);
+	        var nextNote;
+	        if (noteIndex >= 0) {
+	          ++noteIndex;
+	          if (this.note.neume.notes.length > noteIndex) {
+	            nextNote = this.note.neume.notes[noteIndex];
+	            if (nextNote.bounds.right() > this.note.bounds.right()) {
+	              // center the dot over the following note.
+	              this.horizontalOffset = (nextNote.bounds.right() - this.note.bounds.right() - this.bounds.right()) / 2;
+	            } else {
+	              nextNote = null;
+	            }
+	          } else if (this.note.neume.notes.length === noteIndex) {
+	            // this note is the last in its neume:
+	            if (this.note.neume.trailingSpace === 0) {
+	              // if this was the last note in its neume, we only care about the next note if there is no trailing space at the end of this neume.
+	              var notationIndex = this.note.neume.score.notations.indexOf(this.note.neume);
+	              if (notationIndex >= 0) {
+	                var nextNotation = this.note.neume.score.notations[notationIndex + 1];
+	                if (nextNotation && nextNotation.notes) {
+	                  nextNote = nextNotation.notes[0];
+	                }
+	              }
+	            } else if (this.note.shape !== _Exsurge3.NoteShape.Inclinatum) {
+	              this.note.neume.trailingSpace += this.origin.x;
+	            }
+	          }
+	        }
 	      }
 	
-	      this.bounds.x += this.horizontalOffset + this.note.bounds.right() + ctxt.staffInterval / 4.0;
+	      if (this.positionHint === MarkingPositionHint.Above) {
+	        if (staffPosition % 2 === 0) verticalOffset -= ctxt.staffInterval * 1.75;else verticalOffset -= ctxt.staffInterval * .75;
+	      } else if (this.positionHint === MarkingPositionHint.Below) {
+	        if (staffPosition % 2 === 0) verticalOffset += ctxt.staffInterval * 1.75;else verticalOffset += ctxt.staffInterval * .75;
+	      } else {
+	        if (staffPosition % 2 === 0) {
+	          // if the note is in a space and followed by a note on the line below, we often want to move the mora dot up slightly so that it is centered
+	          // between the top of the note's space and the top of the following note.
+	          if (nextNote && nextNote.staffPosition === staffPosition - 1) {
+	            verticalOffset -= ctxt.staffInterval * .25;
+	          }
+	        } else {
+	          verticalOffset -= ctxt.staffInterval * .75;
+	        }
+	      }
+	
+	      this.bounds.x += this.horizontalOffset + this.note.bounds.right();
 	      this.bounds.y += verticalOffset;
 	    }
 	  }]);
@@ -7685,7 +7804,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	          return new Neumes.Torculus();
 	        },
 	        handle: function handle(currNote, prevNote) {
-	          if (currNote.shape === _Exsurge3.NoteShape.Default && currNote.staffPosition > prevNote.staffPosition) return torculusResupinusState;else return createNeume(new Neumes.Torculus(), false);
+	          if (currNote.shape === _Exsurge3.NoteShape.Default && currNote.staffPosition > prevNote.staffPosition) {
+	            if (currNote.ictus) currNote.ictus.positionHint = Markings.MarkingPositionHint.Above;
+	            return torculusResupinusState;
+	          } else {
+	            return createNeume(new Neumes.Torculus(), false);
+	          }
 	        }
 	      };
 	
@@ -8347,17 +8471,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        staffPosition = note.staffPosition;
 	
-	        // fixme: how do these calculations look for puncti inclinati based on staff position offsets?
-	        var multiple;
-	        switch (Math.abs(prevStaffPosition - staffPosition)) {
+	        var multiple = Math.abs(prevStaffPosition - staffPosition);
+	        switch (multiple) {
 	          case 0:
 	            multiple = 1.1;
 	            break;
-	          case 1:
-	            multiple = 0.8;
-	            break;
 	          default:
-	            multiple = 1.2;
+	            multiple *= 2 / 3;
 	            break;
 	        }
 	
@@ -8378,7 +8498,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      if (needsLine) {
 	        var line = new _Exsurge2.NeumeLineVisualizer(this.ctxt, this.lastNote, start, this.lineIsHanging);
-	        this.x = Math.max(0, this.x - line.bounds.width);
+	        this.x = Math.max(this.minX, this.x - line.bounds.width);
 	        line.bounds.x = this.x;
 	        this.neume.addVisualizer(line);
 	      }
@@ -9007,7 +9127,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      _get(Object.getPrototypeOf(PesSubpunctis.prototype), 'performLayout', this).call(this, ctxt);
 	
 	      // podatus followed by inclinati
-	      this.build(ctxt).withPodatus(this.notes[0], this.notes[1]).advanceBy(ctxt.intraNeumeSpacing / 2).withInclinati(this.notes.slice(2));
+	      this.build(ctxt).withPodatus(this.notes[0], this.notes[1]).advanceBy(ctxt.intraNeumeSpacing * 0.68).withInclinati(this.notes.slice(2));
 	
 	      this.finishLayout(ctxt);
 	    }
