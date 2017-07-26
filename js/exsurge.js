@@ -595,6 +595,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Pitch(step, octave) {
 	    _classCallCheck(this, Pitch);
 	
+	    if (typeof octave === 'undefined') {
+	      octave = Math.floor(step / 12);
+	      step = step % 12;
+	    }
 	    this.step = step;
 	    this.octave = octave;
 	  }
@@ -2310,6 +2314,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // max space to add between notations when justifying, in multiples of this.staffInterval
 	    this.maxExtraSpaceInStaffIntervals = 1;
 	
+	    // amount of space allowed to be taken away from any space that is allowed to add space when justifying, in multiples of staffLineWeight
+	    this.condenseLineAmount = 0;
+	
 	    // for keeping track of the clef
 	    this.activeClef = null;
 	
@@ -2408,6 +2415,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return '<style>' + this.createStyleCss(this) + '</style>';
 	    }
 	  }, {
+	    key: 'updateHyphenWidth',
+	    value: function updateHyphenWidth() {
+	      // measure the size of a hyphen for the lyrics
+	      var hyphen = new Lyric(this, this.syllableConnector, LyricType.SingleSyllable);
+	      this.hyphenWidth = hyphen.bounds.width;
+	
+	      this.minLyricWordSpacing = this.hyphenWidth;
+	    }
+	  }, {
 	    key: 'setGlyphScaling',
 	    value: function setGlyphScaling(glyphScaling) {
 	      this.glyphScaling = glyphScaling;
@@ -2420,11 +2436,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.dividerLineWeight = this.neumeLineWeight; // of quarter bar, half bar, etc.
 	      this.episemaLineWeight = this.neumeLineWeight; // of horizontal episemae
 	
-	      // measure the size of a hyphen for the lyrics
-	      var hyphen = new Lyric(this, this.syllableConnector, LyricType.SingleSyllable);
-	      this.hyphenWidth = hyphen.bounds.width;
+	      this.condenseLineFactor = this.staffLineWeight * this.condenseLineAmount;
 	
-	      this.minLyricWordSpacing = this.hyphenWidth;
+	      this.updateHyphenWidth();
 	
 	      this.intraNeumeSpacing = this.staffInterval / 2.0;
 	    }
@@ -4188,7 +4202,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      this.glyphVisualizer.bounds.x = this.bounds.x;
 	      this.glyphVisualizer.bounds.y = this.bounds.y;
-	      return this.glyphVisualizer.createSvgNode(ctxt, this);
+	      this.svgNode = this.glyphVisualizer.createSvgNode(ctxt, this);
+	      return this.svgNode;
 	    }
 	  }, {
 	    key: 'createSvgFragment',
@@ -4290,7 +4305,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      var step = _Exsurge.Pitch.staffOffsetToStep(offset);
 	
-	      if (this.defaultAccidental !== null && step === this.defaultAccidental.step) step += this.defaultAccidental.accidentalType;
+	      if (this.activeAccidental && this.activeAccidental.staffPosition === staffPosition) step += this.activeAccidental.accidentalType;
 	
 	      return new _Exsurge.Pitch(step, this.octave + octaveOffset);
 	    }
@@ -4346,7 +4361,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      var step = _Exsurge.Pitch.staffOffsetToStep(offset);
 	
-	      if (step === _Exsurge.Step.Ti && this.defaultAccidental === _ExsurgeChant2.AccidentalType.Flat) step = _Exsurge.Step.Te;
+	      if (this.activeAccidental && this.activeAccidental.staffPosition === staffPosition) step += this.activeAccidental.accidentalType;
 	
 	      return new _Exsurge.Pitch(step, this.octave + octaveOffset);
 	    }
@@ -4565,6 +4580,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      if (this.needsLayout === false) return; // nothing to do here!
 	
+	      ctxt.updateHyphenWidth();
+	
 	      // setup the context
 	      ctxt.activeClef = this.startingClef;
 	      ctxt.notations = this.notations;
@@ -4597,6 +4614,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }, 0);
 	
 	        return; // nothing to do here!
+	      }
+	
+	      // check for sane value of hyphen width:
+	      ctxt.updateHyphenWidth();
+	      if (ctxt.hyphenWidth / ctxt.lyricTextSize > 0.6) {
+	        setTimeout(function () {
+	          _this7.performLayoutAsync(ctxt, finishedCallback);
+	        }, 100);
+	        return;
 	      }
 	
 	      // setup the context
@@ -4712,6 +4738,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        'height': this.bounds.height,
 	        'viewBox': [0, 0, this.bounds.width, this.bounds.height].join(' ')
 	      }, node);
+	
+	      node.source = this;
+	      this.svg = node;
 	
 	      return node;
 	    }
@@ -5485,45 +5514,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	        // try to fit the curr element on this line.
 	        // if it doesn't fit, we finish up here.
-	        var fitsOnLine = this.positionNotationElement(ctxt, this.lastLyrics, prev, curr, actualRightBoundary);
+	        var extraWidth = 0;
+	        if (ctxt.condenseLineFactor && ctxt.condenseLineFactor > 0) {
+	          this.findNeumesToJustify([]);
+	          extraWidth = this.toJustify.length * ctxt.condenseLineFactor;
+	        }
+	        var fitsOnLine = this.positionNotationElement(ctxt, this.lastLyrics, prev, curr, actualRightBoundary, extraWidth);
 	        if (fitsOnLine === false) {
 	
 	          // first check for elements that cannot begin a system: dividers and custodes
 	          while (this.numNotationsOnLine > 0 && (curr.isDivider || curr.constructor === _ExsurgeChant.Custos)) {
 	            curr = notations[--i];
 	            this.numNotationsOnLine--;
-	          }
-	
-	          // check for an end brace in the curr element
-	          var braceEndIndex = curr.notes && curr.notes.reduce(function (result, n, i) {
-	            return result || n.braceEnd && i + 1 || 0;
-	          }, 0);
-	          var braceStartIndex = curr.notes && curr.notes.reduce(function (result, n, i) {
-	            return result || n.braceStart && i + 1 || 0;
-	          }, 0);
-	          // if there is not a start brace earlier in the element than the end brace, we need to find the earlier start brace
-	          // to keep the entire brace together on the next line
-	          if (braceEndIndex && (!braceStartIndex || braceStartIndex > braceEndIndex)) {
-	            // find last index of start brace
-	            var index = notations.slice(this.notationsStartIndex, i).reduceRight(function (accum, cne, index) {
-	              if (accum === -1 && cne.notes) {
-	                var braceStart = cne.notes.filter(function (n) {
-	                  return n.braceStart;
-	                }).length;
-	                var braceEnd = cne.notes.filter(function (n) {
-	                  return n.braceEnd;
-	                }).length;
-	                // if we see another end brace before we get to a start brace, short circuit
-	                if (braceEnd) return -2;
-	                if (braceStart) return index;
-	              }
-	              return accum;
-	            }, -1);
-	            // if the start brace was found, this line needs to end just before it:
-	            if (index > 0) {
-	              this.numNotationsOnLine = index;
-	              i = index + this.notationsStartIndex;
-	            }
 	          }
 	
 	          // check if the prev elements want to be kept with this one
@@ -5753,6 +5755,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	  }, {
+	    key: 'handleEndBrace',
+	    value: function handleEndBrace(ctxt, note) {
+	      var startBrace = ctxt.lastStartBrace;
+	      if (!startBrace) return;
+	      // calculate the y value of the brace by iterating over all notations
+	      // under/over the brace.
+	      var y, k, i;
+	      var dy = ctxt.intraNeumeSpacing / 2; // some safe space between brace and notes.
+	      if (startBrace.isAbove) {
+	        y = ctxt.calculateHeightFromStaffPosition(4);
+	        for (k = startBrace.notationIndex; k <= i; k++) {
+	          y = Math.min(y, notations[k].bounds.y - dy);
+	        }
+	      } else {
+	        y = ctxt.calculateHeightFromStaffPosition(-4);
+	        for (k = startBrace.notationIndex; k <= i; k++) {
+	          y = Math.max(y, notations[k].bounds.y + dy);
+	        }
+	      }
+	
+	      var startNote = startBrace.note || this.startingClef;
+	
+	      var addAcuteAccent = false;
+	
+	      if (startBrace.shape === _ExsurgeChant2.BraceShape.RoundBrace) {
+	
+	        this.braces.push(new _Exsurge2.RoundBraceVisualizer(ctxt, startBrace.getAttachmentX(startNote), note.braceEnd.getAttachmentX(note), y, startBrace.isAbove));
+	      } else {
+	
+	        if (startBrace.shape === _ExsurgeChant2.BraceShape.AccentedCurlyBrace) addAcuteAccent = true;
+	
+	        this.braces.push(new _Exsurge2.CurlyBraceVisualizer(ctxt, startBrace.getAttachmentX(startNote), note.braceEnd.getAttachmentX(note), y, startBrace.isAbove, addAcuteAccent));
+	      }
+	
+	      delete ctxt.lastStartBrace;
+	    }
+	  }, {
 	    key: 'finishLayout',
 	    value: function finishLayout(ctxt) {
 	      var _this2 = this;
@@ -5806,8 +5845,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 	
 	      var episemata = []; // keep track of episemata in case we can connect some
-	      var startBrace = null,
-	          startBraceNotationIndex = 0;
+	      var startBrace = null;
 	      var minY = Number.MAX_VALUE,
 	          maxY = Number.MIN_VALUE; // for braces
 	
@@ -5884,44 +5922,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	          }
 	
-	          if (note.braceEnd) {
-	
-	            // calculate the y value of the brace by iterating over all notations
-	            // under/over the brace.
-	            var y;
-	            var dy = ctxt.intraNeumeSpacing / 2; // some safe space between brace and notes.
-	            if (startBrace === null) {
-	              // fixme: this brace must have started on the previous line...what to do here, draw half a brace?
-	            } else {
-	                if (startBrace.isAbove) {
-	                  y = ctxt.calculateHeightFromStaffPosition(4);
-	                  for (k = startBraceNotationIndex; k <= i; k++) {
-	                    y = Math.min(y, notations[k].bounds.y - dy);
-	                  }
-	                } else {
-	                  y = ctxt.calculateHeightFromStaffPosition(-4);
-	                  for (k = startBraceNotationIndex; k <= i; k++) {
-	                    y = Math.max(y, notations[k].bounds.y + dy);
-	                  }
-	                }
-	
-	                var addAcuteAccent = false;
-	
-	                if (startBrace.shape === _ExsurgeChant2.BraceShape.RoundBrace) {
-	
-	                  this.braces.push(new _Exsurge2.RoundBraceVisualizer(ctxt, startBrace.getAttachmentX(), note.braceEnd.getAttachmentX(), y, startBrace.isAbove));
-	                } else {
-	
-	                  if (startBrace.shape === _ExsurgeChant2.BraceShape.AccentedCurlyBrace) addAcuteAccent = true;
-	
-	                  this.braces.push(new _Exsurge2.CurlyBraceVisualizer(ctxt, startBrace.getAttachmentX(), note.braceEnd.getAttachmentX(), y, startBrace.isAbove, addAcuteAccent));
-	                }
-	              }
-	          }
+	          if (note.braceEnd) this.handleEndBrace(ctxt, note);
 	
 	          if (note.braceStart) {
-	            startBrace = note.braceStart;
-	            startBraceNotationIndex = i;
+	            ctxt.lastStartBrace = startBrace = note.braceStart;
+	            startBrace.notationIndex = i;
 	          }
 	
 	          // update the active brace y position if there is one
@@ -5933,7 +5938,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      // if we still have an active brace, that means it spands two chant lines!
 	      if (startBrace !== null) {
-	        startBrace = startBrace;
+	        if (this.custos) {
+	          // if the next end brace is on the first note following the line break, simply use it with the custos
+	          // Do the same if there is only an accidental between
+	          // otherwise, make a new end brace to work for this one, and a new start brace for the next line.
+	          var nextNotation = notations[lastIndex];
+	          var nextNote = nextNotation.notes && nextNotation.notes[0];
+	          var nextNoteButOne = notations[lastIndex + 1].notes && notations[lastIndex + 1].notes[0];
+	          var braceEnd = nextNote && nextNote.braceEnd || nextNotation.isAccidental && nextNoteButOne && nextNoteButOne.braceEnd;
+	          if (braceEnd) {
+	            this.custos.braceEnd = braceEnd;
+	            this.handleEndBrace(ctxt, this.custos);
+	          } else {
+	            this.braceStart = startBrace;
+	            this.custos.braceEnd = new _ExsurgeChant2.BracePoint(this.custos, startBrace.isAbove, startBrace.shape, _ExsurgeChant2.BraceAttachment.Right);
+	            this.handleEndBrace(ctxt, this.custos);
+	            ctxt.lastStartBrace = new _ExsurgeChant2.BracePoint(null, startBrace.isAbove, startBrace.shape, _ExsurgeChant2.BraceAttachment.Left);
+	          }
+	        }
 	      }
 	
 	      // don't forget to also include the final custos, which may need a ledger line too
@@ -5947,15 +5969,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  }, {
 	    key: 'positionNotationElement',
-	    value: function positionNotationElement(ctxt, prevLyrics, prev, curr, rightNotationBoundary) {
-	
+	    value: function positionNotationElement(ctxt, prevLyrics, prev, curr, rightNotationBoundary, extraWidth) {
+	      rightNotationBoundary += extraWidth || 0;
 	      var i;
 	
 	      // To begin we just place the current notation right after the previous,
 	      // irrespective of lyrics.
 	      curr.bounds.x = prev.bounds.right() + prev.trailingSpace;
 	
-	      if (curr.hasLyrics() && prev.hasLyrics() && (prev.lyrics[0].lyricType === _Exsurge2.LyricType.SingleSyllable || prev.lyrics[0].lyricType === _Exsurge2.LyricType.EndingSyllable) && (curr.lyrics[0].lyricType === _Exsurge2.LyricType.SingleSyllable || curr.lyrics[0].lyricType === _Exsurge2.LyricType.BeginningSyllable)) {
+	      if (curr.hasLyrics() && !prev.isDivider && !prev.isAccidental && this.numNotationsOnLine > 0 && (curr.lyrics[0].lyricType === _Exsurge2.LyricType.SingleSyllable || curr.lyrics[0].lyricType === _Exsurge2.LyricType.BeginningSyllable)) {
 	        curr.bounds.x += ctxt.intraNeumeSpacing * ctxt.intraSyllabicMultiplier;
 	      }
 	
@@ -6032,7 +6054,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      } while (curr.lyrics.length > 1 && hasShifted && atLeastOneWithoutConnector);
 	
-	      if (curr.bounds.right() + curr.trailingSpace < rightNotationBoundary && curr.lyrics[0].getRight() <= this.staffRight) {
+	      if (curr.bounds.right() + curr.trailingSpace < rightNotationBoundary && curr.lyrics[0].getRight() <= this.staffRight + extraWidth) {
 	        if (prev.isAccidental) {
 	          // move the previous accidental up next to the current note:
 	          prev.bounds.x = curr.bounds.x - prev.bounds.width - prev.trailingSpace;
@@ -6065,11 +6087,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _Exsurge = __webpack_require__(1);
 	
-	var Exsurge = _interopRequireWildcard(_Exsurge);
-	
 	var _Exsurge2 = __webpack_require__(4);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -6392,18 +6410,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function adjustStep(step) {
 	      switch (this.accidentalType) {
 	        case AccidentalType.Flat:
-	          if (step === Step.Ti) return Step.Te;
-	          if (step === Step.Mi) return Step.Me;
+	          if (step === _Exsurge.Step.Ti) return _Exsurge.Step.Te;
+	          if (step === _Exsurge.Step.Mi) return _Exsurge.Step.Me;
 	          break;
 	        case AccidentalType.Sharp:
-	          if (step === Step.Do) return Step.Du;
-	          if (step === Step.Fa) return Step.Fu;
+	          if (step === _Exsurge.Step.Do) return _Exsurge.Step.Du;
+	          if (step === _Exsurge.Step.Fa) return _Exsurge.Step.Fu;
 	          break;
 	        case AccidentalType.Natural:
-	          if (step === Step.Te) return Step.Ti;
-	          if (step === Step.Me) return Step.Mi;
-	          if (step === Step.Du) return Step.Do;
-	          if (step === Step.Fu) return Step.Fa;
+	          if (step === _Exsurge.Step.Te) return _Exsurge.Step.Ti;
+	          if (step === _Exsurge.Step.Me) return _Exsurge.Step.Mi;
+	          if (step === _Exsurge.Step.Du) return _Exsurge.Step.Do;
+	          if (step === _Exsurge.Step.Fu) return _Exsurge.Step.Fa;
 	          break;
 	      }
 	
@@ -6414,10 +6432,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'applyToPitch',
 	    value: function applyToPitch(pitch) {
 	
-	      // fixme: this is broken since we changed to staff positions
-	
 	      // no adjusment needed
-	      if (this.octave !== pitch.octave) return;
+	      if (this.pitch.octave !== pitch.octave) return;
 	
 	      pitch.step = this.adjustStep(pitch.step);
 	    }
@@ -6600,21 +6616,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      var y = 0,
 	          step;
-	      var minDistanceAway = ctxt.staffInterval * 0.4; // min distance from neume
+	      var minDistanceAway = ctxt.staffInterval * 0.3; // min distance from neume
 	      var glyphCode = this.note.glyphVisualizer.glyphCode;
 	
 	      if (this.positionHint === MarkingPositionHint.Below) {
 	        y = this.note.bounds.bottom() + minDistanceAway; // the highest the line could be at
 	        if (glyphCode === _Exsurge2.GlyphCode.None) // correction for episema under the second note of a porrectus
 	          y += ctxt.staffInterval;
-	        step = Math.floor(y / ctxt.staffInterval);
+	        step = Math.ceil(y / ctxt.staffInterval);
 	
 	        // if it's an odd step, that means we're on a staff line,
 	        // so we shift to between the staff line
 	        if (Math.abs(step % 2) === 1) step = step + 1;
 	      } else {
 	        y = this.note.bounds.y - minDistanceAway; // the lowest the line could be at
-	        step = Math.ceil(y / ctxt.staffInterval);
+	        step = Math.floor(y / ctxt.staffInterval);
 	
 	        // if it's an odd step, that means we're on a staff line,
 	        // so we shift to between the staff line
@@ -6864,8 +6880,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	  _createClass(BracePoint, [{
 	    key: 'getAttachmentX',
-	    value: function getAttachmentX() {
-	      if (this.attachment === BraceAttachment.Left) return this.note.neume.bounds.x + this.note.bounds.x;else return this.note.neume.bounds.x + this.note.bounds.right();
+	    value: function getAttachmentX(note) {
+	      if (!note) note = this.note;
+	      if (this.attachment === BraceAttachment.Left) return (note.neume ? note.neume.bounds.x : 0) + note.bounds.x;else return (note.neume ? note.neume.bounds.x : 0) + note.bounds.right();
 	    }
 	  }]);
 	
@@ -7189,6 +7206,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var alText = lyricText.match(__altRegex);
 	        var notationData = match[2];
 	
+	        // new words reset the accidentals, per the Solesmes style (see LU xviij)
+	        // but we need to also make sure that there _is_ a word and that it has notes associated with it.
+	        if (currSyllable === 0 && /\S/.test(lyricText) && /[a-m]/i.test(notationData)) ctxt.activeClef.resetAccidentals();
+	
 	        var items = this.parseNotations(ctxt, notationData, sourceIndex + match.index + match[1].length + 1);
 	
 	        if (items.length === 0) continue;
@@ -7229,9 +7250,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        else if (currSyllable === 0 && j === matches.length - 1) proposedLyricType = _Exsurge2.LyricType.SingleSyllable;else if (currSyllable === 0 && j < matches.length - 1) proposedLyricType = _Exsurge2.LyricType.BeginningSyllable;else if (j === matches.length - 1) proposedLyricType = _Exsurge2.LyricType.EndingSyllable;else proposedLyricType = _Exsurge2.LyricType.MiddleSyllable;
 	
 	        currSyllable++;
-	
-	        // also, new words reset the accidentals, per the Solesmes style (see LU xviij)
-	        if (proposedLyricType === _Exsurge2.LyricType.BeginningSyllable || proposedLyricType === _Exsurge2.LyricType.SingleSyllable) ctxt.activeClef.resetAccidentals();
 	
 	        var lyrics = this.createSyllableLyrics(ctxt, lyricText, proposedLyricType, notationWithLyrics, sourceIndex + match.index);
 	
@@ -7491,6 +7509,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              var noteArray = [];
 	              this.createNoteFromData(ctxt, ctxt.activeClef, atom, noteArray, sourceIndex);
 	              var accidental = new Signs.Accidental(noteArray[0].staffPosition, accidentalType);
+	              accidental.pitch = this.gabcHeightToExsurgePitch(ctxt.activeClef, atom[0]);
 	              accidental.sourceIndex = sourceIndex;
 	              accidental.trailingSpace = ctxt.intraNeumeSpacing * 2;
 	
@@ -8059,7 +8078,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      }
 	
-	      if (this.needToEndBrace && !note.braceStart && !note.braceEnd) {
+	      if (this.needToEndBrace && !note.braceStart && !note.braceEnd && !/[xy#]/.test(c)) {
 	        note.braceEnd = new Markings.BracePoint(note, this.needToEndBrace.isAbove, this.needToEndBrace.shape, this.needToEndBrace.attachment === Markings.BraceAttachment.Left ? Markings.BraceAttachment.Right : Markings.BraceAttachment.Left);
 	        note.braceEnd.automatic = true;
 	        delete this.needToEndBrace;
@@ -8190,8 +8209,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var exsurgeHeight = this.gabcHeightToExsurgeHeight(gabcHeight);
 	
 	      var pitch = clef.staffPositionToPitch(exsurgeHeight);
-	
-	      if (clef.activeAccidental !== null) clef.activeAccidental.applyToPitch(pitch);
 	
 	      return pitch;
 	    }
@@ -8796,7 +8813,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	      if (note.shape === _Exsurge3.NoteShape.Stropha) return _Exsurge2.GlyphCode.Stropha;
 	
-	      if (note.liquescent !== _Exsurge3.LiquescentType.None) return _Exsurge2.GlyphCode.StrophaLiquescent;
+	      if (note.liquescent & _Exsurge3.LiquescentType.Ascending) return _Exsurge2.GlyphCode.PunctumQuadratumAscLiquescent;else if (note.liquescent & _Exsurge3.LiquescentType.Descending) return _Exsurge2.GlyphCode.PunctumQuadratumDesLiquescent;
 	
 	      if (note.shapeModifiers & _Exsurge3.NoteShapeModifiers.Cavum) return _Exsurge2.GlyphCode.PunctumCavum;
 	
@@ -9479,7 +9496,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (third.shape === _Exsurge3.NoteShape.Virga) {
 	        this.build(ctxt).withPodatus(first, second).virgaAt(third);
 	      } else {
-	        this.build(ctxt).noteAt(first, _Exsurge2.GlyphCode.PunctumQuadratum).withPodatus(second, third);
+	        this.build(ctxt).noteAt(first, first.shape === _Exsurge3.NoteShape.Quilisma ? _Exsurge2.GlyphCode.Quilisma : _Exsurge2.GlyphCode.PunctumQuadratum).withPodatus(second, third);
 	      }
 	
 	      this.finishLayout(ctxt);
