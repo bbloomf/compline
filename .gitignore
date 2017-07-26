@@ -3,3 +3,4 @@ gh-pages
 *.sublime-workspace
 node_modules
 dist
+cordova
