@@ -25,7 +25,8 @@ gulp.task('copy', function() {
     'fonts/*.woff',
     'fonts/*.woff2',
     '!dist/**/*',
-    '!node_modules/**/*'
+    '!node_modules/**/*',
+    '!cordova/**/*'
   ], {
     dot: true,
     base: '.'

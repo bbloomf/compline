@@ -20,7 +20,7 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
     this._width = 0;
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
-      if (request.readyState === 4 && request.status === 200 && $this.attr('src') === src) {
+      if (request.readyState === 4 && (request.status === 200 || request.status === 0) && $this.attr('src') === src) {
         elem.setGabc(request.responseText);
       }
     };

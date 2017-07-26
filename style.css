@@ -33,6 +33,9 @@
     font-weight: 600;
     font-style: normal;
 }
+.lyric-font {
+  font-family: 'Crimson Text', serif;
+}
 .verses>p {
   line-height:100%;
   margin: 6pt 0;
