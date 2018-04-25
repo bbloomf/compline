@@ -62,10 +62,10 @@ define(['moment','moment.easter'], function(moment){
       "12": {title:"St. Gregory I Pope, Confessor, and Doctor of the Church", rank:3},
       "17": {title:"St. Patrick Bishop and Confessor", rank:3},
       "18": {title:"St.Cyril Bishop of Jerusalem, Confessor, and Doctor of the Church", rank:3},
-      "19": {title:"St. Joseph, Spouse of the Blessed Virgin Mary, Confessor, and Patron of the Universal Church", rank:1},
+      "19": {title:"St. Joseph, Spouse of the Blessed Virgin Mary, Confessor, and Patron of the Universal Church", rank:1, plusOne:"ifSunday"},
       "21": {title:"St. Benedict Abbot", rank:3},
       "24": {title:"St. Gabriel the Archangel", rank:3},
-      "25": {title:"Annunciation of the Blessed Virgin Mary", rank:1},
+      "25": {title:"Annunciation of the Blessed Virgin Mary", rank:1, plusOne:"ifSunday"},
       "27": {title:"St. John Damascene Confessor and Doctor of the Church", rank:3},
       "28": {title:"St. John Capistran Confessor", rank:3}
     },
@@ -484,6 +484,22 @@ define(['moment','moment.easter'], function(moment){
     // in which case The Holy Family will be on the Saturday following.
     this.holyFamily = moment(this.epiphany).add(7 - (this.epiphany.day()||1), 'days');
     this.transfiguration = moment([Y,7,6]);
+    this.stJoseph = moment([Y,2,19]);
+    this.annunciation = moment([Y,2,25]);
+    var offset = 0;
+    if(this.isHolyWeekOrPaschalWeek(this.stJoseph)) {
+      this.stJoseph = moment(this.easter).add(8 + offset, 'day');
+      ++offset;
+    } else if(this.stJoseph.day() == 0) {
+      this.stJoseph.add(1, 'day');
+    }
+    this.stJoseph.feast = romanCalendar[2][19];
+    if(this.isHolyWeekOrPaschalWeek(this.annunciation)) {
+      this.annunciation = moment(this.easter).add(8 + offset, 'day');
+    } else if(this.annunciation.day() == 0) {
+      this.annunciation.add(1, 'day');
+    }
+    this.annunciation.feast = romanCalendar[2][25];
     dateCache[Y] = this;
   };
   function getSunday(date) {
@@ -530,6 +546,9 @@ define(['moment','moment.easter'], function(moment){
     if(dateMatches(date,'easter-2')) return (date.feast = {title:'Good Friday', rank:1});
     if(dateMatches(date,'easter-1')) return (date.feast = {title:'Holy Saturday', rank:1});
     if(dateMatches(date,'lent1-4')) return (date.feast = {title:'Ash Wednesday', rank:5, key: 'AshWed'});
+    var dates = dateCache[date.year()];
+    if(dates.annunciation.feast && dateMatches(date,'annunciation')) return (date.feast = dates.annunciation.feast);
+    if(dates.stJoseph.feast && dateMatches(date,'stJoseph')) return (date.feast = dates.stJoseph.feast);
     var options = [];
     var selectedOption;
     if(regionalCalendars) {
@@ -566,13 +585,14 @@ define(['moment','moment.easter'], function(moment){
       if(!d) {
         if(day > 1) {
           d = romanCalendar[month][day-1];
-          if(!d || !d.plus) return (date.feast = FeriaWithAlternates(options,selectedOption));
+          if(!d || !d.plusOne) return (date.feast = FeriaWithAlternates(options,selectedOption));
           else if(d.plusOne === 'ifLeapYear' && !date.isLeapYear()) return (date.feast = FeriaWithAlternates(options,selectedOption));
           else if(d.plusOne === 'ifSunday' && date.day()!==1) return (date.feast = FeriaWithAlternates(options,selectedOption));
         } else {
           return (date.feast = FeriaWithAlternates(options,selectedOption));
         }
       }
+      if(d == dates.stJoseph.feast || d == dates.annunciation.feast) d = null;
       if(options.length) {
         options.unshift(d);
         if(selectedOption) {
@@ -618,6 +638,9 @@ define(['moment','moment.easter'], function(moment){
   Dates.prototype.isPaschalWeek = function(date) {
     var easterSaturday = moment(this.easter).add(6,'days');
     return date.isSameOrAfter(this.easter) && date.isBefore(easterSaturday);
+  };
+  Dates.prototype.isHolyWeekOrPaschalWeek = function(date) {
+    return date.isSameOrAfter(moment(this.easter).add(-7,'days')) && date.isBefore(moment(this.easter).add(8,'days'));
   };
   Dates.prototype.isPaschalTime = function(date) {
     var pentecostSaturday = moment(this.easter).add(55,'days');
