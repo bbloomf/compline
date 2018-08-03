@@ -148,3 +148,9 @@ body.hide-most-options .btn-group-vertical:not(.not-hideable)>button.active {
 div.h {
   margin-top: 10px;
 }
+.open-on-hover>.dropdown-menu {
+  margin: 0;
+}
+.open-on-hover:hover>.dropdown-menu {
+  display: block;
+}

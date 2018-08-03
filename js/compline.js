@@ -148,7 +148,10 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   var prevDay = function(week) {
     $('#date').val(changeDateBy(week? -7 : -1)).change();
   };
-  $(document).on('keypress', function(e){
+  $(document).on('click', '[data-toggle="dropdown"]', function(e) {
+    $(this).parent('.btn-group').toggleClass('open');
+    e.stopPropagation();
+  }).on('keypress', function(e){
     switch(e.which) {
       case 106: // j
       case 74:
@@ -298,6 +301,18 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
         }
       }
     });
+    $('.dropdown-menu a[select-date]').each(function(){
+      var $this = $(this);
+      var matches = dateMatchesSelectDate($this);
+      if(matches) {
+        $this.click();
+      } else {
+        var otherInputs = $this.parent().siblings().find('a[value]');
+        if(otherInputs.length==1 && !otherInputs.is('[select-date]')) {
+          otherInputs.click();
+        }
+      }
+    });
     $('option[select-date]').each(function(){
       var $this = $(this);
       var matches = dateMatchesSelectDate($this);
@@ -403,6 +418,26 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       }
     }
   });
+  $('.btn-group>.dropdown-menu>li>a[value]').click(function(e){
+    e.preventDefault();
+    var $this = $(this),
+        $parent = $this.parents('.btn-group').first(),
+        $label = $parent.find('.btn>.lbl'),
+        val = $this.attr('value');
+    $parent.removeClass('open');
+    $label.html($this.contents().clone());
+    var chant = $parent.attr('name');
+    if(chant === 'weekday') {
+      setPsalms(parseInt(val), choices.season == 'paschal');
+    } else {
+      choices[chant] = val;
+      if(chant=='season') {
+        setPsalms(undefined, val == 'paschal');
+      } else {
+        loadChant(chant,val,this.id);
+      }
+    }
+  });
   $('#marian-antiphon-choices select,#marian-antiphon-solemn').change(function(){
     var $select = $('#marian-antiphon-choices select');
     var solemn = $('#marian-antiphon-solemn').prop('checked');
@@ -426,8 +461,8 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   function showHideOptions() {
     var show = showOptions();
     $(document.body).toggleClass('hide-most-options',!show);
-    $('#marian-antiphon-choices>select').toggle(show);
-    $('.marian-antiphon-name').toggle(!show);
+    // $('#marian-antiphon-choices>select').toggle(show);
+    // $('.marian-antiphon-name').toggle(!show);
   }
   // if ('serviceWorker' in navigator) {
   //   navigator.serviceWorker.register('./sw.js').then(function(registration) {
