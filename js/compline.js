@@ -12,7 +12,6 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   if(!('fullNotation' in localStorage)) localStorage.fullNotation = '0';
   if(!('fullNotationChapter' in localStorage)) localStorage.fullNotationChapter = '1';
   if(!('fullNotationPrayers' in localStorage)) localStorage.fullNotationPrayers = '0';
-  if(!('showOptions' in localStorage)) localStorage.showOptions = '0';
   if(!('autoSelectRegion' in localStorage)) localStorage.autoSelectRegion = '1';
   var usedRegions = {};
   $('#selectRegion').append('<option value="">None</option>'+Object.keys(calendar.roman.regionCodeMap).map(function(code){
@@ -47,12 +46,6 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     if(typeof newVal === 'undefined') return !!parseInt(localStorage.fullNotationPrayers);
     updateToggle('fullNotationPrayers',!!newVal);
     localStorage.fullNotationPrayers = newVal? 1 : 0;
-  };
-  var showOptions = toggles.showOptions = function(newVal) {
-    if(typeof newVal === 'undefined') return !!parseInt(localStorage.showOptions);
-    updateToggle('showOptions',!!newVal);
-    localStorage.showOptions = newVal? 1 : 0;
-    showHideOptions();
   };
   var autoSelectRegion = toggles.autoSelectRegion = function(newVal) {
     if(typeof newVal === 'undefined') return !!parseInt(localStorage.autoSelectRegion);
@@ -387,7 +380,6 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     }
     $('#feastDay').toggle(!d.alternates);
     $('#selectFeastDay').toggle(!!d.alternates);
-    showHideOptions();
   };
   var setChantSrc = function($elem,src){
     if(!$elem || $elem.length === 0) return;
@@ -465,12 +457,6 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   $('#selectFeastDay').change(function(){
     setDate(moment($date.val()), this.value);
   });
-  function showHideOptions() {
-    var show = showOptions();
-    $(document.body).toggleClass('hide-most-options',!show);
-    // $('#marian-antiphon-choices>select').toggle(show);
-    // $('.marian-antiphon-name').toggle(!show);
-  }
   // if ('serviceWorker' in navigator) {
   //   navigator.serviceWorker.register('./sw.js').then(function(registration) {
   //     // Registration was successful

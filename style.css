@@ -138,7 +138,6 @@ body.hide-choose-day #rbWeekday {
   text-align: left;
   white-space: normal;
   line-height: 1;
-  padding-bottom: 0.4em;
 }
 .btn-group>.btn {
   display: flex;
@@ -155,6 +154,7 @@ body.hide-choose-day #rbWeekday {
   text-indent: -1em;
   display: inline-block;
   flex: 1 0;
+  margin-bottom: 0.25em;
 }
 .btn-group>.btn > .caret {
   flex: 0 0 auto;
@@ -163,6 +163,7 @@ body.hide-choose-day #rbWeekday {
 .btn-group li > a {
   padding-left: calc(20px + 1em);
   text-indent: -1em;
+  padding-bottom: 0.5em;
 }
 .dropdown-menu > li.selected > a {
   color: #262626;

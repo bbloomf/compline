@@ -1,3 +1,4 @@
+fix auto-select region
 Offline support?
 Translations?
 
