@@ -113,10 +113,21 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
   ChantVisualElementPrototype.createdCallback = function() {
     var ctxt = new exsurge.ChantContext(exsurge.TextMeasuringStrategy.Canvas);
 
+    ctxt.condenseLineAmount = 1;
+    ctxt.setGlyphScaling(1/16);
     ctxt.lyricTextFont = "'Crimson Text', serif";
     ctxt.lyricTextSize *= 1.2;
     ctxt.dropCapTextFont = ctxt.lyricTextFont;
     ctxt.annotationTextFont = ctxt.lyricTextFont;
+    ctxt.minLyricWordSpacing *= 0.7;
+    ctxt.accidentalSpaceMultiplier = 1.5;
+    
+    ctxt.specialCharProperties['font-family'] = "'Versiculum'";
+    ctxt.specialCharProperties['font-variant'] = 'normal';
+    ctxt.specialCharProperties['font-size'] = (1.2 * ctxt.lyricTextSize) + 'px';
+    ctxt.specialCharProperties['font-weight'] = '400';
+    ctxt.specialCharText = function(char) { return char.toLowerCase(); };
+    ctxt.setRubricColor('#d00');
 
     this._ctxt = ctxt;
 

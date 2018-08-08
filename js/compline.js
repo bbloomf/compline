@@ -148,8 +148,12 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   var prevDay = function(week) {
     $('#date').val(changeDateBy(week? -7 : -1)).change();
   };
-  $(document).on('click', '[data-toggle="dropdown"]', function(e) {
+  $(document).on('click', function(e) {
+    $('.btn-group.open').removeClass('open');
+  }).on('click', '[data-toggle="dropdown"]', function(e) {
+    var $openBtns = $('.btn-group.open');
     $(this).parent('.btn-group').toggleClass('open');
+    $openBtns.removeClass('open');
     e.stopPropagation();
   }).on('keypress', function(e){
     switch(e.which) {
@@ -418,13 +422,16 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       }
     }
   });
-  $('.btn-group>.dropdown-menu>li>a[value]').click(function(e){
+  $('.btn-group .dropdown-menu>li>a[value]').click(function(e){
     e.preventDefault();
     var $this = $(this),
+        $li = $this.parent(),
         $parent = $this.parents('.btn-group').first(),
         $label = $parent.find('.btn>.lbl'),
         val = $this.attr('value');
     $parent.removeClass('open');
+    $li.parent().children().removeClass('selected');
+    $li.addClass('selected');
     $label.html($this.contents().clone());
     var chant = $parent.attr('name');
     if(chant === 'weekday') {

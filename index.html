@@ -53,10 +53,10 @@ In private recitation, compline is said as follows:
   <button type="button" class="btn btn-lg btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <span class='lbl'>Throughout the year</span> <span class="caret"></span>
   </button>
-  <ul class="dropdown-menu">
+  <div><ul class="dropdown-menu">
     <li><a class='btn-lg' href="#" value='per-annum' id='season-per-annum'>Throughout the year</a></li>
     <li><a class='btn-lg' href="#" value='paschal' select-date='easter:pentecost+5' id='season-paschal'>Paschal Time</a></li>
-  </ul>
+  </ul></div>
 </div>
 <div class='officiant no-priest'>
 <i class='red'>In the absence of a priest or deacon, the Lector says “Dómine” below so as to invoke Our Lord directly for the blessing.</i>
@@ -120,8 +120,8 @@ Afterwards there is added aloud, without</i> Orémus<i class='red'>, the collect
   <button type="button" class="btn btn-lg btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <span class='lbl'>Throughout the year</span> <span class="caret"></span>
   </button>
-  <ul class="dropdown-menu">
-    <li><a class='btn-lg' href='#' value='Ordinary' select-day='sunday minorFeast' select-date='01/14:lent1-2 pentecost+15:advent1-2' id='te-lucis-Ordinary'>Ordinary Sundays and Minor Feasts <i class='h5 red'>(from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i></a></li>
+  <div><ul class="dropdown-menu">
+    <li><a class='btn-lg' href='#' value='Ordinary' select-day='saturday sunday minorFeast' select-date='01/14:lent1-2 pentecost+15:advent1-2' id='te-lucis-Ordinary'>Ordinary Sundays and Minor Feasts <i class='h5 red'>(from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i></a></li>
     <li><a class='btn-lg active href='#'' value='Ferial' select-day='feria' select-date='01/14:lent1-2 pentecost+15:advent1-2' id='te-lucis-Ferial'>Ferial <i class='h5 red'>(Ferial days from Jan. 14 until Friday after Ash Wednesday, and from Monday after Trinity Sunday until Friday before First Sunday of Advent)</i></a></li>
     <li><a class='btn-lg' href='#' value='Solemn' select-date='firstClassFeast' id='te-lucis-Solemn'>Solemn <i class='h5 red'>(All First class feasts lacking a proper tone at any time of the year)</i></a></li>
     <li><a class='btn-lg' href='#' value='Our-Lady' select-date='feastOfOurLady' id='te-lucis-Our-Lady'>Our Lady <i class='h5 red'>(All feasts of the Blessed Virgin Mary, except the Seven Sorrows, of whatever rank at any time of the year)</i></a></li>
@@ -138,7 +138,7 @@ Afterwards there is added aloud, without</i> Orémus<i class='red'>, the collect
     <li><a class='btn-lg' href='#' value='Pentecost' select-date='pentecost-1:pentecost+5' id='te-lucis-Pentecost'>Pentecost <i class='h5 red'>(On all days from the Vigil of Pentecost until the Friday in the Octave of Pentecost)</i></a></li>
     <li><a class='btn-lg' href='#' value='Christ-the-King' select-date='christTheKing' id='te-lucis-Christ-the-King'>Christ the King <i class='h5 red'>(On the Feast of Christ the King)</i></a></li>
     <li><a class='btn-lg' href='#' value='Sacred-Heart' select-date='sacredHeart' id='te-lucis-Sacred-Heart'>Sacred Heart <i class='h5 red'>(On the Feast of the Sacred Heart of Jesus)</i></a></li>
-  </ul>
+  </ul></div>
 </div>
 <chant-gabc id='te-lucis' src='te-lucis/Ferial.gabc'></chant-gabc>
 <i class='red'>The Officiant then says the Chapter:</i>
@@ -156,12 +156,12 @@ Tu autem in nobis es, Dómine,&nbsp;<span class='red'>†</span> et nomen sanctu
   <button type="button" class="btn btn-lg btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <span class='lbl'>Throughout the year</span> <span class="caret"></span>
   </button>
-  <ul class="dropdown-menu">
+  <div><ul class="dropdown-menu">
     <li><a class='btn-lg' href='#' value='ordinary_full' select-date='01/01:easter-4 pentecost+6:advent1-2 12/24:12/31' id='in-manus-tuas-ordinary'>Throughout the year</a></li>
     <li><a class='btn-lg' href='#' value='passiontide_full' select-date='easter-15:easter-4' select-day='sunday !firstOrSecondClassFeast' id='in-manus-tuas-passiontide'>Passiontide, except First or Second Class Feasts</a></li>
     <li><a class='btn-lg' href='#' value='advent_full' select-date='advent1-1:12/23' id='in-manus-tuas-advent'>Saturday before the First Sunday of Advent until Dec. 23 inclusive</a></li>
     <li><a class='btn-lg' href='#' value='pt_full' select-date='easter+6:pentecost+5' id='in-manus-tuas-pt'>Saturday before Low Sunday until Friday in the Octave of Pentecost inclusive</a></li>
-  </ul>
+  </ul></div>
 </div>
 <div class='in-manus-tuas passiontide_full' style='display:none'>
 <i class='red'>(In Passiontide, except on a First or Second Class Feast, the Gloria Patri is omitted, and all repeat again immediately “In manus tuas...” in its place)</i>

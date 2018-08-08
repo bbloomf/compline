@@ -119,27 +119,56 @@ div#options-menu.showing>ul {
 div#options-menu.showing>svg {
   display: none;
 }
-body.hide-choose-day #rbSunday,
-body.hide-most-options .btn-group-vertical:not(.not-hideable)>button {
+body.hide-choose-day #rbSunday{
   display: none;
 }
-body.hide-choose-day #rbWeekday,
-body.hide-most-options .btn-group-vertical:not(.not-hideable)>button.active {
+body.hide-choose-day #rbWeekday {
   display: block;
   border-radius: 4px;
   font-weight: normal;
   padding-top: 10px;
   padding-bottom: 10px;
 }
-.btn-group-vertical {
+.btn-group {
   margin-bottom: 4px;
   max-width: 100%;
 }
-.btn-group-vertical .btn {
+.btn-group>.btn,
+.btn-group li > a {
   text-align: left;
   white-space: normal;
+  line-height: 1;
+  padding-bottom: 0.4em;
 }
-.btn-group-vertical .btn.active {
+.btn-group>.btn {
+  display: flex;
+  flex-direction: row;
+}
+.btn-group>.btn+div {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  width: calc(100vw - 30px);
+}
+.btn-group>.btn > .lbl {
+  margin-left: 1em;
+  text-indent: -1em;
+  display: inline-block;
+  flex: 1 0;
+}
+.btn-group>.btn > .caret {
+  flex: 0 0 auto;
+  margin: auto -7px auto 7px;
+}
+.btn-group li > a {
+  padding-left: calc(20px + 1em);
+  text-indent: -1em;
+}
+.dropdown-menu > li.selected > a {
+  color: #262626;
+  background-color: #e8e8e8;
+}
+.btn-group li.active {
   font-weight: 600;
   padding-top: 12px;
   padding-bottom: 8px;
@@ -148,9 +177,10 @@ body.hide-most-options .btn-group-vertical:not(.not-hideable)>button.active {
 div.h {
   margin-top: 10px;
 }
-.open-on-hover>.dropdown-menu {
+.open-on-hover>div>.dropdown-menu {
   margin: 0;
 }
-.open-on-hover:hover>.dropdown-menu {
+.open-on-hover:hover>div>.dropdown-menu,
+.open > div > .dropdown-menu {
   display: block;
 }

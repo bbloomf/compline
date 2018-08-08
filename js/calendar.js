@@ -625,9 +625,11 @@ define(['moment','moment.easter'], function(moment){
     if(date.day() === 0) return false;
     return !d || d.rank >= 5;
   };
-  Dates.prototype.sunday = function(date) {
-    return date.day() === 0;
-  };
+  moment.weekdays().forEach(function(day, index) {
+    Dates.prototype[day.toLowerCase()] = function(date) {
+      return date.day() === index;
+    }
+  });
   function datesForMoment(moment) {
     return moment.Dates || (moment.Dates = new Dates(moment.year()));
   }
