@@ -129,10 +129,12 @@ body.hide-choose-day #rbWeekday {
   padding-top: 10px;
   padding-bottom: 10px;
 }
+.btn-group-vertical,
 .btn-group {
   margin-bottom: 4px;
   max-width: 100%;
 }
+.btn-group-vertical .btn,
 .btn-group>.btn,
 .btn-group li > a {
   text-align: left;
@@ -169,7 +171,7 @@ body.hide-choose-day #rbWeekday {
   color: #262626;
   background-color: #e8e8e8;
 }
-.btn-group li.active {
+.btn-group-vertical .btn.active {
   font-weight: 600;
   padding-top: 12px;
   padding-bottom: 8px;
