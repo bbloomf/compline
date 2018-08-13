@@ -1,16 +1,17 @@
 initial-style: 1;
-annotation: V/. 4.;
+annotation: V/.;
+annotation: 4.;
 name: in-manus-tuas-advent;
 %%
 (f3)IN(h) ma(h)nus(h) tu(h)as(hf) Dó(g')mi(h)ne,(i.) (;) Com(i)mén(g')do(h) spí(fe)ri(f')tum(h) me(h)um.(g.) (::)
-<v>\Rbar</v>()  In(h) ma(h)nus...(h) (::)
+<v>\Rbar</v> In(h) ma(h)nus...(h) (::)
 
 initial-style: 0;
 %%
-(f3)<v>\Vbar</v>() Red(e)e(fh)mí(h)sti(h) nos(h) Dó(gh)mi(h)ne,(h'_) (,) De(h)us(h) ve(h)ri(hf)tá(gh)tis.(i.) (::)
-<v>\Rbar</v>() Com(i)mén(g')do(h) spí(fe)ri(f')tum(h) me(h)um.(g.) (::)
+(f3)<v>\Vbar</v> Red(e)e(fh)mí(h)sti(h) nos(h) Dó(gh)mi(h)ne,(h'_) (,) De(h)us(h) ve(h)ri(hf)tá(gh)tis.(i.) (::)
+<v>\Rbar</v> Com(i)mén(g')do(h) spí(fe)ri(f')tum(h) me(h)um.(g.) (::)
 
 initial-style: 0;
 %%
-(f3)<v>\Vbar</v>() Gló(i)ri(i)a(i) Pa(ij)tri,(j'_) (,) et(j) Fí(i)li(j)o,(g'_) (,) et(h) Spi(h)rí(h)tu(h)i(hf) San(gh)cto.(i.) (::)
-<v>\Rbar</v>() In(h) ma(h)nus(h) tu(h)as(hf) Dó(g')mi(h)ne,(i.) (;) Com(i)mén(g')do(h) spí(fe)ri(f')tum(h) me(h)um.(g.) (::)
+(f3)<v>\Vbar</v> Gló(i)ri(i)a(i) Pa(ij)tri,(j'_) (,) et(j) Fí(i)li(j)o,(g'_) (,) et(h) Spi(h)rí(h)tu(h)i(hf) San(gh)cto.(i.) (::)
+<v>\Rbar</v> In(h) ma(h)nus(h) tu(h)as(hf) Dó(g')mi(h)ne,(i.) (;) Com(i)mén(g')do(h) spí(fe)ri(f')tum(h) me(h)um.(g.) (::)
