@@ -324,12 +324,12 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     });
     var isPT = dates.isPaschalTime(date);
     var showChooseDay = (date.day() !== 0);
-    var rbWeekday = $('#rbWeekday').prop('value',date.day());
+    var rbWeekday = $('#rbWeekday').attr('value',date.day());
     if(isPT && dates.isPaschalWeek(date)) {
       showChooseDay = false;
       setPsalms(0,'no-antiphon');
       setCanticle('-po');
-      $('#weekday').text('Easter ' + days[date.day()]);
+      $('.weekday-lbl').text('Easter ' + days[date.day()]);
     } else if(dates.isTriduum(date)) {
       showChooseDay = false;
       var day = date.day();
@@ -346,10 +346,10 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
           name = 'Holy Saturday';
           break;
       }
-      $('#weekday').text(name);
+      $('.weekday-lbl').text(name);
     } else if(calendar.dateMatches(date,'allSouls')) {
       showChooseDay = false;
-      $('#weekday').text('All Souls Day');
+      $('.weekday-lbl').text('All Souls Day');
       setPsalms('asd');
       setCanticle('-asd');
     } else {
@@ -358,7 +358,7 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       } else {
         rbWeekday.click();
       }
-      $('#weekday').text(days[date.day()]);
+      $('.weekday-lbl').text(days[date.day()]);
       setCanticle(isPT?'-pt':'');
     }
     $(document.body).toggleClass('hide-choose-day',!showChooseDay);
@@ -397,23 +397,6 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     $('div.' + chant + '.' + value).show();
   };
   var choices = {};
-  $('.btn-group-vertical button[type=radio]').click(function(){
-    var $this = $(this);
-    var $parent = $this.parent();
-    $parent.children().removeClass('active');
-    $this.addClass('active');
-    var chant = $parent.attr('name');
-    if(chant === 'weekday') {
-      setPsalms(parseInt(this.value), choices.season == 'paschal');
-    } else {
-      choices[chant] = this.value;
-      if(chant=='season') {
-        setPsalms(undefined, this.value == 'paschal');
-      } else {
-        loadChant(chant,this.value,this.id);
-      }
-    }
-  });
   $('.btn-group .dropdown-menu>li>a[value]').click(function(e){
     e.preventDefault();
     var $this = $(this),

@@ -25,9 +25,14 @@
 <input type='date' id='date'><br/>
 <span id='feastDay'></span>
 <select id='selectFeastDay' style='display:none'></select><br/>
-<div class="btn-group-vertical not-hideable" name="weekday" role="group">
-  <button type='radio' class="btn btn-lg btn-default active" id='rbWeekday'><span id='weekday'></span> at Compline</button>
-  <button type='radio' class="btn btn-lg btn-default" value='0' id='rbSunday'>Sunday at Compline (First or Second Class Feast)</button>
+<div class="btn-group open-on-hover" name="weekday" role="group">
+  <button type="button" class="btn btn-lg btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <span class='lbl'><span class='weekday-lbl'></span> at Compline</span> <span class="caret"></span>
+  </button>
+  <div><ul class="dropdown-menu">
+    <li><a class="btn-lg" href='#' value id='rbWeekday'><span class='weekday-lbl'></span> at Compline</a></li>
+    <li><a class="btn-lg" href='#' value='0' id='rbSunday'>Sunday at Compline (First or Second Class Feast)</a></li>
+  </ul></div>
 </div>
 <div include='easter-3' class='red'>
 On Holy Thursday, Compline is said after the stripping of the altars, with candles extinguished and without singing.
@@ -41,9 +46,14 @@ In private recitation, compline is said as follows:
 </div>
 <div id='officiant-choices'>
 <div class='h'>Officiant:</div>
-<div class="btn-group-vertical not-hideable" name="officiant" role="group">
-  <button type='radio' value="priest" class="btn btn-lg btn-default" id='officiant-priest'>Officiant is a Priest or Deacon</button>
-  <button type='radio' value="no-priest" class="btn btn-lg btn-default active" id='officiant-no-priest'>No Priest or Deacon present</button>
+<div class="btn-group open-on-hover" name="officiant" role="group">
+  <button type="button" class="btn btn-lg btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <span class='lbl'>No Priest or Deacon present</span> <span class="caret"></span>
+  </button>
+  <div><ul class="dropdown-menu">
+    <li><a value="priest" href='#' class="btn-lg" id='officiant-priest'>Officiant is a Priest or Deacon</a></li>
+    <li class='selected'><a value="no-priest" href='#' class="btn-lg active" id='officiant-no-priest'>No Priest or Deacon present</a></li>
+  </ul></div>
 </div>
 </div>
 <div exclude='easter-3:easter-1 allSouls'>
