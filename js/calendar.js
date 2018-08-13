@@ -618,12 +618,12 @@ define(['moment','moment.easter'], function(moment){
   };
   Dates.prototype.minorFeast = function(date) {
     var d = getFeastForDate(date);
-    return (d && d.rank > 1 && d.rank < 5);
+    return (d && d.rank > 1 && d.rank < 3);
   };
   Dates.prototype.feria = function(date) {
     var d = getFeastForDate(date);
     if(date.day() === 0) return false;
-    return !d || d.rank >= 5;
+    return !d || d.rank >= 3;
   };
   moment.weekdays().forEach(function(day, index) {
     Dates.prototype[day.toLowerCase()] = function(date) {
