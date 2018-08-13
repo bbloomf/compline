@@ -87,7 +87,17 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
       if(gabcHeader) {
         gabcHeader = gabcHeader.reduce(function(result,line){
           var match = line.match(/^%?([\w-_]+):\s*([^;\r\n]*)(?:;|$)/i);
-          if(match) result[match[1]] = match[2];
+          if(match) {
+            if(match[1] in result) {
+              if(typeof result[match[1]] === 'string') {
+                result[match[1]] = [result[match[1]], match[2]]
+              } else {
+                result[match[1]].push(match[2]);
+              }
+            } else {
+              result[match[1]] = match[2];
+            }
+          }
           return result;
         }, {});
         if('initial-style' in gabcHeader) {
@@ -97,9 +107,15 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
       if(!(i in useDropCap)) useDropCap[i] = useDropCapAttr;
       score[i] = new exsurge.ChantScore(ctxt, mappings[i], useDropCap[i]);
       if(gabcHeader && gabcHeader.annotation && useDropCap[i]) {
-        score[i].annotation = new exsurge.Annotation(ctxt, gabcHeader.annotation);
+        if(gabcHeader.annotation instanceof Array) {
+          score[i].annotation = new exsurge.Annotations(ctxt, gabcHeader.annotation[0], gabcHeader.annotation[1]);
+        } else {
+          score[i].annotation = new exsurge.Annotation(ctxt, gabcHeader.annotation);
+        }
       } else if(annotationAttr) {
         score[i].annotation = new exsurge.Annotation(ctxt, annotationAttr);
+      } else if(gabcHeader && gabcHeader.mode) {
+        score[i].annotation = new exsurge.Annotation(ctxt, gabcHeader.mode + '.');
       }
       if(gabcHeader && gabcHeader['user-notes']) {
         score[i].userNotes = gabcHeader['user-notes'];
