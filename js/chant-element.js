@@ -137,6 +137,7 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
     ctxt.annotationTextFont = ctxt.lyricTextFont;
     ctxt.minLyricWordSpacing *= 0.7;
     ctxt.accidentalSpaceMultiplier = 1.5;
+    ctxt.annotationTextColor = '#d00';
     
     ctxt.specialCharProperties['font-family'] = "'Versiculum'";
     ctxt.specialCharProperties['font-variant'] = 'normal';
