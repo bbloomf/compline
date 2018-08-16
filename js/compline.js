@@ -286,18 +286,6 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       return matches && selectDay;
     };
     //select inputs based on date
-    $('button[select-date]').each(function(){
-      var $this = $(this);
-      var matches = dateMatchesSelectDate($this);
-      if(matches) {
-        $this.click();
-      } else {
-        var otherInputs = $this.siblings('button[type=radio]');
-        if(otherInputs.length==1 && !otherInputs.is('[select-date]')) {
-          otherInputs.click();
-        }
-      }
-    });
     $('.dropdown-menu a[select-date]').each(function(){
       var $this = $(this);
       var matches = dateMatchesSelectDate($this);
