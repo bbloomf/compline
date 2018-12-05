@@ -187,3 +187,8 @@ div.h {
 .open > div > .dropdown-menu {
   display: block;
 }
+chant-gabc,
+svg {
+  display: block;
+  max-width: 100%;
+}
