@@ -44,10 +44,10 @@
   float:left;
   width:25pt;
   text-align:right;
-  color: #d00;
+  color: #d00!important;
 }
 .red {
-  color: #d00;
+  color: #d00!important;
 }
 [style*="fill:#f00;"] {
   fill: #d00!important;
@@ -58,7 +58,7 @@ body {
   margin: 8px;
 }
 .sans{font-family: sans-serif;}
-.versiculum{font-family: 'Versiculum';font-variant:normal;font-size: 130%;color:#d00;}
+.versiculum{font-family: 'Versiculum';font-variant:normal;font-size: 130%;color:#d00!important;}
 @media print {
   .print-hide{
     display:none;
@@ -186,4 +186,11 @@ div.h {
 .open-on-hover:hover>div>.dropdown-menu,
 .open > div > .dropdown-menu {
   display: block;
+}
+chant-gabc,
+chant-gabc > svg {
+  display: block;
+}
+chant-gabc {
+  margin: -2px 0 4px;
 }

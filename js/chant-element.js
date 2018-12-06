@@ -65,9 +65,6 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
       // perform layout on the chant
       var innerHTML = '';
       for(var i = 0; i < score.length; ++i) {
-        if(score[i].userNotes || score[i].commentary) {
-          innerHTML += '<br>';
-        }
         if(score[i].userNotes) {
           innerHTML += '<i>'+score[i].userNotes + '</i>';
         }
