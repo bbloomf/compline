@@ -46,7 +46,7 @@
   text-align:right;
   color: #d00!important;
 }
-.red {
+.red, .red * {
   color: #d00!important;
 }
 [style*="fill:#f00;"] {
