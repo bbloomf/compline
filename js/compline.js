@@ -902,14 +902,11 @@ define('chant-element',['jquery','exsurge','document-register-element'], functio
       // perform layout on the chant
       var innerHTML = '';
       for(var i = 0; i < score.length; ++i) {
-        if(score[i].userNotes || score[i].commentary) {
-          innerHTML += '<br>';
-        }
         if(score[i].userNotes) {
-          innerHTML += '<i>'+score[i].userNotes + '</i>';
+          innerHTML += '<i class="red">'+score[i].userNotes + '</i>';
         }
         if(score[i].commentary) {
-          innerHTML += '<i style="float:right">'+score[i].commentary + '</i>';
+          innerHTML += '<i class="red" style="float:right">'+score[i].commentary + '</i>';
         }
         score[i].performLayout(ctxt);
         score[i].layoutChantLines(ctxt, width);
