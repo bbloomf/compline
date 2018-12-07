@@ -1144,7 +1144,7 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     updateToggle(toggle);
   });
   function doAutoSelectRegion() {
-    $.getJSON("https://freegeoip.net/json/", function(result){
+    $.getJSON("https://freegeoip.app/json/", function(result){
       if(result.country_code in calendar.roman.regionCodeMap) {
         selectRegion(result.country_code);
       } else {
@@ -1264,6 +1264,7 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       day = currentPsalms.day;
       paschalTime = paschalTime || currentPsalms.paschalTime;
     } else {
+      if(currentPsalms.day == day && currentPsalms.paschalTime == paschalTime) return;
       currentPsalms.day = day;
       currentPsalms.paschalTime = paschalTime;
     }
@@ -1344,23 +1345,30 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       var $this = $(this);
       var matches = dateMatchesSelectDate($this);
       if(matches) {
-        $this.click();
+        $this.trigger('click',true);
       } else {
         var otherInputs = $this.parent().siblings().find('a[value]');
         if(otherInputs.length==1 && !otherInputs.is('[select-date]')) {
-          otherInputs.click();
+          otherInputs.trigger('click',true);
         }
       }
     });
     $('option[select-date]').each(function(){
       var $this = $(this);
       var matches = dateMatchesSelectDate($this);
+      var $parent;
       if(matches) {
-        $this.parent().val($this.val()).change();
+        $parent = $this.parent();
+        if($parent.val() != $this.val()) {
+          $parent.val($this.val()).trigger('change');
+        }
       } else {
         var otherInputs = $this.siblings('option');
         if(otherInputs.length==1 && !otherInputs.is('[select-date]')) {
-          $this.parent().val(otherInputs.val()).change();
+          $parent = $this.parent();
+          if($parent.val() != $this.val()) {
+            $parent.val(otherInputs.val()).trigger('change');
+          }
         }
       }
     });
@@ -1396,11 +1404,12 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       setCanticle('-asd');
     } else {
       if(showChooseDay && d && d.rank <= 2) {
-        $('#rbSunday').click();
+        $('#rbSunday').trigger('click',true);
       } else {
-        rbWeekday.click();
+        rbWeekday.trigger('click',true);
       }
       $('.weekday-lbl').text(days[date.day()]);
+      setPsalms(date.day(), choices.season == 'paschal');
       setCanticle(isPT?'-pt':'');
     }
     $(document.body).toggleClass('hide-choose-day',!showChooseDay);
@@ -1439,24 +1448,25 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     $('div.' + chant + '.' + value).show();
   };
   var choices = {};
-  $('.btn-group .dropdown-menu>li>a[value]').click(function(e){
+  $('.btn-group .dropdown-menu>li>a[value]').click(function(e, isProgrammaticTrigger){
     e.preventDefault();
     var $this = $(this),
         $li = $this.parent(),
         $parent = $this.parents('.btn-group').first(),
         $label = $parent.find('.btn>.lbl'),
         val = $this.attr('value');
+    if(isProgrammaticTrigger && $li.hasClass('selected')) return;
     $parent.removeClass('open');
     $li.parent().children().removeClass('selected');
     $li.addClass('selected');
     $label.html($this.contents().clone());
     var chant = $parent.attr('name');
     if(chant === 'weekday') {
-      setPsalms(parseInt(val), choices.season == 'paschal');
+      if(!isProgrammaticTrigger) setPsalms(parseInt(val), choices.season == 'paschal');
     } else {
       choices[chant] = val;
       if(chant=='season') {
-        setPsalms(undefined, val == 'paschal');
+        if(!isProgrammaticTrigger) setPsalms(undefined, val == 'paschal');
       } else {
         loadChant(chant,val,this.id);
       }
