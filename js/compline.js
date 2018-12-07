@@ -920,9 +920,9 @@ define('chant-element',['jquery','exsurge','document-register-element'], functio
       this.innerHTML = innerHTML;
     }
 
-    setGabc(gabc, annotationAttr) {
+    setGabc(gabc, annotationAttr, useDropCapAttr) {
+      if(/^\s*$/.test(gabc)) return;
       var useDropCap = [];
-      var useDropCapAttr = this.getAttribute("use-drop-cap");
       if (useDropCapAttr === 'false') {
         useDropCapAttr = false;
       } else {
@@ -1021,17 +1021,27 @@ define('chant-element',['jquery','exsurge','document-register-element'], functio
       if(srcAttr) {
         this.setSrc(srcAttr);
       } else {
-        setGabc(this.innerText,this.getAttribute("annotation"));
+        this.setGabc(this.innerText,this.getAttribute("annotation"),this.getAttribute("use-drop-cap"));
       }
 
       this._width = 0;
-
-      this._attached = false;
     }
 
-    attachedCallback() {
-      this._attached = true;
+    attributeChangedCallback(name, oldValue, newValue) {
+      switch(name) {
+        case "src":
+          this.setSrc(newValue);
+          return;
+        case "annotation":
+          this.setGabc(this.innerText,newValue,this.getAttribute("use-drop-cap"));
+          return;
+        case "use-drop-cap":
+          this.setGabc(this.innerText,this.getAttribute("annotation"),newValue);
+          return;
+      }
     }
+
+    static get observedAttributes() { return ['src','annotation','use-drop-cap']; }
   };
   // register the custom element
   if(window.customElements && window.customElements.define) {
