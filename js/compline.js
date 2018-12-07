@@ -90,7 +90,7 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     updateToggle(toggle);
   });
   function doAutoSelectRegion() {
-    $.getJSON("https://freegeoip.net/json/", function(result){
+    $.getJSON("https://freegeoip.app/json/", function(result){
       if(result.country_code in calendar.roman.regionCodeMap) {
         selectRegion(result.country_code);
       } else {
