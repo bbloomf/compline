@@ -482,7 +482,7 @@ define(['moment','moment.easter'], function(moment){
     this.epiphany = moment([Y,0,6]);
     // The Feast of the Holy Family is on the Sunday following Epiphany, unless Epiphany falls on a Sunday,
     // in which case The Holy Family will be on the Saturday following.
-    this.holyFamily = moment(this.epiphany).add(7 - (this.epiphany.day()||1), 'days');
+    this.holyFamily = moment(this.epiphany).add(7 - (this.epiphany.day()), 'days');
     this.transfiguration = moment([Y,7,6]);
     this.stJoseph = moment([Y,2,19]);
     this.annunciation = moment([Y,2,25]);
@@ -686,9 +686,18 @@ define(['moment','moment.easter'], function(moment){
     var test;
     while((matches = regexDateRange.exec(dateRange))) {
       var opposite = matches[1];
+      var secondDate = date.clone();
       var range = [momentFromRegex(date,matches.slice(1),dates)];
       if(matches[9]) {
-        range.push(momentFromRegex(date,matches.slice(9),dates));
+        if(matches[3] > matches[11]) {
+          // if the range spans the new year, it is a special case:
+          if(range[0].isAfter(date)) {
+            range[0].add(-1,'year');
+          } else {
+            secondDate.add(1,'year');
+          }
+        }
+        range.push(momentFromRegex(secondDate,matches.slice(9),dates));
         test = date.isBetween(range[0],range[1],'day','[]');
         if(opposite) test = !test;
         if(test) return true;

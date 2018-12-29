@@ -1,5 +1,6 @@
 require(['jquery','moment','calendar','chant-element'], function($,moment,calendar) {
   'use strict';
+  $('select').val('');
   var localStorage = window.localStorage;
   try {
     var mod = '__storage test__';
