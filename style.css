@@ -36,8 +36,11 @@
 .lyric-font {
   font-family: 'Crimson Text', serif;
 }
+.verses {
+  margin-top: -6pt;
+}
 .verses>p {
-  line-height:100%;
+  line-height: 1;
   margin: 6pt 0;
 }
 .verses span.verse-number {
@@ -48,6 +51,10 @@
 }
 .red, .red * {
   color: #d00!important;
+  line-height: 1;
+}
+p.red {
+  margin-bottom: 0;
 }
 [style*="fill:#f00;"] {
   fill: #d00!important;
