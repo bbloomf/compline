@@ -350,13 +350,15 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       setPsalms('asd');
       setCanticle('-asd');
     } else {
+      var psalmDay = date.day();
       if(showChooseDay && d && d.rank <= 2) {
         $('#rbSunday').trigger('click',true);
+        psalmDay = 0;
       } else {
         rbWeekday.trigger('click',true);
       }
       $('.weekday-lbl').text(days[date.day()]);
-      setPsalms(date.day(), choices.season == 'paschal');
+      setPsalms(psalmDay, choices.season == 'paschal');
       setCanticle(isPT?'-pt':'');
     }
     $(document.body).toggleClass('hide-choose-day',!showChooseDay);
