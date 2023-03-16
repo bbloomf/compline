@@ -863,7 +863,7 @@ define('chant-element',['jquery','exsurge','document-register-element'], functio
       if (mql.matches) {
         console.info('calling before printing via media query');
         printWidth = window.document.body.clientWidth;
-        console.info({printWidth});
+        console.info({printWidth:printWidth});
         doLayout(true);
       } else {
         // console.info('calling after printing via media query');
