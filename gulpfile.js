@@ -4,7 +4,6 @@
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var del = require('del');
-var runSequence = require('run-sequence');
 var pagespeed = require('psi');
 var htmlmin = require('gulp-htmlmin');
 var replace = require('gulp-replace');
@@ -35,7 +34,7 @@ gulp.task('copy', function() {
 });
 
 // Compile and Automatically Prefix Stylesheets
-gulp.task('styles', function() {
+gulp.task('styles', function(cb) {
   var requirejs = require('requirejs');
 
   requirejs.optimize({
@@ -44,6 +43,7 @@ gulp.task('styles', function() {
     optimizeCss: "standard"
   });
 
+  cb();
   // return gulp.src([
   //   'dist/*.css'
   // ])
@@ -54,7 +54,7 @@ gulp.task('styles', function() {
 });
 
 // Build one javascript file:
-gulp.task('scripts', function() {
+gulp.task('scripts', function(cb) {
   var requirejs = require('requirejs');
 
   requirejs.optimize({
@@ -82,6 +82,7 @@ gulp.task('scripts', function() {
     //   }));
     //}
   });
+  cb();
 });
 
 // Concatenate And Minify JavaScript
@@ -121,12 +122,10 @@ gulp.task('html', function() {
 gulp.task('clean', del.bind(null, ['.tmp', 'dist/*', '!dist/.git'], {dot: true}));
 
 // Build and serve the output from the dist build
-gulp.task('serve:dist', ['default']);
+// gulp.task('serve:dist', ['default']);
 
 // Build Production Files, the Default Task
-gulp.task('default', ['clean'], function(cb) {
-  runSequence('copy', ['html', 'styles', 'scripts'], cb);
-});
+gulp.task('default', gulp.series(['html', 'styles', 'scripts', 'copy']));
 
 // Run PageSpeed Insights
 // Update `url` below to the public URL for your site
