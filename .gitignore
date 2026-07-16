@@ -4,3 +4,4 @@ gh-pages
 node_modules
 dist
 cordova
+build

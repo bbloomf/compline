@@ -5,6 +5,7 @@
   "main": "index.html",
   "scripts": {
     "build": "gulp",
+    "build:booklet": "node scripts/build-booklet.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -41,6 +42,7 @@
     "minimatch": "^3.0.2",
     "psi": "^2.0.4",
     "pump": "^1.0.1",
-    "requirejs": "^2.2.0"
+    "requirejs": "^2.2.0",
+    "playwright": "^1.56.1"
   }
 }
