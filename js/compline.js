@@ -67,6 +67,10 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   $('#selectRegion').change(function(e){
     selectRegion($(this).val());
   });
+  // js/theme.js stores the choice in localStorage.theme and applies it
+  $('#selectTheme').val(window.complineTheme.getTheme()).change(function(e){
+    window.complineTheme.setTheme($(this).val());
+  });
   function updateToggle(toggle,val) {
     if(typeof val === 'undefined') {
       var $toggle = $('input[toggle='+toggle+']');
