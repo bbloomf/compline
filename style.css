@@ -37,15 +37,15 @@
   font-family: 'Crimson Text', serif;
 }
 .verses {
-  margin-top: -6pt;
+  margin-top: -0.4615em;
 }
 .verses>p {
   line-height: 1;
-  margin: 6pt 0;
+  margin: 0.4615em 0;
 }
 .verses span.verse-number {
   float:left;
-  width:25pt;
+  width:1.923em;
   text-align:right;
   color: #d00!important;
 }
@@ -72,6 +72,33 @@ body {
   }
   body{
     max-width:8in;
+  }
+}
+/* Scale the text with the width of the page, in step with the chant, which is
+   laid out 624px wide and scaled up to fill wider pages (see chant-element.js).
+   --scaled-px is 1px at 624px wide, and grows with the page up to 1258px. */
+@media screen and (min-width: 640px) {
+  :root {
+    --scaled-px: calc((100vw - 16px) / 624);
+  }
+  body {
+    font-size: calc(17.3333 * var(--scaled-px)); /* 13pt */
+  }
+  .btn-lg {
+    font-size: calc(18 * var(--scaled-px));
+  }
+  .dropdown-menu,
+  .h5 {
+    font-size: calc(14 * var(--scaled-px));
+  }
+}
+@media screen and (min-width: 1274px) {
+  :root {
+    --scaled-px: calc(1258px / 624);
+  }
+  body {
+    max-width: 1258px;
+    margin: 8px auto;
   }
 }
 tspan[style="font-family:'Exsurge Characters';fill:#f00;"] {

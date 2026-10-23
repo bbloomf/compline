@@ -1,6 +1,10 @@
 define(['jquery','exsurge','document-register-element'], function($,exsurge) {
   'use strict';
   var printWidth = 672;
+  // On screen, chant is laid out no wider than this, and on wider screens the
+  // SVG is scaled up to fill the width (as in jgabc's propers page).  The body
+  // text in style.css scales by the same ratio, so the two stay in proportion.
+  var maxLayoutWidth = 624;
   var regexGabcHeader = /((?:[\w-_]+:\s*[^;\r\n]*;?\r?\n)+)%%\r?\n/;
   var _width = window.document.body.clientWidth;
   var doLayout = function(sync) {
@@ -9,6 +13,18 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
     if(sync === true) _width = Math.min(_width,printWidth);
     $('chant-gabc').each(function(){
       this.doLayout(_width,sync === true);
+    });
+  };
+  // Wait for the resize or rotation to finish before laying out again.
+  var resizeTimeout;
+  var doLayoutAfterResize = function() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(doLayout, 100);
+  };
+  // Makes a fixed-size SVG scale to fill the width of its container.
+  var makeSvgScalable = function(svg, layoutWidth) {
+    return svg.replace(/^(<svg[^>]*?) width="([0-9.]+)" height="([0-9.]+)"/, function(match, start, width, height) {
+      return start + ' viewBox="0 0 ' + width + ' ' + height + '" width="' + (100 * width / layoutWidth) + '%"';
     });
   };
   if (window.matchMedia) {
@@ -30,8 +46,10 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
   }
   window.onbeforeprint = function() { doLayout(true) };
   window.onafterprint = function() { doLayout() };
-  if (window.addEventListener) window.addEventListener('resize',doLayout,false);
-  else if (window.attachEvent) window.attachEvent('onresize',doLayout);
+  if (window.addEventListener) {
+    window.addEventListener('resize',doLayoutAfterResize,false);
+    window.addEventListener('orientationchange',doLayoutAfterResize,false);
+  } else if (window.attachEvent) window.attachEvent('onresize',doLayoutAfterResize);
   // client side support
   class ChantVisualElement extends HTMLElement {
     constructor() {
@@ -60,8 +78,13 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
       var score = this._score;
       var ctxt = this._ctxt;
       newWidth = newWidth || (this.parentElement && this.parentElement.clientWidth) || window.document.body.clientWidth;
-      if(newWidth === 0 || this._width === newWidth) return;
+      if(newWidth === 0) return;
+      sync = !!sync;
+      // printing uses the full width, without scaling
+      if(!sync) newWidth = Math.min(newWidth, maxLayoutWidth);
+      if(this._width === newWidth && this._sync === sync) return;
       var width = this._width = newWidth;
+      this._sync = sync;
       // perform layout on the chant
       var innerHTML = '';
       for(var i = 0; i < score.length; ++i) {
@@ -77,7 +100,7 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
         if(sync) {
           innerHTML += score[i].createSvgForEachLine(ctxt);
         } else {
-          innerHTML += score[i].createSvg(ctxt);
+          innerHTML += makeSvgScalable(score[i].createSvg(ctxt), width);
         }
       }
       this.innerHTML = innerHTML;
