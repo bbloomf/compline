@@ -90,23 +90,52 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   $.each(toggles, function(toggle){
     updateToggle(toggle);
   });
-  function doAutoSelectRegion() {
-    $.getJSON("https://freegeoip.app/json/", function(result){
-      if(result.country_code in calendar.roman.regionCodeMap) {
-        selectRegion(result.country_code);
-      } else {
-        var test = result.country_code + '-' + result.region_code;
-        if(test in calendar.roman.regionCodeMap) {
-          selectRegion(test);
-        } else {
-          console.info('Unknown Region:', result);
+  // IANA time zones (with their legacy aliases) in each region; a name ending in '/' matches every zone under it.
+  // England, Scotland and Wales all use Europe/London, so 'GB' isn't a region itself.
+  var timeZoneRegions = {
+    'US': ['US/', 'Navajo', 'Pacific/Honolulu', 'Pacific/Johnston', 'America/Indiana/', 'America/Kentucky/', 'America/North_Dakota/',
+      'America/Adak', 'America/Anchorage', 'America/Atka', 'America/Boise', 'America/Chicago', 'America/Denver', 'America/Detroit',
+      'America/Fort_Wayne', 'America/Indianapolis', 'America/Juneau', 'America/Knox_IN', 'America/Los_Angeles', 'America/Louisville',
+      'America/Menominee', 'America/Metlakatla', 'America/New_York', 'America/Nome', 'America/Phoenix', 'America/Shiprock',
+      'America/Sitka', 'America/Yakutat'],
+    'CA': ['Canada/', 'America/Atikokan', 'America/Blanc-Sablon', 'America/Cambridge_Bay', 'America/Creston', 'America/Dawson',
+      'America/Dawson_Creek', 'America/Edmonton', 'America/Fort_Nelson', 'America/Glace_Bay', 'America/Goose_Bay', 'America/Halifax',
+      'America/Inuvik', 'America/Iqaluit', 'America/Moncton', 'America/Montreal', 'America/Nipigon', 'America/Pangnirtung',
+      'America/Rainy_River', 'America/Rankin_Inlet', 'America/Regina', 'America/Resolute', 'America/St_Johns', 'America/Swift_Current',
+      'America/Thunder_Bay', 'America/Toronto', 'America/Vancouver', 'America/Whitehorse', 'America/Winnipeg', 'America/Yellowknife'],
+    // #selectRegion has one option, 'AU', for Australia and New Zealand
+    'AU': ['Australia/', 'NZ', 'NZ-CHAT', 'Pacific/Auckland', 'Pacific/Chatham'],
+    'GB': ['GB', 'GB-Eire', 'Europe/London']
+  };
+  function regionFromTimeZone(timeZone) {
+    var region = '';
+    $.each(timeZoneRegions, function(code, zones) {
+      $.each(zones, function(i, zone) {
+        if(zone.slice(-1) === '/'? timeZone.indexOf(zone) === 0 : timeZone === zone) {
+          region = code;
+          return false;
         }
-      }
-      console.info('Country: ' + result.country_name + '\n' + 'Code: ' + result.country_code);
-      window.ipGeo = ipGeo = result;
+      });
+      if(region) return false;
     });
+    return region;
   }
-  var ipGeo;
+  function doAutoSelectRegion() {
+    var timeZone;
+    try {
+      timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    } catch(e) {}
+    if(!timeZone) return;
+    var region = regionFromTimeZone(timeZone);
+    if(region === 'GB') {
+      // Keep England, Scotland or Wales if the user already chose one, and let them choose while auto select is on.
+      if(!/^GB-/.test(localStorage.region)) selectRegion('');
+      $('#selectRegion').prop('disabled', false);
+    } else {
+      selectRegion(region);
+    }
+    console.info('Time zone: ' + timeZone + '\n' + 'Region: ' + region);
+  }
   if(parseInt(localStorage.autoSelectRegion)) {
     doAutoSelectRegion();
   }
