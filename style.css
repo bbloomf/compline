@@ -61,7 +61,7 @@ p.red {
 }
 body {
   font-family: 'Crimson Text', serif;
-  font-size: 13pt;
+  font-size: 19.2px; /* the size of the chant lyrics (see chant-element.js) */
   margin: 8px;
 }
 .sans{font-family: sans-serif;}
@@ -81,8 +81,16 @@ body {
   :root {
     --scaled-px: calc((100vw - 16px) / 624);
   }
+  /* 100vw includes the scrollbar, but the chant's width doesn't, so measure
+     the width of the root element instead where container units work. */
+  @supports (width: 1cqw) {
+    :root {
+      container-type: inline-size;
+      --scaled-px: calc((100cqw - 16px) / 624);
+    }
+  }
   body {
-    font-size: calc(17.3333 * var(--scaled-px)); /* 13pt */
+    font-size: calc(19.2 * var(--scaled-px));
   }
   .btn-lg {
     font-size: calc(18 * var(--scaled-px));
