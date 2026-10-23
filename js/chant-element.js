@@ -169,14 +169,19 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
       ctxt.annotationTextFont = ctxt.lyricTextFont;
       ctxt.minLyricWordSpacing *= 0.7;
       ctxt.accidentalSpaceMultiplier = 1.5;
-      ctxt.annotationTextColor = '#d00';
+      // Draw in the inherited CSS `color` (see theme.css) so the chant follows light/dark
+      // mode without re-rendering.
+      ctxt.lyricTextColor = ctxt.alTextColor = ctxt.translationTextColor = ctxt.dropCapTextColor = 'currentColor';
+      ctxt.staffLineColor = ctxt.neumeLineColor = ctxt.dividerLineColor = 'currentColor';
+      ctxt.annotationTextColor = 'var(--rubric-color, #d00)';
       
       ctxt.specialCharProperties['font-family'] = "'Versiculum'";
       ctxt.specialCharProperties['font-variant'] = 'normal';
       ctxt.specialCharProperties['font-size'] = (1.2 * ctxt.lyricTextSize) + 'px';
       ctxt.specialCharProperties['font-weight'] = '400';
       ctxt.specialCharText = function(char) { return char.toLowerCase(); };
-      ctxt.setRubricColor('#d00');
+      // Rubric red follows --rubric-color (theme.css)
+      ctxt.setRubricColor('var(--rubric-color, #d00)');
 
       this._ctxt = ctxt;
 
@@ -205,6 +210,13 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
     }
 
     static get observedAttributes() { return ['src','annotation','use-drop-cap']; }
+  };
+  // exsurge fills "negative" glyph paths, such as the hollow of a punctum cavum, with #fff, but they have
+  // to match the background.  Glyphs are shared through <use>, whose shadow tree stylesheet rules cannot
+  // reach, so the colour travels with the glyph as a fill attribute whose variable resolves per theme (see theme.css).
+  var svgFragmentForGlyph = exsurge.QuickSvg.svgFragmentForGlyph;
+  exsurge.QuickSvg.svgFragmentForGlyph = function(glyph) {
+    return svgFragmentForGlyph.call(this, glyph).replace(/fill="#fff"/g, 'fill="var(--exsurge-negative-fill, #fff)"');
   };
   // register the custom element
   if(window.customElements && window.customElements.define) {
