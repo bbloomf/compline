@@ -1,2 +1,9 @@
-platforms/*
-node_modules/*
+platforms
+plugins
+node_modules
+dist
+cordova
+build.json
+appid-secret.key
+# OS X
+.DS_Store
