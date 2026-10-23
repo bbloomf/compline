@@ -23,6 +23,8 @@
   "homepage": "https://github.com/bbloomf/compline",
   "devDependencies": {
     "amdclean": "^2.7.0",
+    "cordova-android": "^15.1.0",
+    "cordova-ios": "^8.1.1",
     "del": "^2.2.1",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.0",
