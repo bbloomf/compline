@@ -2,3 +2,4 @@ fix auto-select region
 Offline support?
 Translations?
 
+Once #17 (width sizing) and #18 (exsurge 2.2.1) have both landed: simplify makeSvgScalable in js/chant-element.js. exsurge 2 already writes viewBox, so it only needs to swap width/height for the percentage width.
