@@ -21,8 +21,8 @@ chant-gabc > svg {
   color: #000;
   /* read by the fill attribute on "negative" glyph paths, such as the hollow of
      a punctum cavum: those have to match the background, and a stylesheet cannot
-     reach them because glyphs are shared through <use>.  See the
-     svgFragmentForGlyph wrapper in js/chant-element.js. */
+     reach them because glyphs are shared through <use>.  See
+     ctxt.negativeFillColor in js/chant-element.js. */
   --exsurge-negative-fill: #fff;
 }
 chant-gabc use {
