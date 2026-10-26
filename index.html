@@ -21,7 +21,13 @@
     <li><label>Psalms&nbsp;<select notation='psalms'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option></select></label></li>
     <li><label>Chapter&nbsp;<select notation='chapter'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option></select></label></li>
     <li><label>Prayers&nbsp;<select notation='prayers'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option></select></label></li>
-    <li><label>Other chants&nbsp;<select notation='chants'><option value='text'>Plain text</option><option value='full'>Fully notated</option></select></label></li>
+    <li><label>Other chants&nbsp;<select id='notation-other-chants'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='mixed' disabled hidden>Mixed</option></select></label><button type='button' class='expander' aria-expanded='false' aria-controls='notation-other-chants-list' aria-label='Each chant'>&#9656;</button>
+      <ul id='notation-other-chants-list' hidden>
+        <li><label>Hymn&nbsp;<select notation='hymn'><option value='text'>Plain text</option><option value='full'>Fully notated</option></select></label></li>
+        <li><label>Marian antiphon&nbsp;<select notation='marian'><option value='text'>Plain text</option><option value='full'>Fully notated</option></select></label></li>
+        <li><label>Everything else&nbsp;<select notation='chants'><option value='text'>Plain text</option><option value='full'>Fully notated</option></select></label></li>
+      </ul>
+    </li>
     <li>Theme&nbsp;<select id='selectTheme'><option value="auto">Auto (follow device)</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
   </ul>
 </div>
@@ -123,7 +129,8 @@ Pater noster <i class='red'>is said, silently throughout.
 Afterwards there is added aloud, without</i> Orémus<i class='red'>, the collect:</i>
 </div>
 <div exclude='easter-3:easter+5 allSouls'>
-<p class='red'><i>The Officiant then intones the Hymn </i>Te lucis<i> which is sung in one of the tones given below.  All bow slightly for the first three stanzas of the third verse.</i></p>
+<div class='notation-section'>
+<p class='red notation-section-title'><i>The Officiant then intones the Hymn </i>Te lucis<i> which is sung in one of the tones given below.  All bow slightly for the first three stanzas of the third verse.</i></p>
 <div id='te-lucis-choices' class="btn-group hidden-print" name="te-lucis">
   <button type="button" class="btn btn-lg btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <span class='lbl'>Throughout the year</span> <span class="caret"></span>
@@ -148,8 +155,9 @@ Afterwards there is added aloud, without</i> Orémus<i class='red'>, the collect
     <li><a class='btn-lg' href='#' value='Sacred-Heart' select-date='sacredHeart-1:sacredHeart' id='te-lucis-Sacred-Heart'>Sacred Heart <i class='h5 red'>(On the Feast of the Sacred Heart of Jesus)</i></a></li>
   </ul></div>
 </div>
-<div class='notation-choice hidden-print'><label>Hymn&nbsp;<select notation='hymn'><option value='text'>Plain text</option><option value='full'>Fully notated</option></select></label></div>
+<div class='notation-choice hidden-print'><label class='notation-level'>Hymn&nbsp;<select notation='hymn'><option value='text'>Plain text</option><option value='full'>Fully notated</option></select></label></div>
 <chant-gabc id='te-lucis' notation='hymn' src='te-lucis/Ferial.gabc'></chant-gabc>
+</div>
 <i class='red'>The Officiant then says the Chapter:</i>
 <br>
 <span class='pointed-chapter'>
@@ -234,7 +242,8 @@ Per Dóminum nostrum Jesum Christum Fílium tuum:&nbsp;<span class='red'>†</sp
 Benedícat et custódiat nos omnípotens et miséricors Dóminus, Pater, et Fílius, et Spíritus Sanctus.
 <span class='versiculum'>r</span>&nbsp;Amen.
 <br><br>
-MARIAN ANTIPHON
+<div class='notation-section'>
+<span class='notation-section-title'>MARIAN ANTIPHON</span>
 <div id='marian-antiphon-choices'>
 <select name='marian-antiphon' class='hidden-print'>
   <option select-date='advent1-1:12/31 01/01:02/01' value='alma-redemptoris-mater' id='marian-antiphon-alma'>Alma Redemptoris Mater</option>
@@ -242,14 +251,15 @@ MARIAN ANTIPHON
   <option select-date='easter:pentecost+5' value='regina-caeli' id='marian-antiphon-regina'>Regina Cæli</option>
   <option select-date='pentecost+6:advent1-2' value='salve-regina' id='marian-antiphon-salve'>Salve Regina</option>
 </select>
-<div class='notation-choice hidden-print'><label>Marian antiphon&nbsp;<select notation='marian'><option value='text'>Plain text</option><option value='full'>Fully notated</option></select></label>
-<label id='marian-antiphon-solemn-choice'><input type='checkbox' id='marian-antiphon-solemn'>&nbsp;Solemn Tone</label></div>
+<div class='notation-choice hidden-print'><label id='marian-antiphon-solemn-choice'><input type='checkbox' id='marian-antiphon-solemn'>&nbsp;Solemn Tone</label>
+<label class='notation-level'>Marian antiphon&nbsp;<select notation='marian'><option value='text'>Plain text</option><option value='full'>Fully notated</option></select></label></div>
 <div class='marian-antiphon alma-redemptoris-mater alma-redemptoris-mater-solemn'><span class='marian-antiphon-name'>Alma Redemptoris Mater </span><i class='red'>(from Saturday before the First Sunday of Advent until Feb. 1 inclusive)</i></div>
 <div class='marian-antiphon ave-regina-caelorum ave-regina-caelorum-solemn'><span class='marian-antiphon-name'>Ave Regina Cælorum </span><i class='red'>(From February 2 until Wednesday of Holy Week inclusive)</i></div>
 <div class='marian-antiphon regina-caeli regina-caeli-solemn'><span class='marian-antiphon-name'>Regina Cæli </span><i class='red'>(from Easter Sunday until Friday in the Octave of Pentecost inclusive)</i></div>
 <div class='marian-antiphon salve-regina salve-regina-solemn'><span class='marian-antiphon-name'>Salve Regina </span><i class='red'>(from Saturday before Trinity Sunday until Friday before the First Sunday of Advent inclusive)</i></div>
 </div>
 <div><chant-gabc id='marian-antiphon' notation='marian' src='marian-antiphon/salve-regina.gabc'></chant-gabc></div>
+</div>
 <div class='marian-antiphon alma-redemptoris-mater alma-redemptoris-mater-solemn' style='display:none;'>
 <span include="02/02:advent1-2">
 <i class='red'>During Advent:</i><br/>
