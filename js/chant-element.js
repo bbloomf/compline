@@ -183,7 +183,8 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
 
       ctxt.specialCharProperties['font-family'] = "'Versiculum'";
       ctxt.specialCharProperties['font-variant'] = 'normal';
-      ctxt.specialCharProperties['font-size'] = (1.2 * ctxt.textStyles.lyric.size) + 'px';
+      // relative to the text it's in, so that ℣ in an annotation isn't drawn at the lyrics' size
+      ctxt.specialCharProperties['font-size'] = '120%';
       ctxt.specialCharProperties['font-weight'] = '400';
       var defaultSpecialCharText = ctxt.specialCharText;
       ctxt.specialCharText = function(char) { return defaultSpecialCharText(char).toLowerCase(); };
