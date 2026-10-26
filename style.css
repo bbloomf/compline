@@ -338,6 +338,64 @@ chant-gabc.plain-text > p {
     cursor: pointer;
   }
 }
+/* Translations (TRANSLATIONS_PLAN.md §4).  js/text-mode.js puts text-la, text-both or text-tr on
+   <body>, and follows each Latin block (lang=la) with its translation (.tr), inside a .tr-pair or
+   a psalm's .verses.  A Latin block has the class has-tr when it has a translation, and
+   tr-missing when it doesn't.  In a chant, each unit's translation follows it in a .chant-tr. */
+/* In Latin only, a .run-in block stays in the line it continues, and the line ends at the
+   br.run-in-end after it. */
+body.text-la .tr-pair.run-in,
+body.text-la .tr-pair.run-in > [lang=la] {
+  display: inline;
+}
+body:not(.text-la) br.run-in-end {
+  display: none;
+}
+body.text-la .tr,
+body.text-la .chant-tr,
+body.text-tr .has-tr,
+body.text-tr #options-menu .notation-menu,
+body.text-tr .notation-choice {
+  display: none;
+}
+/* Beside the Latin, the translation is quieter.  With the translation only, a text that has no
+   translation shows its Latin, quietly. */
+body.text-both .tr,
+body.text-tr .tr-missing {
+  color: var(--tr-color);
+}
+chant-gabc.plain-text > .tr-pair > p,
+chant-gabc > .chant-tr > p {
+  margin: 0 0 0.4615em;
+}
+chant-gabc > .chant-tr {
+  margin: 0.3em 0 0.2em;
+}
+/* On a narrow screen the translation is under the Latin; on a wide one, and in print, beside it. */
+@media print, screen and (min-width: 768px) {
+  body.text-both .tr-pair,
+  body.text-both .verses:not(.chant-tr) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1.5em;
+  }
+  body.text-both .tr-pair > [lang=la],
+  body.text-both .verses > [lang=la] {
+    grid-column: 1;
+  }
+  body.text-both .tr-pair > .tr,
+  body.text-both .verses > .tr {
+    grid-column: 2;
+  }
+  /* grid items' margins don't collapse */
+  body.text-both .verses:not(.chant-tr) {
+    row-gap: 0.4615em;
+    margin: 0 0 0.4615em;
+  }
+  body.text-both .verses:not(.chant-tr) > p {
+    margin: 0;
+  }
+}
 /* Chant playback (js/chant-playback.js), as in jgabc: the initial opens a menu to play the
    chant, the notes light up as they sound, and a bar at the bottom of the page controls it. */
 :root {

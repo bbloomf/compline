@@ -1,4 +1,4 @@
-require(['jquery','moment','calendar'], function($,moment,calendar) {
+require(['jquery','moment','calendar','text-mode'], function($,moment,calendar,textMode) {
   'use strict';
   $('select').val('');
   var localStorage = window.localStorage;
@@ -49,10 +49,14 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
     marian:  {key: 'notationMarian',  levels: ['text', 'full'], defaultLevel: 'full'},
     chants:  {key: 'notationChants',  levels: ['text', 'full'], defaultLevel: 'full'}
   };
-  var notation = function(section) {
+  var storedNotation = function(section) {
     var s = notationSections[section];
     var level = localStorage[s.key];
     return s.levels.indexOf(level) >= 0 ? level : s.defaultLevel;
+  };
+  // With the translation only, everything is plain text (TRANSLATIONS_PLAN.md §4).
+  var notation = function(section) {
+    return textMode.mode() === 'tr'? 'text' : storedNotation(section);
   };
   var fullyNotatedPsalms = function() {
     return notation('psalms') === 'full';
@@ -73,7 +77,7 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
     $.each(notationSections[section].levels, function(i, l) {
       $(document.body).toggleClass('notation-' + section + '-' + l, l === level);
     });
-    $('select[notation=' + section + ']').val(level);
+    $('select[notation=' + section + ']').val(storedNotation(section));
     markPlainText(section);
   };
   $.each(notationSections, updateNotation);
@@ -93,7 +97,7 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
   var $otherChantsList = $('#notation-other-chants-list');
   var updateOtherChants = function() {
     var levels = $otherChantsList.find('select[notation]').map(function(){
-      return notation($(this).attr('notation'));
+      return storedNotation($(this).attr('notation'));
     }).get();
     var mixed = levels.some(function(l){ return l !== levels[0]; });
     $otherChants.val(mixed ? 'mixed' : levels[0]);
@@ -117,6 +121,41 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
   // hovered, or on a touch screen once its title is tapped (style.css).
   $('.notation-section-title').click(function(e){
     $(this).closest('.notation-section').toggleClass('show-notation');
+  });
+  // What text to show: Latin, Latin and a translation, or the translation only; and which
+  // translation (TRANSLATIONS_PLAN.md §5).  js/text-mode.js keeps both, and the body class
+  // text-<mode>, which style.css reads.
+  var $textMode = $('#selectTextMode');
+  var $trLang = $('#selectTrLang');
+  $trLang.append(textMode.languages.map(function(l){
+    return '<option value="' + l.code + '">' + l.name + '</option>';
+  }).join(''));
+  var showTextMode = function() {
+    textMode.updateBodyClasses();
+    $textMode.val(textMode.mode());
+    $trLang.val(textMode.lang()).prop('disabled', textMode.mode() === 'la');
+  };
+  showTextMode();
+  var updateTextMode = function() {
+    showTextMode();
+    textMode.load(function() {
+      // the translation only makes every section plain text
+      $.each(notationSections, updateNotation);
+      setPsalms();
+      setCanticle();
+      textMode.translate(document.body);
+      $('chant-gabc').each(function(){
+        if(this.updateText) this.updateText();
+      });
+    });
+  };
+  $textMode.change(function(e){
+    textMode.setMode($(this).val());
+    updateTextMode();
+  });
+  $trLang.change(function(e){
+    textMode.setLang($(this).val());
+    updateTextMode();
   });
   var toggles = {};
   var autoSelectRegion = toggles.autoSelectRegion = function(newVal) {
@@ -303,6 +342,7 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
       }
       $('#canticle').empty().append(html);
       markAllPlainText();
+      textMode.translate('#canticle');
     };
     $('#canticle').empty();
     if(fullyNotatedPsalms()) {
@@ -352,6 +392,7 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
       var html = ant + psalm + data + ant;
       $('#placeholder').empty().append(html);
       markAllPlainText();
+      textMode.translate('#placeholder');
     };
     if(full) {
       gotData('');
@@ -552,9 +593,12 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
   $('#selectFeastDay').change(function(){
     setDate(moment($date.val()), this.value);
   });
-  // Loaded last, so that every <chant-gabc> already has its plain-text attribute when it is first
-  // drawn, and none is laid out as chant only to be redrawn as text.  (The dist build bundles it.)
-  require(['chant-element']);
+  // Loaded last, so that every <chant-gabc> already has its plain-text attribute and its translation
+  // when it is first drawn, and none is drawn twice.  (The dist build bundles it.)
+  textMode.load(function() {
+    textMode.translate(document.body);
+    require(['chant-element']);
+  });
   // if ('serviceWorker' in navigator) {
   //   navigator.serviceWorker.register('./sw.js').then(function(registration) {
   //     // Registration was successful

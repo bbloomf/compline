@@ -1,4 +1,4 @@
-define(['jquery','exsurge','document-register-element','chant-playback'], function($,exsurge) {
+define(['jquery','exsurge','text-mode','document-register-element','chant-playback'], function($,exsurge,textMode) {
   'use strict';
   var printWidth = 672;
   // On screen, chant is laid out no wider than this, and on wider screens the
@@ -74,9 +74,15 @@ define(['jquery','exsurge','document-register-element','chant-playback'], functi
   // lines all start with a number is a psalm, laid out like the pointed verses.  Only the
   // first textLines lines are kept, if it's given: the rest of a psalm's intonation file
   // shows how to sing the flex and later verses.
-  var gabcToHtml = function(gabc, annotationAttr, useDropCapAttr, textLines) {
+  // With a translation (see translation() below), each psalm verse is followed by its own,
+  // and each paragraph by its unit.  If the units don't match the paragraphs, they all follow
+  // the whole chant.
+  var gabcToHtml = function(gabc, annotationAttr, useDropCapAttr, textLines, translation) {
     var lineCount = 0;
-    return splitGabc(gabc).map(function(score) {
+    var verse = /^(\d+)\. /;
+    var units = translation && translation.units;
+    var paragraphs = [];
+    splitGabc(gabc).forEach(function(score) {
       var header = score.header;
       var useDropCap = ('initial-style' in header)? header['initial-style'] === '1' : useDropCapAttr;
       var html = '';
@@ -98,20 +104,91 @@ define(['jquery','exsurge','document-register-element','chant-playback'], functi
         });
       }
       if(prefix) body = prefix + ' ' + body;
-      return html + body.trim().split(/\r?\n\s*\r?\n/).map(function(paragraph) {
+      var section = textMode.psalmSection(header['user-notes']);
+      body.trim().split(/\r?\n\s*\r?\n/).forEach(function(paragraph, i) {
         var lines = paragraph.split(/\r?\n/).map(gabcLineToHtml).filter(function(line) {
           return line && !(textLines && ++lineCount > textLines);
         });
-        if(lines.length === 0) return '';
-        var verse = /^(\d+\.) /;
-        if(lines.every(function(line) { return verse.test(line); })) {
-          return '<div class="verses">' + lines.map(function(line) {
-            return line.replace(verse, '<p><span class="verse-number">$1&nbsp;</span>') + '</p>';
-          }).join('') + '</div>';
-        }
-        return '<p>' + lines.join('<br>').replace(verse, "<span class='red'>$1</span> ") + '</p>';
-      }).join('');
+        paragraphs.push({
+          labels: i === 0? html : '',
+          lines: lines,
+          verses: lines.length > 0 && lines.every(function(line) { return verse.test(line); }),
+          section: section
+        });
+      });
+    });
+    var unitCount = paragraphs.filter(function(p) { return p.lines.length && !p.verses; }).length;
+    var paired = units && units.length === unitCount;
+    var unit = 0;
+    var html = paragraphs.map(function(p) {
+      if(p.lines.length === 0) return p.labels;
+      if(p.verses) {
+        return p.labels + '<div class="verses">' + p.lines.map(function(line) {
+          var n = parseInt(line.match(verse)[1]);
+          var latin = line.replace(verse, '');
+          if(translation) return textMode.verseHtml(p.section, n, latin);
+          return '<p><span class="verse-number">' + n + '.&nbsp;</span>' + latin + '</p>';
+        }).join('') + '</div>';
+      }
+      var latin = p.lines.join('<br>').replace(verse, "<span class='red'>$1.</span> ");
+      if(translation && (paired || !units)) return p.labels + textMode.pairHtml(latin, paired? [units[unit++]] : null);
+      return p.labels + '<p>' + latin + '</p>';
     }).join('');
+    if(units && !paired) {
+      console.warn('The translation has ' + units.length + ' units, the chant ' + unitCount, translation.key);
+      html = textMode.pairHtml(html, units, 'div');
+    }
+    return html;
+  };
+  // Splits a chant into units for 'both' mode, each a score of its own with the translation that
+  // follows it (TRANSLATIONS_PLAN.md §4): a psalm's verses (but a psalm's intonation stays whole,
+  // followed by verse 1), or the paragraphs of anything else.  A later unit of a score gets the
+  // clef again, and no drop cap, annotation or notes.  A chant with no translation isn't split,
+  // and if the units don't match the paragraphs, they all follow the whole chant.
+  var regexClef = /^\s*(\([cf]b?[1-4]\))/;
+  var splitUnits = function(scores, translation) {
+    var units = translation.units;
+    var result = [];
+    var unitCount = 0;
+    scores.forEach(function(score) {
+      var section = textMode.psalmSection(score.header['user-notes']);
+      var verse = section && textMode.verseTranslationHtml(section, 1);
+      if((section && !verse) || (!section && !units) || translation.intonation) {
+        if(verse) score.translationHtml = '<div class="verses chant-tr">' + verse + '</div>';
+        result.push(score);
+        return;
+      }
+      var clef = (score.body.match(regexClef) || [])[1] || '(c4)';
+      score.body.split(section? /\r?\n(?=\s*\d+\.\s)/ : /\r?\n\s*\r?\n/).filter(function(chunk) {
+        return /\S/.test(chunk);
+      }).forEach(function(chunk, i) {
+        var unit = {
+          header: i === 0? score.header : {'initial-style': '0'},
+          body: (i === 0 || regexClef.test(chunk))? chunk : clef + chunk.replace(/^\s+/, ''),
+          laterUnit: i > 0
+        };
+        if(section) {
+          var html = textMode.verseTranslationHtml(section, parseInt(chunk.replace(regexClef, '')));
+          if(html) unit.translationHtml = '<div class="verses chant-tr">' + html + '</div>';
+        } else {
+          unit.index = unitCount++;
+        }
+        result.push(unit);
+      });
+    });
+    if(!units) return result;
+    var unitHtml = function(units) {
+      return '<div class="chant-tr"><p' + textMode.trAttributes() + '>' + textMode.unitsHtml(units) + '</p></div>';
+    };
+    if(units.length !== unitCount) {
+      console.warn('The translation has ' + units.length + ' units, the chant ' + unitCount, translation.key);
+      scores[scores.length - 1].translationHtml = unitHtml(units);
+      return scores;
+    }
+    result.forEach(function(unit) {
+      if('index' in unit) unit.translationHtml = unitHtml([units[unit.index]]);
+    });
+    return result;
   };
   var _width = window.document.body.clientWidth;
   var doLayout = function(sync) {
@@ -213,11 +290,35 @@ define(['jquery','exsurge','document-register-element','chant-playback'], functi
           // as nodes, which playback lights up note by note (chant-playback.js)
           this.appendChild(makeSvgScalable(score[i].createSvgNode(ctxt), width));
         }
+        if(score[i].translationHtml) {
+          this.insertAdjacentHTML('beforeend', score[i].translationHtml);
+        }
       }
     }
 
     isPlainText() {
       return this.hasAttribute('plain-text');
+    }
+
+    // The translation of this chant (TRANSLATIONS_PLAN.md §4), or null in 'la' mode.  A psalm's
+    // comes verse by verse from the psalter, and anything else's is a unit per paragraph, keyed
+    // by its src.  A psalm's intonation (text-lines) has only verse 1.
+    translation() {
+      if(textMode.mode() === 'la') return null;
+      var key = this.getAttribute('src');
+      var psalm = this.getAttribute('notation') === 'psalms';
+      return {
+        key: key,
+        units: psalm? null : textMode.texts(key),
+        intonation: psalm && this.hasAttribute('text-lines')
+      };
+    }
+
+    // Draws the chant again if the text mode or translation has changed since it was drawn.
+    updateText() {
+      if(this._gabc && this._textKey !== textMode.renderKey()) {
+        this.setGabc(this._gabc, this._annotationAttr, this._useDropCapAttr);
+      }
     }
 
     setGabc(gabc, annotationAttr, useDropCapAttr) {
@@ -226,6 +327,8 @@ define(['jquery','exsurge','document-register-element','chant-playback'], functi
       this._annotationAttr = annotationAttr;
       this._useDropCapAttr = useDropCapAttr;
       this._width = 0;
+      this._textKey = textMode.renderKey();
+      var translation = this.translation();
       var useDropCap = [];
       if (useDropCapAttr === 'false') {
         useDropCapAttr = false;
@@ -238,7 +341,7 @@ define(['jquery','exsurge','document-register-element','chant-playback'], functi
       if(this._plainText) {
         // no exsurge layout at all
         this._score = null;
-        this.innerHTML = gabcToHtml(gabc, annotationAttr, useDropCapAttr, parseInt(this.getAttribute('text-lines')));
+        this.innerHTML = gabcToHtml(gabc, annotationAttr, useDropCapAttr, parseInt(this.getAttribute('text-lines')), translation);
         return;
       }
       var mappings = this._mappings = [];
@@ -247,6 +350,7 @@ define(['jquery','exsurge','document-register-element','chant-playback'], functi
       gabc = normalizeGabc(gabc.replace(/(<b>[^<]+)<sp>'(?:oe|œ)<\/sp>/g,'$1œ</b>\u0301<b>') // character doesn't work in the bold version of this font.
         .replace(/<b><\/b>/g,''));
       var scores = splitGabc(gabc);
+      if(translation) scores = splitUnits(scores, translation);
       for(var i=0; i<scores.length; ++i) {
         var gabcHeader = scores[i].header;
         gabc = scores[i].body
@@ -268,7 +372,7 @@ define(['jquery','exsurge','document-register-element','chant-playback'], functi
           } else {
             score[i].annotation = new exsurge.Annotation(ctxt, gabcHeader.annotation);
           }
-        } else if(annotationAttr) {
+        } else if(annotationAttr && !scores[i].laterUnit) {
           score[i].annotation = new exsurge.Annotation(ctxt, annotationAttr);
         } else if(gabcHeader && gabcHeader.mode) {
           score[i].annotation = new exsurge.Annotation(ctxt, gabcHeader.mode + '.');
@@ -279,6 +383,7 @@ define(['jquery','exsurge','document-register-element','chant-playback'], functi
         if(gabcHeader && gabcHeader.commentary) {
           score[i].commentary = gabcHeader.commentary;
         }
+        score[i].translationHtml = scores[i].translationHtml;
       }
       this.doLayout(_width);
     }

@@ -16,6 +16,8 @@
  */
 :root {
   --rubric-color: #d00;
+  /* a translation beside the Latin (style.css) */
+  --tr-color: #555;
 }
 chant-gabc > svg {
   color: #000;
@@ -34,6 +36,7 @@ chant-gabc use {
     color-scheme: dark;
     background-color: #000;
     --rubric-color: #f66;
+    --tr-color: #bbb;
   }
   html.dark body {
     background-color: #000;
