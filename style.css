@@ -276,11 +276,19 @@ body.notation-prayers-text .pointed-prayer i {
   font-weight: normal;
   font-style: normal;
 }
-/* Its own block formatting context keeps the space after the last paragraph or verse, so
-   verse 1 is as far from the pointed verse 2 after it as the verses are from each other. */
+/* A table before and after keeps the margins of the first and last paragraph or verse inside,
+   so verse 1 is as far from the pointed verse 2 after it as the verses are from each other.
+   (Like Bootstrap's .clearfix; display: flow-root would do it, but not in older WebViews.) */
 chant-gabc.plain-text {
-  display: flow-root;
   margin: 0;
+}
+chant-gabc.plain-text::before,
+chant-gabc.plain-text::after {
+  content: '';
+  display: table;
+}
+chant-gabc.plain-text::after {
+  clear: both;
 }
 chant-gabc.plain-text > p {
   margin: 0 0 0.4615em;

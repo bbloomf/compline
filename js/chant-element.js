@@ -34,16 +34,19 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
     }
     return scores;
   };
-  // Plain text (TRANSLATIONS_PLAN.md §4c).  A <chant-gabc> shows its words instead of the
-  // chant when <body> has the class notation-<section>-text (set by compline.js), where
-  // <section> is its notation attribute, or 'chants' if it has none.
-  // One line of GABC as HTML: the neumes go and the syllables join into words.
-  var gabcLineToHtml = function(line) {
-    return line.replace(/<v>\\Vbar<\/v>|<sp>V\/<\/sp>/g, '℣')
-      .replace(/<v>\\Rbar<\/v>|<sp>R\/<\/sp>/g, '℟')
+  // GABC markup that both the chant and the plain text turn into plain characters.
+  var normalizeGabc = function(gabc) {
+    return gabc.replace(/<v>\\([VRA])bar<\/v>/g, '$1/.')
       .replace(/<sp>'(?:ae|æ)<\/sp>/g,'ǽ')
       .replace(/<sp>'(?:oe|œ)<\/sp>/g,'œ́')
-      .replace(/<v>\\greheightstar<\/v>/g,'*')
+      .replace(/<v>\\greheightstar<\/v>/g,'*');
+  };
+  // Plain text (TRANSLATIONS_PLAN.md §4c).  A <chant-gabc> shows its words instead of the
+  // chant while it has the attribute plain-text.
+  // One line of GABC as HTML: the neumes go and the syllables join into words.
+  var gabcLineToHtml = function(line) {
+    return normalizeGabc(line).replace(/V\/\.|<sp>V\/<\/sp>/g, '℣')
+      .replace(/R\/\.|<sp>R\/<\/sp>/g, '℟')
       // a whole word in italics is a rubric, as in setGabc (marked by \u0001…\u0002 until the tags go)
       .replace(/(^|\s)<i>([^<\s*]+)<\/i>(?:\(\))?(?=\s|$)/g, '$1\u0001$2\u0002')
       .replace(/\([^)]*\)/g, '')
@@ -52,11 +55,10 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
       .replace(/&/g, '&amp;')
       .replace(/\s+/g, ' ')
       .trim()
-      // a word split by the asterisks in a long melisma: "alle- * ** luia"
-      .replace(/(\S)- (?:\*+ )*/g, '$1')
       .replace(/℣ ?/g, "<span class='versiculum'>v</span>&nbsp;")
       .replace(/℟ ?/g, "<span class='versiculum'>r</span>&nbsp;")
-      .replace(/ ([*†])(?= |$)/g, "&nbsp;<span class='red'>$1</span>")
+      // * and †, and the ** where the choir takes over in a long melisma ("alle- * ** luia")
+      .replace(/ (\*+|†)(?= |$)/g, "&nbsp;<span class='red'>$1</span>")
       .replace(/\u0001/g, "<i class='red'>")
       .replace(/\u0002/g, '</i>');
   };
@@ -214,14 +216,7 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
     }
 
     isPlainText() {
-      return document.body.classList.contains('notation-' + (this.getAttribute('notation') || 'chants') + '-text');
-    }
-
-    // Shows the chant or the plain text again if the notation level has changed between them.
-    refreshNotation() {
-      if(this._gabc && this.isPlainText() !== this._plainText) {
-        this.setGabc(this._gabc, this._annotationAttr, this._useDropCapAttr);
-      }
+      return this.hasAttribute('plain-text');
     }
 
     setGabc(gabc, annotationAttr, useDropCapAttr) {
@@ -248,13 +243,8 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
       var mappings = this._mappings = [];
       var score = this._score = [];
       var ctxt = this._ctxt;
-      gabc = gabc.replace(/<v>\\([VRA])bar<\/v>/g,function(match,barType) {
-        return barType + '/.';
-      }).replace(/(<b>[^<]+)<sp>'(?:oe|œ)<\/sp>/g,'$1œ</b>\u0301<b>') // character doesn't work in the bold version of this font.
-        .replace(/<b><\/b>/g,'')
-        .replace(/<sp>'(?:ae|æ)<\/sp>/g,'ǽ')
-        .replace(/<sp>'(?:oe|œ)<\/sp>/g,'œ́')
-        .replace(/<v>\\greheightstar<\/v>/g,'*');
+      gabc = normalizeGabc(gabc.replace(/(<b>[^<]+)<sp>'(?:oe|œ)<\/sp>/g,'$1œ</b>\u0301<b>') // character doesn't work in the bold version of this font.
+        .replace(/<b><\/b>/g,''));
       var scores = splitGabc(gabc);
       for(var i=0; i<scores.length; ++i) {
         var gabcHeader = scores[i].header;
@@ -342,16 +332,23 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
         case "src":
           this.setSrc(newValue);
           return;
+        // once drawn, innerText is the rendering, not the GABC
         case "annotation":
-          this.setGabc(this.innerText,newValue,this.getAttribute("use-drop-cap"));
+          this.setGabc(this._gabc || this.innerText,newValue,this.getAttribute("use-drop-cap"));
           return;
         case "use-drop-cap":
-          this.setGabc(this.innerText,this.getAttribute("annotation"),newValue);
+          this.setGabc(this._gabc || this.innerText,this.getAttribute("annotation"),newValue);
+          return;
+        case "plain-text":
+          // redraw only if it has changed between the chant and the words
+          if(this._gabc && this.isPlainText() !== this._plainText) {
+            this.setGabc(this._gabc, this._annotationAttr, this._useDropCapAttr);
+          }
           return;
       }
     }
 
-    static get observedAttributes() { return ['src','annotation','use-drop-cap']; }
+    static get observedAttributes() { return ['src','annotation','use-drop-cap','plain-text']; }
   };
   // register the custom element
   if(window.customElements && window.customElements.define) {
