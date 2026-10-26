@@ -1,6 +1,6 @@
 # Translations for Compline: plan (rev. 2, multi-language from Divinum Officium)
 
-Status: Phase 0 done (2026-10-26, results in §7a); nothing else implemented. Rev. 3 (2026-10-24) records the answers to the open questions, the full coverage check, the notation levels with six menus (§4c) and the Spanish doxologies. Written against `master` @ 28f86f6, with Divinum Officium (DO) `master` @ b9064d7 (2026-10-23) checked out sparsely for the research below. DO is now pinned at `ad87836` (2026-10-26); §7a lists what that changed.
+Status: Phase 0 done (2026-10-26, results in §7a). Phase 1a, the notation levels, done (2026-10-26, notes in §7b). Nothing else implemented. Rev. 3 (2026-10-24) records the answers to the open questions, the full coverage check, the notation levels with six menus (§4c) and the Spanish doxologies. Written against `master` @ 28f86f6, with Divinum Officium (DO) `master` @ b9064d7 (2026-10-23) checked out sparsely for the research below. DO is now pinned at `ad87836` (2026-10-26); §7a lists what that changed.
 
 **What changed from rev. 1:** every translation now comes from the [Divinum Officium](https://github.com/DivinumOfficium/divinum-officium) data files (MIT licence), not hand-collected sources. That means the app can offer **every language DO has**, and Latin-Bea, instead of English only.
 
@@ -14,9 +14,9 @@ The Latin comes from three places. Each needs its own way of adding the translat
 
 | Source | What it holds | How it renders |
 |---|---|---|
-| **Static HTML in `index.html`** | Confiteor (two forms), Misereatur (three forms), Indulgentiam, the versicles, the pointed chapter (`.pointed-chapter`), the pointed collect and Marian prayers (`.pointed-prayer`), the Marian V/R pairs, *Benedicat*, *Divinum auxilium*, the Triduum and All Souls texts. Rubrics are in English (`.red`). | Plain HTML, shown and hidden by `[include]`/`[exclude]` (date rules in `setDate`), `.officiant.*`, `.marian-antiphon.*` and the `fullNotation*` toggles. |
+| **Static HTML in `index.html`** | Confiteor (two forms), Misereatur (three forms), Indulgentiam, the versicles, the pointed chapter (`.pointed-chapter`), the pointed collect and Marian prayers (`.pointed-prayer`), the Marian V/R pairs, *Benedicat*, *Divinum auxilium*, the Triduum and All Souls texts. Rubrics are in English (`.red`). | Plain HTML, shown and hidden by `[include]`/`[exclude]` (date rules in `setDate`), `.officiant.*`, `.marian-antiphon.*` and the notation levels (body classes, §4c). |
 | **GABC files** (root, `te-lucis/`, `in-manus-tuas/`, `marian-antiphon/`, `psalms/`) | Every chanted text. The Latin exists **only** in the GABC lyrics. A file can hold several scores (split by `regexGabcHeader`), and stanzas or V/R parts are often blank-line paragraphs. | `<chant-gabc src=…>` → `ChantVisualElement.setGabc()` → exsurge → SVG. The `user-notes` and `commentary` headers become red labels (for example `user-notes: Psalm 4.`). |
-| **Pointed psalm and canticle HTML** (`psalms/<day>/psalm-verses[-PT\|-triduum].html`, `canticle-psalm[-po\|-asd].html`) | Verses 2…n as `<div class="verses"><p><span class="verse-number">N.&nbsp;</span>…</p>`, with `<i class='red'>Psalm 90</i>` headings between psalms. | Fetched with `$.get` in `setPsalms`/`setCanticle`. Verse 1 is the chanted `psalm.gabc`. With `fullNotation` on, everything comes from `psalm_full.gabc` (one line per verse, `N. ` prefix, one score per psalm). |
+| **Pointed psalm and canticle HTML** (`psalms/<day>/psalm-verses[-PT\|-triduum].html`, `canticle-psalm[-po\|-asd].html`) | Verses 2…n as `<div class="verses"><p><span class="verse-number">N.&nbsp;</span>…</p>`, with `<i class='red'>Psalm 90</i>` headings between psalms. | Fetched with `$.get` in `setPsalms`/`setCanticle`. Verse 1 is the chanted `psalm.gabc`. With the psalms fully notated (`notationPsalms`), everything comes from `psalm_full.gabc` (one line per verse, `N. ` prefix, one score per psalm). |
 
 Facts that still apply:
 
@@ -376,7 +376,7 @@ Follow the existing pattern (localStorage strings plus controls in `#options-men
 | Phase | Work | Rough size |
 |---|---|---|
 | **0. Decisions and spikes** ✅ | Answer §9. Pin a DO commit (decided: re-import by hand; the data should rarely change). Spike (a) exsurge `[translation]` lines and (b) splitting scores into units (layout time on a long full psalm on a phone). **Done 2026-10-26; results in §7a.** | ½–1 day |
-| **1a. Notation levels** (§4c) | The six `notation*` selects and their migration, body classes, CSS that switches off the pointing, and the GABC plain-text renderer in `chant-element`. Independent of translations; can ship on its own first. | S–M: about 150 lines |
+| **1a. Notation levels** (§4c) ✅ | The six `notation*` selects and their migration, body classes, CSS that switches off the pointing, and the GABC plain-text renderer in `chant-element`. Independent of translations; can ship on its own first. **Done 2026-10-26; notes in §7b.** | S–M: about 150 lines |
 | **1. Display infrastructure** | `js/text-mode.js` (settings, body classes, query parameters, lazy `require` of `i18n/<lang>`), the menu `<select>`s, `[lang]`/grid/stack/print CSS, the notated-toggle refactor, `chant-element` unit splitting with translation blocks plus the translation-only text render, the psalm-verse interleaver, `data-tr` filling for `index.html`, and the missing-text fallback. Test against a hand-written `en.js` stub. | M: about 400 lines, 1–2 days |
 | **2. DO importer: psalter** | Section ranges from `Psalmi minor`, key-matched extraction, fuzzy alignment against the app's Latin, Gloria split, marker handling, mismatch report. | M: about 1 day |
 | **3. DO importer: everything else** | `manifest.json` for about 60 keys (index HTML prayers, about 40 chant files, 17 Te lucis files built from the hymn plus a doxology, Marian antiphons and collects), the `@`/`$`/`&`/`s///` resolver, the 1960 variant choice, generated Paschal alleluia forms, splitting into units. | M–L: 1–2 days, mostly mapping |
@@ -416,6 +416,20 @@ The spikes are in `tools/spikes/phase0.html`. Serve the repository root (for exa
 - **Page height:** one score per verse makes the psalms about 21% taller at 359 px and about 35% taller at 624 px, before any translation text, because every verse starts a new line with its own clef. A verse that only just overflows ends with a line of one or two syllables ("am.", "um?"), which the whole-psalm score fills with the start of the next verse. This only applies in `both` mode; `la` keeps one score per psalm.
 - When joining scores into one GABC string, put a blank line between them. `regexGabcHeader` isn't anchored to the start of a line, so a header straight after a lyric line that contains `word:` takes that line into the header, and the line disappears.
 - **Still to do:** run the timings on a real phone ("Run timings" on the spike page). The throttled numbers are an estimate.
+
+### 7b. Phase 1a notes (2026-10-26)
+
+Built as §4c and §5 describe. Where the code made a detail come out differently:
+
+- **Where the menus are.** Psalms, Chapter, Prayers and Other chants are in the options menu, in place of the three checkboxes. The hymn and Marian antiphon menus are in the page: the hymn one under the Te lucis tone selector, and the Marian one under the antiphon chooser, with "Solemn Tone" beside it. CSS hides "Solemn Tone" while the Marian antiphon is plain text.
+- **Which section a chant belongs to** is its `notation` attribute (`psalms`, `chapter`, `prayers`, `hymn`, `marian`; none means `chants`). `compline.js` gives a `<chant-gabc>` the attribute `plain-text` when its section is plain text, and the element redraws itself when that attribute comes or goes. Phase 1 can set the same attribute for `textMode`. Below "Fully notated", the hidden notated chapter and prayers get `plain-text` too, so they skip exsurge layout. `compline.js` loads `chant-element` only after it has set the attributes, so no chant is first laid out as notation and then redrawn as text. The notation code is in `compline.js`, not in `js/text-mode.js`, because `setPsalms` and `setCanticle` need it.
+- **℣ and ℟.** The GABC files write them as `<v>\Vbar</v>` and `<v>\Rbar</v>` (and `V/.` in annotations), not `<sp>V/</sp>`. The renderer handles all three. It draws them like the page's own ℣ and ℟: `<span class='versiculum'>v</span>`.
+- **Annotations.** A ℣, ℟ or "Ant." annotation becomes part of the text, because *In manus tuas* and *Deus in adjutorium* get their first ℣ only from the annotation. Mode annotations ("8. G") are left out.
+- **Drop caps.** The capitals after the first letter ("TE lucis", "SAlve", "HÆC") are made lower case.
+- **Psalm intonation files.** After verse 1, `psalm.gabc` shows how to sing the flex, and `canticle-psalm*.gabc` shows the starts of verses 2 and 3 ("Quia...", "Quod parásti * ..."). In plain text those lines are left out: `setPsalms`/`setCanticle` add `text-lines='1'` when the psalms aren't fully notated.
+- **Spacing.** Plain-text chants get an empty table before and after (as Bootstrap's `.clearfix` does; `display: flow-root` isn't in older WebViews), so verse 1 is as far from verse 2 (from the pointed HTML) as the verses are from each other.
+- **One special case:** the solemn *Regina cæli* splits "alle- * ** luia" over a long melisma. Plain text keeps it as written, with `*` and `**` in red, because they mark where the choir takes over.
+- In passing: `doLayout` no longer fails on an element that hasn't loaded yet, and a GABC file with no header no longer breaks `setGabc`. (Every file has a header, so neither changed anything visible.)
 
 ---
 

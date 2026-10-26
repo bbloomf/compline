@@ -255,4 +255,45 @@ chant-gabc > svg {
 }
 chant-gabc {
   margin: -2px 0 4px;
+}/* Notation levels (TRANSLATIONS_PLAN.md §4c).  compline.js puts notation-<section>-<level>
+   on <body>.  Plain text of the psalms, chapter and prayers is the pointed text with the
+   pointing switched off; the other chants give their own plain text (chant-element.js). */
+body.notation-chapter-text .notated-chapter,
+body.notation-chapter-pointed .notated-chapter,
+body.notation-chapter-full .pointed-chapter,
+body.notation-prayers-text .notated-prayer,
+body.notation-prayers-pointed .notated-prayer,
+body.notation-prayers-full .pointed-prayer,
+body.notation-marian-text #marian-antiphon-solemn-choice {
+  display: none;
+}
+body.notation-psalms-text .verses b,
+body.notation-psalms-text .verses i,
+body.notation-chapter-text .pointed-chapter b,
+body.notation-chapter-text .pointed-chapter i,
+body.notation-prayers-text .pointed-prayer b,
+body.notation-prayers-text .pointed-prayer i {
+  font-weight: normal;
+  font-style: normal;
+}
+/* A table before and after keeps the margins of the first and last paragraph or verse inside,
+   so verse 1 is as far from the pointed verse 2 after it as the verses are from each other.
+   (Like Bootstrap's .clearfix; display: flow-root would do it, but not in older WebViews.) */
+chant-gabc.plain-text {
+  margin: 0;
+}
+chant-gabc.plain-text::before,
+chant-gabc.plain-text::after {
+  content: '';
+  display: table;
+}
+chant-gabc.plain-text::after {
+  clear: both;
+}
+chant-gabc.plain-text > p {
+  margin: 0 0 0.4615em;
+}
+.notation-choice label {
+  font-weight: normal;
+  margin-right: 1em;
 }

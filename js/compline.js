@@ -1,4 +1,4 @@
-require(['jquery','moment','calendar','chant-element'], function($,moment,calendar) {
+require(['jquery','moment','calendar'], function($,moment,calendar) {
   'use strict';
   $('select').val('');
   var localStorage = window.localStorage;
@@ -10,9 +10,16 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     localStorage = {};
   }
   if(!('region' in localStorage)) localStorage.region = '';
-  if(!('fullNotation' in localStorage)) localStorage.fullNotation = '0';
-  if(!('fullNotationChapter' in localStorage)) localStorage.fullNotationChapter = '1';
-  if(!('fullNotationPrayers' in localStorage)) localStorage.fullNotationPrayers = '0';
+  // The notation levels replace the fullNotation checkboxes, so carry those over.
+  if(!('notationPsalms' in localStorage)) localStorage.notationPsalms = localStorage.fullNotation === '1' ? 'full' : 'pointed';
+  if(!('notationChapter' in localStorage)) localStorage.notationChapter = localStorage.fullNotationChapter === '0' ? 'pointed' : 'full';
+  if(!('notationPrayers' in localStorage)) localStorage.notationPrayers = localStorage.fullNotationPrayers === '1' ? 'full' : 'pointed';
+  if(!('notationHymn' in localStorage)) localStorage.notationHymn = 'full';
+  if(!('notationMarian' in localStorage)) localStorage.notationMarian = 'full';
+  if(!('notationChants' in localStorage)) localStorage.notationChants = 'full';
+  delete localStorage.fullNotation;
+  delete localStorage.fullNotationChapter;
+  delete localStorage.fullNotationPrayers;
   if(!('autoSelectRegion' in localStorage)) localStorage.autoSelectRegion = '1';
   var usedRegions = {};
   $('#selectRegion').append('<option value="">None</option>'+Object.keys(calendar.roman.regionCodeMap).map(function(code){
@@ -30,24 +37,56 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       $optionsMenu.removeClass('showing');  
     }
   });
+  // How much notation each section shows (TRANSLATIONS_PLAN.md §4c).  Each has a
+  // <select notation='section'>, and the body class notation-<section>-<level>, which
+  // style.css reads.  Its <chant-gabc notation='section'> elements (no attribute means
+  // 'chants') get the attribute plain-text when they should show their words.
+  var notationSections = {
+    psalms:  {key: 'notationPsalms',  levels: ['text', 'pointed', 'full'], defaultLevel: 'pointed'},
+    chapter: {key: 'notationChapter', levels: ['text', 'pointed', 'full'], defaultLevel: 'full'},
+    prayers: {key: 'notationPrayers', levels: ['text', 'pointed', 'full'], defaultLevel: 'pointed'},
+    hymn:    {key: 'notationHymn',    levels: ['text', 'full'], defaultLevel: 'full'},
+    marian:  {key: 'notationMarian',  levels: ['text', 'full'], defaultLevel: 'full'},
+    chants:  {key: 'notationChants',  levels: ['text', 'full'], defaultLevel: 'full'}
+  };
+  var notation = function(section) {
+    var s = notationSections[section];
+    var level = localStorage[s.key];
+    return s.levels.indexOf(level) >= 0 ? level : s.defaultLevel;
+  };
+  var fullyNotatedPsalms = function() {
+    return notation('psalms') === 'full';
+  };
+  // The notated chapter and prayers are hidden below 'full', so they skip exsurge layout too.
+  var markPlainText = function(section) {
+    var level = notation(section);
+    var plainText = section === 'psalms'? level === 'text' : level !== 'full';
+    $(section === 'chants'? 'chant-gabc:not([notation])' : 'chant-gabc[notation=' + section + ']')
+      .attr('plain-text', plainText? '' : null);
+  };
+  // for chants added to the page after updateNotation
+  var markAllPlainText = function() {
+    $.each(notationSections, markPlainText);
+  };
+  var updateNotation = function(section) {
+    var level = notation(section);
+    $.each(notationSections[section].levels, function(i, l) {
+      $(document.body).toggleClass('notation-' + section + '-' + l, l === level);
+    });
+    $('select[notation=' + section + ']').val(level);
+    markPlainText(section);
+  };
+  $.each(notationSections, updateNotation);
+  $('select[notation]').change(function(e){
+    var section = $(this).attr('notation');
+    localStorage[notationSections[section].key] = $(this).val();
+    updateNotation(section);
+    if(section === 'psalms') {
+      setPsalms();
+      setCanticle();
+    }
+  });
   var toggles = {};
-  var fullNotation = toggles.fullNotation = function(newVal) {
-    if(typeof newVal === 'undefined') return !!parseInt(localStorage.fullNotation);
-    updateToggle('fullNotation',!!newVal);
-    localStorage.fullNotation = newVal? 1 : 0;
-    setPsalms();
-    setCanticle();
-  };
-  var fullNotationChapter = toggles.fullNotationChapter = function(newVal) {
-    if(typeof newVal === 'undefined') return !!parseInt(localStorage.fullNotationChapter);
-    updateToggle('fullNotationChapter',!!newVal);
-    localStorage.fullNotationChapter = newVal? 1 : 0;
-  };
-  var fullNotationPrayers = toggles.fullNotationPrayers = function(newVal) {
-    if(typeof newVal === 'undefined') return !!parseInt(localStorage.fullNotationPrayers);
-    updateToggle('fullNotationPrayers',!!newVal);
-    localStorage.fullNotationPrayers = newVal? 1 : 0;
-  };
   var autoSelectRegion = toggles.autoSelectRegion = function(newVal) {
     if(typeof newVal === 'undefined') return !!parseInt(localStorage.autoSelectRegion);
     updateToggle('autoSelectRegion',!!newVal);
@@ -80,14 +119,6 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     switch(toggle) {
       case 'autoSelectRegion':
         $('#selectRegion').prop('disabled', val);
-        break;
-      case 'fullNotationPrayers':
-        $('.notated-prayer').toggle(val);
-        $('.pointed-prayer').toggle(!val);
-        break;
-      case 'fullNotationChapter':
-        $('.notated-chapter').toggle(val);
-        $('.pointed-chapter').toggle(!val);
         break;
     }
   }
@@ -208,22 +239,30 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       }
     }
   }
+  // In plain text, a psalm's intonation file shows only verse 1; its other lines show how to sing
+  // the flex and later verses.  The rest of the psalm comes from the pointed HTML.
+  var textLines = function() {
+    return fullyNotatedPsalms()? '' : " text-lines='1'";
+  };
   // type should be '-po' for paschal octave, '-pt' for paschal time, or '-asd' for all souls' day, or '' for regular
   var currentCanticle = '';
   var setCanticle = function(type) {
     type = (typeof type == 'undefined')? currentCanticle.replace(/_full$/,'') : type;
     var antType = type;
-    if(fullNotation()) type += '_full';
+    if(fullyNotatedPsalms()) type += '_full';
     if(type === currentCanticle) return;
     currentCanticle = type;
+    var canticle = type;
     // There is no Nunc dimittis antiphon on All Souls' Day.
     var ant = antType === '-asd'? '' : "<chant-gabc src='canticle-ant"+antType+".gabc'></chant-gabc>";
     if(antType==='-pt') {
       antType = '';
       type = type.slice(3);
     }
-    var psalm = "<chant-gabc src='canticle-psalm"+type+".gabc'></chant-gabc>";
+    var psalm = "<chant-gabc notation='psalms'"+textLines()+" src='canticle-psalm"+type+".gabc'></chant-gabc>";
     var gotData = function(data){
+      // a later call has changed the canticle since this one asked for its verses
+      if(currentCanticle !== canticle) return;
       var html = ant + psalm + data;
       if(antType === '-po') {
         html += "<chant-gabc src='haec-dies.gabc'></chant-gabc>";
@@ -231,9 +270,10 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
         html += ant;
       }
       $('#canticle').empty().append(html);
+      markAllPlainText();
     };
     $('#canticle').empty();
-    if(fullNotation()) {
+    if(fullyNotatedPsalms()) {
       gotData('');
     } else {
       $.get('canticle-psalm'+type+'.html',gotData);
@@ -251,31 +291,35 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     }
     if(typeof day == 'undefined' && typeof paschalTime == 'undefined') return;
     // Only process if things have changed since the last time this function was called.
-    if(renderedPsalms.day === day && renderedPsalms.paschalTime === paschalTime && renderedPsalms.fullNotation === fullNotation()) return;
-    renderedPsalms = {day: day, paschalTime: paschalTime, fullNotation: fullNotation()};
+    if(renderedPsalms.day === day && renderedPsalms.paschalTime === paschalTime && renderedPsalms.full === fullyNotatedPsalms()) return;
+    renderedPsalms = {day: day, paschalTime: paschalTime, full: fullyNotatedPsalms()};
+    var rendered = renderedPsalms;
     var ant = '',
         psalm = '',
         pt = '',
-        full = fullNotation()? '_full' : '';
+        full = fullyNotatedPsalms()? '_full' : '';
     if(day === 'triduum') {
       day = 0;
       pt = '-triduum';
       full = '';
     } else if(day === 'asd') {
       pt = '';
-      psalm = "<chant-gabc src='psalms/"+day+"/psalm"+pt+full+".gabc'></chant-gabc>";
+      psalm = "<chant-gabc notation='psalms'"+textLines()+" src='psalms/"+day+"/psalm"+pt+full+".gabc'></chant-gabc>";
     } else {
       pt = paschalTime?'-PT':'';
       ant = paschalTime?
         "<chant-gabc src='psalms/ant-PT.gabc'></chant-gabc>" :
         "<chant-gabc src='psalms/"+day+"/ant.gabc'></chant-gabc>";
       if(paschalTime === 'no-antiphon') ant = '';
-      psalm = "<chant-gabc src='psalms/"+day+"/psalm"+pt+full+".gabc'></chant-gabc>";
+      psalm = "<chant-gabc notation='psalms'"+textLines()+" src='psalms/"+day+"/psalm"+pt+full+".gabc'></chant-gabc>";
       dayName = days[day];
     }
     var gotData = function(data){
+      // a later call has changed the psalms since this one asked for their verses
+      if(renderedPsalms !== rendered) return;
       var html = ant + psalm + data + ant;
       $('#placeholder').empty().append(html);
+      markAllPlainText();
     };
     if(full) {
       gotData('');
@@ -418,7 +462,8 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   var setChantSrc = function($elem,src){
     if(!$elem || $elem.length === 0) return;
     $elem.attr('src',src);
-    $elem.get(0).setSrc(src);
+    // until chant-element has loaded, the src attribute is enough
+    if($elem.get(0).setSrc) $elem.get(0).setSrc(src);
   };
   var loadChant = function(chant,value,id) {
     var src = chant + '/' + value + '.gabc';
@@ -455,8 +500,8 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
       }
     }
   });
-  $('#marian-antiphon-choices select,#marian-antiphon-solemn').change(function(){
-    var $select = $('#marian-antiphon-choices select');
+  $('#marian-antiphon-choices select[name=marian-antiphon],#marian-antiphon-solemn').change(function(){
+    var $select = $('#marian-antiphon-choices select[name=marian-antiphon]');
     var solemn = $('#marian-antiphon-solemn').prop('checked');
     var chant = 'marian-antiphon';
     var val = $select.val();
@@ -475,6 +520,9 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
   $('#selectFeastDay').change(function(){
     setDate(moment($date.val()), this.value);
   });
+  // Loaded last, so that every <chant-gabc> already has its plain-text attribute when it is first
+  // drawn, and none is laid out as chant only to be redrawn as text.  (The dist build bundles it.)
+  require(['chant-element']);
   // if ('serviceWorker' in navigator) {
   //   navigator.serviceWorker.register('./sw.js').then(function(registration) {
   //     // Registration was successful
