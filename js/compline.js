@@ -1,14 +1,8 @@
-require(['jquery','moment','calendar'], function($,moment,calendar) {
+require(['jquery','moment','calendar','text-mode'], function($,moment,calendar,textMode) {
   'use strict';
   $('select').val('');
-  var localStorage = window.localStorage;
-  try {
-    var mod = '__storage test__';
-    localStorage.setItem(mod, mod);
-    localStorage.removeItem(mod);
-  } catch(e) {
-    localStorage = {};
-  }
+  // shared with js/text-mode.js, which tests that storage works
+  var localStorage = textMode.storage;
   if(!('region' in localStorage)) localStorage.region = '';
   // The notation levels replace the fullNotation checkboxes, so carry those over.
   if(!('notationPsalms' in localStorage)) localStorage.notationPsalms = localStorage.fullNotation === '1' ? 'full' : 'pointed';
@@ -49,10 +43,14 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
     marian:  {key: 'notationMarian',  levels: ['text', 'full'], defaultLevel: 'full'},
     chants:  {key: 'notationChants',  levels: ['text', 'full'], defaultLevel: 'full'}
   };
-  var notation = function(section) {
+  var storedNotation = function(section) {
     var s = notationSections[section];
     var level = localStorage[s.key];
     return s.levels.indexOf(level) >= 0 ? level : s.defaultLevel;
+  };
+  // With the translation only, everything is plain text (TRANSLATIONS_PLAN.md §4).
+  var notation = function(section) {
+    return textMode.mode() === 'tr'? 'text' : storedNotation(section);
   };
   var fullyNotatedPsalms = function() {
     return notation('psalms') === 'full';
@@ -73,7 +71,7 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
     $.each(notationSections[section].levels, function(i, l) {
       $(document.body).toggleClass('notation-' + section + '-' + l, l === level);
     });
-    $('select[notation=' + section + ']').val(level);
+    $('select[notation=' + section + ']').val(storedNotation(section));
     markPlainText(section);
   };
   $.each(notationSections, updateNotation);
@@ -93,7 +91,7 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
   var $otherChantsList = $('#notation-other-chants-list');
   var updateOtherChants = function() {
     var levels = $otherChantsList.find('select[notation]').map(function(){
-      return notation($(this).attr('notation'));
+      return storedNotation($(this).attr('notation'));
     }).get();
     var mixed = levels.some(function(l){ return l !== levels[0]; });
     $otherChants.val(mixed ? 'mixed' : levels[0]);
@@ -117,6 +115,47 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
   // hovered, or on a touch screen once its title is tapped (style.css).
   $('.notation-section-title').click(function(e){
     $(this).closest('.notation-section').toggleClass('show-notation');
+  });
+  // What text to show: Latin, Latin and a translation, or the translation only; and which
+  // translation (TRANSLATIONS_PLAN.md §5).  js/text-mode.js keeps both, and the body class
+  // text-<mode>, which style.css reads.
+  var $textMode = $('#selectTextMode');
+  var $trLang = $('#selectTrLang');
+  $trLang.append(textMode.languages.map(function(l){
+    return '<option value="' + l.code + '">' + l.name + '</option>';
+  }).join(''));
+  // no menus until a translation is offered (?text= still works, for testing)
+  $textMode.add($trLang).closest('li').toggle(textMode.languages.length > 0);
+  var showTextMode = function() {
+    textMode.updateBodyClasses();
+    $textMode.val(textMode.mode());
+    $trLang.val(textMode.lang()).prop('disabled', textMode.mode() === 'la');
+  };
+  showTextMode();
+  // Adds the translation to the page, or takes it away, and redraws the chants that it changes.
+  var translatePage = function() {
+    textMode.translate(document.body);
+    $('chant-gabc').each(function(){
+      if(this.updateText) this.updateText();
+    });
+  };
+  var updateTextMode = function() {
+    showTextMode();
+    textMode.load(function() {
+      // the translation only makes every section plain text
+      $.each(notationSections, updateNotation);
+      setPsalms();
+      setCanticle();
+      translatePage();
+    });
+  };
+  $textMode.change(function(e){
+    textMode.setMode($(this).val());
+    updateTextMode();
+  });
+  $trLang.change(function(e){
+    textMode.setLang($(this).val());
+    updateTextMode();
   });
   var toggles = {};
   var autoSelectRegion = toggles.autoSelectRegion = function(newVal) {
@@ -206,18 +245,10 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
   if(parseInt(localStorage.autoSelectRegion)) {
     doAutoSelectRegion();
   }
-  $.QueryString = (function (a) {
-      if (a === "") return {};
-      var b = {};
-      for (var i = 0; i < a.length; ++i) {
-          var p = a[i].split('=');
-          if (p.length != 2) continue;
-          b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
-      }
-      if (b.successMsg) showAlert(false, b.successMsg);
-      if (b.failMsg) showAlert(true, b.failMsg);
-      return b;
-  })(window.location.search.substr(1).split('&'));
+  // parsed by js/text-mode.js
+  $.QueryString = textMode.query;
+  if ($.QueryString.successMsg) showAlert(false, $.QueryString.successMsg);
+  if ($.QueryString.failMsg) showAlert(true, $.QueryString.failMsg);
   var date = moment();
   
   $('#date').val(date.format("YYYY-MM-DD"));
@@ -303,6 +334,7 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
       }
       $('#canticle').empty().append(html);
       markAllPlainText();
+      textMode.translate('#canticle');
     };
     $('#canticle').empty();
     if(fullyNotatedPsalms()) {
@@ -352,6 +384,7 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
       var html = ant + psalm + data + ant;
       $('#placeholder').empty().append(html);
       markAllPlainText();
+      textMode.translate('#placeholder');
     };
     if(full) {
       gotData('');
@@ -554,7 +587,9 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
   });
   // Loaded last, so that every <chant-gabc> already has its plain-text attribute when it is first
   // drawn, and none is laid out as chant only to be redrawn as text.  (The dist build bundles it.)
+  // The chants don't wait for the translation: those drawn before it loads are drawn again.
   require(['chant-element']);
+  textMode.load(translatePage);
   // if ('serviceWorker' in navigator) {
   //   navigator.serviceWorker.register('./sw.js').then(function(registration) {
   //     // Registration was successful
