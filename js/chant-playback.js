@@ -1,8 +1,8 @@
 define(['jquery','exsurge'], function($,exsurge) {
   'use strict';
-  // Playback of a chant, as in jgabc: tapping a chant's large initial opens a menu to play it and
-  // to choose its starting pitch, and while it plays, a bar at the bottom of the page controls it.
-  // jgabc plays through Tone.js; this uses the Web Audio API directly, with the same timbre and envelope.
+  // Playback of a chant, as in jgabc: tapping a chant's large initial, or its first syllable, opens a
+  // menu to play it and to choose its starting pitch, and while it plays, a bar at the bottom of the
+  // page controls it.  jgabc plays through Tone.js; this uses the Web Audio API directly.
   var localStorage = window.localStorage;
   try {
     var mod = '__storage test__';
@@ -14,14 +14,43 @@ define(['jquery','exsurge'], function($,exsurge) {
 
   // Audio
   var AudioContext = window.AudioContext || window.webkitAudioContext;
-  var audio, wave;
+  var audio, wave, output;
+  // A reverberant space, as chant is heard in a church: the impulse is noise that dies away over 2.5s.
+  var makeReverb = function() {
+    var length = Math.floor(2.5 * audio.sampleRate);
+    var impulse = audio.createBuffer(2, length, audio.sampleRate);
+    for(var channel = 0; channel < 2; ++channel) {
+      var data = impulse.getChannelData(channel);
+      for(var i = 0; i < length; ++i) {
+        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 4);
+      }
+    }
+    var reverb = audio.createConvolver();
+    reverb.buffer = impulse;
+    return reverb;
+  };
   // Browsers only let audio start from a tap or click, so the tap on the initial that opens the
   // menu makes the context, or wakes it.
   var getAudio = function() {
     if(!audio) {
       audio = new AudioContext();
-      // the partials of jgabc's synth
-      wave = audio.createPeriodicWave(new Float32Array([0, 0.3, 0.03, 0.05]), new Float32Array(4));
+      // a pure tone between a flute pipe of an organ and a clarinet: mostly the fundamental, with a
+      // little of the odd harmonics that give a clarinet its hollow sound, and hardly any of the even ones
+      wave = audio.createPeriodicWave(new Float32Array([0, 1, 0.06, 0.25, 0.03, 0.1, 0.01, 0.04]), new Float32Array(8));
+      output = audio.createGain();
+      output.gain.value = 0.6;
+      var filter = audio.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 2000;
+      filter.Q.value = 0.5;
+      var reverb = makeReverb();
+      var wet = audio.createGain();
+      wet.gain.value = 0.3;
+      output.connect(filter);
+      filter.connect(audio.destination);
+      filter.connect(reverb);
+      reverb.connect(wet);
+      wet.connect(audio.destination);
       // iOS keeps Web Audio silent while the ring/silent switch is on silent, unless the page asks for playback.
       if(navigator.audioSession) navigator.audioSession.type = 'playback';
     }
@@ -32,43 +61,58 @@ define(['jquery','exsurge'], function($,exsurge) {
   var frequency = function(pitch) {
     return 440 * Math.pow(2, (pitch - 57) / 12);
   };
-  var startVoice = function(pitch, time) {
+  // Given fromPitch, the note slides up or down to its pitch from there, as a singer's voice does
+  // from one note to the next.
+  var startVoice = function(pitch, time, fromPitch) {
     var osc = audio.createOscillator();
     var gain = audio.createGain();
     osc.setPeriodicWave(wave);
-    osc.frequency.value = frequency(pitch);
+    if(fromPitch === undefined || fromPitch === pitch) {
+      osc.frequency.setValueAtTime(frequency(pitch), time);
+    } else {
+      osc.frequency.setValueAtTime(frequency(fromPitch), time);
+      osc.frequency.exponentialRampToValueAtTime(frequency(pitch), time + 0.04);
+    }
     gain.gain.setValueAtTime(0, time);
     osc.connect(gain);
-    gain.connect(audio.destination);
+    gain.connect(output);
     osc.onended = function() {
       gain.disconnect();
     };
     osc.start(time);
-    return {osc: osc, gain: gain.gain};
+    return {
+      gain: gain.gain,
+      stop: function(time) {
+        osc.stop(time);
+      }
+    };
   };
-  // A note of the chant, with the envelope of jgabc's synth: a 0.05s attack, a 0.3s decay to 0.4,
-  // and a 0.8s release.  (The time constants are the ones Tone.js uses for those times.)
-  var playNote = function(pitch, time, length) {
-    var voice = startVoice(pitch, time);
-    voice.gain.linearRampToValueAtTime(0.8, time + 0.05);
-    voice.gain.setTargetAtTime(0.32, time + 0.05, 0.05);
-    voice.gain.setTargetAtTime(0, time + length, 0.11);
-    voice.osc.stop(time + length + 0.8);
+  // A note of the chant: like an organ pipe, it speaks over 0.06s and holds steady, and as it ends
+  // it dies away into the reverberation.
+  var playNote = function(pitch, time, length, fromPitch) {
+    var voice = startVoice(pitch, time, fromPitch);
+    voice.gain.linearRampToValueAtTime(0.8, time + 0.06);
+    voice.gain.setTargetAtTime(0, time + length, 0.08);
+    voice.stop(time + length + 0.8);
     return voice;
   };
-  // Tone.js's synth plays one note at a time, so a note ends as the next one starts.
+  // One note at a time, so a note fades out as the next one swells in.
   var cutVoice = function(voice, time) {
-    voice.gain.cancelScheduledValues(time);
-    voice.gain.setTargetAtTime(0, time, 0.01);
+    if(voice.gain.cancelAndHoldAtTime) {
+      voice.gain.cancelAndHoldAtTime(time);
+    } else {
+      voice.gain.cancelScheduledValues(time);
+    }
+    voice.gain.setTargetAtTime(0, time, 0.02);
   };
   // The starting pitch sounds for as long as its button is held, as with jgabc's tones.js.
   var stopHeldTone;
   var holdTone = function(pitch) {
     var voice = startVoice(pitch, audio.currentTime);
-    voice.gain.setTargetAtTime(0.33, audio.currentTime, 0.1 / 3);
+    voice.gain.setTargetAtTime(0.8, audio.currentTime, 0.03);
     stopHeldTone = function() {
-      voice.gain.setTargetAtTime(0, audio.currentTime, 0.3 / 3);
-      voice.osc.stop(audio.currentTime + 0.6);
+      voice.gain.setTargetAtTime(0, audio.currentTime, 0.1);
+      voice.stop(audio.currentTime + 0.8);
       stopHeldTone = null;
     };
   };
@@ -217,6 +261,8 @@ define(['jquery','exsurge'], function($,exsurge) {
       if(note.isDivider) {
         setHighlight('syllable', null);
         setHighlight('dropCap', null);
+        // a breath, so the next note doesn't slide in from this one
+        p.pitch = undefined;
         if(note.constructor === exsurge.FullBar || note.constructor === exsurge.DoubleBar) duration = 2;
       }
     }
@@ -253,8 +299,10 @@ define(['jquery','exsurge'], function($,exsurge) {
         }
       }
       if(length) {
+        var pitch = note.pitch.toInt() + p.transpose;
         if(p.voice) cutVoice(p.voice, time);
-        p.voice = playNote(note.pitch.toInt() + p.transpose, time, length * beat());
+        p.voice = playNote(pitch, time, length * beat(), p.pitch);
+        p.pitch = pitch;
       }
     }
     ++p.noteId;
@@ -270,6 +318,7 @@ define(['jquery','exsurge'], function($,exsurge) {
   var pauseScore = function() {
     clearTimeout(playback.timer);
     playback.timer = null;
+    playback.pitch = undefined;
   };
   var stopScore = function() {
     if(!playback) return;
@@ -375,9 +424,10 @@ define(['jquery','exsurge'], function($,exsurge) {
   var removeMenus = function() {
     $('.chant-context').remove();
   };
-  var showMenu = function(dropCap) {
+  // over the initial, or over the first syllable
+  var showMenu = function(anchor) {
     removeMenus();
-    var score = $(dropCap).closest('svg').prop('source');
+    var score = $(anchor).closest('svg').prop('source');
     if(!score || !AudioContext) return;
     getAudio();
     var startPitch = null, lowPitch = Infinity, highPitch = -Infinity;
@@ -437,10 +487,10 @@ define(['jquery','exsurge'], function($,exsurge) {
     });
     changePitch(0);
 
-    // centered over the initial, above the first line of the chant, or below it if there isn't room
+    // centered over the initial or syllable, above the first line of the chant, or below it if there isn't room
     $menu.appendTo(document.body);
-    var capRect = dropCap.getBoundingClientRect(),
-        lineRect = dropCap.parentNode.getBoundingClientRect(),
+    var capRect = anchor.getBoundingClientRect(),
+        lineRect = anchor.parentNode.getBoundingClientRect(),
         width = $menu.outerWidth(),
         height = $menu.outerHeight(),
         left = capRect.left + (capRect.width - width) / 2,
@@ -475,6 +525,23 @@ define(['jquery','exsurge'], function($,exsurge) {
       "</linearGradient>" +
     "</defs></svg>");
 
+  // The first syllable of a chant, with its notes, opens the menu too, so that a chant without a large
+  // initial can be played.  A punctum is small to tap, so the space within a note's width of them counts.
+  var getStart = function(svg, x, y) {
+    var score = svg.source;
+    if(!score) return null;
+    var notation = score.notations.filter(function(notation) {
+      return notation.notes && notation.notes.length;
+    })[0];
+    var noteElem = notation && notation.notes[0].svgNode;
+    if(!noteElem || !svg.contains(noteElem)) return null;
+    var syllable = noteElem.parentNode.parentNode,
+        rect = syllable.getBoundingClientRect(),
+        margin = noteElem.getBoundingClientRect().width;
+    if(x < rect.left - margin || x > rect.right + margin || y < rect.top - margin || y > rect.bottom + margin) return null;
+    return syllable;
+  };
+
   $(document).on('click', function() {
     removeMenus();
     releaseHeldTone();
@@ -482,5 +549,13 @@ define(['jquery','exsurge'], function($,exsurge) {
     e.stopPropagation();
     releaseHeldTone();
     showMenu(this);
+  }).on('click', 'chant-gabc svg', function(e) {
+    var start = getStart(this, e.clientX, e.clientY);
+    if(!start) return;
+    e.stopPropagation();
+    releaseHeldTone();
+    showMenu(start);
+  }).on('mousemove', 'chant-gabc svg', function(e) {
+    this.classList.toggle('at-start', !!getStart(this, e.clientX, e.clientY));
   });
 });
