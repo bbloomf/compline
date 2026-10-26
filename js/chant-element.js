@@ -440,6 +440,9 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       // choose the line breaks of the whole score together, as Gregorio does, rather than filling
       // each line in turn; doLayout() lays out the screen and print renders the same way
       ctxt.lineBreaking = 'optimal';
+      // and never leave a lone syllable such as the "men." of "℟. A-men." for the last line
+      ctxt.minSyllablesLastLine = 2;
+      ctxt.minNotesLastLine = 4;
 
       ctxt.specialCharProperties['font-family'] = "'Versiculum'";
       ctxt.specialCharProperties['font-variant'] = 'normal';
