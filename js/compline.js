@@ -216,7 +216,8 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     if(fullNotation()) type += '_full';
     if(type === currentCanticle) return;
     currentCanticle = type;
-    var ant = "<chant-gabc src='canticle-ant"+antType+".gabc'></chant-gabc>";
+    // There is no Nunc dimittis antiphon on All Souls' Day.
+    var ant = antType === '-asd'? '' : "<chant-gabc src='canticle-ant"+antType+".gabc'></chant-gabc>";
     if(antType==='-pt') {
       antType = '';
       type = type.slice(3);
@@ -239,19 +240,19 @@ require(['jquery','moment','calendar','chant-element'], function($,moment,calend
     }
   };
   var currentPsalms = {};
+  var renderedPsalms = {};
   var setPsalms = function(day,paschalTime) {
     if(typeof(day) === 'undefined') {
       day = currentPsalms.day;
       paschalTime = paschalTime || currentPsalms.paschalTime;
     } else {
-      if(currentPsalms.day == day && currentPsalms.paschalTime == paschalTime) return;
       currentPsalms.day = day;
       currentPsalms.paschalTime = paschalTime;
     }
     if(typeof day == 'undefined' && typeof paschalTime == 'undefined') return;
     // Only process if things have changed since the last time this function was called.
-    if(currentPsalms.day == day && currentPsalms.paschalTime == paschalTime && currentPsalms.full == fullNotation()) return;
-    currentPsalms.fullNotation = fullNotation();
+    if(renderedPsalms.day === day && renderedPsalms.paschalTime === paschalTime && renderedPsalms.fullNotation === fullNotation()) return;
+    renderedPsalms = {day: day, paschalTime: paschalTime, fullNotation: fullNotation()};
     var ant = '',
         psalm = '',
         pt = '',

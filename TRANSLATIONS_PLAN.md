@@ -389,9 +389,13 @@ Phases 2–3 can run in parallel with Phase 1 once the module format (`psalter`/
 
 ## 8. Unrelated things noticed (not fixed)
 
-- `setPsalms` compares `currentPsalms.full` (line 220) but saves `currentPsalms.fullNotation` (line 221), so the early-return guard never matches.
-- Typo in `index.html:81`: "consciense".
-- `sw.js` cache list is stale.
+Nothing outstanding. Fixed since this list was first written:
+
+- The `setPsalms` early-return guard, which never matched. It now compares against what is on screen.
+- The "consciense" typo in `index.html`.
+- The stale `sw.js` cache list, which also had 8 entries for files that no longer exist, so the service worker couldn't have installed. Registration is still commented out.
+- On All Souls Day, `setCanticle('-asd')` asked for `canticle-ant-asd.gabc`, which never existed. There is no Nunc dimittis antiphon that day, so it is now left out.
+- The gulp `copy` task now excludes `platforms/` and `.claude/`, so a local Cordova build or Claude worktree no longer puts extra copies of the chant files into `dist/`.
 
 ---
 
