@@ -342,14 +342,13 @@ chant-gabc.plain-text > p {
    <body>, and follows each Latin block (lang=la) with its translation (.tr), inside a .tr-pair or
    a psalm's .verses.  A Latin block has the class has-tr when it has a translation, and
    tr-missing when it doesn't.  In a chant, each unit's translation follows it in a .chant-tr. */
-/* In Latin only, a .run-in block stays in the line it continues, and the line ends at the
-   br.run-in-end after it. */
-body.text-la .tr-pair.run-in,
-body.text-la .tr-pair.run-in > [lang=la] {
-  display: inline;
-}
-body:not(.text-la) br.run-in-end {
-  display: none;
+/* A <span class='tr-pair'> continues the line before it in Latin only; with a translation it's a
+   block like the others (and a grid when they're side by side, below). */
+.text-both span.tr-pair,
+.text-tr span.tr-pair,
+.text-both span.tr-pair > span,
+.text-tr span.tr-pair > span {
+  display: block;
 }
 body.text-la .tr,
 body.text-la .chant-tr,

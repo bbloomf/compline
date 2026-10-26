@@ -16,6 +16,7 @@
 // with ℣ or ℟.  * and † are shown in red, as in the Latin.
 define(['jquery'], function($) {
   'use strict';
+  // The app's settings, which compline.js uses too: an object in their place where storage throws.
   var localStorage = window.localStorage;
   try {
     var mod = '__storage test__';
@@ -26,22 +27,34 @@ define(['jquery'], function($) {
   }
   if(!('textMode' in localStorage)) localStorage.textMode = 'la';
   var modes = ['la', 'both', 'tr'];
-  // The languages that have a module in js/i18n/ (TRANSLATIONS_PLAN.md §2).
-  var languages = [
-    {code: 'en', name: 'English'}
-  ];
+  // The languages offered in the menu, each with a module in js/i18n/ (TRANSLATIONS_PLAN.md §2).
+  // None yet: js/i18n/en.js is a stub for testing (?text=both) until Phase 4 generates the real
+  // one and adds English here.  compline.js hides the Text and Translation menus until then.
+  var languages = [];
   var isLanguage = function(code) {
     return languages.some(function(l) { return l.code === code; });
   };
+  // The page's query parameters, which compline.js uses too.
   var query = {};
   window.location.search.substr(1).split('&').forEach(function(param) {
     var p = param.split('=');
     if(p.length === 2) query[p[0]] = decodeURIComponent(p[1].replace(/\+/g, ' '));
   });
+  // Once the user chooses in the menu, a ?text= or ?lang= override goes, from the address too, so
+  // reloading the page doesn't bring it back.
+  var dropQuery = function(key) {
+    delete query[key];
+    if(!window.history || !window.history.replaceState) return;
+    var search = window.location.search.substr(1).split('&').filter(function(param) {
+      return param && param.split('=')[0] !== key;
+    }).join('&');
+    window.history.replaceState(window.history.state, '',
+      window.location.pathname + (search ? '?' + search : '') + window.location.hash);
+  };
 
   var mode = function() {
-    var m = query.text || localStorage.textMode;
-    return modes.indexOf(m) >= 0 ? m : 'la';
+    if(modes.indexOf(query.text) >= 0) return query.text;
+    return modes.indexOf(localStorage.textMode) >= 0 ? localStorage.textMode : 'la';
   };
   // The first of the browser's languages that has a translation (de-AT counts as de), else English.
   // Latin (Pius XII) is never chosen this way.
@@ -54,15 +67,15 @@ define(['jquery'], function($) {
     return 'en';
   };
   var lang = function() {
-    var l = query.lang || localStorage.trLang;
-    return isLanguage(l) ? l : browserLang();
+    if(isLanguage(query.lang)) return query.lang;
+    return isLanguage(localStorage.trLang) ? localStorage.trLang : browserLang();
   };
   var setMode = function(m) {
-    delete query.text;
+    dropQuery('text');
     localStorage.textMode = m;
   };
   var setLang = function(l) {
-    delete query.lang;
+    dropQuery('lang');
     localStorage.trLang = l;
   };
 
@@ -104,10 +117,16 @@ define(['jquery'], function($) {
     var match = label.match(/Psalm\s+(\d+)(?:\.\s*([IV]+))?/);
     return match && (match[2] ? match[1] + '.' + match[2] : match[1]);
   };
-  var psalmVerse = function(section, verse) {
+  var psalm = function(section) {
     var d = data();
-    var psalm = section && d && d.psalter && d.psalter[section];
-    return (psalm && psalm[verse - 1]) || null;
+    return (section && d && d.psalter && d.psalter[section]) || null;
+  };
+  var hasPsalm = function(section) {
+    return !!psalm(section);
+  };
+  var psalmVerse = function(section, verse) {
+    var verses = psalm(section);
+    return (verses && verses[verse - 1]) || null;
   };
   var escapeHtml = function(text) {
     return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -161,6 +180,10 @@ define(['jquery'], function($) {
       var $pair = $(this);
       $pair.children('.tr').remove();
       var $latin = $pair.children('[lang=la]');
+      if($latin.length !== 1) {
+        console.warn('A .tr-pair needs one Latin child (lang=la)', this);
+        return;
+      }
       var units = mode() === 'la' ? null : texts($pair.attr('data-tr'));
       $latin.removeClass('has-tr tr-missing').addClass(latinClass(!!units));
       if(units) {
@@ -187,6 +210,8 @@ define(['jquery'], function($) {
   };
 
   return {
+    storage: localStorage,
+    query: query,
     languages: languages,
     mode: mode,
     lang: lang,
@@ -196,6 +221,7 @@ define(['jquery'], function($) {
     renderKey: renderKey,
     texts: texts,
     psalmSection: psalmSection,
+    hasPsalm: hasPsalm,
     psalmVerse: psalmVerse,
     unitsHtml: unitsHtml,
     trAttributes: trAttributes,

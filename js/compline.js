@@ -1,14 +1,8 @@
 require(['jquery','moment','calendar','text-mode'], function($,moment,calendar,textMode) {
   'use strict';
   $('select').val('');
-  var localStorage = window.localStorage;
-  try {
-    var mod = '__storage test__';
-    localStorage.setItem(mod, mod);
-    localStorage.removeItem(mod);
-  } catch(e) {
-    localStorage = {};
-  }
+  // shared with js/text-mode.js, which tests that storage works
+  var localStorage = textMode.storage;
   if(!('region' in localStorage)) localStorage.region = '';
   // The notation levels replace the fullNotation checkboxes, so carry those over.
   if(!('notationPsalms' in localStorage)) localStorage.notationPsalms = localStorage.fullNotation === '1' ? 'full' : 'pointed';
@@ -130,12 +124,21 @@ require(['jquery','moment','calendar','text-mode'], function($,moment,calendar,t
   $trLang.append(textMode.languages.map(function(l){
     return '<option value="' + l.code + '">' + l.name + '</option>';
   }).join(''));
+  // no menus until a translation is offered (?text= still works, for testing)
+  $textMode.add($trLang).closest('li').toggle(textMode.languages.length > 0);
   var showTextMode = function() {
     textMode.updateBodyClasses();
     $textMode.val(textMode.mode());
     $trLang.val(textMode.lang()).prop('disabled', textMode.mode() === 'la');
   };
   showTextMode();
+  // Adds the translation to the page, or takes it away, and redraws the chants that it changes.
+  var translatePage = function() {
+    textMode.translate(document.body);
+    $('chant-gabc').each(function(){
+      if(this.updateText) this.updateText();
+    });
+  };
   var updateTextMode = function() {
     showTextMode();
     textMode.load(function() {
@@ -143,10 +146,7 @@ require(['jquery','moment','calendar','text-mode'], function($,moment,calendar,t
       $.each(notationSections, updateNotation);
       setPsalms();
       setCanticle();
-      textMode.translate(document.body);
-      $('chant-gabc').each(function(){
-        if(this.updateText) this.updateText();
-      });
+      translatePage();
     });
   };
   $textMode.change(function(e){
@@ -245,18 +245,10 @@ require(['jquery','moment','calendar','text-mode'], function($,moment,calendar,t
   if(parseInt(localStorage.autoSelectRegion)) {
     doAutoSelectRegion();
   }
-  $.QueryString = (function (a) {
-      if (a === "") return {};
-      var b = {};
-      for (var i = 0; i < a.length; ++i) {
-          var p = a[i].split('=');
-          if (p.length != 2) continue;
-          b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
-      }
-      if (b.successMsg) showAlert(false, b.successMsg);
-      if (b.failMsg) showAlert(true, b.failMsg);
-      return b;
-  })(window.location.search.substr(1).split('&'));
+  // parsed by js/text-mode.js
+  $.QueryString = textMode.query;
+  if ($.QueryString.successMsg) showAlert(false, $.QueryString.successMsg);
+  if ($.QueryString.failMsg) showAlert(true, $.QueryString.failMsg);
   var date = moment();
   
   $('#date').val(date.format("YYYY-MM-DD"));
@@ -593,12 +585,11 @@ require(['jquery','moment','calendar','text-mode'], function($,moment,calendar,t
   $('#selectFeastDay').change(function(){
     setDate(moment($date.val()), this.value);
   });
-  // Loaded last, so that every <chant-gabc> already has its plain-text attribute and its translation
-  // when it is first drawn, and none is drawn twice.  (The dist build bundles it.)
-  textMode.load(function() {
-    textMode.translate(document.body);
-    require(['chant-element']);
-  });
+  // Loaded last, so that every <chant-gabc> already has its plain-text attribute when it is first
+  // drawn, and none is laid out as chant only to be redrawn as text.  (The dist build bundles it.)
+  // The chants don't wait for the translation: those drawn before it loads are drawn again.
+  require(['chant-element']);
+  textMode.load(translatePage);
   // if ('serviceWorker' in navigator) {
   //   navigator.serviceWorker.register('./sw.js').then(function(registration) {
   //     // Registration was successful
