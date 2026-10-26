@@ -119,12 +119,23 @@ tspan[style="font-family:'Exsurge Characters';fill:#f00;"] {
 select {
   max-width: 100%;
 }
+/* The options menu stays in the top right corner as the page scrolls.  Its text
+   scales with the page like the rest, but stops growing at 28px. */
 div#options-menu {
   display: inline-block;
-  position: absolute;
+  position: fixed;
   top: 8px;
   right: 8px;
   z-index: 3;
+  font-size: min(1em, 28px);
+}
+/* Unless the page is wide enough to leave a right margin for the gear to sit in
+   (1258px of page plus 2 × 41px, plus room for a scrollbar), the gear covers the
+   text, so keep it faint until it's hovered or open. */
+@media screen and (max-width: 1359px) {
+  div#options-menu:not(:hover):not(.showing) {
+    opacity: 0.5;
+  }
 }
 div#options-menu>svg {
   width: 25px;
@@ -141,11 +152,19 @@ div#options-menu>ul {
   list-style-type: none;
   border: 1px solid #999;
   border-radius: 4px;
-  padding: 4px;
+  padding: 0.25em;
   background: #f6f6f6;
-  width: 300px;
-  max-width: 100%;
+  width: max-content;
+  max-width: calc(100vw - 16px);
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
   margin: 0;
+}
+div#options-menu input[type=checkbox] {
+  width: 0.75em;
+  height: 0.75em;
+  margin: 0;
+  vertical-align: -0.05em;
 }
 div#options-menu>ul a {
   text-decoration: none;
@@ -154,7 +173,7 @@ div#options-menu>ul a:hover {
   text-decoration: underline;
 }
 div#options-menu>ul>li:not(:first-child) {
-  margin-top: 12px;
+  margin-top: 0.6em;
 }
 div#options-menu.showing>ul {
   display: block;
