@@ -113,6 +113,11 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
   });
   // Start open when they differ, so "Mixed" is explained
   showOtherChants(updateOtherChants());
+  // The hymn's and the Marian antiphon's own notation menus show while their section is
+  // hovered, or on a touch screen once its title is tapped (style.css).
+  $('.notation-section-title').click(function(e){
+    $(this).closest('.notation-section').toggleClass('show-notation');
+  });
   var toggles = {};
   var autoSelectRegion = toggles.autoSelectRegion = function(newVal) {
     if(typeof newVal === 'undefined') return !!parseInt(localStorage.autoSelectRegion);

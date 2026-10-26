@@ -319,3 +319,27 @@ chant-gabc.plain-text > p {
   font-weight: normal;
   margin-right: 1em;
 }
+/* The hymn's and the Marian antiphon's own notation menus (the options menu has them too)
+   stay out of sight until the section is hovered or has focus, or on a touch screen until
+   its title is tapped.  They fade rather than collapse, so the chant below doesn't move. */
+.notation-section .notation-level {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+.notation-section.show-notation .notation-level,
+.notation-section:focus-within .notation-level {
+  opacity: 1;
+  pointer-events: auto;
+}
+@media (hover: hover) {
+  .notation-section:hover .notation-level {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+@media (hover: none) {
+  .notation-section-title {
+    cursor: pointer;
+  }
+}
