@@ -1,4 +1,4 @@
-define(['jquery','exsurge','document-register-element'], function($,exsurge) {
+define(['jquery','exsurge','document-register-element','chant-playback'], function($,exsurge) {
   'use strict';
   var printWidth = 672;
   // On screen, chant is laid out no wider than this, and on wider screens the
@@ -131,9 +131,9 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
   // Makes a fixed-size SVG scale to fill the width of its container.
   // exsurge already writes the viewBox, so this only swaps the fixed size for a percentage width.
   var makeSvgScalable = function(svg, layoutWidth) {
-    return svg.replace(/^(<svg[^>]*?) width="([0-9.]+)" height="[0-9.]+"/, function(match, start, width) {
-      return start + ' width="' + (100 * width / layoutWidth) + '%"';
-    });
+    svg.setAttribute('width', (100 * svg.getAttribute('width') / layoutWidth) + '%');
+    svg.removeAttribute('height');
+    return svg;
   };
   if (window.matchMedia) {
     var mediaQueryList = window.matchMedia('print');
@@ -196,24 +196,24 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
       var width = this._width = newWidth;
       this._sync = sync;
       // perform layout on the chant
-      var innerHTML = '';
+      this.innerHTML = '';
       for(var i = 0; i < score.length; ++i) {
         if(score[i].userNotes) {
-          innerHTML += '<i class="red">'+score[i].userNotes + '</i>';
+          this.insertAdjacentHTML('beforeend', '<i class="red">'+score[i].userNotes + '</i>');
         }
         if(score[i].commentary) {
-          innerHTML += '<i class="red" style="float:right">'+score[i].commentary + '</i>';
+          this.insertAdjacentHTML('beforeend', '<i class="red" style="float:right">'+score[i].commentary + '</i>');
         }
         score[i].performLayout(ctxt);
         score[i].layoutChantLines(ctxt, width);
-        // render the score to svg code
+        // render the score to svg
         if(sync) {
-          innerHTML += score[i].createSvgForEachLine(ctxt);
+          this.insertAdjacentHTML('beforeend', score[i].createSvgForEachLine(ctxt));
         } else {
-          innerHTML += makeSvgScalable(score[i].createSvg(ctxt), width);
+          // as nodes, which playback lights up note by note (chant-playback.js)
+          this.appendChild(makeSvgScalable(score[i].createSvgNode(ctxt), width));
         }
       }
-      this.innerHTML = innerHTML;
     }
 
     isPlainText() {

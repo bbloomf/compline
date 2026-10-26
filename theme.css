@@ -118,4 +118,17 @@ chant-gabc use {
   html.dark .dropdown-menu .divider {
     background-color: #333;
   }
+
+  /* chant playback (js/chant-playback.js) */
+  html.dark {
+    --playback-color: #6cb4f0;
+  }
+  html.dark .playback-stop-faded {
+    stop-color: #fff;
+  }
+  html.dark .chant-context .btn.info {
+    color: #fff;
+    background-color: #3a3a3a;
+    border-color: #777;
+  }
 }

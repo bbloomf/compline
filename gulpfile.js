@@ -11,7 +11,7 @@ var pump = require('pump');
 
 // Lint JavaScript
 gulp.task('jshint', function() {
-  return gulp.src(['js/compline.js', 'js/chant-element.js', 'js/calendar.js', 'js/theme.js'])
+  return gulp.src(['js/compline.js', 'js/chant-element.js', 'js/chant-playback.js', 'js/calendar.js', 'js/theme.js'])
     .pipe($.jshint())
     .pipe($.jshint.reporter('jshint-stylish'));
 });
