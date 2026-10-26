@@ -1,6 +1,6 @@
 # Translations for Compline: plan (rev. 2, multi-language from Divinum Officium)
 
-Status: plan only, nothing implemented. Rev. 3 (2026-10-24) records the answers to the open questions, the full coverage check, the notation levels with six menus (§4c) and the Spanish doxologies. Written against `master` @ 28f86f6, with Divinum Officium (DO) `master` @ b9064d7 (2026-10-23) checked out sparsely for the research below.
+Status: Phase 0 done (2026-10-26, results in §7a); nothing else implemented. Rev. 3 (2026-10-24) records the answers to the open questions, the full coverage check, the notation levels with six menus (§4c) and the Spanish doxologies. Written against `master` @ 28f86f6, with Divinum Officium (DO) `master` @ b9064d7 (2026-10-23) checked out sparsely for the research below. DO is now pinned at `ad87836` (2026-10-26); §7a lists what that changed.
 
 **What changed from rev. 1:** every translation now comes from the [Divinum Officium](https://github.com/DivinumOfficium/divinum-officium) data files (MIT licence), not hand-collected sources. That means the app can offer **every language DO has**, and Latin-Bea, instead of English only.
 
@@ -23,7 +23,7 @@ Facts that still apply:
 - **The same psalm text is repeated across files.** The normal, `-PT` and `-triduum` files differ only in pointing (or in leaving out the Gloria). So key translations by **psalm and verse**, not by file.
 - **Psalm parts restart their numbering** (`Psalm 7. I.`/`II.`). The Gloria Patri and Sicut erat are the last two numbered verses of each psalm, and the Triduum leaves them out. In total there are about 307 chanted verse lines, about 260 of them unique.
 - **Regional and seasonal variants only choose files.** `calendar.js` chooses which variant file to use and has no per-region texts. Feast titles in `calendar.js` are in English.
-- **The bundled exsurge supports Gregorio translation lines.** The minified `js/exsurge.js` has `TranslationText` and the lyric syntax `/\[(alt:)?(.*?)\]/`, so `syl[translation](notes)` and `[/]` spans work. This is untested; see Phase 0.
+- **The bundled exsurge supports Gregorio translation lines.** The minified `js/exsurge.js` has `TranslationText` and the lyric syntax `/\[(alt:)?(.*?)\]/`, so `syl[translation](notes)` and `[/]` spans work. Phase 0 tested them: they render, but the spacing doesn't hold (§7a).
 - **`setGabc` rewrites the lyrics before parsing.** For example, `([^c])u([aeiou…])` becomes `u{…}`, and `<i>`/`<b>` become `_`/`*`. Any translation inserted into GABC has to go in **after** those replacements.
 
 ---
@@ -62,20 +62,23 @@ Each psalm file has **one line per breviary verse**, keyed by Vulgate reference,
 
 - The DO psalter is already in **breviary verse division**. That removes rev. 1's biggest manual job (lining up Douay-Rheims numbering by hand).
 - App verse *i* of a section is line *i* of the matching DO range. Spot-checked: Ps 4 has 10 lines and the app has 10 verses before the Gloria; Ps 90 has 16 and 16. Parts follow `Psalmi minor` ranges, so `Psalm 7. I.` = `7(2-10)`.
-- I compared each language's verse keys against Latin for the 20 Compline psalm files (19 psalms plus Nunc dimittis). Number of files that don't match:
+- I compared each language's verse keys against Latin for the 20 Compline psalm files (19 psalms plus Nunc dimittis). Number of files that don't match, re-checked at the pinned commit (§7a):
 
 | Language | Mismatches (of 20) | Note |
 |---|---|---|
-| English, Español, Italiano, Polski, Magyar-Kaldi | 1 | |
-| Deutsch | 2 | |
-| Français, Português, Nederlands, Magyar, Dansk, Vietnamice | 0 | |
+| Español | 1 | Ps 102:17–18 divided differently (below) |
+| Italiano, Polski, Magyar-Kaldi | 1 | `11:6` for `11:6b` |
+| Deutsch | 2 | Ps 60 and Ps 69 |
+| English, Français, Português, Nederlands, Magyar, Dansk, Vietnamice | 0 | English had 1 (`122:2y`) until DO fixed it upstream |
 | Hebrew | 13 | Masoretic text, not a translation of the Vulgate, and right-to-left |
 | Bohemice, Polski-Newer | most | Psalms missing (no Nunc dimittis, and so on) |
 | Latin-Bea | n/a | Different verse division, see §2b |
 
   The importer should match by **key**, and report anything that doesn't match, rather than relying on line counts.
 
-  The one-file mismatches are **typos in DO's verse keys**, not missing text: English `122:2y` for `122:2a`, and Italiano and Polski `11:6` for `11:6b`. The importer maps them with an override. Deutsch is different: its Ps 60 has **no verse 9**. Its verse 8 is a rhymed couplet that covers the content of both 8 and 9, so it can't be split.
+  The Italiano and Polski mismatch is a **typo in DO's verse keys**, not missing text: `11:6` for `11:6b`. The importer maps it with an override. (English had the same kind of typo, `122:2y` for `122:2a`, which DO has since fixed.) **Español is different:** its Ps 102 has the text, but divided into lines differently. Latin has three lines keyed `102:17`, `102:17`, `102:18`; Spanish has two, where Spanish 17 is Latin 17a plus the first half of 17b, and Spanish 18 is the rest of 17b plus 18. That is in Saturday's second psalm, so the importer pairs Latin 17–18 (three app verses) with Spanish 17–18 as one group, the way §2b pairs Bea, unless `extra/es/` supplies a three-line division. Deutsch is different again: its Ps 60 has **no verse 9**. Its verse 8 is a rhymed couplet that covers the content of both 8 and 9, so it can't be split.
+
+  **Latin repeats some keys** where it splits a verse without `a`/`b`: 69:4, 69:6, 70:3, 70:18, 76:18, 87:9, 102:17, 141:4, 141:5 and 141:7. Every language repeats them the same way, so "match by key" means "match the *n*-th line with that key".
 
 ### Coverage of every text the app uses (decided: launch only languages at 100%)
 
@@ -83,7 +86,7 @@ Checked section by section against the DO checkout: the 20 psalm files by verse 
 
 | Language | Result | What's missing |
 |---|---|---|
-| **English, Français, Español, Italiano, Português, Polski** | **100%** | Nothing. (English, Italiano and Polski need the verse-key override above.) |
+| **English, Français, Español, Italiano, Português, Polski** | **100%** | Nothing. (Italiano and Polski need the verse-key override above, and Español the Ps 102 grouping.) |
 | Magyar | not offered | Christ the King and Holy Family doxologies |
 | Deutsch | not offered | Transfiguration and Christ the King doxologies; Ps 60:9 |
 | Vietnamice | not offered | All three feast doxologies; no Triduum files |
@@ -119,7 +122,8 @@ The data is **generated from DO by a dev-time importer**, and the output is comm
 tools/do-import/
   import.js          # node script: reads a pinned DO checkout, writes js/i18n/<lang>.js
   manifest.json      # app text key -> DO file/section (+ transforms)
-  DO_COMMIT          # pinned DO commit hash
+  DO_COMMIT          # pinned DO commit hash (Phase 0: done)
+  fetch-do.sh        # sparse checkout of DO at DO_COMMIT (Phase 0: done)
 js/i18n/
   en.js  de.js  fr.js  es.js  it.js  pt.js  pl.js  nl.js  hu.js  vi.js  la-bea.js  ...
   LICENSE-divinum-officium.txt
@@ -157,9 +161,9 @@ Modes are set as body classes: `text-la` | `text-both` | `text-tr`. Every text n
 | HTML prayers and versicles | Wider than about 768 px: CSS grid with **Latin on the left, translation on the right**, rows aligned. Narrow screens: **stacked**, with the translation under each Latin paragraph in a quieter style, distinct from the red rubrics. |
 | Pointed psalms | After the fragment loads, add a translated `<p>` after each Latin `<p>`, matched on `.verse-number`, so verse pairs fall into the same grid or stack. Verse 1, the chanted intonation, gets its translation under the `<chant-gabc>`. |
 | Pointed chapter and prayers | The translation block follows the pointed Latin, as plain text without pointing. |
-| Short chants, antiphons, responsories, hymn | **Decided:** a translation block after each **unit**. `chant-element` splits the source into scores or blank-line paragraphs (copying the clef onto each later one), renders each, and adds the unit's translation underneath. The hymn becomes stanza, translation, stanza, translation. |
-| Fully notated psalms | The same, at **verse** level (decided): split each psalm score at `^\d+\. ` lines. The Phase 0 spike checks layout time on a phone; the fallback is one block per psalm. |
-| Later, optional: interlinear | Exsurge's translation line under the staff, for short chants, if the spike shows the spacing holds. |
+| Short chants, antiphons, responsories, hymn | **Decided:** a translation block after each **unit**. `chant-element` splits the source into scores or blank-line paragraphs (copying the clef onto each later one), renders each, and adds the unit's translation underneath. The hymn becomes stanza, translation, stanza, translation. All the units stay in **one** `<chant-gabc>`, which writes each unit's SVG and then its translation into its own `innerHTML` (Phase 0: one element per unit doubles the layout time, §7a). |
+| Fully notated psalms | The same, at **verse** level (decided): split each psalm score at `^\d+\. ` lines. Phase 0 measured it: inside one element it costs about the same as today, so the fallback (one block per psalm) isn't needed (§7a). |
+| Later, optional: interlinear | Exsurge's translation line under the staff. Phase 0: not usable as it is, because exsurge doesn't make room for the translation and won't break a line inside one (§7a). |
 
 ### Latin only (`la`)
 What the app does today. Translation nodes are hidden, and `chant-element` skips splitting.
@@ -371,7 +375,7 @@ Follow the existing pattern (localStorage strings plus controls in `#options-men
 
 | Phase | Work | Rough size |
 |---|---|---|
-| **0. Decisions and spikes** | Answer §9. Pin a DO commit (decided: re-import by hand; the data should rarely change). Spike (a) exsurge `[translation]` lines and (b) splitting scores into units (layout time on a long full psalm on a phone). | ½–1 day |
+| **0. Decisions and spikes** ✅ | Answer §9. Pin a DO commit (decided: re-import by hand; the data should rarely change). Spike (a) exsurge `[translation]` lines and (b) splitting scores into units (layout time on a long full psalm on a phone). **Done 2026-10-26; results in §7a.** | ½–1 day |
 | **1a. Notation levels** (§4c) | The six `notation*` selects and their migration, body classes, CSS that switches off the pointing, and the GABC plain-text renderer in `chant-element`. Independent of translations; can ship on its own first. | S–M: about 150 lines |
 | **1. Display infrastructure** | `js/text-mode.js` (settings, body classes, query parameters, lazy `require` of `i18n/<lang>`), the menu `<select>`s, `[lang]`/grid/stack/print CSS, the notated-toggle refactor, `chant-element` unit splitting with translation blocks plus the translation-only text render, the psalm-verse interleaver, `data-tr` filling for `index.html`, and the missing-text fallback. Test against a hand-written `en.js` stub. | M: about 400 lines, 1–2 days |
 | **2. DO importer: psalter** | Section ranges from `Psalmi minor`, key-matched extraction, fuzzy alignment against the app's Latin, Gloria split, marker handling, mismatch report. | M: about 1 day |
@@ -384,6 +388,34 @@ Follow the existing pattern (localStorage strings plus controls in `#options-men
 | *9. Optional* | Localise the interface (rubrics, menu, feast titles), exsurge interlinear lines. Out of scope: singing anything in the vernacular other than the hymn, and singing the Bea psalter. | M–XL each |
 
 Phases 2–3 can run in parallel with Phase 1 once the module format (`psalter`/`texts`/`meta`) is agreed.
+
+### 7a. Phase 0 results (2026-10-26)
+
+**DO is pinned at `ad87836`** (`master` on 2026-10-26), not at `b9064d7`, which the research used. In those three days DO merged about 950 files of typo fixes. For Compline they fix English `122:2y` (now `122:2a`, so English needs no override), restore the end of English Ps 70:22 ("thou holy one of Israel"), and correct words in nine of the Portuguese Compline psalms. The other changes to files the importer reads (the English *Sacrosanctæ* prayer, Matins readings for Christ the King and the Transfiguration) don't touch any text the app uses. `tools/do-import/DO_COMMIT` holds the hash. `tools/do-import/fetch-do.sh [dir]` makes a sparse checkout of only the files the importer reads, at that commit (default `../divinum-officium`; about 33 MB of files plus 64 MB of git data; a fresh run takes about 15 s). The verse keys were re-checked at this commit; §2 has the results, including the Spanish Ps 102 grouping and Latin's repeated keys.
+
+The spikes are in `tools/spikes/phase0.html`. Serve the repository root (for example `python3 -m http.server 8000`) and open `/tools/spikes/phase0.html`. It also works on a phone on the same network.
+
+**Spike (a): exsurge `[translation]` lines.**
+- The syntax works with the bundled exsurge 2.2.1. `syl[text]` starts a translation under a syllable, `syl[/]` ends it, and the text is centred across the span, in italics at 0.75 of the lyric size.
+- **The spacing doesn't hold.** Exsurge doesn't spread the notes to make room. At 624 px, hymn lines whose English is longer than the Latin run into the next translation ("…favor thouWouldst be…").
+- **Line breaks make it worse on a phone.** Exsurge won't break a line inside a translation span. So each hymn line gets a line of its own, with the Latin spread across the width. On a psalm tone, a half-verse that doesn't fit on one line leaves its first syllable alone on a line ("1. Cum"), with the rest of the half-verse on the next.
+- A translation has to go in **after** `setGabc`'s lyric rewrites: inserted before them, "guard" comes out as "gu{a}rd". The place for it is just before `createMappingsFromSource`, which is also where Phase 7 swaps the hymn's lyrics. The text also has to lose GABC syntax: `( )` and `[ ]` end the lyric or the translation, and `* _ ^ %` are exsurge markup, so DO's `*` mediant has to go.
+- **Result:** interlinear stays optional (Phase 9). It needs exsurge changes first: room for translation spans, and line breaks inside them. Build the block-per-unit display (§4).
+
+**Spike (b): one score per unit.**
+- Splitting works: blank-line paragraphs for hymn stanzas, `^\d+\. ` lines for psalm verses. Each later unit needs the clef again and an explicit `initial-style: 0;` (without one, `setGabc` gives the unit a drop cap), and no annotation or user notes.
+- **The cost depends on where the units render.** Each `<chant-gabc>` has its own `ChantContext`, and that per-element cost is what dominates, not the number of scores. Timings for one day's `psalm_full.gabc` (3 psalms, 32–47 verses), 359 px wide (a 375 px phone), median of 5 runs, through `<chant-gabc>` as the app renders it. The throttled rows are headless Chrome with DevTools CPU throttling, as a stand-in for a phone:
+
+| CPU | One score per psalm (today) | One score per verse, one element | One element per verse |
+|---|---|---|---|
+| This Mac | 40–52 ms | 43–56 ms | 71–99 ms |
+| 4× slower | 197–261 ms | 203–318 ms | 426–633 ms |
+| 6× slower | 303–386 ms | 309–422 ms | 645–906 ms |
+
+  So **render all of a section's units in one `<chant-gabc>`**. `doLayout` already joins the SVGs of a multi-score file; it writes each unit's translation block after its SVG. That costs 1.0–1.2× what the app costs today. One element per unit costs about 2.2×.
+- **Page height:** one score per verse makes the psalms about 21% taller at 359 px and about 35% taller at 624 px, before any translation text, because every verse starts a new line with its own clef. A verse that only just overflows ends with a line of one or two syllables ("am.", "um?"), which the whole-psalm score fills with the start of the next verse. This only applies in `both` mode; `la` keeps one score per psalm.
+- When joining scores into one GABC string, put a blank line between them. `regexGabcHeader` isn't anchored to the start of a line, so a header straight after a lyric line that contains `word:` takes that line into the header, and the line disappears.
+- **Still to do:** run the timings on a real phone ("Run timings" on the spike page). The throttled numbers are an estimate.
 
 ---
 

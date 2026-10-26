@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Translations: Phase 0 spikes</title>
+<!--
+  Phase 0 of TRANSLATIONS_PLAN.md.  Serve the repository root (for example
+  `python3 -m http.server 8000`) and open /tools/spikes/phase0.html, on a phone
+  too, to see:
+    A. exsurge's [translation] lines under the staff (interlinear),
+    B. Te lucis split into one score per stanza, with a translation after each,
+    C. a fully notated psalm split into one score per verse, the same way,
+    D. how long B and C take to lay out, compared with one score per psalm.
+  The English texts are from Divinum Officium (MIT licence).
+-->
+<link rel="stylesheet" href="../../style.css">
+<script src="../../js/theme.js"></script>
+<style>
+  h2 { font-family: sans-serif; font-size: 18px; margin-top: 2em; }
+  .note { font-family: sans-serif; font-size: 13px; color: #666; }
+  .tr { font-style: italic; margin: 0 0 0.8em; }
+  .tr .red { font-style: normal; }
+  table { border-collapse: collapse; font-family: sans-serif; font-size: 12px; }
+  td, th { border: 1px solid #ccc; padding: 2px 5px; text-align: right; }
+  td:first-child, th:first-child { text-align: left; }
+  #timing-area { position: absolute; left: -10000px; top: 0; }
+</style>
+</head>
+<body>
+<h1 class="sans" style="font-size:22px">Translations: Phase 0 spikes</h1>
+<p class="note">Layout width on this screen: <span id="layout-width"></span> px</p>
+
+<h2>A1. Interlinear, inserted after chant-element's lyric rewrites</h2>
+<p class="note">One translation per line of the hymn, from the line's first syllable to its last (<code>syl[text]</code> … <code>syl[/]</code>).</p>
+<div id="a1"></div>
+
+<h2>A2. Interlinear, half-verse by half-verse, on a psalm tone</h2>
+<div id="a2"></div>
+
+<h2>A3. Interlinear, inserted before the rewrites</h2>
+<p class="note">The same as A1, but the translation goes into the GABC before <code>setGabc</code> rewrites it.</p>
+<div id="a3"></div>
+
+<h2>B. Te lucis, one score per stanza</h2>
+<div id="b"></div>
+
+<h2>C. Psalm 4 fully notated, one score per verse</h2>
+<div id="c"></div>
+
+<h2>D. Layout time: one score per psalm vs one per verse</h2>
+<p class="note">Each row is one day's <code>psalm_full.gabc</code>, rendered through <code>&lt;chant-gabc&gt;</code> as the app does (parse, layout, SVG, insert, reflow). <b>whole</b>: one score per psalm, as today. <b>split</b>: one score per verse, all in one element. <b>elements</b>: one element per verse. Median of <span id="runs"></span> runs after a warm-up.</p>
+<button id="run-timings">Run timings</button>
+<div id="d"></div>
+<pre id="d-json" class="note"></pre>
+<div id="timing-area"></div>
+
+<script src="../../js/require.js"></script>
+<script>
+require.config({ baseUrl: '../../js' });
+require(['jquery', 'exsurge', 'chant-element'], function($, exsurge) {
+  'use strict';
+
+  var en = {
+    hymn: [
+      'Before the ending of the day,', 'Creator of the world, we pray', 'That with thy wonted favor thou', 'Wouldst be our guard and keeper now.',
+      'From all ill dreams defend our eyes,', 'From nightly fears and fantasies;', 'Tread under foot our ghostly foe,', 'That no pollution we may know.',
+      'O Father, that we ask be done,', 'Through Jesus Christ, thine only Son;', 'Who, with the Holy Ghost and thee,', 'Doth live and reign eternally.',
+      'Amen.'
+    ],
+    psalm4: [
+      'When I called upon him, the God of my justice heard me: * when I was in distress, thou hast enlarged me.',
+      'Have mercy on me: * and hear my prayer.',
+      'O ye sons of men, how long will you be dull of heart? * Why do you love vanity, and seek after lying?',
+      'Know ye also that the Lord hath made his holy one wonderful: * the Lord will hear me when I shall cry unto him.',
+      'Be ye angry, and sin not: ‡ the things you say in your hearts, * be sorry for them upon your beds.',
+      'Offer up the sacrifice of justice, † and trust in the Lord: * many say, Who sheweth us good things?',
+      'The light of thy countenance, O Lord, is signed upon us: * thou hast given gladness in my heart.',
+      'By the fruit of their corn, their wine, and oil, * they are multiplied.',
+      'In peace in the selfsame * I will sleep, and I will rest:',
+      'For thou, O Lord, singularly * hast settled me in hope.',
+      'Glory be to the Father, and to the Son, * and to the Holy Ghost.',
+      'As it was in the beginning, is now, * and ever shall be, world without end. Amen.'
+    ]
+  };
+
+  var regexGabcHeader = /((?:[\w-_]+:\s*[^;\r\n]*;?\r?\n)+)%%\r?\n/;
+  var get = function(url) { return $.get({ url: url, dataType: 'text' }); };
+
+  // [{header, body}] for each score in a GABC file
+  function splitScores(gabc) {
+    var parts = gabc.replace(/^﻿/, '').split(regexGabcHeader);
+    var scores = [];
+    for (var i = 1; i < parts.length; i += 2) scores.push({ header: parts[i], body: parts[i + 1] });
+    return scores;
+  }
+
+  // One GABC source per unit: blank-line paragraphs ('stanza') or numbered lines ('verse').
+  // Later units get the clef again, and no drop cap, annotation or user notes.
+  function splitUnits(score, mode) {
+    var body = score.body.trim();
+    var clef = (body.match(/^\(([cf]b?[1-4])\)/) || [])[0] || '(c4)';
+    var chunks = mode === 'verse' ? body.split(/\r?\n(?=\d+\.\s)/) : body.split(/\r?\n\s*\r?\n/);
+    return chunks.filter(function(c) { return /\S/.test(c); }).map(function(chunk, i) {
+      chunk = chunk.trim();
+      if (i > 0 && chunk.indexOf(clef) !== 0) chunk = clef + chunk;
+      return (i === 0 ? score.header : 'initial-style: 0;\n') + '%%\n' + chunk + '\n';
+    });
+  }
+
+  // Translation text can't contain GABC syntax: ( ) end a lyric, [ ] end the translation,
+  // and * _ ^ % are exsurge's bold, italic, red and small-caps markup.
+  function escapeTranslation(text) {
+    return text.replace(/\s*\*\s*/g, ' ').replace(/[()\[\]_^%]/g, '').trim();
+  }
+
+  // Puts translations[k] under the k-th line of lyrics, where lines are separated by bars.
+  function addTranslationLines(gabc, translations) {
+    var re = /([^()]*)\(([^)]*)\)/g, m, syllables = [];
+    while ((m = re.exec(gabc))) syllables.push({ lyric: m[1], notes: m[2], index: m.index, end: re.lastIndex });
+    var lines = [], line = [];
+    syllables.forEach(function(s) {
+      if (/^[,;:`]+[0-9]?$/.test(s.notes)) {
+        if (line.length) lines.push(line);
+        line = [];
+      } else if (/\S/.test(s.lyric)) {
+        line.push(s);
+      }
+    });
+    if (line.length) lines.push(line);
+    lines.forEach(function(line, k) {
+      if (!translations[k]) return;
+      line[0].lyric += '[' + escapeTranslation(translations[k]) + ']';
+      if (line.length > 1) line[line.length - 1].lyric += '[/]';
+    });
+    var out = '', last = 0;
+    syllables.forEach(function(s) {
+      out += gabc.slice(last, s.index) + s.lyric + '(' + s.notes + ')';
+      last = s.end;
+    });
+    return out + gabc.slice(last);
+  }
+
+  // Renders through <chant-gabc>, optionally changing each score's GABC after setGabc's rewrites.
+  function renderChant(container, gabc, afterRewrite) {
+    var elem = document.createElement('chant-gabc');
+    container.appendChild(elem);
+    var original = exsurge.Gabc.createMappingsFromSource;
+    var scoreIndex = 0;
+    if (afterRewrite) {
+      exsurge.Gabc.createMappingsFromSource = function(ctxt, source) {
+        return original.call(this, ctxt, afterRewrite(source, scoreIndex++));
+      };
+    }
+    try {
+      elem.setGabc(gabc);
+    } finally {
+      exsurge.Gabc.createMappingsFromSource = original;
+    }
+    return elem;
+  }
+
+  function addParagraph(container, html, className) {
+    var p = document.createElement('p');
+    p.className = className || 'tr';
+    p.lang = 'en';
+    p.innerHTML = html;
+    container.appendChild(p);
+  }
+
+  function halves(verses) {
+    return verses.reduce(function(result, verse) { return result.concat(verse.split('*')); }, []);
+  }
+
+  var median = function(values) {
+    var sorted = values.slice().sort(function(a, b) { return a - b; });
+    return sorted[Math.floor(sorted.length / 2)];
+  };
+
+  var fontsReady = document.fonts && document.fonts.load ? Promise.all([
+    "1em 'Crimson Text'", "italic 1em 'Crimson Text'", "bold 1em 'Crimson Text'", "600 1em 'Crimson Text'", "1em 'Versiculum'"
+  ].map(function(font) { return document.fonts.load(font); })) : Promise.resolve();
+
+  $.when(get('../../te-lucis/Ferial.gabc'), get('../../psalms/0/psalm_full.gabc')).then(function(hymnResult, psalmsResult) {
+    return fontsReady.then(function() { return [hymnResult[0], psalmsResult[0]]; });
+  }).then(function(texts) {
+    var hymn = texts[0], psalms = texts[1];
+    var psalm4 = splitScores(psalms)[0];
+    var psalm4Gabc = psalm4.header + '%%\n' + psalm4.body;
+    $('#layout-width').text(Math.min(document.body.clientWidth, 624));
+
+    // A1, A2: translations added after the rewrites, as the plan proposes
+    renderChant(document.getElementById('a1'), hymn, function(source) {
+      return addTranslationLines(source, en.hymn);
+    });
+    renderChant(document.getElementById('a2'), psalm4Gabc, function(source) {
+      return addTranslationLines(source, halves(en.psalm4));
+    });
+    // A3: the same translations added first, so the rewrites run over them too
+    var hymnScore = splitScores(hymn)[0];
+    renderChant(document.getElementById('a3'), hymnScore.header + '%%\n' + addTranslationLines(hymnScore.body, en.hymn));
+
+    // B: a score per stanza, each followed by its translation
+    var b = document.getElementById('b');
+    splitUnits(hymnScore, 'stanza').forEach(function(unit, i) {
+      renderChant(b, unit);
+      var lines = i < 2 ? en.hymn.slice(4 * i, 4 * i + 4) : en.hymn.slice(8);
+      addParagraph(b, lines.join('<br>'));
+    });
+
+    // C: a score per verse, each followed by its translation
+    var c = document.getElementById('c');
+    splitUnits(psalm4, 'verse').forEach(function(unit, i) {
+      renderChant(c, unit);
+      addParagraph(c, '<span class="red">' + (i + 1) + '.</span>&nbsp;' +
+        en.psalm4[i].replace(/[*†‡]/g, '<span class="red">$&</span>'));
+    });
+  });
+
+  // D: timings
+  var runs = 5;
+  $('#runs').text(runs);
+  var days = ['0', '1', '2', '3', '4', '5', '6', 'asd'];
+
+  function timeRender(sources) {
+    var area = document.getElementById('timing-area');
+    area.innerHTML = '';
+    area.style.width = document.body.clientWidth + 'px';
+    var start = performance.now();
+    sources.forEach(function(source) { renderChant(area, source); });
+    var height = area.offsetHeight;
+    return { ms: performance.now() - start, height: height };
+  }
+
+  $('#run-timings').on('click', function() {
+    var button = this;
+    button.disabled = true;
+    $('#d').text('Running…');
+    $.when.apply($, days.map(function(day) { return get('../../psalms/' + day + '/psalm_full.gabc'); }))
+      .then(function() {
+        var files = Array.prototype.slice.call(arguments).map(function(result) { return result[0]; });
+        // let the "Running…" text paint first
+        return new Promise(function(resolve) { setTimeout(function() { resolve(files); }, 50); });
+      }).then(function(files) {
+        // whole: one element, one score per psalm (as today)
+        // split: one element, one score per verse (all the verses in one <chant-gabc>)
+        // elements: one element per verse
+        var rows = files.map(function(gabc, f) {
+          var scores = splitScores(gabc);
+          var units = scores.reduce(function(units, score) { return units.concat(splitUnits(score, 'verse')); }, []);
+          // (the header regex isn't anchored to the start of a line, so scores need a blank line between them)
+          var modes = { whole: [gabc], split: [units.join('\n')], elements: units };
+          var row = { day: days[f], psalms: scores.length, verses: units.length };
+          Object.keys(modes).forEach(function(mode) {
+            timeRender(modes[mode]); // warm-up
+            var times = [], height;
+            for (var r = 0; r < runs; ++r) {
+              var result = timeRender(modes[mode]);
+              times.push(result.ms);
+              height = result.height;
+            }
+            row[mode + 'Ms'] = median(times);
+            row[mode + 'Height'] = height;
+            row[mode + 'Svgs'] = document.querySelectorAll('#timing-area svg').length;
+            row[mode + 'Lyrics'] = document.getElementById('timing-area').textContent.replace(/\s+/g, '').length;
+          });
+          return row;
+        });
+        document.getElementById('timing-area').innerHTML = '';
+        var total = function(key) { return rows.reduce(function(sum, row) { return sum + row[key]; }, 0); };
+        var fmt = function(x) { return x.toFixed(1); };
+        var html = '<table><tr><th>day</th><th>psalms</th><th>verses</th><th>whole ms</th><th>split ms</th><th>elements ms</th>' +
+          '<th>split ÷ whole</th><th>whole px high</th><th>split px high</th></tr>' +
+          rows.map(function(row) {
+            return '<tr><td>' + row.day + '</td><td>' + row.psalms + '</td><td>' + row.verses + '</td><td>' + fmt(row.wholeMs) +
+              '</td><td>' + fmt(row.splitMs) + '</td><td>' + fmt(row.elementsMs) + '</td><td>' + (row.splitMs / row.wholeMs).toFixed(2) +
+              '</td><td>' + row.wholeHeight + '</td><td>' + row.splitHeight + '</td></tr>';
+          }).join('') +
+          '<tr><th>all</th><th></th><th>' + total('verses') + '</th><th>' + fmt(total('wholeMs')) + '</th><th>' + fmt(total('splitMs')) +
+          '</th><th>' + fmt(total('elementsMs')) + '</th><th>' + (total('splitMs') / total('wholeMs')).toFixed(2) + '</th><th>' +
+          total('wholeHeight') + '</th><th>' + total('splitHeight') + '</th></tr></table>';
+        $('#d').html(html);
+        $('#d-json').text(JSON.stringify({ width: Math.min(document.body.clientWidth, 624), userAgent: navigator.userAgent, rows: rows }));
+        button.disabled = false;
+      });
+  });
+});
+</script>
+</body>
+</html>
