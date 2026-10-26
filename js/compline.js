@@ -32,7 +32,7 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
   $(document.body).click(function(e){
     var $target = $(e.target);
     if($target.parents().is($optionsMenu)) {
-      if(!$target.is('a,input,select,label')) $optionsMenu.toggleClass('showing');
+      if(!$target.is('a,input,select,label,button')) $optionsMenu.toggleClass('showing');
     } else {
       $optionsMenu.removeClass('showing');  
     }
@@ -85,6 +85,38 @@ require(['jquery','moment','calendar'], function($,moment,calendar) {
       setPsalms();
       setCanticle();
     }
+  });
+  // "Other chants" in the options menu sets the hymn, the Marian antiphon and every
+  // chant without a section of its own at once, and reads "Mixed" when they differ.
+  // Its button shows each of them.
+  var $otherChants = $('#notation-other-chants');
+  var $otherChantsList = $('#notation-other-chants-list');
+  var updateOtherChants = function() {
+    var levels = $otherChantsList.find('select[notation]').map(function(){
+      return notation($(this).attr('notation'));
+    }).get();
+    var mixed = levels.some(function(l){ return l !== levels[0]; });
+    $otherChants.val(mixed ? 'mixed' : levels[0]);
+    return mixed;
+  };
+  $otherChants.change(function(e){
+    $otherChantsList.find('select[notation]').val($(this).val()).change();
+  });
+  $('select[notation]').change(updateOtherChants);
+  var $otherChantsButton = $('#options-menu button[aria-controls=notation-other-chants-list]');
+  var showOtherChants = function(show) {
+    $otherChantsButton.attr('aria-expanded', show);
+    $otherChantsList.prop('hidden', !show);
+  };
+  $otherChantsButton.click(function(e){
+    showOtherChants($otherChantsList.prop('hidden'));
+  });
+  // Start open when they differ, so "Mixed" is explained
+  showOtherChants(updateOtherChants());
+  // The hymn's and the Marian antiphon's own notation menus show while their section is
+  // hovered, or on a touch screen once its title is tapped (style.css).
+  $('.notation-section-title').click(function(e){
+    $(this).closest('.notation-section').toggleClass('show-notation');
   });
   var toggles = {};
   var autoSelectRegion = toggles.autoSelectRegion = function(newVal) {
