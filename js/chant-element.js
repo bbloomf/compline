@@ -22,9 +22,10 @@ define(['jquery','exsurge','document-register-element'], function($,exsurge) {
     resizeTimeout = setTimeout(doLayout, 100);
   };
   // Makes a fixed-size SVG scale to fill the width of its container.
+  // exsurge already writes the viewBox, so this only swaps the fixed size for a percentage width.
   var makeSvgScalable = function(svg, layoutWidth) {
-    return svg.replace(/^(<svg[^>]*?) width="([0-9.]+)" height="([0-9.]+)"/, function(match, start, width, height) {
-      return start + ' viewBox="0 0 ' + width + ' ' + height + '" width="' + (100 * width / layoutWidth) + '%"';
+    return svg.replace(/^(<svg[^>]*?) width="([0-9.]+)" height="[0-9.]+"/, function(match, start, width) {
+      return start + ' width="' + (100 * width / layoutWidth) + '%"';
     });
   };
   if (window.matchMedia) {
