@@ -61,18 +61,11 @@ define(['jquery','exsurge'], function($,exsurge) {
   var frequency = function(pitch) {
     return 440 * Math.pow(2, (pitch - 57) / 12);
   };
-  // Given fromPitch, the note slides up or down to its pitch from there, as a singer's voice does
-  // from one note to the next.
-  var startVoice = function(pitch, time, fromPitch) {
+  var startVoice = function(pitch, time) {
     var osc = audio.createOscillator();
     var gain = audio.createGain();
     osc.setPeriodicWave(wave);
-    if(fromPitch === undefined || fromPitch === pitch) {
-      osc.frequency.setValueAtTime(frequency(pitch), time);
-    } else {
-      osc.frequency.setValueAtTime(frequency(fromPitch), time);
-      osc.frequency.exponentialRampToValueAtTime(frequency(pitch), time + 0.04);
-    }
+    osc.frequency.value = frequency(pitch);
     gain.gain.setValueAtTime(0, time);
     osc.connect(gain);
     gain.connect(output);
@@ -89,8 +82,8 @@ define(['jquery','exsurge'], function($,exsurge) {
   };
   // A note of the chant: like an organ pipe, it speaks over 0.06s and holds steady, and as it ends
   // it dies away into the reverberation.
-  var playNote = function(pitch, time, length, fromPitch) {
-    var voice = startVoice(pitch, time, fromPitch);
+  var playNote = function(pitch, time, length) {
+    var voice = startVoice(pitch, time);
     voice.gain.linearRampToValueAtTime(0.8, time + 0.06);
     voice.gain.setTargetAtTime(0, time + length, 0.08);
     voice.stop(time + length + 0.8);
@@ -261,8 +254,6 @@ define(['jquery','exsurge'], function($,exsurge) {
       if(note.isDivider) {
         setHighlight('syllable', null);
         setHighlight('dropCap', null);
-        // a breath, so the next note doesn't slide in from this one
-        p.pitch = undefined;
         if(note.constructor === exsurge.FullBar || note.constructor === exsurge.DoubleBar) duration = 2;
       }
     }
@@ -299,10 +290,8 @@ define(['jquery','exsurge'], function($,exsurge) {
         }
       }
       if(length) {
-        var pitch = note.pitch.toInt() + p.transpose;
         if(p.voice) cutVoice(p.voice, time);
-        p.voice = playNote(pitch, time, length * beat(), p.pitch);
-        p.pitch = pitch;
+        p.voice = playNote(note.pitch.toInt() + p.transpose, time, length * beat());
       }
     }
     ++p.noteId;
@@ -318,7 +307,6 @@ define(['jquery','exsurge'], function($,exsurge) {
   var pauseScore = function() {
     clearTimeout(playback.timer);
     playback.timer = null;
-    playback.pitch = undefined;
   };
   var stopScore = function() {
     if(!playback) return;
