@@ -395,13 +395,14 @@ chant-gabc > .chant-tr {
     margin: 0;
   }
 }
-/* Chant playback (js/chant-playback.js), as in jgabc: the initial opens a menu to play the
+/* Chant playback (js/chant-playback.js), as in jgabc: the initial or first syllable opens a menu to play the
    chant, the notes light up as they sound, and a bar at the bottom of the page controls it. */
 :root {
   --playback-color: #337ab7;
 }
 @media screen {
-  chant-gabc text.dropCap {
+  chant-gabc text.dropCap,
+  chant-gabc svg.at-start {
     cursor: pointer;
   }
 }
