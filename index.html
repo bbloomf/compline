@@ -21,7 +21,13 @@
     <li><label>Psalms&nbsp;<select notation='psalms'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option></select></label></li>
     <li><label>Chapter&nbsp;<select notation='chapter'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option></select></label></li>
     <li><label>Prayers&nbsp;<select notation='prayers'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option></select></label></li>
-    <li><label>Other chants&nbsp;<select notation='chants'><option value='text'>Plain text</option><option value='full'>Fully notated</option></select></label></li>
+    <li><label>Other chants&nbsp;<select id='notation-other-chants'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='mixed' disabled hidden>Mixed</option></select></label><button type='button' class='expander' aria-expanded='false' aria-controls='notation-other-chants-list' aria-label='Each chant'>&#9656;</button>
+      <ul id='notation-other-chants-list' hidden>
+        <li><label>Hymn&nbsp;<select notation='hymn'><option value='text'>Plain text</option><option value='full'>Fully notated</option></select></label></li>
+        <li><label>Marian antiphon&nbsp;<select notation='marian'><option value='text'>Plain text</option><option value='full'>Fully notated</option></select></label></li>
+        <li><label>Everything else&nbsp;<select notation='chants'><option value='text'>Plain text</option><option value='full'>Fully notated</option></select></label></li>
+      </ul>
+    </li>
     <li>Theme&nbsp;<select id='selectTheme'><option value="auto">Auto (follow device)</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
   </ul>
 </div>

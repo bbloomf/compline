@@ -175,6 +175,28 @@ div#options-menu>ul a:hover {
 div#options-menu>ul>li:not(:first-child) {
   margin-top: 0.6em;
 }
+/* The button after "Other chants" opens the list of each chant it sets */
+div#options-menu button.expander {
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  line-height: 1;
+  padding: 0 0.3em;
+  margin-left: 0.1em;
+  cursor: pointer;
+}
+div#options-menu button.expander[aria-expanded=true] {
+  transform: rotate(90deg);
+}
+div#options-menu ul ul {
+  list-style-type: none;
+  padding-left: 1em;
+  margin: 0;
+}
+div#options-menu ul ul>li {
+  margin-top: 0.6em;
+}
 div#options-menu.showing>ul {
   display: block;
 }
