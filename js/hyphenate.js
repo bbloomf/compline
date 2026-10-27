@@ -56,8 +56,9 @@ define(['hypher', 'hyphenation/la'], function(Hypher, latin) {
     if(el.tagName === 'CHANT-GABC') return el.classList.contains('plain-text') ? 'la' : '';
     return undefined;
   };
+  // The page's own lang (English, for the rubrics and the menus) isn't one to hyphenate.
   var contextLang = function(el) {
-    for(; el && el.nodeType === 1; el = el.parentNode) {
+    for(; el && el.nodeType === 1 && el !== document.documentElement; el = el.parentNode) {
       var lang = ownLang(el);
       if(lang !== undefined) return lang;
     }

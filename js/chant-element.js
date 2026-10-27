@@ -412,6 +412,18 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
           this.insertAdjacentHTML('beforeend', score[i].translationHtml);
         }
       }
+      this.markLang();
+    }
+
+    // The language of the chant's own words, for screen readers: Latin, or the translation's where
+    // the hymn is sung in it (§4b).  Its red labels have none, and a block that holds a translation
+    // (a .tr-pair, .chant-tr or .verses) has it on each of its parts already.
+    markLang() {
+      var lyrics = this._sungLang || 'la';
+      Array.prototype.forEach.call(this.children, function(child) {
+        if(child.hasAttribute('lang') || child.classList.contains('red') || child.querySelector('[lang]')) return;
+        child.setAttribute('lang', child.tagName.toLowerCase() === 'svg' ? lyrics : 'la');
+      });
     }
 
     isPlainText() {
@@ -465,12 +477,14 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
         useDropCapAttr = true;
       }
 
+      this._sungLang = translation && translation.sung ? textMode.langAttr() : null;
       this._plainText = this.isPlainText();
       this.classList.toggle('plain-text', this._plainText);
       if(this._plainText) {
         // no exsurge layout at all
         this._score = null;
         this.innerHTML = this._noteHtml + gabcToHtml(gabc, annotationAttr, useDropCapAttr, parseInt(this.getAttribute('text-lines')), translation);
+        this.markLang();
         return;
       }
       var mappings = this._mappings = [];

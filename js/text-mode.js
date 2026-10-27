@@ -222,10 +222,14 @@ define(['jquery'], function($) {
   var langName = function() {
     return ((data() || {}).meta || {}).name || lang();
   };
+  // The translation's lang attribute.
+  var langAttr = function() {
+    return ((data() || {}).meta || {}).lang || lang();
+  };
   // The attributes of the translation that follows a Latin element.
   var trAttributes = function() {
     var meta = (data() || {}).meta || {};
-    return " class='tr' lang='" + (meta.lang || lang()) + "'" + (meta.dir === 'rtl' ? " dir='rtl'" : '');
+    return " class='tr' lang='" + langAttr() + "'" + (meta.dir === 'rtl' ? " dir='rtl'" : '');
   };
   // Classes for a Latin element: in 'tr' mode it hides when it has a translation, and is shown
   // in a subtle style when it doesn't (style.css).  A Latin translation (meta.latin, Latin-Bea)
@@ -313,6 +317,7 @@ define(['jquery'], function($) {
     psalmVerse: psalmVerse,
     unitsHtml: unitsHtml,
     langName: langName,
+    langAttr: langAttr,
     trAttributes: trAttributes,
     verseTranslationHtml: verseTranslationHtml,
     verseHtml: verseHtml,

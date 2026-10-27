@@ -665,3 +665,28 @@ div.chant-context {
   border-left: none;
   padding-left: 10px;
 }
+/* Where the translations come from (index.html, js/compline.js), at the foot of the page while one
+   is shown. */
+#credits {
+  margin: 2em 0 1em;
+  padding-top: 0.5em;
+  border-top: 1px solid var(--tr-color);
+  color: var(--tr-color);
+  font-size: 0.7em;
+}
+#credits p {
+  margin: 0.4em 0 0;
+}
+#credits summary {
+  cursor: pointer;
+}
+#credits pre {
+  margin: 0.4em 0 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  white-space: pre-wrap;
+  word-break: normal;
+}

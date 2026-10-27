@@ -160,8 +160,28 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
       if(this.updateText) this.updateText();
     });
   });
+  // Where the translations come from, at the foot of the page while one is shown: Divinum
+  // Officium, whose MIT license (js/i18n/LICENSE-divinum-officium.txt) opens under it, and what
+  // was written for this app in the language shown.
+  var $credits = $('#credits');
+  var showCredits = function() {
+    $credits.prop('hidden', textMode.mode() === 'la');
+    $credits.children('[data-credit-lang]').each(function(){
+      $(this).prop('hidden', $(this).attr('data-credit-lang').split(' ').indexOf(textMode.lang()) < 0);
+    });
+  };
+  $credits.children('details').on('toggle', function(){
+    var $license = $(this).children('pre');
+    if(this.open && !$license.text()) {
+      $.get('js/i18n/LICENSE-divinum-officium.txt', function(text) {
+        // its paragraphs, each wrapped to the page rather than at 80 characters
+        $license.text(text.trim().replace(/([^\n])\n(?!\n)/g, '$1 '));
+      }, 'text');
+    }
+  });
   // Adds the translation to the page, or takes it away, and redraws the chants that it changes.
   var translatePage = function() {
+    showCredits();
     showHymnMode();
     textMode.translate(document.body);
     $('chant-gabc').each(function(){
