@@ -328,9 +328,11 @@ define(['moment','moment.easter'], function(moment){
     }
     return Math.round(moment.duration(b - a).asDays())/7;
   };
+  // A Sunday's office is marked sunday:1, unless a feast takes its place (isFeast), so that firstClassFeast can
+  // tell a I class feast from a I class Sunday.
   var SundayFeast = function(SundayObject,date,dates) {
     if(SundayObject.feast) return SundayObject.feast;
-    return {
+    var result = {
       title: SundayObject.title.replace(/%([a-z])/g, function(match,callback) {
         return SundayObject[callback](date,dates);
       }),
@@ -339,14 +341,23 @@ define(['moment','moment.easter'], function(moment){
       }),
       rank: (SundayObject.r ? SundayObject.r(date,dates) : SundayObject.rank) || 2
     };
+    if(!(SundayObject.isFeast && SundayObject.isFeast(date,dates))) result.sunday = 1;
+    return result;
   };
   var CalendarSundays = [
     { on: '01/01', feast: romanCalendar[0][1], key: 'jan1' },
-    { before: '01/06', title: 'The Most Holy Name of Jesus', key: 'nat2'},
+    { before: '01/06', title: 'The Most Holy Name of Jesus', key: 'nat2', isFeast: function() { return true; }},
     { on: '01/06', feast: romanCalendar[0][6], key: 'epi'},
-    { before: 'septuagesima', title: '%n. Sunday after Epiphany', key: 'epi%n', n: function(date,dates) {return Math.ceil(weeksBetween('epiphany', date)); }},
+    { before: 'septuagesima', title: '%t', key: 'epi%n', n: function(date,dates) {return Math.ceil(weeksBetween('epiphany', date)); },
+      t: function(date,dates) {
+        // the I Sunday after Epiphany is the feast of the Holy Family
+        var n = this.n(date,dates);
+        return n === 1 ? 'The Most Holy Family of Jesus, Mary, Joseph' : n + '. Sunday after Epiphany';
+      }, isFeast: function(date,dates) {
+        return this.n(date,dates) === 1;
+      }},
     { before: 'lent1', title: '%tgesima', key: '%t', t: function(date,dates) {return (['Septua','Sexa','Quinqua'])[weeksBetween('septuagesima', date)]; }},
-    { before: 'easter', title: '%t', key: 'quad%n', n: function(date, dates) {
+    { before: 'easter', title: '%t', rank: 1, key: 'quad%n', n: function(date, dates) {
       return 1 + weeksBetween('lent1', date);
     }, t: function(date, dates) {
         var weeksSinceLent1 = weeksBetween('lent1', date);
@@ -361,7 +372,9 @@ define(['moment','moment.easter'], function(moment){
       }
     },
     { on: 'easter', title: 'Easter Sunday', rank: 1, key: 'pasc0' },
-    { before: 'ascension', title: '%n. Sunday after Easter', key: 'pasc%n', n: function(date,dates) { return weeksBetween('easter', date); }},
+    { before: 'ascension', title: '%n. Sunday after Easter', key: 'pasc%n', n: function(date,dates) { return weeksBetween('easter', date); },
+      // Low Sunday is I class
+      r: function(date,dates) { if(weeksBetween('easter', date) === 1) return 1; }},
     { before: 'pentecost', title: 'Sunday After the Ascension', key: 'pasc6'},
     { on: 'pentecost', title: 'Pentecost', rank: 1, key: 'pent0' },
     { before: 'advent1', title: '%t', key: '%k', k: function(date,dates) {
@@ -380,16 +393,12 @@ define(['moment','moment.easter'], function(moment){
       if(weeksBetween('pentecost', date) === 1) return 1;
       var weeksSinceLastWeekOfOctober = weeksBetween('10/25',date);
       if(weeksSinceLastWeekOfOctober>=0 && weeksSinceLastWeekOfOctober<1) return 1;
+    }, isFeast: function(date,dates) {
+      return this.r(date,dates) === 1;
     }},
     { before: '12/25', title: '%n. Sunday of Advent', rank: 1, key: 'adv%n', n: function(date,dates) { return weeksBetween('advent1', date) + 1; }},
     { on: '12/25', feast: romanCalendar[11][25], key: ['NatMD','NatMane','NatInterdiu']},
     { after: '12/25', title: 'Sunday within the Octave of Christmas', key:'nat1'}
-  ];
-
-  var firstClassSundays = [
-    "advent1","advent1+7","advent1+14","advent1+21",
-    "lent1","lent1+7","lent1+14","lent1+21","lent1+28","lent1+35",
-    "easter","easter+7","pentecost"
   ];
 
   romanCalendar.regionCodeMap = {
@@ -486,8 +495,7 @@ define(['moment','moment.easter'], function(moment){
     this.christTheKing.subtract(this.christTheKing.day(),'days');
     this.sevenDolors = moment([Y,8,15]);
     this.epiphany = moment([Y,0,6]);
-    // The Feast of the Holy Family is on the Sunday following Epiphany, unless Epiphany falls on a Sunday,
-    // in which case The Holy Family will be on the Saturday following.
+    // The Feast of the Holy Family is on the Sunday following Epiphany, so on 13 January when Epiphany is a Sunday.
     this.holyFamily = moment(this.epiphany).add(7 - (this.epiphany.day()), 'days');
     this.transfiguration = moment([Y,7,6]);
     this.stJoseph = moment([Y,2,19]);
@@ -533,7 +541,7 @@ define(['moment','moment.easter'], function(moment){
   // (All Souls) doesn't compete.
   function outranksSunday(date, sunday, feast) {
     if(!feast || feast.plusOne === 'ifSunday') return false;
-    if(sunday.rank === 1 || dateMatches(date, firstClassSundays.join(' '))) {
+    if(sunday.rank === 1) {
       return feast.rank === 1 && dateMatches(date, '12/08 12/24');
     }
     return feast.rank === 1 || (feast.rank === 2 && !!feast.lord);
@@ -578,6 +586,12 @@ define(['moment','moment.easter'], function(moment){
     if(dateMatches(date,'easter-2')) return (date.feast = {title:'Good Friday', rank:1});
     if(dateMatches(date,'easter-1')) return (date.feast = {title:'Holy Saturday', rank:1});
     if(dateMatches(date,'lent1-4')) return (date.feast = {title:'Ash Wednesday', rank:5, key: 'AshWed'});
+    // When Christmas is a Sunday, the Sunday within its octave (the last of CalendarSundays) is kept on 30 December,
+    // as in DO's transfer table for dominical letter b.
+    var dates = datesForMoment(date);
+    if(dates.christmas.day() === 0 && dateMatches(date,'12/30')) {
+      return (date.feast = SundayFeast(CalendarSundays[CalendarSundays.length - 1], date, dates));
+    }
     return (date.feast = getSanctoralFeast(date,currentRegion));
   }
   function getSanctoralFeast(date,currentRegion) {
@@ -598,7 +612,9 @@ define(['moment','moment.easter'], function(moment){
           if(d.plusOne === 'ifSunday' && date.day()===1) option = d;
         }
         if(option) {
-          var selectThisOption = (region === currentRegion || romanCalendar.regionCodeMap[localStorage.region] === region);
+          // currentRegion is a region's name, or '' for the universal calendar; without it, the user's region
+          var selectThisOption = (typeof currentRegion === 'string'? region === currentRegion :
+              romanCalendar.regionCodeMap[localStorage.region] === region);
           option.region = [region];
           var sameFeast = $.grep(options, function(o,i){
             return o.title == option.title && o.rank === option.rank;
@@ -639,9 +655,10 @@ define(['moment','moment.easter'], function(moment){
     }
     return FeriaWithAlternates(options,selectedOption);
   }
+  // not a I class Sunday (Advent, Lent, Passiontide, Easter, Low Sunday, Pentecost)
   Dates.prototype.firstClassFeast = function(date) {
     var d = getFeastForDate(date);
-    return !!(d && d.rank === 1);
+    return !!(d && d.rank === 1 && !d.sunday);
   };
   Dates.prototype.firstOrSecondClassFeast = function(date) {
     var d = getFeastForDate(date);
