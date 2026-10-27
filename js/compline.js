@@ -580,7 +580,8 @@ require(['jquery','moment','calendar','text-mode'], function($,moment,calendar,t
   });
   var $date = $('#date');
   $date.change(function(){
-    if(this.value) setDate(moment(this.value), localStorage.region);
+    // localStorage.region is a code ('US'); the calendar's regions are names ('United States')
+    if(this.value) setDate(moment(this.value), calendar.roman.regionCodeMap[localStorage.region] || '');
   }).change();
   $('#selectFeastDay').change(function(){
     setDate(moment($date.val()), this.value);
