@@ -10,8 +10,9 @@
 //
 // It generates the psalter (Phase 2, psalter.js) and the texts (Phase 3, texts.js, from
 // manifest.json), then respells the words in extra/<lang>/spelling.txt (§7f), and puts the hymn
-// together from DO's and extra/<lang>/hymn-*.txt (Phase 7, hymn.js).  Any other part of a module
-// already in the file is kept.
+// together from DO's and extra/<lang>/hymn-*.txt (Phase 7, hymn.js), and the rubrics from
+// extra/<lang>/rubrics.txt (Phase 8, rubrics.js).  Any other part of a module already in the file
+// is kept.
 'use strict';
 var fs = require('fs');
 var path = require('path');
@@ -19,6 +20,7 @@ var childProcess = require('child_process');
 var psalter = require('./psalter');
 var texts = require('./texts');
 var hymns = require('./hymn');
+var rubrics = require('./rubrics');
 
 // Every language the plan names (§2).  keys renames a translation's verse keys where DO has a
 // typo; groups pairs runs of verses as a whole where a translation divides them differently;
@@ -129,6 +131,13 @@ LANGUAGES.forEach(function(lang) {
   hymnReport[lang.code] = hymns.build(lang, doHymn, tones, spellingFix[lang.code]);
 });
 
+// The rubrics (rubrics.js), for the languages that have them.
+var rubricReport = {};
+LANGUAGES.forEach(function(lang) {
+  var r = rubrics.build(root, lang.code);
+  if(r) rubricReport[lang.code] = r;
+});
+
 var list = function(title, lines) {
   if(!lines.length) return;
   console.log('  ' + title + ':');
@@ -224,6 +233,14 @@ LANGUAGES.forEach(function(lang) {
     console.log('    (and ' + sung.filter(function(line) { return !/^!!/.test(line); }).length + ' notes; --verbose lists them)');
   }
 });
+console.log('\nThe rubrics (extra/<lang>/rubrics.txt; the others are in English):');
+Object.keys(rubricReport).forEach(function(code) {
+  var r = rubricReport[code].report;
+  console.log('  ' + code + ': ' + Object.keys(rubricReport[code].rubrics).length + ' rubrics' +
+    (r.missing.length ? ', missing ' + r.missing.join(' ') : '') +
+    (r.unknown.length ? ', not on the page (remove them?) ' + r.unknown.join(' ') : ''));
+  r.errors.forEach(function(line) { console.log('    !! ' + line); });
+});
 Object.keys(spellings).forEach(function(code) {
   console.log('\n' + code + ' spelling (extra/' + code + '/spelling.txt):');
   console.log('  ' + spellings[code].map(function(w) {
@@ -278,14 +295,20 @@ options.write.forEach(function(code) {
     });
   }
   if(hymnReport[code] && hymnReport[code].hymn) module.hymn = hymnReport[code].hymn;
+  if(rubricReport[code]) module.rubrics = rubricReport[code].rubrics;
+  if(rubricReport[code] && rubricReport[code].report.errors.length) {
+    console.error('\n' + code + '\'s rubrics have errors (above): not written.');
+    process.exitCode = 1;
+    return;
+  }
   if(hymnReport[code] && hymnReport[code].report.errors.length) {
     console.error('\n' + code + '\'s hymn has errors (above): not written.');
     process.exitCode = 1;
     return;
   }
   Object.keys(old).forEach(function(k) {
-    // the hymn is generated, so one the language no longer has goes
-    if(!(k in module) && k !== 'hymn') module[k] = old[k];
+    // the hymn and the rubrics are generated, so ones the language no longer has go
+    if(!(k in module) && k !== 'hymn' && k !== 'rubrics') module[k] = old[k];
   });
   var header = [
     '// ' + lang.name + ', from Divinum Officium (https://github.com/DivinumOfficium/divinum-officium) at ' + doCommit.slice(0, 7) + ',',
@@ -298,6 +321,10 @@ options.write.forEach(function(code) {
     '// (§7c).  The hymn, Te lucis, is the first two stanzas and each tone\'s doxology, in each kind of',
     '// translation the language has (§4b; tools/do-import/hymn.js).'
   ];
+  if(module.rubrics) {
+    header[header.length - 1] += '  The rubrics are the page\'s, in';
+    header.push('// the language, written for the app (§4d; tools/do-import/extra/' + code + '/rubrics.txt).');
+  }
   fs.writeFileSync(file, header.join('\n') + '\ndefine(' + serialize(module) + ');\n');
   console.log('\nWrote ' + path.relative(root, file));
 });

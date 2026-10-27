@@ -159,7 +159,74 @@ define(['jquery'], function($) {
   // What a chant (whose src is key, shown as m) was drawn for, so it's drawn again only when this
   // changes.
   var renderKey = function(key, m) {
-    return m === 'la' ? m : m + ':' + lang() + (modules[lang()] ? '' : ':loading') + (hymnTone(key) ? ':' + hymnMode() : '');
+    return (m === 'la' ? m : m + ':' + lang() + (modules[lang()] ? '' : ':loading') + (hymnTone(key) ? ':' + hymnMode() : '')) +
+      (rubrics() ? ':rubrics-' + lang() : '');
+  };
+
+  // The rubrics (§4d), in the translation's language while a translation is shown, where its module
+  // has them: English's are the page's own, and Latin-Bea has none.  Each rubric of index.html has
+  // a data-rubric key, and rubrics[key] is its text: {…} is Latin (lang=la), and \n a line break.
+  // rubrics['note:<English>'] translates the start of a heading: a chant's user-notes or commentary
+  // ("Psalm 7. I." → "Salmo 7. I."), and the pointed psalms' own.
+  var rubrics = function() {
+    var d = data();
+    return (d && d.rubrics) || null;
+  };
+  var rubric = function(key) {
+    var r = rubrics();
+    return r && typeof r[key] === 'string' ? r[key] : null;
+  };
+  // A heading translated, or null where the rubrics don't translate it (Polish's "Psalm" is
+  // translated, though it's the same word).
+  var rubricNote = function(text) {
+    var r = rubrics();
+    if(!r || !text) return null;
+    for(var key in r) {
+      var en = key.replace(/^note:/, '');
+      if(en !== key && text.indexOf(en) === 0 && /^[ .]?$/.test(text.charAt(en.length))) return r[key] + text.slice(en.length);
+    }
+    return null;
+  };
+  // A heading, as chant-element.js draws it: red italics, in the rubrics' language once translated.
+  var noteHtml = function(text, style) {
+    var note = rubricNote(text);
+    return '<i class="red"' + (note === null ? '' : ' lang="' + langAttr() + '"') + (style ? ' style="' + style + '"' : '') + '>' +
+      (note === null ? text : note) + '</i>';
+  };
+  // A rubric's text as HTML.  wrap is the tags its words go in, where its English has its words in
+  // <i> around Latin that isn't ("the Hymn </i>Te lucis<i> which…").
+  var rubricHtml = function(text, wrap) {
+    return text.split(/(\{[^}]*\})/).map(function(part, i) {
+      if(i % 2) return "<span lang='la'>" + escapeHtml(part.slice(1, -1)) + '</span>';
+      if(!part) return '';
+      var html = escapeHtml(part).replace(/\n/g, '<br/>');
+      return wrap ? wrap[0] + html + wrap[1] : html;
+    }).join('');
+  };
+  var translateRubrics = function($root) {
+    $root.find('[data-rubric]').addBack('[data-rubric]').each(function() {
+      var $el = $(this);
+      // what was last shown, as hyphenate.js changes the HTML
+      if(!('_rubricHtml' in this)) {
+        this._rubricHtml = this._rubricShown = this.innerHTML;
+        this._rubricWrap = $el.is('i') || !$el.children('i').length ? null :
+          $el.hasClass('red') ? ['<i>', '</i>'] : ["<i class='red'>", '</i>'];
+      }
+      var text = rubric($el.attr('data-rubric'));
+      var html = text === null ? this._rubricHtml : rubricHtml(text, this._rubricWrap);
+      if(this._rubricShown !== html) this.innerHTML = this._rubricShown = html;
+      if(text === null) $el.removeAttr('lang');
+      else $el.attr('lang', langAttr());
+    });
+    // the pointed psalms' headings ("Psalm 90"); a chant's are drawn by chant-element.js
+    $root.find('i.red:not([data-rubric])').not('chant-gabc i').each(function() {
+      if(!('_rubricText' in this)) this._rubricText = this._rubricShown = $(this).text();
+      var note = rubricNote(this._rubricText);
+      var shown = note === null ? this._rubricText : note;
+      if(this._rubricShown !== shown) $(this).text(this._rubricShown = shown);
+      if(note === null) $(this).removeAttr('lang');
+      else $(this).attr('lang', langAttr());
+    });
   };
 
   // The hymn (§4b).  The tone of a te-lucis/<tone>.gabc key, or null for any other.
@@ -298,6 +365,7 @@ define(['jquery'], function($) {
   // section's mode.
   var translate = function(root) {
     var $root = $(root);
+    translateRubrics($root);
     $root.find('.tr-pair[data-tr]').each(function() {
       var $pair = $(this);
       $pair.children('.tr').remove();
@@ -355,6 +423,8 @@ define(['jquery'], function($) {
     load: load,
     renderKey: renderKey,
     texts: texts,
+    rubric: rubric,
+    noteHtml: noteHtml,
     psalmSection: psalmSection,
     hasPsalm: hasPsalm,
     psalmVerse: psalmVerse,

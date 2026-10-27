@@ -130,10 +130,10 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       var useDropCap = ('initial-style' in header)? header['initial-style'] === '1' : useDropCapAttr;
       var html = '';
       if(header['user-notes']) {
-        html += '<i class="red">'+header['user-notes'] + '</i>';
+        html += textMode.noteHtml(header['user-notes']);
       }
       if(header.commentary) {
-        html += '<i class="red" style="float:right">'+header.commentary + '</i>';
+        html += textMode.noteHtml(header.commentary, 'float:right');
       }
       var annotation = (header.annotation && useDropCap)? header.annotation : annotationAttr;
       var prefix = [].concat(annotation || []).map(function(annotation) {
@@ -408,10 +408,10 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       this.innerHTML = this._noteHtml || '';
       for(var i = 0; i < score.length; ++i) {
         if(score[i].userNotes) {
-          this.insertAdjacentHTML('beforeend', '<i class="red">'+score[i].userNotes + '</i>');
+          this.insertAdjacentHTML('beforeend', textMode.noteHtml(score[i].userNotes));
         }
         if(score[i].commentary) {
-          this.insertAdjacentHTML('beforeend', '<i class="red" style="float:right">'+score[i].commentary + '</i>');
+          this.insertAdjacentHTML('beforeend', textMode.noteHtml(score[i].commentary, 'float:right'));
         }
         score[i].performLayout(ctxt);
         score[i].layoutChantLines(ctxt, width);
@@ -492,8 +492,10 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       textMode.markMode(this, mode);
       this._textKey = textMode.renderKey(this.getAttribute('src'), mode);
       var translation = this.translation();
+      var unsung = textMode.rubric('hymn-unsung');
       this._noteHtml = translation && translation.unsung?
-        "<p class='red hymn-note'><i>Not available to sing in " + textMode.langName() + ' for this season.</i></p>' : '';
+        "<p class='red hymn-note'" + (unsung ? " lang='" + textMode.langAttr() + "'" : '') + '><i>' +
+        (unsung || 'Not available to sing in ' + textMode.langName() + ' for this season.') + '</i></p>' : '';
       var useDropCap = [];
       if (useDropCapAttr === 'false') {
         useDropCapAttr = false;

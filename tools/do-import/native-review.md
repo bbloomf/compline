@@ -70,6 +70,17 @@ two vowels on one note.
   > Temblad y no pequéis, † lo que decís en vuestros corazones, * reflexionadlo en el silencio de
   > vuestro lecho;
 
+### Written for the app: the rubrics (`extra/es/rubrics.txt`)
+
+Claude drafted all 48, from the English. Divinum Officium has only a few rubrics, and none of
+these. Each entry has its English above it. Read them on the page in "Latin & translation".
+
+- [ ] **Each rubric reads naturally** and uses the words a Spanish book of the old office would use.
+- [ ] **The hymn's rubric:** the English says "the first three stanzas of the third verse". The
+  draft says "the first three lines of the third stanza", where the doxology names the Trinity.
+- [ ] **Words chosen:** *Oficiante*, *Lector*, *Cantor*, *santiguarse*, *la oración* for the
+  collect (DO's *Oración*), *la denudación de los altares*.
+
 ### Questions of wording in DO's Spanish
 
 - [ ] "Ti" or "ti" for God: "en Ti" (Ps 90:2), and "A Ti, Creador" in the hymn.
@@ -139,6 +150,17 @@ The new texts were approved in Phase 7. What is left is to hear them.
 - [ ] **The Sicut erat** has a `*` added, and so does **Nunc dimittis v. 4** ("…et gloire
   d’Israël Votre peuple"). Should there be a comma after "d’Israël"?
 
+### Written for the app: the rubrics (`extra/fr/rubrics.txt`)
+
+Claude drafted all 48, from the English. Divinum Officium has only a few rubrics, and none of
+these. Each entry has its English above it. Read them on the page in "Latin & translation".
+
+- [ ] **Each rubric reads naturally** and uses the words a French book of the old office would use.
+- [ ] **The hymn's rubric:** the English says "the first three stanzas of the third verse". The
+  draft says "the first three lines of the third stanza", where the doxology names the Trinity.
+- [ ] **Words chosen:** *l’Officiant*, *le Lecteur*, *le Chantre*, *le Capitule*, *l’oraison*,
+  *l’hymne* (feminine), and a no-break space before : ; ? ! and inside « »?
+
 ### Questions of wording in DO's French
 
 - [ ] **Hæc dies:** "réjouissons-nous en Lui". The Latin *in ea* is the day, not God.
@@ -175,6 +197,17 @@ The new texts were approved in Phase 7. What is left is to hear them.
   - "iattanza", where DO also offers "tracotanza";
   - and five more (`extra/it/texts.txt`, the psalm sections from Phase 5).
 
+### Written for the app: the rubrics (`extra/it/rubrics.txt`)
+
+Claude drafted all 48, from the English. Divinum Officium has only a few rubrics, and none of
+these. Each entry has its English above it. Read them on the page in "Latin & translation".
+
+- [ ] **Each rubric reads naturally** and uses the words a Italian book of the old office would use.
+- [ ] **The hymn's rubric:** the English says "the first three stanzas of the third verse". The
+  draft says "the first three lines of the third stanza", where the doxology names the Trinity.
+- [ ] **Words chosen:** *l’Officiante*, *il Lettore*, *il Cantore*, *Compieta* without an
+  article, *l’orazione*.
+
 ### Questions of wording in DO's Italian
 
 - [ ] **Two mistranslations:**
@@ -203,6 +236,17 @@ The new texts were approved in Phase 7. What is left is to hear them.
 - [ ] **Misereatur:** *vós* for one person and for the people alike, so the two forms are the
   same.
 - [ ] **"Padre" (the app's) beside "padre" (DO's Jube).**
+
+### Written for the app: the rubrics (`extra/pt/rubrics.txt`)
+
+Claude drafted all 48, from the English. Divinum Officium has only a few rubrics, and none of
+these. Each entry has its English above it. Read them on the page in "Latin & translation".
+
+- [ ] **Each rubric reads naturally** and uses the words a Portuguese book of the old office would use.
+- [ ] **The hymn's rubric:** the English says "the first three stanzas of the third verse". The
+  draft says "the first three lines of the third stanza", where the doxology names the Trinity.
+- [ ] **Words chosen:** *o Oficiante*, *o Leitor*, *o Cantor*, *a oração*, and European
+  Portuguese spelling (*ação*, *diretamente*), as in DO's texts?
 
 ### Questions of wording in DO's Portuguese
 
@@ -235,6 +279,18 @@ The new texts were approved in Phase 7. What is left is to hear them.
   - DO always says "prosimy Cię, Panie";
   - "zasłużyły dostąpić" is stiff, and DO says "zasłużyli na…";
   - "błagamy" and "błagania" are close together.
+
+### Written for the app: the rubrics (`extra/pl/rubrics.txt`)
+
+Claude drafted all 48, from the English. Divinum Officium has only a few rubrics, and none of
+these. Each entry has its English above it. Read them on the page in "Latin & translation".
+
+- [ ] **Each rubric reads naturally** and uses the words a Polish book of the old office would use.
+- [ ] **The hymn's rubric:** the English says "the first three stanzas of the third verse". The
+  draft says "the first three lines of the third stanza", where the doxology names the Trinity.
+- [ ] **Words chosen:** *przewodniczący* for the Officiant, *lektor*, *kantor*, *kolekta*, and
+  the Bible abbreviations *Łk 2* and *1 P 5* in the headings.
+- [ ] **Quotation marks:** „…”, where DO's Polish rubrics have «…».
 
 ### Possible slips that need a Polish reader
 
