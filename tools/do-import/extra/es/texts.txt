@@ -1,0 +1,44 @@
+# Texts DO doesn't have, or that take the place of DO's, written by hand (TRANSLATIONS_PLAN.md
+# §7e–§7g).  The format is extra/en/texts.txt's; extra/la/texts.txt has the Latin.
+#
+# The priest's Confiteor and Misereatur: DO's [Confiteor_], with its own "a vos, Padre", and
+# [Misereatur], with "vos" for the priest and "vosotros" for the people.
+
+[index:confiteor-priest]
+Yo, pecador, me confieso a Dios todopoderoso, a la bienaventurada siempre Virgen María, al bienaventurado San Miguel Arcángel, al bienaventurado San Juan Bautista, a los bienaventurados apóstoles Pedro y Pablo, a todos los santos y a vos, Padre, que pequé gravemente con el pensamiento, palabra y obra, por mi culpa, por mi culpa, por mi grandísima culpa; por tanto, ruego a la bienaventurada siempre Virgen María, al bienaventurado San Miguel Arcángel, al bienaventurado San Juan Bautista, a los santos Apóstoles Pedro y Pablo, a todos los santos y a vos, Padre, que roguéis por mí a Dios, nuestro Señor.
+
+[index:misereatur-tui]
+Dios todopoderoso tenga misericordia de vos, perdone vuestros pecados, y os lleve a la vida eterna.
+R. Amén.
+
+[index:misereatur-vestri]
+Dios todopoderoso tenga misericordia de vosotros, perdone vuestros pecados, y os lleve a la vida eterna.
+R. Amén.
+
+# The Confiteor without a priest: DO's, without its "(y a vosotros hermanos o a vos, Padre)".
+[@Prayers:Confiteor_]
+v. Yo, pecador, me confieso a Dios todopoderoso, a la bienaventurada siempre Virgen María, al bienaventurado San Miguel Arcángel, al bienaventurado San Juan Bautista, a los bienaventurados apóstoles Pedro y Pablo, a todos los santos, que pequé gravemente con el pensamiento, palabra y obra /:se golpea el pecho tres veces:/, por mi culpa, por mi culpa, por mi grandísima culpa; por tanto, ruego a la bienaventurada siempre Virgen María, al bienaventurado San Miguel Arcángel, al bienaventurado San Juan Bautista, a los santos Apóstoles Pedro y Pablo, a todos los santos, que roguéis por mí a Dios, nuestro Señor.
+
+# The priest's form: DO has "Dígnate, Señor, dar tu bendición." for both, but domne addresses the
+# priest.
+[jube-domne.gabc]
+V. Dígnate, Padre, dar tu bendición.
+
+# Psalm 15:9 with one *, where the Latin has it ("lingua mea: * ínsuper"); DO has two.
+# Psalm 102:7 with the * the Latin has ("Móysi, * fíliis"); DO has none.
+# Psalm 4:5: DO has "…" for the Vulgate's "quæ dícitis in córdibus vestris"; this translates it.
+[@Psalterium/Psalmorum/Psalm4]
+4:5 Temblad y no pequéis, ‡ lo que decís en vuestros corazones, * reflexionadlo en el silencio de vuestro lecho;
+
+[@Psalterium/Psalmorum/Psalm15]
+15:9 Por eso se me alegra el corazón, se gozan mis entrañas, * y mi carne descansa serena.
+
+[@Psalterium/Psalmorum/Psalm102]
+102:7 Enseñó sus caminos a Moisés * y sus hazañas a los hijos de Israel.
+
+# All Souls' collect: DO's [Oratio mortuorum1] is another prayer ("…te ofrecemos con humildad
+# este sacrificio de alabanza…"), not the Propitiáre.  This translates the Latin.
+[@Sancti/11-02:Oratio mortuorum1]
+$Oremus
+v. Sé propicio, Señor, te rogamos, a las almas de todos tus siervos y siervas, por las cuales imploramos humildemente tu majestad: para que, por estos oficios de piadosa súplica, merezcan llegar al descanso eterno.
+$Per Dominum

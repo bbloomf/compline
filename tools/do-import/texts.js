@@ -20,7 +20,8 @@
 //   abbrev    the line up to its *, or its first two words, then "…", as the app's "In manus..."
 //   prefix    in place of the line's V./R. ("" for none)
 //   inline    joins the piece's first line onto the line before, with this between
-//   amen      the last line's Amen becomes a line "R. Amen." of its own (added if it has none)
+//   amen      the last line's Amen (the language's word, or "Amen") becomes a line "R. Amen." in
+//             the language's word, of its own (added if it has none)
 //   generate  'alleluia-antiphon': "Alleluia, * alleluia, alleluia.", as DO's alleluia_ant
 // A text can instead be {units, version}: version is the DO version its conditions are read for.
 // A hymn is {hymn, doxology}: the doxology takes the place of the hymn's stanza from its * on, and
@@ -33,7 +34,9 @@
 // don't come from DO"): each [key] is followed by its units, separated by blank lines, and a line
 // that starts with # is a comment.  A [@file:section] is one of DO's sections instead, in DO's own
 // syntax ($Per Dominum and the like are resolved), which the language uses wherever DO would read
-// that section: a fix to one part of a text, which leaves the rest to DO.
+// that section: a fix to one part of a text, which leaves the rest to DO.  The psalter reads
+// [@Prayers:Gloria] and [@Prayers:Requiem] from there too, and a psalm file, which has no
+// sections, is [@Psalterium/Psalmorum/Psalm233] with only the lines that change (psalter.js).
 // extra/<lang>/spelling.txt respells words in the psalter and the texts (spelling() below).
 'use strict';
 var fs = require('fs');
@@ -60,14 +63,21 @@ var escapeRegExp = function(s) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
 
-// A language's extra/<lang>/texts.txt, as {texts: {key: units}, sections: {'file:section': lines}};
-// both empty if it has none.
+// A language's extra/<lang>/texts.txt, as {texts: {key: units}, sections: {'file:section': lines},
+// psalms: {number: lines}}; all empty if it has none.  A psalm file has no sections, so
+// [@Psalterium/Psalmorum/Psalm233] holds only the verse lines that take the place of DO's, keyed
+// as DO keys them (psalter.js).
 var extraTexts = function(code) {
-  var result = {texts: {}, sections: {}};
+  var result = {texts: {}, sections: {}, psalms: {}};
   var sections = text.sections(readExtra(code, 'texts.txt') || '');
   Object.keys(sections).forEach(function(key) {
     var lines = sections[key].filter(function(line) { return !isComment(line); })
       .map(function(line) { return line.trim(); });
+    var psalm = key.match(/^@Psalterium\/Psalmorum\/Psalm(\d+)$/);
+    if(psalm) {
+      result.psalms[psalm[1]] = lines.filter(Boolean);
+      return;
+    }
     if(/^@/.test(key)) {
       var ref = refParts(key);
       result.sections[ref[0] + ':' + ref[1]] = lines.join('\n').trim().split('\n');
@@ -124,8 +134,10 @@ var expand = function(line) {
   return line;
 };
 
-// DO's markup taken out of resolved lines, leaving the lines of a unit (§7c).
-var clean = function(lines) {
+// DO's markup taken out of resolved lines, leaving the lines of a unit (§7c).  label: the
+// language's own word for DO's "Benedictio." label, if it has one (words()).
+var clean = function(lines, label) {
+  var labels = new RegExp('^\\s*(?:Ant|Benedictio' + (label ? '|' + escapeRegExp(label) : '') + ')\\.\\s*', 'u');
   var out = [];
   lines.forEach(function(line) {
     if(out.length && /~$/.test(out[out.length - 1])) {
@@ -138,12 +150,14 @@ var clean = function(lines) {
     return /\S/.test(line) && !/^\s*(_|!|#|&|\$rubrica\b)/.test(line);
   }).map(function(line) {
     return line
-      .replace(/\/:.*?:\//g, ' ')
+      // a rubric, and the space before punctuation after it (Español's "obra /:…:/, por")
+      .replace(/\s*\/:.*?:\/(?:\s*([,.;:!?]))?/g, function(m, mark) { return mark ? mark + ' ' : ' '; })
       .replace(/\{:.*?:\}/g, '')
       .replace(/^\s*R\.br\.\s*/, '')
       .replace(/^\s*[vr]\.\s+/, '')
       .replace(/^\s*([VR])\.\s*/, '$1. ')
-      .replace(/^\s*(?:Ant|Benedictio)\.\s*/, '')
+      // the label, which the app's chant hasn't
+      .replace(labels, '')
       .replace(/(^|\s)\++(?=\s|$)/g, ' ')
       .replace(/‡/g, '†')
       .replace(/(\p{L})\[(\p{L}+)\]/gu, '$1$2')
@@ -166,7 +180,9 @@ var words = function(r) {
   var duplex = last(r.reference(resolve.PRAYERS, 'Alleluia Duplex')) ||
     (alleluia ? alleluia + ', ' + alleluia.toLowerCase() + '.' : null);
   var gloria = clean(r.reference(resolve.PRAYERS, 'Gloria1'))[0];
-  return {amen: amen, alleluia: alleluia, duplex: duplex, gloria: gloria};
+  // the blessing's label, where the language translates "Benedictio." (Español's "Bendición.")
+  var label = ((r.reference(resolve.PRAYERS, 'Benedictio Completorium_')[0] || '').match(/^\s*(\p{L}+)\.\s/u) || [])[1];
+  return {amen: amen, alleluia: alleluia, duplex: duplex, gloria: gloria, label: label};
 };
 
 // DO's Paschal forms (LanguageTextTools.pm).
@@ -249,7 +265,7 @@ var piece = function(p, ctx) {
     var at = lines.map(function(l) { return l.trim(); }).indexOf(p.start);
     lines = at < 0 ? ['⟨no ' + p.start + ' in ' + p.ref + '⟩'] : lines.slice(at + 1);
   }
-  lines = clean(lines);
+  lines = clean(lines, ctx.w.label);
   if(p.lines) lines = pickLines(lines, p.lines);
   if(p.tail) lines = lines.slice(-p.tail);
   if(p.paschal === 'single') {
@@ -279,8 +295,11 @@ var piece = function(p, ctx) {
     var amen = ctx.w.amen;
     if(!amen) return lines.concat('⟨no Amen⟩');
     var stem = amen.replace(/\p{P}+$/u, '');
-    var at = last.search(new RegExp('\\s' + escapeRegExp(stem) + '\\p{P}*$', 'iu'));
-    if(at >= 0) lines[lines.length - 1] = last.slice(0, at);
+    // DO's French also ends some prayers with the Latin "Amen." where its own word is "Ainsi soit-il."
+    var at = last.search(new RegExp('(?:^|\\s)(?:' + escapeRegExp(stem) + '|Amen)\\p{P}*$', 'iu'));
+    // a line of its own (Português) goes
+    if(at === 0) lines.pop();
+    else if(at > 0) lines[lines.length - 1] = last.slice(0, at);
     lines.push('R. ' + amen);
   }
   return lines;
@@ -314,9 +333,17 @@ var hymn = function(spec, ctx) {
     if(/⟨/.test(doxology.join('\n'))) return {units: stanzas(lines.slice(0, star).concat(doxology)), notes: []};
     var amen = lines[lines.length - 1];
     var notes = [];
-    if(doxology.length && doxology[doxology.length - 1].trim() !== amen.trim() && /^\s*\S+\s*$/.test(amen)) {
-      doxology = doxology.concat(amen);
-      notes.push(spec.doxology + ' has no "' + amen.trim() + '": the hymn\'s is added');
+    if(doxology.length && /^\s*\S+\s*$/.test(amen)) {
+      // DO's own Amen, as a line of its own ("Amén." where the hymn has "Amén"), or at the end of
+      // the last line (Italiano's Transfiguration), which is split off; else the hymn's
+      var word = amen.trim().replace(/\p{P}+$/u, '');
+      var last = doxology[doxology.length - 1];
+      var own = last.match(new RegExp('^(.*\\S)\\s+(' + escapeRegExp(word) + '\\p{P}*)\\s*$', 'iu'));
+      if(own) doxology = doxology.slice(0, -1).concat(own[1], own[2]);
+      else if(last.trim().replace(/\p{P}+$/u, '').toLowerCase() !== word.toLowerCase()) {
+        doxology = doxology.concat(amen);
+        notes.push(spec.doxology + ' has no "' + amen.trim() + '": the hymn\'s is added');
+      }
     }
     lines = lines.slice(0, star).concat(doxology);
     return {units: stanzas(lines), notes: notes};
@@ -458,4 +485,5 @@ exports.build = function(doDir, root, languages) {
   return report;
 };
 
+exports.extra = extraTexts;
 exports.THRESHOLD = THRESHOLD;

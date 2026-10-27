@@ -1,0 +1,28 @@
+# Texts DO doesn't have, or that take the place of DO's, written by hand (TRANSLATIONS_PLAN.md
+# §7e–§7g).  The format is extra/en/texts.txt's; extra/la/texts.txt has the Latin.
+#
+# The priest's Confiteor and Misereatur: DO's [Confiteor_] and [Misereatur], with "i tobie, ojcze"
+# (ojcze as in DO's Jube domne) and "tobą" or "wami".
+
+[index:confiteor-priest]
+Spowiadam się Bogu wszechmogącemu, Najświętszej Maryi zawsze Dziewicy, świętemu Michałowi Archaniołowi, świętemu Janowi Chrzcicielowi, świętym Apostołom Piotrowi i Pawłowi, wszystkim Świętym i tobie, ojcze, że bardzo zgrzeszyłem, myślą, mową i uczynkiem: moja wina, moja wina, moja bardzo wielka wina. Przeto błagam Najświętszą Maryję zawsze Dziewicę, świętego Michała Archanioła, świętego Jana Chrzciciela, świętych Apostołów Piotra i Pawła, wszystkich Świętych i ciebie, ojcze, o modlitwę za mnie do Pana Boga naszego.
+
+[index:misereatur-tui]
+Niech się zmiłuje nad tobą Bóg wszechmogący, a odpuściwszy ci grzechy, doprowadzi cię do życia wiecznego.
+R. Amen.
+
+[index:misereatur-vestri]
+Niech się zmiłuje nad wami Bóg wszechmogący, a odpuściwszy wam grzechy, doprowadzi was do życia wiecznego.
+R. Amen.
+
+# The form without a priest: DO has "Pobłogosław, ojcze." for both, but Dómine addresses the Lord.
+[jube-domine.gabc]
+V. Pobłogosław, Panie.
+
+# All Souls' collect: Polski's Sancti/11-02 has no [Oratio mortuorum1], and DO has the Propitiáre in
+# no Polish file.  This translates the Latin, in the words of DO's other Polish collects for the
+# dead (Commune/C9).
+[@Sancti/11-02:Oratio mortuorum1]
+$Oremus
+v. Bądź miłościw, prosimy, Panie, duszom wszystkich sług i służebnic Twoich, za które pokornie błagamy majestat Twój: aby przez te pobożne błagania i modły zasłużyły dostąpić wiecznego odpoczynku.
+$Per Dominum

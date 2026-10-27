@@ -1,0 +1,39 @@
+# Texts DO doesn't have, or that take the place of DO's, written by hand (TRANSLATIONS_PLAN.md
+# §7e–§7g).  The format is extra/en/texts.txt's; extra/la/texts.txt has the Latin.
+#
+# The priest's Confiteor and Misereatur: DO's [Confiteor] and [Misereatur], with "et à vous, mon
+# Père" and "vous", as the French missals address the priest (French has no thee).
+
+[index:confiteor-priest]
+Je confesse à Dieu tout puissant, à la bienheureuse Marie toujours Vierge, à Saint Michel Archange, à Saint Jean-Baptiste, aux saints Apôtres Pierre et Paul, à tous les Saints, et à vous, mon Père, que j’ai beaucoup péché, par pensées, par paroles et par actions : c’est ma faute, c’est ma faute, c’est ma très grande faute. C’est pourquoi je supplie la bienheureuse Marie toujours Vierge, Saint Michel Archange, Saint Jean-Baptiste, les saints Apôtres Pierre et Paul, tous les Saints, et vous, mon Père, de prier pour moi le Seigneur notre Dieu.
+
+[index:misereatur-tui]
+Que le Dieu tout-puissant ait pitié de vous, et que, après vous avoir pardonné vos péchés, il vous conduise à la vie éternelle.
+R. Ainsi soit-il.
+
+[index:misereatur-vestri]
+Que le Dieu tout-puissant ait pitié de vous, et que, après vous avoir pardonné vos péchés, il vous conduise à la vie éternelle.
+R. Ainsi soit-il.
+
+# The Sicut erat, with the * where the Latin has it ("et semper, * et in sǽcula"); DO has none.
+[@Prayers:Gloria]
+V. Gloire au Père, au Fils, * et au Saint-Esprit.
+R. Comme il était au commencement, maintenant et toujours, * et dans les siècles des siècles. Ainsi soit-il.
+
+# The same in Deus in adjutorium, whose Gloria is DO's own lines, not [Gloria].
+[@Prayers:Deus in adjutorium]
+V. Dieu + venez à mon aide.
+R. Seigneur, hâtez-vous de me secourir.
+v. Gloire au Père, au Fils, * et au Saint-Esprit.
+Comme il était au commencement, maintenant et toujours, * et dans les siècles des siècles. Ainsi soit-il.
+
+# Nunc dimittis verse 4, with the * where the Latin has it ("géntium, * et glóriam"); DO has none.
+[@Psalterium/Psalmorum/Psalm233]
+2:32 lumière pour éclairer les nations, * et gloire d’Israël Votre peuple.
+
+# All Souls' collect: DO's [Oratio mortuorum1] ends its prayer "Par Notre-Seigneur." and then has
+# the whole $Per Dominum as well.
+[@Sancti/11-02:Oratio mortuorum1]
+$Oremus
+v. Faites miséricorde, nous vous le demandons, Seigneur, aux âmes de tous vos serviteurs et de toutes vos servantes, pour lesquelles nous prions et supplions votre majesté, afin que par ces offices de pieuse supplication, elles méritent d’arriver au repos éternel.
+$Per Dominum

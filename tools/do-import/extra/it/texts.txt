@@ -1,0 +1,43 @@
+# Texts DO doesn't have, or that take the place of DO's, written by hand (TRANSLATIONS_PLAN.md
+# §7e–§7g).  The format is extra/en/texts.txt's; extra/la/texts.txt has the Latin.
+#
+# The priest's Confiteor and Misereatur: DO's [Confiteor_] and [Misereatur], with "e a te, padre"
+# (padre as in DO's Jube domne) and "te" or "voi".
+
+[index:confiteor-priest]
+Confesso a Dio onnipotente, alla beata sempre Vergine Maria, al beato Michele Arcangelo, al beato Giovanni Battista, ai Santi Apostoli Pietro e Paolo, a tutti i Santi e a te, padre, di aver molto peccato, in pensieri, parole ed opere: per mia colpa, per mia colpa, per mia grandissima colpa. E perciò supplico la beata sempre Vergine Maria, il beato Michele Arcangelo, il beato Giovanni Battista, i Santi Apostoli Pietro e Paolo, tutti i Santi e te, padre, di pregare per me il Signore Dio nostro.
+
+[index:misereatur-tui]
+Abbia misericordia di te l'onnipotente Iddio, e, rimessi i tuoi peccati, ti conduca alla vita eterna.
+R. Amen.
+
+[index:misereatur-vestri]
+Abbia misericordia di voi l'onnipotente Iddio, e, rimessi i vostri peccati, vi conduca alla vita eterna.
+R. Amen.
+
+# DO's editorial square brackets: the words DO supplies are kept, without the brackets, and the two
+# alternative renderings ("riandatele [respingetele]", "iattanza [tracotanza]") are left out.
+[@Psalterium/Psalmorum/Psalm4]
+4:5 Adiratevi pure, ma non vogliate peccare; ‡ le cose che dite nei vostri cuori, * riandatele con compunzione nei vostri letti.
+
+[@Psalterium/Psalmorum/Psalm6]
+6:7 Sono stanco nel mio gemito, † ogni notte bagnerò di pianto il mio letto, * irrigherò con le mie lacrime il mio giaciglio.
+
+[@Psalterium/Psalmorum/Psalm7]
+7:11 Il mio giusto soccorso verrà dal Signore, * che salva i retti di cuore.
+
+[@Psalterium/Psalmorum/Psalm11]
+11:4 Stermini il Signore tutte le labbra ingannatrici, * e la lingua che parla con iattanza.
+
+[@Psalterium/Psalmorum/Psalm60]
+60:7 Tu aggiungerai giorni ai giorni del re: * protrarrai i suoi anni di generazione in generazione.
+60:8 Rimanga sul trono in eterno nel cospetto di Dio. * Chi scruterà la sua misericordia e la sua verità?
+
+[@Psalterium/Psalmorum/Psalm76]
+76:11 Ed io dissi: Adesso comincio: * questo cambiamento vien dalla destra dell'Altissimo.
+
+[@Psalterium/Psalmorum/Psalm90]
+90:9 Perché tu hai detto: O Signore, sei la mia speranza; * e hai scelto l'Altissimo per tuo rifugio.
+
+[@Psalterium/Psalmorum/Psalm122]
+122:2b come gli occhi dell'ancella sono volti alle mani della sua padrona: * così i nostri occhi sono volti al Signore Dio nostro, fino a che abbia pietà di noi.
