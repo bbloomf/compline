@@ -594,12 +594,16 @@ define(['moment','moment.easter'], function(moment){
   function getSanctoralFeast(date,currentRegion) {
     var dates = datesForMoment(date);
     if(dates.annunciation.feast && dateMatches(date,'annunciation')) return dates.annunciation.feast;
-    if(dates.stJoseph.feast && dateMatches(date,'stJoseph')) return dates.stJoseph.feast;
+    var isStJoseph = !!dates.stJoseph.feast && dateMatches(date,'stJoseph');
     var options = [];
     var selectedOption;
     if(regionalCalendars) {
       var key = date.format('MM/DD'),
           altKey = moment(date).subtract(1,'day').format('MM/DD');
+      // A regional St. Joseph (Canada's) is moved with the universal feast, as DO's transfer tables move the one
+      // 03-19 office out of Holy Week and off a Sunday.
+      if(isStJoseph) key = altKey = '03/19';
+      else if(key === '03/19') key = null;
       $.each(regionalCalendars, function(region, calendar){
         var option;
         if(key in calendar) {
@@ -629,7 +633,7 @@ define(['moment','moment.easter'], function(moment){
     if(romanCalendar) {
       var month = date.month();
       var day = date.date();
-      var d = romanCalendar[month][day];
+      var d = isStJoseph? dates.stJoseph.feast : romanCalendar[month][day];
       if(!d) {
         if(day > 1) {
           d = romanCalendar[month][day-1];
@@ -641,7 +645,7 @@ define(['moment','moment.easter'], function(moment){
         }
       }
       // St. Joseph and the Annunciation, moved to another day this year
-      if(d == dates.stJoseph.feast || d == dates.annunciation.feast) return FeriaWithAlternates(options,selectedOption);
+      if((d == dates.stJoseph.feast && !isStJoseph) || d == dates.annunciation.feast) return FeriaWithAlternates(options,selectedOption);
       if(options.length) {
         options.unshift(d);
         if(selectedOption) {

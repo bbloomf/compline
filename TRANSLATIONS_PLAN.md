@@ -546,10 +546,6 @@ Built as §3 describes. `import.js` now also prints, for every language, which t
 
 ## 8. Unrelated things noticed (not fixed)
 
-Found while fixing the six items below:
-
-- **Setting a date throws when 19 March falls in Holy Week** (2008, 2035), for every user. St. Joseph is moved after Low Sunday, so `getSanctoralFeast` drops the universal 19 March (`d = null`), but Canada's St. Joseph is still an option, so it sets `alternates` on `null`; with Canada chosen, `setDate` reads `null.region`. On a Sunday (2028) `sundayOrFeast` already puts the Sunday in that slot. Canada's St. Joseph should presumably move with the universal one.
-
 Fixed since this list was first written:
 
 - The `setPsalms` early-return guard, which never matched. It now compares against what is on screen.
@@ -566,6 +562,8 @@ Fixed since this list was first written:
 - **The Advent, Lent and Easter Te lucis rules didn't except I class feasts,** though their notes say so. They now have `select-day='!firstClassFeast'`, which the I class Sundays pass (above). Checked: St. Joseph the Workman on Sunday 2022-05-01 and Monday 2023-05-01, St. Joseph on 2026-03-19 (Lent) and 2027-03-19, St. George in England, and St. Francis Xavier in Australia (2026-12-03, Advent) have the Solemn tone; the Immaculate Conception on the 2nd Sunday of Advent (2030-12-08) has Our Lady's; ferias in Advent, Lent, Passiontide and Paschaltide keep their tones.
 
 The checks above were run in the browser on top of a re-check of the Sunday-precedence dates above (All Saints, the Assumption, the Immaculate Conception, the Advent and Lent Sundays, Trinity, Christ the King, the Purification, Transfiguration, Exaltation and Lateran on Sundays, Christmas Eve on the 4th Sunday of Advent, Ss. Peter and Paul, St. John the Baptist, the Immaculate Heart, an ordinary weekday and Sunday), with nothing changed but the tones listed above, and no console errors.
+
+- **Setting a date threw when 19 March fell in Holy Week** (2008, 2035; found while fixing the six items above), for every user. St. Joseph was moved after Low Sunday, but Canada's St. Joseph stayed on 19 March, so `getSanctoralFeast` set `alternates` on the dropped universal entry (`null`), and with Canada chosen `setDate` read `null.region`. The review fix to the Sunday precedence made a moved St. Joseph's day a feria with its regional alternates, which stopped the error but still offered Canada's St. Joseph on 19 March. DO has no Canadian calendar; its 1960 transfer tables move the one `03-19` office, out of Holy Week and off a Sunday. So Canada's St. Joseph now goes with `dates.stJoseph`. Before, Canada's St. Joseph was never offered on the day St. Joseph was kept; now the menu offers it, as for the other regional feasts. Checked with no region and with Canada: 2008-03-19 and 2035-03-19 are ferias; St. Joseph, with Canada's as the alternate (preselected for Canada), is on 2008-03-31, 2035-04-02, 2027-03-19 and Monday 2028-03-20; Sunday 2028-03-19 is still the 3rd Sunday of Lent. No console errors.
 
 ---
 
