@@ -300,13 +300,13 @@ define(['moment','moment.easter'], function(moment){
       "5": {title:"Commemoration of St. Sabbas Abbot", rank:5},
       "6": {title:"St. Nicholas Bishop and Confessor", rank:3},
       "7": {title:"St. Ambrose Bishop, Confessor, and Doctor of the Church", rank:3},
-      "8": {title:"On the Immaculate Conception of the Blessed Virgin Mary", rank:1, ol:1},
+      "8": {title:"On the Immaculate Conception of the Blessed Virgin Mary", rank:1, ol:1, overFirstClassSunday:1},
       "10": {title:"Commemoration of St. Melchiades Pope and Martyr", rank:5},
       "11": {title:"St. Damasus I Pope and Confessor", rank:3},
       "13": {title:"St. Lucy Virgin and Martyr", rank:3},
       "16": {title:"St. Eusebius Bishop and Martyr", rank:3},
       "21": {title:"St. Thomas Apostle", rank:2},
-      "24": {title:"Vigil", rank:1},
+      "24": {title:"Vigil", rank:1, overFirstClassSunday:1},
       "25": {title:"On the Nativity of our Lord Jesus Christ", rank:1, com:"St. Anastasia Martyr"},
       "26": {title:"St. Stephen Protomartyr", rank:2},
       "27": {title:"St. John Apostle and Evangelist", rank:2},
@@ -390,9 +390,7 @@ define(['moment','moment.easter'], function(moment){
       return weeksSincePentecost + '. Sunday after Pentecost';
     }, r: function(date,dates) {
       // Trinity Sunday and Christ the King are I class feasts
-      if(weeksBetween('pentecost', date) === 1) return 1;
-      var weeksSinceLastWeekOfOctober = weeksBetween('10/25',date);
-      if(weeksSinceLastWeekOfOctober>=0 && weeksSinceLastWeekOfOctober<1) return 1;
+      if(dateMatches(date, 'pentecost+7 christTheKing')) return 1;
     }, isFeast: function(date,dates) {
       return this.r(date,dates) === 1;
     }},
@@ -414,7 +412,7 @@ define(['moment','moment.easter'], function(moment){
   // regional calendars:
   var regionalCalendars = {
     "United States": {
-      "12/08": {title:"On the Immaculate Conception of the Blessed Virgin Mary, Principal Patroness of the United States", rank:1, ol:1},
+      "12/08": {title:"On the Immaculate Conception of the Blessed Virgin Mary, Principal Patroness of the United States", rank:1, ol:1, overFirstClassSunday:1},
       "12/12": {title:"Our Lady of Guadalupe, Patroness of the Americas", rank:3, ol:1},
       "01/04": {title:"St. Elizabeth Ann Seton, Widow", rank:3},
       "01/22": {title:"Votive Mass for Peace", rank:2, plusOne:"ifSunday"},
@@ -536,24 +534,23 @@ define(['moment','moment.easter'], function(moment){
     }
   }
   // 1960 rubrics (General Rubrics 15 and the table of precedence): a I class Sunday gives way only to the
-  // Immaculate Conception and the Vigil of Christmas; a II class Sunday gives way to every I class feast and
-  // to the II class feasts of the Lord (marked lord:1).  A feast moved to Monday when it falls on a Sunday
-  // (All Souls) doesn't compete.
-  function outranksSunday(date, sunday, feast) {
+  // feasts marked overFirstClassSunday:1 (the Immaculate Conception and the Vigil of Christmas); a II class
+  // Sunday gives way to every I class feast and to the II class feasts of the Lord (marked lord:1).  A feast
+  // moved to Monday when it falls on a Sunday (All Souls) doesn't compete.
+  function outranksSunday(feast, firstClassSunday) {
     if(!feast || feast.plusOne === 'ifSunday') return false;
-    if(sunday.rank === 1) {
-      return feast.rank === 1 && dateMatches(date, '12/08 12/24');
-    }
+    if(firstClassSunday) return !!feast.overFirstClassSunday;
     return feast.rank === 1 || (feast.rank === 2 && !!feast.lord);
   }
   // The Sunday, or the saint's day that outranks it.  Of a saint's day's regional alternates, only those that
   // outrank the Sunday are kept; elsewhere the Sunday is kept.
   function sundayOrFeast(date, sunday, feast) {
-    if(!feast.alternates) return outranksSunday(date, sunday, feast) ? feast : sunday;
+    var firstClassSunday = sunday.rank === 1;
+    if(!feast.alternates) return outranksSunday(feast, firstClassSunday) ? feast : sunday;
     var alternates = $.grep(feast.alternates, function(alt, i) {
-      return i === 0 || outranksSunday(date, sunday, alt);
+      return i === 0 || outranksSunday(alt, firstClassSunday);
     });
-    if(!outranksSunday(date, sunday, alternates[0])) alternates[0] = sunday;
+    if(!outranksSunday(alternates[0], firstClassSunday)) alternates[0] = sunday;
     var selected = $.inArray(feast, alternates) >= 0 ? feast : alternates[0];
     // a copy, so that the calendar's own entry keeps its weekday alternates
     selected = $.extend({}, selected);
@@ -643,15 +640,19 @@ define(['moment','moment.easter'], function(moment){
           return FeriaWithAlternates(options,selectedOption);
         }
       }
-      if(d == dates.stJoseph.feast || d == dates.annunciation.feast) d = null;
+      // St. Joseph and the Annunciation, moved to another day this year
+      if(d == dates.stJoseph.feast || d == dates.annunciation.feast) return FeriaWithAlternates(options,selectedOption);
       if(options.length) {
         options.unshift(d);
         if(selectedOption) {
           d = selectedOption;
         }
         d.alternates = options;
+      } else {
+        // the calendar's entry may still have the alternates of another year's date
+        delete d.alternates;
       }
-      if(d) return d;
+      return d;
     }
     return FeriaWithAlternates(options,selectedOption);
   }
@@ -666,6 +667,8 @@ define(['moment','moment.easter'], function(moment){
   };
   Dates.prototype.feastOfOurLady = function(date) {
     var d = getFeastForDate(date);
+    // from Ash Wednesday, a III class feast is only commemorated, so the day keeps its Lenten tone
+    if(d && d.rank === 3 && dateMatches(date, 'lent1-4:easter-1')) return false;
     return !!(d && d.ol);
   };
   Dates.prototype.minorFeast = function(date) {
