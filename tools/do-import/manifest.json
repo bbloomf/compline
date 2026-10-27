@@ -1,0 +1,199 @@
+{
+  "files": {
+    "Prayers": "Psalterium/Common/Prayers",
+    "Minor": "Psalterium/Special/Minor Special",
+    "Mariaant": "Psalterium/Mariaant",
+    "Doxologies": "Psalterium/Doxologies",
+    "Psalmi": "Psalterium/Psalmi/Psalmi minor"
+  },
+  "texts": {
+    "jube-domine.gabc": ["$Jube domne"],
+    "jube-domne.gabc": {"version": "Divino Afflatu - 1954", "units": ["$Jube domne"]},
+    "blessing.gabc": [{"ref": "$Benedictio Completorium_", "amen": true}],
+    "lesson.gabc": [
+      [{"ref": "@Minor:Lectio Completorium", "lines": "1"}, {"ref": "$Tu autem_", "lines": "1", "inline": " "}],
+      {"ref": "$Tu autem_", "lines": "2"}
+    ],
+    "adjutorium-nostrum.gabc": ["@Prayers:Adjutorium nostrum:1", "@Prayers:Adjutorium nostrum:2"],
+    "index:confiteor": ["$Confiteor"],
+    "index:misereatur-nostri": [{"ref": "$Misereatur", "amen": true}],
+    "index:confiteor-priest": {
+      "units": ["$Confiteor"],
+      "subs": {
+        "la": "s/et ómnibus Sanctis, quia/ómnibus Sanctis et tibi pater, quia/ s/et omnes Sanctos, oráre/omnes Sanctos, et te pater: oráre/",
+        "en": "s/and to all the Saints, that/to all the Saints, and to thee, Father, that/ s/and all the Saints, to pray/all the Saints, and thee, Father, to pray/"
+      }
+    },
+    "index:misereatur-tui": {
+      "units": [{"ref": "$Misereatur", "amen": true}],
+      "subs": {
+        "la": "s/nostri/tui/ s/nostris/tuis/ s/nos ad/te ad/",
+        "en": "s/on us/on thee/ s/forgive us our/forgive thee thy/ s/bring us/bring thee/"
+      }
+    },
+    "index:misereatur-vestri": {
+      "units": [{"ref": "$Misereatur", "amen": true}],
+      "subs": {
+        "la": "s/nostri/vestri/ s/nostris/vestris/ s/nos ad/vos ad/",
+        "en": "s/on us/on you/ s/forgive us our/forgive you your/ s/bring us/bring you/"
+      }
+    },
+    "index:indulgentiam": [{"ref": "$Indulgentiam", "amen": true}],
+    "converte-nos.gabc": ["@Prayers:Converte nos:1", "@Prayers:Converte nos:2"],
+    "deus-in-adjutorium.gabc": [
+      "@Prayers:Deus in adjutorium:1",
+      "@Prayers:Deus in adjutorium:2",
+      ["@Prayers:Deus in adjutorium:3-4", {"ref": "@Prayers:Alleluia:1", "inline": " * "}],
+      "@Prayers:Alleluia:2"
+    ],
+    "deus-in-adjutorium_alleluia.gabc": [
+      "@Prayers:Deus in adjutorium:1",
+      "@Prayers:Deus in adjutorium:2",
+      ["@Prayers:Deus in adjutorium:3-4", {"ref": "@Prayers:Alleluia:1", "inline": " "}]
+    ],
+    "deus-in-adjutorium_laus-tibi.gabc": [
+      "@Prayers:Deus in adjutorium:1",
+      "@Prayers:Deus in adjutorium:2",
+      ["@Prayers:Deus in adjutorium:3-4", {"ref": "@Prayers:Alleluia:2", "inline": " "}]
+    ],
+    "index:christus-factus-est": [{"ref": "@Tempora/Quad6-4:Special Completorium", "start": "&psalm(233)", "lines": "1"}],
+    "index:mortem-autem-crucis": [
+      {"ref": "@Tempora/Quad6-5:Special Completorium", "start": "&psalm(233)", "lines": "1", "after": "@Tempora/Quad6-4:Special Completorium"}
+    ],
+
+    "psalms/0/ant.gabc": ["@Psalmi:Completorium:1 s/^.*?= //"],
+    "psalms/1/ant.gabc": ["@Psalmi:Completorium:3 s/^.*?= //"],
+    "psalms/2/ant.gabc": ["@Psalmi:Completorium:5 s/^.*?= //"],
+    "psalms/3/ant.gabc": ["@Psalmi:Completorium:7 s/^.*?= //"],
+    "psalms/4/ant.gabc": ["@Psalmi:Completorium:9 s/^.*?= //"],
+    "psalms/5/ant.gabc": ["@Psalmi:Completorium:11 s/^.*?= //"],
+    "psalms/6/ant.gabc": ["@Psalmi:Completorium:13 s/^.*?= //"],
+    "psalms/ant-PT.gabc": [{"generate": "alleluia-antiphon"}],
+
+    "te-lucis/Ferial.gabc": {"hymn": "@Minor:Hymnus Completorium"},
+    "te-lucis/Ordinary.gabc": {"hymn": "@Minor:Hymnus Completorium"},
+    "te-lucis/Solemn.gabc": {"hymn": "@Minor:Hymnus Completorium"},
+    "te-lucis/Advent.gabc": {"hymn": "@Minor:Hymnus Completorium"},
+    "te-lucis/Lent.gabc": {"hymn": "@Minor:Hymnus Completorium"},
+    "te-lucis/Passiontide.gabc": {"hymn": "@Minor:Hymnus Completorium"},
+    "te-lucis/Christmas.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Nat"},
+    "te-lucis/Our-Lady.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Nat"},
+    "te-lucis/Seven-Dolors.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Nat"},
+    "te-lucis/Epiphany.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Epi"},
+    "te-lucis/Holy-Family.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Tempora/Epi1-0:Doxology"},
+    "te-lucis/Easter.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Pasch"},
+    "te-lucis/Ascension.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Asc"},
+    "te-lucis/Pentecost.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Pent"},
+    "te-lucis/Sacred-Heart.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Heart"},
+    "te-lucis/Transfiguration.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Sancti/08-06:Doxology"},
+    "te-lucis/Christ-the-King.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Sancti/10-DU:Doxology"},
+
+    "chapter.gabc": ["@Minor:Completorium_"],
+
+    "in-manus-tuas/ordinary_full.gabc": {
+      "units": [
+        [{"ref": "@Minor:Responsory Completorium", "lines": "1", "prefix": "V. "}, {"ref": "@Minor:Responsory Completorium", "lines": "2", "abbrev": true}],
+        {"ref": "@Minor:Responsory Completorium", "lines": "3-4"},
+        {"ref": "@Minor:Responsory Completorium", "lines": "5-6"}
+      ]
+    },
+    "in-manus-tuas/ordinary.gabc": {
+      "units": [
+        [{"ref": "@Minor:Responsory Completorium", "lines": "1", "prefix": "V. "}, {"ref": "@Minor:Responsory Completorium", "lines": "2", "abbrev": true}],
+        ["@Minor:Responsory Completorium:3", {"ref": "@Minor:Responsory Completorium", "lines": "4", "abbrev": true, "prefix": "* "}],
+        ["@Minor:Responsory Completorium:5 s/\\s*\\*//", {"ref": "@Minor:Responsory Completorium", "lines": "6", "abbrev": true, "prefix": "* "}]
+      ]
+    },
+    "in-manus-tuas/advent_full.gabc": {
+      "units": [
+        [{"ref": "@Minor:Responsory Completorium", "lines": "1", "prefix": "V. "}, {"ref": "@Minor:Responsory Completorium", "lines": "2", "abbrev": true}],
+        {"ref": "@Minor:Responsory Completorium", "lines": "3-4"},
+        {"ref": "@Minor:Responsory Completorium", "lines": "5-6"}
+      ]
+    },
+    "in-manus-tuas/advent.gabc": {
+      "units": [
+        [{"ref": "@Minor:Responsory Completorium", "lines": "1", "prefix": "V. "}, {"ref": "@Minor:Responsory Completorium", "lines": "2", "abbrev": true}],
+        ["@Minor:Responsory Completorium:3", {"ref": "@Minor:Responsory Completorium", "lines": "4", "abbrev": true, "prefix": "* "}],
+        ["@Minor:Responsory Completorium:5 s/\\s*\\*//", {"ref": "@Minor:Responsory Completorium", "lines": "6", "abbrev": true, "prefix": "* "}]
+      ]
+    },
+    "in-manus-tuas/passiontide_full.gabc": {
+      "units": [
+        [{"ref": "@Minor:Responsory Completorium", "lines": "1", "prefix": "V. "}, {"ref": "@Minor:Responsory Completorium", "lines": "2", "abbrev": true}],
+        {"ref": "@Minor:Responsory Completorium", "lines": "3-4"},
+        {"ref": "@Minor:Responsory Completorium", "lines": "6"}
+      ]
+    },
+    "in-manus-tuas/passiontide.gabc": {
+      "units": [
+        [{"ref": "@Minor:Responsory Completorium", "lines": "1", "prefix": "V. "}, {"ref": "@Minor:Responsory Completorium", "lines": "2", "abbrev": true}],
+        [{"ref": "@Minor:Responsory Completorium", "lines": "3", "prefix": ""}, {"ref": "@Minor:Responsory Completorium", "lines": "4", "abbrev": true, "prefix": "* "}],
+        {"ref": "@Minor:Responsory Completorium", "lines": "6", "abbrev": true, "prefix": ""}
+      ]
+    },
+    "in-manus-tuas/pt_full.gabc": {
+      "units": [
+        [{"ref": "@Minor:Responsory Completorium", "paschal": "responsory", "lines": "1", "prefix": "V. "}, {"ref": "@Minor:Responsory Completorium", "lines": "2", "abbrev": true}],
+        {"ref": "@Minor:Responsory Completorium", "paschal": "responsory", "lines": "3-4"},
+        {"ref": "@Minor:Responsory Completorium", "paschal": "responsory", "lines": "5-6"}
+      ]
+    },
+    "in-manus-tuas/pt.gabc": {
+      "units": [
+        [{"ref": "@Minor:Responsory Completorium", "paschal": "responsory", "lines": "1", "prefix": "V. "}, {"ref": "@Minor:Responsory Completorium", "lines": "2", "abbrev": true}],
+        ["@Minor:Responsory Completorium:3", {"ref": "@Minor:Responsory Completorium", "paschal": "responsory", "lines": "4", "inline": " * "}],
+        ["@Minor:Responsory Completorium:5 s/\\s*\\*//", {"ref": "@Minor:Responsory Completorium", "lines": "6", "abbrev": true, "inline": " * "}]
+      ]
+    },
+    "custodi-nos.gabc": ["@Minor:Versum 4"],
+    "custodi-nos-advent.gabc": ["@Minor:Versum 4"],
+    "custodi-nos-pt.gabc": [{"ref": "@Minor:Versum 4", "paschal": "single"}],
+
+    "canticle-ant.gabc": ["@Minor:Ant 4"],
+    "canticle-ant-pt.gabc": [{"ref": "@Minor:Ant 4", "paschal": "single"}],
+    "canticle-ant-po.gabc": ["@Tempora/Pasc0-0:Ant 43:1"],
+    "haec-dies.gabc": ["@Tempora/Pasc0-0:Ant 43:2"],
+
+    "index:dominus-vobiscum": ["@Prayers:Dominus:1-2"],
+    "index:domine-exaudi": ["@Prayers:Dominus:3-4"],
+    "prayer.gabc": [["$Oremus", "$Oratio Visita_", "$Per Dominum"]],
+    "index:visita-silent": ["$Oratio Visita_"],
+    "index:per-dominum-silent": [{"ref": "$Per Dominum", "lines": "1"}],
+    "benedicamus-domino.gabc": ["$Benedicamus Domino"],
+    "index:benedicat": [{"ref": "$Benedictio Completorium2", "amen": true}],
+
+    "marian-antiphon/alma-redemptoris-mater.gabc": [{"ref": "@Mariaant:Advent", "part": "antiphon"}],
+    "marian-antiphon/alma-redemptoris-mater-solemn.gabc": [{"ref": "@Mariaant:Advent", "part": "antiphon"}],
+    "index:marian-alma-advent-versicle": [{"ref": "@Mariaant:Advent", "part": "versicle"}],
+    "marian-antiphon/alma-prayer_advent.gabc": [{"ref": "@Mariaant:Advent", "part": "prayer", "amen": true}],
+    "index:marian-alma-christmas-versicle": [{"ref": "@Mariaant:Nativiti", "part": "versicle"}],
+    "marian-antiphon/alma-prayer_christmas.gabc": [{"ref": "@Mariaant:Nativiti", "part": "prayer", "amen": true}],
+    "marian-antiphon/ave-regina-caelorum.gabc": [{"ref": "@Mariaant:Quadragesimae", "part": "antiphon"}],
+    "marian-antiphon/ave-regina-caelorum-solemn.gabc": [{"ref": "@Mariaant:Quadragesimae", "part": "antiphon"}],
+    "index:marian-ave-versicle": [{"ref": "@Mariaant:Quadragesimae", "part": "versicle"}],
+    "marian-antiphon/ave-prayer.gabc": [{"ref": "@Mariaant:Quadragesimae", "part": "prayer", "amen": true}],
+    "marian-antiphon/regina-caeli.gabc": [{"ref": "@Mariaant:Paschalis", "part": "antiphon"}],
+    "marian-antiphon/regina-caeli-solemn.gabc": [{"ref": "@Mariaant:Paschalis", "part": "antiphon"}],
+    "index:marian-regina-versicle": [{"ref": "@Mariaant:Paschalis", "part": "versicle"}],
+    "marian-antiphon/regina-prayer.gabc": [{"ref": "@Mariaant:Paschalis", "part": "prayer", "amen": true}],
+    "marian-antiphon/salve-regina.gabc": [{"ref": "@Mariaant:Postpentecost", "part": "antiphon"}],
+    "marian-antiphon/salve-regina-solemn.gabc": [{"ref": "@Mariaant:Postpentecost", "part": "antiphon"}],
+    "index:marian-salve-versicle": [{"ref": "@Mariaant:Postpentecost", "part": "versicle"}],
+    "marian-antiphon/salve-prayer.gabc": [{"ref": "@Mariaant:Postpentecost", "part": "prayer", "amen": true}],
+    "index:divinum-auxilium": [{"ref": "$Divinum auxilium", "lines": "1", "prefix": "V. ", "amen": true}],
+
+    "index:asd-preces": [[
+      "@Prayers:Pater noster Et:2-3",
+      "$Aportainferi",
+      "$Requiescant",
+      "@Prayers:Dominus:3-4",
+      "@Prayers:Dominus:1-2 s/^V\\. /V. (/ s/$/)/"
+    ]],
+    "index:asd-collect": {
+      "note": "DO concludes with the whole Per Dominum; the app with its first words",
+      "units": [{"ref": "@Sancti/11-02:Oratio mortuorum1", "tail": 4}]
+    },
+    "index:asd-requiem": [["$Requiem", "$Requiescant"]]
+  }
+}

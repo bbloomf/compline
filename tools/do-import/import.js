@@ -8,17 +8,19 @@
 // someone has checked it.  The DO checkout is the one fetch-do.sh makes: by default
 // divinum-officium/ next to this repository (or, in a git worktree, next to the main checkout).
 //
-// So far it generates the psalter (Phase 2).  A module's other parts (texts) are kept as they
-// are in the file until Phase 3 generates them.
+// It generates the psalter (Phase 2, psalter.js) and the texts (Phase 3, texts.js, from
+// manifest.json).  Any other part of a module already in the file is kept.
 'use strict';
 var fs = require('fs');
 var path = require('path');
 var childProcess = require('child_process');
 var psalter = require('./psalter');
+var texts = require('./texts');
 
 // Every language the plan names (§2).  keys renames a translation's verse keys where DO has a
 // typo; groups pairs runs of verses as a whole where a translation divides them differently;
-// fallback is the folder whose prayers a language borrows where it has none, as DO does.
+// fallback is the folder whose prayers a language borrows where it has none, as DO does; texts
+// false leaves out the texts, as Latin-Bea's are the Vulgate's (§2b).
 var LANGUAGES = [
   {code: 'en', folder: 'English', name: 'English'},
   {code: 'fr', folder: 'Francais', name: 'Français'},
@@ -26,7 +28,7 @@ var LANGUAGES = [
   {code: 'it', folder: 'Italiano', name: 'Italiano', keys: {'11:6': '11:6b'}},
   {code: 'pt', folder: 'Portugues', name: 'Português'},
   {code: 'pl', folder: 'Polski', name: 'Polski', keys: {'11:6': '11:6b'}},
-  {code: 'la-bea', folder: 'Latin-Bea', name: 'Latin (Pius XII psalter)', fallback: 'Latin'},
+  {code: 'la-bea', folder: 'Latin-Bea', name: 'Latin (Pius XII psalter)', fallback: 'Latin', texts: false},
   // not offered yet (§2)
   {code: 'de', folder: 'Deutsch', name: 'Deutsch'},
   {code: 'nl', folder: 'Nederlands', name: 'Nederlands'},
@@ -87,6 +89,7 @@ try {
 
 // The report.
 var report = psalter.build(doDir, root, LANGUAGES);
+var textReport = texts.build(doDir, root, LANGUAGES);
 var list = function(title, lines) {
   if(!lines.length) return;
   console.log('  ' + title + ':');
@@ -134,6 +137,41 @@ LANGUAGES.forEach(function(lang) {
   }
 });
 
+console.log('\nThe app\'s Latin texts against DO\'s, unit by unit (!! = below ' + texts.THRESHOLD + '):');
+var textFlagged = textReport.latin.filter(function(line) { return /^!!/.test(line); });
+(options.verbose ? textReport.latin : textFlagged).forEach(function(line) { console.log('  ' + line); });
+if(!textFlagged.length) console.log('  every unit matches');
+if(!options.verbose && textReport.latin.length > textFlagged.length) {
+  console.log('  (and ' + (textReport.latin.length - textFlagged.length) + ' small differences; --verbose lists them)');
+}
+if(textReport.app.length) {
+  console.log('\nThe app\'s texts and manifest.json:');
+  textReport.app.forEach(function(line) { console.log('  ' + line); });
+}
+console.log('\nText coverage:');
+console.log('  language   texts      units        missing  counts  unsafe');
+LANGUAGES.forEach(function(lang) {
+  var r = textReport.languages[lang.code];
+  var pad = function(s, n) { s = String(s); return s + new Array(Math.max(0, n - s.length) + 1).join(' '); };
+  if(!r.texts) {
+    console.log('  ' + pad(lang.code, 10) + ' none: the Latin\'s (§2b)');
+    return;
+  }
+  console.log('  ' + pad(lang.code, 10) + ' ' + pad(r.ok + '/' + r.keys, 10) + ' ' + pad(r.translated + '/' + r.units, 12) + ' ' +
+    pad(r.missing.length, 8) + ' ' + pad(r.counts.length, 7) + ' ' + r.unsafe.length);
+});
+console.log('  (texts: with every unit; counts: texts whose units don\'t match the Latin\'s paragraphs;\n' +
+  '  unsafe: chants with characters GABC can\'t take, §7a)');
+LANGUAGES.forEach(function(lang) {
+  var r = textReport.languages[lang.code];
+  if(!r.missing.length && !r.counts.length && !r.notes.length && !r.unsafe.length) return;
+  console.log('\n' + lang.code + ' (' + lang.folder + ') texts:');
+  list('missing', r.missing);
+  list('unit counts', r.counts);
+  list('notes', r.notes);
+  list('characters GABC can\'t take', r.unsafe);
+});
+
 // Writing the modules.
 var quote = function(s) {
   return '\'' + s.replace(/\\/g, '\\\\').replace(/'/g, '\\\'').replace(/\n/g, '\\n') + '\'';
@@ -169,7 +207,9 @@ options.write.forEach(function(code) {
   var file = path.join(root, 'js/i18n', code + '.js');
   var old = readModule(file);
   var meta = Object.assign({}, old.meta || {}, {name: lang.name, dir: 'ltr', doCommit: doCommit.slice(0, 7)});
+  delete meta.stub;
   var module = {meta: meta, psalter: report.languages[code].psalter};
+  if(textReport.languages[code].texts) module.texts = textReport.languages[code].texts;
   Object.keys(old).forEach(function(k) {
     if(!(k in module)) module[k] = old[k];
   });
@@ -177,15 +217,11 @@ options.write.forEach(function(code) {
     '// ' + lang.name + ', from Divinum Officium (https://github.com/DivinumOfficium/divinum-officium) at ' + doCommit.slice(0, 7) + ',',
     '// Copyright (c) 2026 Divinum Officium, MIT license (js/i18n/LICENSE-divinum-officium.txt).',
     '//',
-    '// The psalter is generated by tools/do-import/import.js (TRANSLATIONS_PLAN.md §3): fix the importer',
-    '// or DO, not this file.  Each section\'s verses are in the app\'s order, with the Gloria Patri and',
-    '// Sicut erat last; \'\' is a verse whose translation is part of the verse before.'
+    '// Generated by tools/do-import/import.js (TRANSLATIONS_PLAN.md §3): fix the importer, its',
+    '// manifest.json or DO, not this file.  Each psalter section\'s verses are in the app\'s order, with',
+    '// the Gloria Patri and Sicut erat last; \'\' is a verse whose translation is part of the verse',
+    '// before.  Each text\'s units are the paragraphs of its chant, or its index.html block (§7c).'
   ];
-  if(meta.stub) {
-    header.push('// texts is still the hand-written stub of Phase 1, which Phase 3 replaces.  It covers the',
-      '// chants and prayers of an ordinary Sunday after Pentecost with no priest; everything else is',
-      '// left out, to show the fallback.');
-  }
   fs.writeFileSync(file, header.join('\n') + '\ndefine(' + serialize(module) + ');\n');
   console.log('\nWrote ' + path.relative(root, file));
 });

@@ -98,3 +98,98 @@ exports.read = function(root) {
   });
   return {sections: sections, order: order};
 };
+
+// The scores of a GABC file, [{header, body}], split as splitGabc in js/chant-element.js does.
+var regexGabcHeader = /((?:[\w-_]+:\s*[^;\r\n]*;?\r?\n)+)%%\r?\n/;
+var scores = function(gabc) {
+  var parts = gabc.split(regexGabcHeader);
+  if(parts.length === 1) parts.splice(0, 0, '', '');
+  var result = [];
+  for(var i = 1; i < parts.length; i += 2) {
+    var header = {};
+    parts[i].split(/\r?\n/).forEach(function(line) {
+      var match = line.match(/^%?([\w-_]+):\s*([^;\r\n]*)(?:;|$)/i);
+      if(match && !(match[1] in header)) header[match[1]] = match[2];
+    });
+    result.push({header: header, body: parts[i + 1]});
+  }
+  return result;
+};
+
+// A GABC lyric line as a unit's line (§7c): ℣ and ℟ as "V. " and "R. ", no neumes or tags.
+var gabcUnitLine = function(line) {
+  return gabcText(line.replace(/<v>\\([VR])bar<\/v>/g, '$1/.').replace(/<sp>([VR])\/<\/sp>/g, '$1/.'))
+    .replace(/^([VR])\/\.\s*/, '$1. ').replace(/\s([VR])\/\.\s*/g, '\n$1. ');
+};
+
+// The paragraphs of a score that isn't a psalm, as unitParagraphs in js/chant-element.js: a
+// paragraph with no words belongs to the one before (or, first, to the one after).
+var unitParagraphs = function(body) {
+  var paragraphs = [];
+  var wordless = '';
+  body.split(/\r?\n\s*\r?\n/).forEach(function(paragraph) {
+    if(!/\S/.test(paragraph)) return;
+    if(paragraph.split(/\r?\n/).some(function(line) { return !!gabcText(line); })) {
+      paragraphs.push(wordless + paragraph);
+      wordless = '';
+    } else if(paragraphs.length) {
+      paragraphs[paragraphs.length - 1] += '\n\n' + paragraph;
+    } else {
+      wordless += paragraph + '\n\n';
+    }
+  });
+  if(wordless) paragraphs.push(wordless);
+  return paragraphs;
+};
+
+// The units of a chant that isn't a psalm (§7c), as text: one per paragraph of its scores that
+// aren't psalms.  The first gets the score's V/. or R/. annotation.
+var gabcUnits = function(gabc) {
+  var units = [];
+  scores(gabc).forEach(function(score) {
+    var header = score.header;
+    if(header['psalm-section'] || (header['user-notes'] && psalmSection(header['user-notes']))) return;
+    unitParagraphs(score.body).forEach(function(paragraph, i) {
+      var lines = paragraph.split(/\r?\n/).map(gabcUnitLine).filter(Boolean);
+      var annotation = (header.annotation || '').match(/^(?:([VR])\/\.|<v>\\([VR])bar<\/v>)$/);
+      if(i === 0 && annotation) lines[0] = (annotation[1] || annotation[2]) + '. ' + lines[0];
+      units.push(lines.join('\n').replace(/^([VR])\. ([VR])\. /, '$1. '));
+    });
+  });
+  return units;
+};
+
+// An index.html block's Latin as a unit: ℣ and ℟ as "V. " and "R. ", a line per <br>.
+var blockUnit = function(html) {
+  return decode(html
+    // "(℣ Dóminus vobíscum." is "℣ (Dóminus vobíscum."
+    .replace(/\((<span class='versiculum'>[vr]<\/span>(?:&nbsp;|\s)*)/g, '$1(')
+    .replace(/<span class='versiculum'>([vr])<\/span>(?:&nbsp;|\s)*/g, function(m, vr) { return '\u0001' + vr.toUpperCase() + '. '; })
+    .replace(/<br\s*\/?>/g, '\n').replace(/<[^>]+>/g, ''))
+    .split(/\n|(?=\u0001)/).map(function(line) { return line.replace(/\u0001/g, '').replace(/\s+/g, ' ').trim(); })
+    .filter(Boolean).join('\n');
+};
+
+// The texts that have translations (§7c), {key: [unit, …]}: every chant that isn't a psalm,
+// keyed by its src, and the blocks of index.html with a data-tr key of their own (index:…),
+// one unit each.  A chant's pointed twin in index.html (chapter.gabc, …) uses the chant's units.
+exports.texts = function(root) {
+  var result = {};
+  var dirs = ['.', 'te-lucis', 'in-manus-tuas', 'marian-antiphon', 'psalms'].concat(
+    fs.readdirSync(path.join(root, 'psalms')).filter(function(d) {
+      return fs.statSync(path.join(root, 'psalms', d)).isDirectory();
+    }).map(function(d) { return 'psalms/' + d; }));
+  dirs.forEach(function(dir) {
+    files(root, dir, /\.gabc$/).forEach(function(file) {
+      var key = file.replace(/^\.\//, '');
+      var units = gabcUnits(fs.readFileSync(path.join(root, file), 'utf8').replace(/^﻿/, ''));
+      if(units.length) result[key] = units;
+    });
+  });
+  var index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+  var pairs = /<(div|span) [^>]*class='tr-pair' data-tr='(index:[^']+)'>\s*<(p|div|span) lang='la'>([\s\S]*?)<\/\3><\/\1>/g, m;
+  while((m = pairs.exec(index))) {
+    if(!result[m[2]]) result[m[2]] = [blockUnit(m[4])];
+  }
+  return result;
+};

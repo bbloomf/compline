@@ -29,9 +29,9 @@ define(['jquery'], function($) {
   if(!('textMode' in localStorage)) localStorage.textMode = 'la';
   var modes = ['la', 'both', 'tr'];
   // The languages offered in the menu, each with a module in js/i18n/ (TRANSLATIONS_PLAN.md §2).
-  // None yet: js/i18n/en.js, whose psalter is generated but whose texts are still a stub, is for
-  // testing (?text=both) until Phase 4 generates the rest and adds English here.  compline.js hides
-  // the Text and Translation menus until then.
+  // None yet: js/i18n/en.js, which is generated but not yet checked end to end, is for testing
+  // (?text=both) until Phase 4 checks it and adds English here.  compline.js hides the Text and
+  // Translation menus until then.
   var languages = [];
   var isLanguage = function(code) {
     return languages.some(function(l) { return l.code === code; });
