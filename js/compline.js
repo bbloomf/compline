@@ -1,5 +1,7 @@
-require(['jquery','moment','calendar','text-mode'], function($,moment,calendar,textMode) {
+require(['jquery','moment','calendar','text-mode','hyphenate'], function($,moment,calendar,textMode,hyphenate) {
   'use strict';
+  // soft hyphens in the Latin and the translations, from now on (js/hyphenate.js)
+  hyphenate.watch();
   $('select').val('');
   // shared with js/text-mode.js, which tests that storage works
   var localStorage = textMode.storage;
