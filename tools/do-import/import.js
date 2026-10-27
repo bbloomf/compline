@@ -284,7 +284,8 @@ options.write.forEach(function(code) {
     return;
   }
   Object.keys(old).forEach(function(k) {
-    if(!(k in module)) module[k] = old[k];
+    // the hymn is generated, so one the language no longer has goes
+    if(!(k in module) && k !== 'hymn') module[k] = old[k];
   });
   var header = [
     '// ' + lang.name + ', from Divinum Officium (https://github.com/DivinumOfficium/divinum-officium) at ' + doCommit.slice(0, 7) + ',',

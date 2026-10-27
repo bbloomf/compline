@@ -218,10 +218,9 @@ define(['jquery'], function($) {
   var unitsHtml = function(units, slashes) {
     return units.map(function(unit) { return unitHtml(unit, slashes); }).join('<br>');
   };
-  // The name of the translation's language, as the menu shows it.
+  // The name of the translation's language, from its module.
   var langName = function() {
-    var l = lang();
-    return languages.filter(function(each) { return each.code === l; }).map(function(each) { return each.name; })[0] || l;
+    return ((data() || {}).meta || {}).name || lang();
   };
   // The attributes of the translation that follows a Latin element.
   var trAttributes = function() {

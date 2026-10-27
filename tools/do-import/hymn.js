@@ -57,7 +57,8 @@ exports.tones = function(root) {
 };
 
 // A sung line's syllables, in order, each {text, wordStart}: words split at spaces, and syllables at
-// a - between letters.  A word with no letters (a dash) goes with the syllable before it.
+// a - between letters.  A word with no letters (a dash) goes with the syllable before it.  swapLyrics
+// in js/chant-element.js splits them the same way, and has to.
 var syllables = exports.syllables = function(line) {
   var result = [];
   line.trim().split(/\s+/).forEach(function(word) {
