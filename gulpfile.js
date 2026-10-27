@@ -25,6 +25,7 @@ gulp.task('copy', function() {
     'js/i18n/*.js',
     'js/i18n/LICENSE-divinum-officium.txt',
     'js/hyphenation/*.js',
+    'js/hyphenation/LICENSE.txt',
     'fonts/*.woff',
     'fonts/*.woff2',
     '!dist/**/*',

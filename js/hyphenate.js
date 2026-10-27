@@ -10,24 +10,24 @@
 // which come with this module.  Copying leaves the soft hyphens out.
 define(['hypher', 'hyphenation/la'], function(Hypher, latin) {
   'use strict';
-  var SHY = /­/g;
-  var languages = ['la', 'en', 'fr', 'es', 'it', 'pt', 'pl'];
+  var SHY = /\u00AD/g;
   // Latin's patterns break after a single letter, as they divide syllables under the notes; in a line
   // of text, a word keeps at least two letters on each side of the hyphen.
   var minimums = {la: {leftmin: 2, rightmin: 2}};
   // Words shorter than this aren't hyphenated (as in Hypher's hyphenateText).
   var minLength = 5;
   // A word: the letters (and combining accents, as in œ́) of the Latin alphabet, accented or not.
-  var regexWord = /[A-Za-zÀ-ÖØ-öø-ɏ̀-ͯ]+/g;
+  var regexWord = /[A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u0300-\u036F]+/g;
   // Elements that a word may run through, as the pointed psalms' <b> and <i> do.
   var regexInline = /^(B|I|EM|STRONG|SPAN|U|SMALL|SUB|SUP|A)$/;
   var regexSkip = /^(SCRIPT|STYLE|TEXTAREA|INPUT|SELECT|OPTION|BUTTON)$/;
   var htmlNamespace = 'http://www.w3.org/1999/xhtml';
 
-  // The patterns a lang attribute uses, or null: the language without its region or variant.
+  // The patterns a lang attribute uses, or null: the language without its region or variant.  The
+  // languages are those tools/hyphenation/build.js generates; for any other, load() finds no module.
   var patternsFor = function(lang) {
     var code = (lang || '').toLowerCase().split('-')[0];
-    return languages.indexOf(code) >= 0 ? code : null;
+    return /^[a-z]{2,3}$/.test(code) ? code : null;
   };
   // Each language's Hypher, null while its patterns load, or false if they couldn't.
   var hyphenators = {};
@@ -47,10 +47,12 @@ define(['hypher', 'hyphenation/la'], function(Hypher, latin) {
     return words[word];
   };
 
-  // The language of an element's own text, if it says: its lang, or for a <chant-gabc>, Latin as
-  // plain text or none as chant (but the translations under the notes have their own lang).
+  // The language of an element's own text, if it says: its lang; none for a rubric (in English, as
+  // a chant's labels are); or for a <chant-gabc>, Latin as plain text or none as chant (but the
+  // translations under the notes have their own lang).
   var ownLang = function(el) {
     if(el.hasAttribute('lang')) return el.getAttribute('lang');
+    if(el.classList.contains('red')) return '';
     if(el.tagName === 'CHANT-GABC') return el.classList.contains('plain-text') ? 'la' : '';
     return undefined;
   };
@@ -65,7 +67,10 @@ define(['hypher', 'hyphenation/la'], function(Hypher, latin) {
   // Blocks waiting for each language's patterns.
   var waiting = {};
   var load = function(code, block) {
-    (waiting[code] = waiting[code] || []).push(block);
+    // each block once, and only while it's on the page
+    waiting[code] = (waiting[code] || []).filter(function(other) {
+      return other !== block && document.body.contains(other);
+    }).concat([block]);
     if(code in hyphenators) return;
     hyphenators[code] = null;
     require(['hyphenation/' + code], function(language) {
@@ -137,7 +142,7 @@ define(['hypher', 'hyphenation/la'], function(Hypher, latin) {
         var last = start;
         for(; b < breaks.length && breaks[b] <= end; ++b) {
           if(breaks[b] <= start) continue;
-          result += value.slice(last - start, breaks[b] - start) + '­';
+          result += value.slice(last - start, breaks[b] - start) + '\u00AD';
           last = breaks[b];
         }
         result += value.slice(last - start);
@@ -147,20 +152,26 @@ define(['hypher', 'hyphenation/la'], function(Hypher, latin) {
     });
   };
 
-  // The element whose text a change to node affects: the nearest that isn't inline.  null in an SVG.
+  // The element whose text a change to node affects: the nearest that isn't inline, but never all of
+  // <body> (then node itself).  null in an SVG.
   var blockOf = function(node) {
     var el = node.nodeType === 1 ? node : node.parentNode;
     while(el && el.nodeType === 1 && el !== document.body && el.namespaceURI === htmlNamespace && regexInline.test(el.tagName)) {
       el = el.parentNode;
     }
+    if(el === document.body) el = node;
     if(!el || el.nodeType !== 1 || el.namespaceURI !== htmlNamespace || el.closest('svg')) return null;
     return el;
   };
-  var hyphenateAdded = function(records) {
+  // What's added to the page, an element whose lang changes, and a <chant-gabc> whose class does
+  // (between chant and plain text).
+  var hyphenateChanged = function(records) {
     var blocks = [];
     records.forEach(function(record) {
-      for(var i = 0; i < record.addedNodes.length; ++i) {
-        var block = blockOf(record.addedNodes[i]);
+      var nodes = record.type !== 'attributes' ? record.addedNodes :
+        record.attributeName === 'lang' || record.target.tagName === 'CHANT-GABC' ? [record.target] : [];
+      for(var i = 0; i < nodes.length; ++i) {
+        var block = blockOf(nodes[i]);
         if(block && blocks.indexOf(block) < 0) blocks.push(block);
       }
     });
@@ -173,7 +184,28 @@ define(['hypher', 'hyphenation/la'], function(Hypher, latin) {
   };
 
   // Copied text keeps the hyphens only where they're written.  The browser would copy the soft
-  // hyphens too, so the copy is made here, without them, of what's shown.
+  // hyphens too, so the copy is made here, without them, of what's shown.  The HTML keeps what the
+  // browser's would have written into it from the stylesheet: the rubrics' color, and ℣ and ℟'s font.
+  var copyStyles = {red: ['color'], versiculum: ['font-family', 'color']};
+  // A TreeWalker filter for the elements of a range, which adds each one's mark for the copy.
+  var copyFilter = function(range, marks) {
+    return {acceptNode: function(el) {
+      if(el.namespaceURI !== htmlNamespace || !range.intersectsNode(el)) return NodeFilter.FILTER_REJECT;
+      if(el.getClientRects().length === 0) {
+        marks.push([el, 'data-copy-hidden', '']);
+        return NodeFilter.FILTER_REJECT;
+      }
+      var style = [];
+      Object.keys(copyStyles).forEach(function(name) {
+        if(!el.classList.contains(name)) return;
+        copyStyles[name].forEach(function(property) {
+          style.push(property + ':' + window.getComputedStyle(el).getPropertyValue(property));
+        });
+      });
+      if(style.length) marks.push([el, 'data-copy-style', style.join(';')]);
+      return NodeFilter.FILTER_SKIP;
+    }};
+  };
   var copyWithoutSoftHyphens = function(e) {
     var selection = window.getSelection();
     if(!e.clipboardData || !selection || !selection.rangeCount) return;
@@ -182,22 +214,25 @@ define(['hypher', 'hyphenation/la'], function(Hypher, latin) {
     var html = document.createElement('div');
     for(var i = 0; i < selection.rangeCount; ++i) {
       var range = selection.getRangeAt(i);
-      // what's hidden (the Latin in 'translation only' mode) is marked, so it can go from the copy
-      var hidden = [];
+      // Each selected element is marked in the copy: what's hidden (the Latin in 'translation only'
+      // mode), so it can go, and what has a style to keep.  A score's SVG, what isn't selected and
+      // what's hidden are passed over whole, and the marks go on only after all are read, so the
+      // page is laid out once.
+      var marks = [];
       var root = range.commonAncestorContainer;
       if(root.nodeType !== 1) root = root.parentNode;
-      var walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
-      for(var el = walker.currentNode; el; el = walker.nextNode()) {
-        if(el !== root && range.intersectsNode(el) && el.getClientRects().length === 0) {
-          el.setAttribute('data-copy-hidden', '');
-          hidden.push(el);
-        }
-      }
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT, copyFilter(range, marks));
+      while(walker.nextNode()) {}
+      marks.forEach(function(mark) { mark[0].setAttribute(mark[1], mark[2]); });
       html.appendChild(range.cloneContents());
-      hidden.forEach(function(el) { el.removeAttribute('data-copy-hidden'); });
+      marks.forEach(function(mark) { mark[0].removeAttribute(mark[1]); });
     }
     [].slice.call(html.querySelectorAll('[data-copy-hidden]')).forEach(function(el) {
       if(el.parentNode) el.parentNode.removeChild(el);
+    });
+    [].slice.call(html.querySelectorAll('[data-copy-style]')).forEach(function(el) {
+      el.setAttribute('style', el.getAttribute('data-copy-style'));
+      el.removeAttribute('data-copy-style');
     });
     e.clipboardData.setData('text/plain', text.replace(SHY, ''));
     e.clipboardData.setData('text/html', html.innerHTML.replace(SHY, ''));
@@ -206,12 +241,12 @@ define(['hypher', 'hyphenation/la'], function(Hypher, latin) {
 
   var watch = function() {
     hyphenateBlock(document.body);
-    new MutationObserver(hyphenateAdded).observe(document.body, {childList: true, subtree: true});
+    new MutationObserver(hyphenateChanged).observe(document.body,
+      {childList: true, subtree: true, attributes: true, attributeFilter: ['lang', 'class']});
     document.addEventListener('copy', copyWithoutSoftHyphens);
   };
 
   return {
-    watch: watch,
-    hyphenate: hyphenateBlock
+    watch: watch
   };
 });
