@@ -1,6 +1,6 @@
 # Translations for Compline: plan (rev. 2, multi-language from Divinum Officium)
 
-Status: Phase 0 done (2026-10-26, results in §7a). Phase 1a, the notation levels, done (2026-10-26, notes in §7b). Phase 1, the display, done against a hand-written English stub (2026-10-26, notes and the module format in §7c). Phase 2, the psalter importer, done (2026-10-27, notes and every language's coverage in §7d): Phase 3, the importer for everything else, done (2026-10-27, notes and every language's coverage in §7e): `js/i18n/en.js` is now wholly generated from DO, psalter and texts. Phase 4, English end to end, done (2026-10-27, notes in §7f): English is offered in the menu. Phase 5, more languages, done (2026-10-27, notes in §7g): Français, Español, Italiano, Português and Polski are offered too, with font subsets for their letters; the hand-written texts in each are kept as drafted until a reader of the language checks them in Phase 8 (§7g). Phase 6, Latin-Bea, done (2026-10-27, notes in §7h): the Pius XII psalter is offered last in the menu, as a comparison text, its psalms paired with the Vulgate's by content. Phase 7, the hymn, done (2026-10-27, notes in §7i): *Te lucis* can be shown as a literal or a metrical translation, or sung in English or Spanish to any of the 17 tones. Next: Phase 8, the release. Rev. 3 (2026-10-24) records the answers to the open questions, the full coverage check, the notation levels with six menus (§4c) and the Spanish doxologies. Written against `master` @ 28f86f6, with Divinum Officium (DO) `master` @ b9064d7 (2026-10-23) checked out sparsely for the research below. DO is now pinned at `ad87836` (2026-10-26); §7a lists what that changed.
+Status: Phase 0 done (2026-10-26, results in §7a). Phase 1a, the notation levels, done (2026-10-26, notes in §7b). Phase 1, the display, done against a hand-written English stub (2026-10-26, notes and the module format in §7c). Phase 2, the psalter importer, done (2026-10-27, notes and every language's coverage in §7d): Phase 3, the importer for everything else, done (2026-10-27, notes and every language's coverage in §7e): `js/i18n/en.js` is now wholly generated from DO, psalter and texts. Phase 4, English end to end, done (2026-10-27, notes in §7f): English is offered in the menu. Phase 5, more languages, done (2026-10-27, notes in §7g): Français, Español, Italiano, Português and Polski are offered too, with font subsets for their letters; the hand-written texts in each are kept as drafted until a reader of the language checks them in Phase 8 (§7g). Phase 6, Latin-Bea, done (2026-10-27, notes in §7h): the Pius XII psalter is offered last in the menu, as a comparison text, its psalms paired with the Vulgate's by content. Phase 7, the hymn, done (2026-10-27, notes in §7i): *Te lucis* can be shown as a literal or a metrical translation, or sung in English or Spanish to any of the 17 tones. Phase 8, the release, is ready to publish (2026-10-27, notes in §7j). The typo pass, credits, accessibility and build are done. Publishing to gh-pages, the reports to DO and the Cordova release wait for the user's go-ahead, and the native readers' checklist (`tools/do-import/native-review.md`) is still to be done. Rev. 3 (2026-10-24) records the answers to the open questions, the full coverage check, the notation levels with six menus (§4c) and the Spanish doxologies. Written against `master` @ 28f86f6, with Divinum Officium (DO) `master` @ b9064d7 (2026-10-23) checked out sparsely for the research below. DO is now pinned at `ad87836` (2026-10-26); §7a lists what that changed.
 
 **What changed from rev. 1:** every translation now comes from the [Divinum Officium](https://github.com/DivinumOfficium/divinum-officium) data files (MIT licence), not hand-collected sources. That means the app can offer **every language DO has**, and Latin-Bea, instead of English only.
 
@@ -391,7 +391,7 @@ Follow the existing pattern (localStorage strings plus controls in `#options-men
 | **5. More languages** ✅ | Run the importer for fr, es, it, pt, pl and la-bea, confirm 100% in the coverage report, add font subsets, spot-check each language (ideally with a reader of that language). **Done 2026-10-27 for fr, es, it, pt and pl; notes in §7g. Latin-Bea moved to Phase 6.** | S–M, mostly QA |
 | **6. Latin-Bea as a comparison text** ✅ | Verse-group pairing with a block fallback. Suppress the "translation" where Bea is identical to Latin. **Done 2026-10-27; notes in §7h.** | S |
 | **7. Hymn: literal and sung** ✅ | Literal: the extra-text merge in the importer, plus the English literal hymn and doxologies (content). Sung: hyphenation drafts, the hand-reviewed `hymn-sung.txt` per metrical language, the validator (note count, stanzas, each doxology against each of the 17 tones), lyric swapping in `chant-element`, the `hymnMode` select with its fallbacks and disabled choices, merging the `extra/` overrides (Britt's literal English, the new English and Spanish Easter doxologies). Check every tone in en and es. **Done 2026-10-27; notes in §7i.** | M code (about 150 lines) + S per language to review hyphenation. Entering Britt's English and checking his doxology coverage: S. Entering the Spanish doxologies: S. |
-| **8. Release** | **Typo pass** over every generated language file and the `extra/` texts (spell-check per language, plus reading the new hymn texts aloud, and a native speaker's check of the Spanish doxologies); fix in `extra/` overrides and report upstream to DO. Wide-screen layout polish, print, accessibility, credits/licence in the app ("Translations: Divinum Officium, MIT", plus the source of the literal hymn), gh-pages publish, Cordova merge, rebuild and store submission. | M |
+| **8. Release** ⏳ | **Typo pass** over every generated language file and the `extra/` texts (spell-check per language, plus reading the new hymn texts aloud, and a native speaker's check of the Spanish doxologies); fix in `extra/` overrides and report upstream to DO. Wide-screen layout polish, print, accessibility, credits/licence in the app ("Translations: Divinum Officium, MIT", plus the source of the literal hymn), gh-pages publish, Cordova merge, rebuild and store submission. **Everything but the publishing done 2026-10-27; notes in §7j. Publishing, DO reports and Cordova wait for the user; native readers' checklist open.** | M |
 | *9. Optional* | Localise the interface (rubrics, menu, feast titles), exsurge interlinear lines. Out of scope: singing anything in the vernacular other than the hymn, and singing the Bea psalter. | M–XL each |
 
 Phases 2–3 can run in parallel with Phase 1 once the module format (`psalter`/`texts`/`meta`) is agreed.
@@ -728,6 +728,191 @@ The files:
   - the Spanish and English hymn texts read aloud as sung.
 - **English Holy Family:** an 8.8.8.8 text would let it be sung. DO's text stays as the metrical one.
 - **Britt's 1952 renderings** could replace the drafts if their copyright is found to have lapsed.
+
+### 7j. Phase 8 notes (2026-10-27)
+
+What's done:
+- the typo pass;
+- the credits and license in the app;
+- accessibility, layout and print;
+- the build.
+
+What waits for the user: publishing to gh-pages, the reports to DO, the Cordova release and the
+store. These steps are drafted outside the repository, in the Phase 8 hand-over notes, with the
+commands to run and the DO report.
+
+**The typo pass.**
+- **The spell check.** Every word of each module and each `extra/` text went through a spell
+  checker in its own language:
+  - macOS's dictionaries for en, fr, es, it and pt;
+  - Hunspell's (nspell with dictionary-pl) for Polish, which macOS lacks.
+
+  It flagged:
+  - English's archaic forms (*-eth*, *shewn*);
+  - Polish's Wujek spellings (*-éj*, *jeźli*);
+  - a few real slips (*perchè*, *cheiíssima*, *Descansed*).
+
+  A script then looked for double spaces, stray spaces before punctuation, doubled words, straight
+  quotes and unbalanced brackets.
+- **The reading.** A full reading of each language, against DO's files and the Latin, found what a
+  spell checker can't:
+  - real words in the wrong place (*Tú cólera*, *suplica*, *Cosi*, *nelle fede*);
+  - missing or wrong punctuation;
+  - capitals that contradict the text's own use.
+- **The fixes.** Clear slips are fixed in `extra/<lang>/`, never in the modules:
+  - as `[@file:section]` copies of DO's sections;
+  - as psalm-line overrides;
+  - as respellings in `spelling.txt`.
+
+  Each has a comment saying what it fixes. Counts, as rows of the reviews; one override can fix a
+  text in several places:
+
+  | Language | Fixed | Skipped |
+  |---|---|---|
+  | English | 24 | 4: the In manus rows (below), and the Per Dominum, a question of wording |
+  | Français | 20 | 4 |
+  | Español | 18 | 4 |
+  | Italiano | 25 | 15 |
+  | Português | 7 | 0 |
+  | Polski | 35 | 16 |
+
+  Every one was checked in the module diff.
+- **What changed in English.**
+  - Ps 69 "’T is well" became "’Tis well". The Psalm 69 override gives both of the repeated `69:4`
+    lines, because the *n*-th line replaces the *n*-th (§7g).
+  - `spelling.txt` gained *gray* and *sepulcher(s)*, and *mercy’s* and *world’s* with a curly
+    apostrophe like the rest of DO's English.
+  - The Easter-octave antiphon's capitals.
+  - All Souls' "Deliver their souls, O Lord." (DO's own `Commune/C9`).
+  - The Alma Redemptoris Mater's punctuation, and "by that joy".
+  - "our Lord" in the Christmas collect.
+  - In the Regina cæli, "O Queen of heaven, rejoice!" and "For he whom".
+  - In the Salve, "Hail, holy Queen", "in this valley of tears", "O holy Mother of God", and in
+    its collect "who, by…" and "thy Son".
+  - "thee" and "today" in the Ascension doxology.
+  - The Holy Family doxology's capitals.
+  - The Transfiguration doxology's "blest" and "ages’".
+- **What was left alone in every language.**
+  - **The capital after the In manus `*`** stays, also where the fully notated form drops the `*`
+    (§7g). The app's own Latin chant does the same ("Dómine, * Commendo", and "Dómine, Commendo"
+    in `_full`), so the translations mirror the chant.
+  - **Questions of wording** went to the native readers' checklist, not into the modules. Among
+    them:
+    - English's "Holy Spirit" beside "Holy Ghost", the Wednesday antiphon (a mistranslation),
+      and the Per Dominum's word order;
+    - Italian's two mistranslations, "del suo popolo" and "Hanno allontanato", and "fa"/"fa'";
+    - French's *Vous*/*vous* for God;
+    - Spanish's *Ti*/*ti*.
+- **Re-import.** `node tools/do-import/import.js en fr es it pt pl la-bea` gives the same files twice
+  over. The coverage is unchanged: 26/26 sections and 87/87 texts in each language, every Latin unit
+  matching, and Spanish sung on 17 of 17 tones and English on 16. Latin-Bea doesn't change.
+
+**The native readers' checklist** is `tools/do-import/native-review.md`, one section per language.
+It has each text written for the app, with its reason:
+- the Spanish doxologies and the three rewritten lines;
+- every language's priest's forms (§7g);
+- the Polish and Spanish All Souls collects;
+- the Jube forms;
+- Spanish Ps 4:5;
+- the Italian psalm verses without DO's brackets;
+- the English and Spanish hymns, to be sung aloud.
+
+It also has the questions of wording, and the possible slips only a native reader can settle
+(Polish *powienie*, *szędziwości*). The full reviews, with a reason for each row, are in the Phase 8
+hand-over notes.
+
+**The report to DO** is drafted per language: file, section, line, the text, the fix. It has 111
+items and two notes on verse keys:
+- Italiano's and Polski's `11:6` for `11:6b` (§2);
+- Latin-Bea's shifted keys (§7h).
+
+It isn't filed. Once DO fixes a slip, the override can go at the next re-pin, and the importer
+shows an override that no longer changes anything.
+
+**Credits and license.** `index.html` has a `<footer id='credits'>` at the end of the page. It is
+shown in "Latin & translation" and "translation only", hidden in Latin only, and printed.
+- "Translations: Divinum Officium (divinumofficium.com), MIT license." is a `<details>`. Opening
+  it loads `js/i18n/LICENSE-divinum-officium.txt` with `$.get`, which works in Cordova as the
+  psalm fragments do. The license's paragraphs are rewrapped to the page.
+- There are no links, so nothing navigates the Cordova app's web view away.
+- Below it, a line for each language that has text written for the app, picked by
+  `data-credit-lang` (`showCredits` in `js/compline.js`):
+  - every language but Latin-Bea: the texts DO doesn't have, such as the priest's forms;
+  - English: the literal hymn is Britt's (1922), and the doxologies he doesn't translate, with
+    the metrical Easter doxology, were written for the app;
+  - Español: the doxologies in eight-syllable verse were written for the app, and three of DO's
+    lines rewritten.
+
+**Accessibility.**
+- **The page's language.** `<html lang='en'>` is new: the page's own text (rubrics, menus) is
+  English, and it had no `lang`.
+  - `hyphenate.js` treats that root `lang` as "don't hyphenate", so no English text gained soft
+    hyphens. Checked: none in the rubrics, labels or credits.
+  - A chant's own words had no `lang` either, so they now inherited English. `markLang` in
+    `chant-element.js` gives them one:
+    - each SVG and plain-text block is `la`;
+    - an SVG is the translation's `lang` (`textMode.langAttr()`) where the hymn is sung in it;
+    - red labels get none;
+    - a block that already holds `lang`ed parts (`.tr-pair`, `.chant-tr`, `.verses`) is skipped.
+
+  Every translation block already had its `lang` (`la-x-bea` for Bea).
+- **Labels.** Five controls had no accessible name: Region, Theme, the date, the feast menu and
+  the Marian antiphon menu. They have an `aria-label` now, which changes nothing on screen.
+  Every other control is inside its `<label>`.
+- **Contrast** (WCAG), light and dark:
+  - text 21:1;
+  - translation and credits (`--tr-color`) 7.5:1 light, 10.9:1 dark;
+  - rubrics 5.2:1 light, 7.3:1 dark;
+  - links 4.6:1 light, 9.4:1 dark;
+  - the dark menu 17.4:1.
+
+  All pass AA.
+
+**Layout and print.**
+- At 1400 px in "Latin & translation", nothing is wider than the page.
+- Print with real print media (`print.mjs`), on Sunday 2026-11-08:
+  - Latin only: 7 pages, no credits;
+  - English in "Latin & translation": 11 pages; in "translation only": 6 pages;
+  - Polski: 10 pages;
+  - Latin-Bea: 8 pages, with the DO line only;
+  - Español with the hymn sung and the psalms fully notated: 13 pages.
+
+  The translations are beside the Latin, the credits at the end, and the license closed to its
+  summary.
+
+**Checked in the browser** with Phase 4's `check.js`, after the fixes:
+- **Dates:** an ordinary Sunday and Wednesday, All Souls, Holy Thursday, Good Friday, Easter
+  Monday, Christmas and a Paschaltide Wednesday.
+- **Languages and modes:** all six languages in "Latin & translation" and "translation only",
+  and English and Español with the hymn sung.
+- **Results:** every run passes, and the credits show the right lines for each language.
+  - The sung hymn's SVGs have the translation's `lang`.
+  - In Latin only, the credits are hidden.
+  - Latin-Bea gives what §7h describes: `check.js` isn't Bea-aware, so it flags the
+    `tr-same` texts, as expected.
+
+**The build.** `gulp` (Node 22) copies everything §6 lists into `dist/`:
+- the seven language modules and `LICENSE-divinum-officium.txt`, the same as `js/i18n/`;
+- `js/hyphenation/` and its license;
+- all 26 font files: the `-ext` and `-vi` subsets and `crimson-undertie`.
+
+`dist/index.html` has the footer and `lang`, and `dist/js/compline.js` has the new code.
+
+The built `dist/`, served on its own, was checked with `check.js`:
+- Latin only, then each of the seven languages in both modes, on a Sunday and a Paschaltide
+  Wednesday. Every run passes, with the right credits in each.
+- Three runs in the first pass did fail: English and French in "Latin & translation", while each
+  language loaded for the first time in a hidden browser pane. They pass on a re-run with 3 s for
+  each date.
+- The license opens.
+- A French page loads `crimson-roman-ext.woff2`. There were no console errors.
+
+**Left for later:**
+- the native readers' checklist, and any fixes it brings;
+- the publishing steps, each on the user's yes;
+- the rubric glosses in "translation only" (§7f);
+- a phone's 60% lyric size (§7f);
+- the timings on a real phone (§7a).
 
 ---
 
