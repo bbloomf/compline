@@ -371,6 +371,10 @@ chant-gabc > .chant-tr > p {
 chant-gabc > .chant-tr {
   margin: 0.3em 0 0.2em;
 }
+/* right under the notes it belongs to */
+chant-gabc > svg + .chant-tr {
+  margin-top: 0;
+}
 /* On a narrow screen the translation is under the Latin; on a wide one, and in print, beside it. */
 @media print, screen and (min-width: 768px) {
   body.text-both .tr-pair,
