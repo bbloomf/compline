@@ -14,3 +14,40 @@ R. Amém.
 [index:misereatur-vestri]
 Compadeça-se de vós Deus omnipotente, e, perdoados os vossos pecados, conduza-vos à vida eterna.
 R. Amém.
+
+# The Confiteor without a priest: DO's [Confiteor_], with "e a todos os Santos, que pequei", as
+# its second half has it; DO has "santos: que pequei".
+[@Prayers:Confiteor_]
+v. Eu me confesso a Deus, todo-poderoso, à bem-aventurada sempre Virgem Maria, ao bem-aventurado S. Miguel Arcanjo, ao bem-aventurado S. João Baptista, aos Santos Apóstolos S. Pedro e S. Paulo, e a todos os Santos, que pequei muitas vezes por pensamentos, palavras e obras: /:bate no próprio peito:/ por minha culpa, por minha culpa, por minha tão grande culpa. Portanto rogo à bem-aventurada sempre Virgem Maria, ao bem-aventurado S. Miguel Arcanjo, ao bem-aventurado S. João Baptista, aos Santos Apóstolos S. Pedro e S. Paulo, e a todos os Santos, que rogueis a Deus, Nosso Senhor, por mim.
+
+# The Salve Regina, with the comma of its vocative ("Salve, Rainha,"); DO has "Salve Rainha,".
+[@Mariaant:Postpentecost]
+v. Salve, Rainha, Mãe de misericórdia,
+vida, doçura, esperança nossa, salve!
+A vós bradamos, os degredados filhos de Eva;
+a vós suspiramos, gemendo e chorando
+neste vale de lágrimas.
+Eia, pois, advogada nossa,
+esses vossos olhos misericordiosos a nós volvei;
+e depois deste desterro nos mostrai Jesus,
+bendito fruto do vosso ventre;
+ó clemente, ó piedosa, ó doce sempre Virgem Maria.
+_
+V. Rogai por nós, santa Mãe de Deus.
+R. Para que sejamos dignos das promessas de Cristo.
+_
+$Oremus
+v. Omnipotente e eterno Deus, que, com a cooperação do Espírito Santo, preparastes o corpo e a alma da gloriosa Virgem Mãe Maria para que merecesse tornar-se digna morada do vosso Filho, concedei que, alegrando-nos com a sua memória, sejamos, pela sua piedosa intercessão, livres dos males presentes e da morte perpétua. Pelo mesmo Cristo Nosso Senhor. Amém.
+
+# Psalm 33:11 without DO's comma between the subject and its verb ("buscam o Senhor, não terão").
+[@Psalterium/Psalmorum/Psalm33]
+33:11 Os ricos tiveram necessidade e fome: * mas os que buscam o Senhor não terão falta de bem algum.
+# Psalm 102:16, "e o seu lugar não mais o conhecerá"; DO has "e seu lugar não o mais conhecerá".
+[@Psalterium/Psalmorum/Psalm102]
+102:16 Porque um sopro de vento passará sobre ele e não subsistirá: * e o seu lugar não mais o conhecerá.
+# Psalm 122:4, "cheíssima"; DO has "cheiíssima".
+[@Psalterium/Psalmorum/Psalm122]
+122:4 Pois a nossa alma está cheíssima: * de ser o objecto de escárnio para os ricos e de desprezo para os soberbos.
+# Psalm 142:11b with both commas round "pela vossa misericórdia"; DO has only the second.
+[@Psalterium/Psalmorum/Psalm142]
+142:11b Tirareis a minha alma da tribulação: * (12a) e, pela vossa misericórdia, dissipareis os meus inimigos.

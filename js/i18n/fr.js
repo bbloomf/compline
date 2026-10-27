@@ -173,7 +173,7 @@ define({
     ],
     '133': [
       'Maintenant donc bénissez le Seigneur, * vous tous, les serviteurs du Seigneur,',
-      'Qui demeurez dans la maison du Seigneur, * dans les parvis de la maison de notre Dieu.',
+      'qui demeurez dans la maison du Seigneur, * dans les parvis de la maison de notre Dieu.',
       'Pendant les nuits levez vos mains vers le sanctuaire, * et bénissez le Seigneur.',
       'Que le Seigneur te bénisse de Sion, * Lui qui a fait le ciel et la terre.',
       'Gloire au Père, au Fils, * et au Saint-Esprit.',
@@ -217,7 +217,7 @@ define({
       'Seigneur mon Dieu, si j’ai fait cela, * s’il y a de l’iniquité dans mes mains,',
       'si j’ai rendu le mal à ceux qui m’en avaient fait, * que je succombe, justement et dénué de tout, devant mes ennemis.',
       'Que l’ennemi poursuive mon âme † et s’en rende maître ; qu’il foule à terre ma vie, * et qu’il traîne ma gloire dans la poussière.',
-      'Levez-vous, Seigneur, dans Votre colère, * et soyez exalté au milieu de mes ennemis.',
+      'Levez-Vous, Seigneur, dans Votre colère, * et soyez exalté au milieu de mes ennemis.',
       'Levez-Vous, Seigneur mon Dieu, suivant le précepte que Vous avez établi ; * et l’assemblée des peuples Vous environnera.',
       'À cause d’elle remontez en haut. * Le Seigneur juge les peuples.',
       'Jugez-moi, Seigneur, selon ma justice, * et selon l’innocence qui est en moi.',
@@ -246,7 +246,7 @@ define({
       'Ce pauvre a crié, et le Seigneur l’a exaucé ; * et Il l’a sauvé de toutes ses tribulations.',
       'L’Ange du Seigneur environnera ceux qui Le craignent, * et Il les délivrera.',
       'Goûtez et voyez combien le Seigneur est doux. * Heureux est l’homme qui espère en Lui.',
-      'Craignez le Seigneur, vous tous ses saints, * car Il n’y a pas d’indigence pour ceux qui Le craignent.',
+      'Craignez le Seigneur, vous tous Ses saints, * car il n’y a pas d’indigence pour ceux qui Le craignent.',
       'Les riches ont été dans le besoin, et ont eu faim ; * mais ceux qui cherchent le Seigneur ne seront privés d’aucun bien.',
       'Gloire au Père, au Fils, * et au Saint-Esprit.',
       'Comme il était au commencement, maintenant et toujours, * et dans les siècles des siècles. Ainsi soit-il.'
@@ -293,7 +293,7 @@ define({
       'Et jusqu’à la vieillesse et aux cheveux blancs, * ô Dieu, ne m’abandonnez pas,',
       'jusqu’à ce que j’aie annoncé la force de Votre bras * à toutes les générations à venir, Votre puissance',
       'et Votre justice qui atteint, ô Dieu, jusqu’aux cieux. * Dans les grandes choses que Vous avez faites, ô Dieu, qui est semblable à Vous ?',
-      'Que de tribulations nombreuses et cruelles Vous m’avez fait éprouver ! Et Vous retournant, Vous m’avez rendu la vie, * et Vous m’avez retiré des abîmes de la terre.',
+      'Que de tribulations nombreuses et cruelles Vous m’avez fait éprouver ! Et, Vous retournant, Vous m’avez rendu la vie, * et Vous m’avez retiré des abîmes de la terre.',
       'Vous avez fait éclater Votre magnificence, * et, Vous retournant, Vous m’avez consolé.',
       'Car je célébrerai encore, ô Dieu, Votre vérité au son des instruments ; * je Vous chanterai sur la harpe, ô Saint d’Israël.',
       'L’allégresse sera sur mes lèvres lorsque je Vous chanterai, * et dans mon âme, que Vous avez rachetée.',
@@ -360,17 +360,17 @@ define({
       'Comme il était au commencement, maintenant et toujours, * et dans les siècles des siècles. Ainsi soit-il.'
     ],
     'nunc-dimittis': [
-      'Maintenant, Seigneur, vous laisserez Votre serviteur s’en aller * en paix, selon Votre parole,',
+      'Maintenant, Seigneur, Vous laisserez Votre serviteur s’en aller * en paix, selon Votre parole,',
       'puisque mes yeux ont vu * le salut qui vient de Vous,',
-      'Que vous avez préparé * à la face de tous les peuples :',
+      'que Vous avez préparé * à la face de tous les peuples :',
       'lumière pour éclairer les nations, * et gloire d’Israël Votre peuple.',
       'Gloire au Père, au Fils, * et au Saint-Esprit.',
       'Comme il était au commencement, maintenant et toujours, * et dans les siècles des siècles. Ainsi soit-il.'
     ],
     'nunc-dimittis-asd': [
-      'Maintenant, Seigneur, vous laisserez Votre serviteur s’en aller * en paix, selon Votre parole,',
+      'Maintenant, Seigneur, Vous laisserez Votre serviteur s’en aller * en paix, selon Votre parole,',
       'puisque mes yeux ont vu * le salut qui vient de Vous,',
-      'Que vous avez préparé * à la face de tous les peuples :',
+      'que Vous avez préparé * à la face de tous les peuples :',
       'lumière pour éclairer les nations, * et gloire d’Israël Votre peuple.',
       'Seigneur, * donnez-leur le repos éternel,',
       'Et faites luire pour eux * la lumière sans déclin.'
@@ -381,13 +381,13 @@ define({
       'V. Veuillez, Seigneur, bénir.'
     ],
     'jube-domne.gabc': [
-      'V. Veuillez, père, bénir.'
+      'V. Veuillez, Père, bénir.'
     ],
     'blessing.gabc': [
       'Que le Seigneur tout-puissant nous accorde une nuit tranquille et une fin parfaite.\nR. Ainsi soit-il.'
     ],
     'lesson.gabc': [
-      'Mes frères : Soyez sobres et veillez, car votre adversaire, le diable, comme un lion rugissant, rôde autour de vous, cherchant qui il pourra dévorer : résistez-lui, forts dans la foi. Et vous Seigneur, ayez pitié de nous.',
+      'Mes frères : Soyez sobres et veillez, car votre adversaire, le diable, comme un lion rugissant, rôde autour de vous, cherchant qui il pourra dévorer : résistez-lui, forts dans la foi. Et vous, Seigneur, ayez pitié de nous.',
       'R. Rendons grâces à Dieu.'
     ],
     'adjutorium-nostrum.gabc': [
@@ -395,13 +395,13 @@ define({
       'R. Qui a fait le ciel et la terre.'
     ],
     'index:confiteor': [
-      'Je confesse à Dieu tout puissant, à la bienheureuse Marie toujours Vierge, à Saint Michel Archange, à Saint Jean-Baptiste, aux saints Apôtres Pierre et Paul, à tous les Saints que j’ai beaucoup péché, par pensées, par paroles et par actions : c’est ma faute, c’est ma faute, c’est ma très grande faute. C’est pourquoi je supplie la bienheureuse Marie toujours Vierge, Saint Michel Archange, Saint Jean-Baptiste, les saints Apôtres Pierre et Paul, tous les Saints, de prier pour moi le Seigneur notre Dieu.'
+      'Je confesse à Dieu tout-puissant, à la bienheureuse Marie toujours Vierge, à Saint Michel Archange, à Saint Jean-Baptiste, aux saints Apôtres Pierre et Paul, à tous les Saints, que j’ai beaucoup péché, par pensées, par paroles et par actions : c’est ma faute, c’est ma faute, c’est ma très grande faute. C’est pourquoi je supplie la bienheureuse Marie toujours Vierge, Saint Michel Archange, Saint Jean-Baptiste, les saints Apôtres Pierre et Paul, tous les Saints, de prier pour moi le Seigneur notre Dieu.'
     ],
     'index:misereatur-nostri': [
       'Que le Dieu tout-puissant ait pitié de nous, et que, après nous avoir pardonné nos péchés, il nous conduise à la vie éternelle.\nR. Ainsi soit-il.'
     ],
     'index:confiteor-priest': [
-      'Je confesse à Dieu tout puissant, à la bienheureuse Marie toujours Vierge, à Saint Michel Archange, à Saint Jean-Baptiste, aux saints Apôtres Pierre et Paul, à tous les Saints, et à vous, mon Père, que j’ai beaucoup péché, par pensées, par paroles et par actions : c’est ma faute, c’est ma faute, c’est ma très grande faute. C’est pourquoi je supplie la bienheureuse Marie toujours Vierge, Saint Michel Archange, Saint Jean-Baptiste, les saints Apôtres Pierre et Paul, tous les Saints, et vous, mon Père, de prier pour moi le Seigneur notre Dieu.'
+      'Je confesse à Dieu tout-puissant, à la bienheureuse Marie toujours Vierge, à Saint Michel Archange, à Saint Jean-Baptiste, aux saints Apôtres Pierre et Paul, à tous les Saints, et à vous, mon Père, que j’ai beaucoup péché, par pensées, par paroles et par actions : c’est ma faute, c’est ma faute, c’est ma très grande faute. C’est pourquoi je supplie la bienheureuse Marie toujours Vierge, Saint Michel Archange, Saint Jean-Baptiste, les saints Apôtres Pierre et Paul, tous les Saints, et vous, mon Père, de prier pour moi le Seigneur notre Dieu.'
     ],
     'index:misereatur-tui': [
       'Que le Dieu tout-puissant ait pitié de vous, et que, après vous avoir pardonné vos péchés, il vous conduise à la vie éternelle.\nR. Ainsi soit-il.'
@@ -417,20 +417,20 @@ define({
       'R. Et détournez de nous votre colère.'
     ],
     'deus-in-adjutorium.gabc': [
-      'V. Dieu venez à mon aide.',
+      'V. Dieu, venez à mon aide.',
       'R. Seigneur, hâtez-vous de me secourir.',
       'Gloire au Père, au Fils, * et au Saint-Esprit.\nComme il était au commencement, maintenant et toujours, * et dans les siècles des siècles. Ainsi soit-il. * Alléluia.',
-      'Louange à Vous Seigneur, Roi d’éternelle gloire.'
+      'Louange à Vous, Seigneur, Roi d’éternelle gloire.'
     ],
     'deus-in-adjutorium_alleluia.gabc': [
-      'V. Dieu venez à mon aide.',
+      'V. Dieu, venez à mon aide.',
       'R. Seigneur, hâtez-vous de me secourir.',
       'Gloire au Père, au Fils, et au Saint-Esprit.\nComme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Ainsi soit-il. Alléluia.'
     ],
     'deus-in-adjutorium_laus-tibi.gabc': [
-      'V. Dieu venez à mon aide.',
+      'V. Dieu, venez à mon aide.',
       'R. Seigneur, hâtez-vous de me secourir.',
-      'Gloire au Père, au Fils, et au Saint-Esprit.\nComme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Ainsi soit-il. Louange à Vous Seigneur, Roi d’éternelle gloire.'
+      'Gloire au Père, au Fils, et au Saint-Esprit.\nComme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Ainsi soit-il. Louange à Vous, Seigneur, Roi d’éternelle gloire.'
     ],
     'index:christus-factus-est': [
       'Le Christ S’est fait obéissant pour nous, jusqu’à la mort.'
@@ -563,13 +563,13 @@ define({
       'V. Vous êtes demeurée sans tache après l’enfantement, ô Vierge.\nR. Mère de Dieu, intercédez pour nous.'
     ],
     'marian-antiphon/alma-prayer_christmas.gabc': [
-      'Prions.\nÔ Dieu, qui par la virginité féconde de la bienheureuse Marie, avez procuré au genre humain les avantages du salut éternel ; accordez-nous, s’il vous plaît, de ressentir les effets de l’intercession de celle par qui nous avons eu la grâce de recevoir l’auteur de la vie, notre Seigneur Jésus-Christ, votre Fils.\nR. Ainsi soit-il.'
+      'Prions.\nÔ Dieu, qui, par la virginité féconde de la bienheureuse Marie, avez procuré au genre humain les avantages du salut éternel ; accordez-nous, s’il vous plaît, de ressentir les effets de l’intercession de celle par qui nous avons eu la grâce de recevoir l’auteur de la vie, notre Seigneur Jésus-Christ, votre Fils.\nR. Ainsi soit-il.'
     ],
     'marian-antiphon/ave-regina-caelorum.gabc': [
-      'Salut, Reine des Cieux !\nSalut, Souveraine des Anges !\nSalut, tige féconde ! Salut, porte\nPar laquelle la lumière s’est levée sur le monde\nRéjouissez-vous, Vierge glorieuse,\nQui l’emportez sur toutes en beauté !\nTriomphez, ô toute belle,\nEt implorez le Christ en notre faveur.'
+      'Salut, Reine des Cieux !\nSalut, Souveraine des Anges !\nSalut, tige féconde ! Salut, porte\nPar laquelle la lumière s’est levée sur le monde :\nRéjouissez-vous, Vierge glorieuse,\nQui l’emportez sur toutes en beauté !\nTriomphez, ô toute belle,\nEt implorez le Christ en notre faveur.'
     ],
     'marian-antiphon/ave-regina-caelorum-solemn.gabc': [
-      'Salut, Reine des Cieux !\nSalut, Souveraine des Anges !\nSalut, tige féconde ! Salut, porte\nPar laquelle la lumière s’est levée sur le monde\nRéjouissez-vous, Vierge glorieuse,\nQui l’emportez sur toutes en beauté !\nTriomphez, ô toute belle,\nEt implorez le Christ en notre faveur.'
+      'Salut, Reine des Cieux !\nSalut, Souveraine des Anges !\nSalut, tige féconde ! Salut, porte\nPar laquelle la lumière s’est levée sur le monde :\nRéjouissez-vous, Vierge glorieuse,\nQui l’emportez sur toutes en beauté !\nTriomphez, ô toute belle,\nEt implorez le Christ en notre faveur.'
     ],
     'index:marian-ave-versicle': [
       'V. Rendez-moi digne de vous louer, ô Vierge sainte.\nR. Donnez-moi de la force contre vos ennemis.'
@@ -590,10 +590,10 @@ define({
       'Prions.\nÔ Dieu, qui avez daigné réjouir le monde par la résurrection de Jésus-Christ, votre Fils ; faites, nous vous en supplions, qu’aidés par sa Mère, la Vierge Marie, nous arrivions à la possession des joies de la vie éternelle. Par le même Christ notre Seigneur.\nR. Ainsi soit-il.'
     ],
     'marian-antiphon/salve-regina.gabc': [
-      'Salut, ô Reine, Mère de Miséricorde !\nNotre vie, notre douceur, notre espoir, salut !\nVers vous, nous crions dans notre exil, fils d’Eve ;\nVers vous nous soupirons, gémissant et pleurant,\ndans cette vallée de larmes.\nÔ vous donc, notre Avocate,\ntournez vers nous vos yeux compatissants.\nEt Jésus, le fruit béni de vos entrailles,\naprès notre exil, montrez-le-nous.\nÔ Clémente, ô Bonne, ô Douce Vierge Marie.'
+      'Salut, ô Reine, Mère de Miséricorde !\nNotre vie, notre douceur, notre espoir, salut !\nVers vous, nous crions dans notre exil, fils d’Ève ;\nVers vous nous soupirons, gémissant et pleurant,\ndans cette vallée de larmes.\nÔ vous donc, notre Avocate,\ntournez vers nous vos yeux compatissants.\nEt Jésus, le fruit béni de vos entrailles,\naprès notre exil, montrez-le-nous.\nÔ Clémente, ô Bonne, ô Douce Vierge Marie.'
     ],
     'marian-antiphon/salve-regina-solemn.gabc': [
-      'Salut, ô Reine, Mère de Miséricorde !\nNotre vie, notre douceur, notre espoir, salut !\nVers vous, nous crions dans notre exil, fils d’Eve ;\nVers vous nous soupirons, gémissant et pleurant,\ndans cette vallée de larmes.\nÔ vous donc, notre Avocate,\ntournez vers nous vos yeux compatissants.\nEt Jésus, le fruit béni de vos entrailles,\naprès notre exil, montrez-le-nous.\nÔ Clémente, ô Bonne, ô Douce Vierge Marie.'
+      'Salut, ô Reine, Mère de Miséricorde !\nNotre vie, notre douceur, notre espoir, salut !\nVers vous, nous crions dans notre exil, fils d’Ève ;\nVers vous nous soupirons, gémissant et pleurant,\ndans cette vallée de larmes.\nÔ vous donc, notre Avocate,\ntournez vers nous vos yeux compatissants.\nEt Jésus, le fruit béni de vos entrailles,\naprès notre exil, montrez-le-nous.\nÔ Clémente, ô Bonne, ô Douce Vierge Marie.'
     ],
     'index:marian-salve-versicle': [
       'V. Priez pour nous, sainte Mère de Dieu.\nR. Afin que nous soyons rendus dignes des promesses du Christ.'
@@ -608,7 +608,7 @@ define({
       'V. Et ne nous laissez pas succomber à la tentation.\nR. Mais délivrez-nous du mal.\nV. Des portes de la tombe.\nR. Délivrez leurs âmes, Seigneur !\nV. Qu’ils reposent en paix.\nR. Amen.\nV. Seigneur, exaucez ma prière.\nR. Et que ma voix aille jusqu’à vous !\nV. (Le Seigneur soit avec vous.\nR. Et avec votre esprit.)'
     ],
     'index:asd-collect': [
-      'Prions.\nFaites miséricorde, nous vous le demandons, Seigneur, aux âmes de tous vos serviteurs et de toutes vos servantes, pour lesquelles nous prions et supplions votre majesté, afin que par ces offices de pieuse supplication, elles méritent d’arriver au repos éternel.\nPar Notre Seigneur Jésus-Christ, Votre Fils, qui vit et règne avec Vous et le Saint-Esprit, Dieu, maintenant et pour les siècles des siècles.\nR. Ainsi soit-il.'
+      'Prions.\nFaites miséricorde, nous vous le demandons, Seigneur, aux âmes de tous vos serviteurs et de toutes vos servantes, pour lesquelles nous prions et supplions votre majesté, afin que, par ces offices de pieuse supplication, elles méritent d’arriver au repos éternel.\nPar Notre Seigneur Jésus-Christ, Votre Fils, qui vit et règne avec Vous et le Saint-Esprit, Dieu, maintenant et pour les siècles des siècles.\nR. Ainsi soit-il.'
     ],
     'index:asd-requiem': [
       'V. Seigneur, donnez-leur le repos éternel,\nR. Et faites luire pour eux la lumière sans déclin.\nV. Qu’ils reposent en paix.\nR. Amen.'
@@ -620,7 +620,7 @@ define({
         'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
         'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !'
       ],
-      doxologies: {Advent: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', Ascension: 'Ô Jésus, à Vous soit la gloire,\nQui rentrez en vainqueur au ciel,\nAinsi qu’au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.', 'Christ-the-King': 'Ô Jésus, gloire soit à vous,\nQui gouvernez les sceptres du monde,\nAinsi qu’au Père et à l’Esprit de vie,\nDans les siècles éternels.\nAinsi soit-il.', Christmas: 'Gloire soit à vous, ô Jésus !\nQui êtes né de la Vierge :\nGloire au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.', Easter: 'À Dieu le Père soit la gloire,\nAinsi qu’au Fils ressuscité des morts,\nEt au Consolateur,\nDurant les siècles éternels.\nAinsi soit-il.', Epiphany: 'À Vous soit la gloire, Jésus,\nQui Vous êtes révélé aux Gentils,\nAinsi qu’au Père et à l’auguste Esprit,\nDans les siècles sempiternels.\nAinsi soit-il.', Ferial: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', 'Holy-Family': 'À Vous, Jésus, qui Vous êtes fait\nObéissant à Vos parents,\nAinsi qu’au Père suprême et à l’Esprit,\nGloire soit éternellement\nAinsi soit-il.', Lent: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', Ordinary: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', 'Our-Lady': 'Gloire soit à vous, ô Jésus !\nQui êtes né de la Vierge :\nGloire au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.', Passiontide: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', Pentecost: 'À Dieu le Père soit la gloire,\nAinsi qu’au Fils ressuscité des morts,\nEt au Consolateur,\nDans les siècles des siècles.\nAinsi soit-il.', 'Sacred-Heart': 'À vous soit la gloire, Jésus,\nQui par Votre Cœur répandez la grâce,\nAinsi qu’au Père et à l’auguste Esprit,\nDans les siècles sempiternels.\nAinsi soit-il.', 'Seven-Dolors': 'Gloire soit à vous, ô Jésus !\nQui êtes né de la Vierge :\nGloire au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.', Solemn: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', Transfiguration: 'Ô Jésus, à vous soit la gloire,\nQui Vous révélez aux petits,\nAvec le Père et l’Esprit vivifiant,\nDans les siècles éternels.\nAinsi soit-il.'}
+      doxologies: {Advent: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', Ascension: 'Ô Jésus, à Vous soit la gloire,\nQui rentrez en vainqueur au ciel,\nAinsi qu’au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.', 'Christ-the-King': 'Ô Jésus, gloire soit à vous,\nQui gouvernez les sceptres du monde,\nAinsi qu’au Père et à l’Esprit de vie,\nDans les siècles éternels.\nAinsi soit-il.', Christmas: 'Gloire soit à vous, ô Jésus !\nQui êtes né de la Vierge :\nGloire au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.', Easter: 'À Dieu le Père soit la gloire,\nAinsi qu’au Fils ressuscité des morts,\nEt au Consolateur,\nDurant les siècles éternels.\nAinsi soit-il.', Epiphany: 'À Vous soit la gloire, Jésus,\nQui Vous êtes révélé aux Gentils,\nAinsi qu’au Père et à l’auguste Esprit,\nDans les siècles sempiternels.\nAinsi soit-il.', Ferial: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', 'Holy-Family': 'À Vous, Jésus, qui Vous êtes fait\nObéissant à Vos parents,\nAinsi qu’au Père suprême et à l’Esprit,\nGloire soit éternellement.\nAinsi soit-il.', Lent: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', Ordinary: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', 'Our-Lady': 'Gloire soit à vous, ô Jésus !\nQui êtes né de la Vierge :\nGloire au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.', Passiontide: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', Pentecost: 'À Dieu le Père soit la gloire,\nAinsi qu’au Fils ressuscité des morts,\nEt au Consolateur,\nDans les siècles des siècles.\nAinsi soit-il.', 'Sacred-Heart': 'À Vous soit la gloire, Jésus,\nQui par Votre Cœur répandez la grâce,\nAinsi qu’au Père et à l’auguste Esprit,\nDans les siècles sempiternels.\nAinsi soit-il.', 'Seven-Dolors': 'Gloire soit à vous, ô Jésus !\nQui êtes né de la Vierge :\nGloire au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.', Solemn: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', Transfiguration: 'Ô Jésus, à Vous soit la gloire,\nQui Vous révélez aux petits,\nAvec le Père et l’Esprit vivifiant,\nDans les siècles éternels.\nAinsi soit-il.'}
     }
   }
 });

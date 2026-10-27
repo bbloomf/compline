@@ -13,12 +13,12 @@ define({
     '4': [
       'Allorché lo invocai, mi esaudì il Dio della mia giustizia: * nella tribolazione mi traesti al largo.',
       'Abbi pietà di me, * ed ascolta la mia preghiera.',
-      'Figli degli uomini, e fino a quando avrete duro il cuore? * perchè amate la vanità, e cercate la menzogna?',
+      'Figli degli uomini, e fino a quando avrete duro il cuore? * perché amate la vanità, e cercate la menzogna?',
       'Or sappiate che il Signore ha reso mirabile il suo santo; * il Signore mi esaudirà quando io lo invocherò.',
       'Adiratevi pure, ma non vogliate peccare; † le cose che dite nei vostri cuori, * riandatele con compunzione nei vostri letti.',
       'Sacrificate un sacrificio di giustizia, † e sperate nel Signore: * molti dicono: Chi ci farà vedere il bene?',
       'La luce del tuo volto è impressa sopra di noi, o Signore, * tu infondesti nel mio cuore la gioia.',
-      'Si sono moltiplicati * per l\'abbondanza del loro frumento del loro vino e del loro olio.',
+      'Si sono moltiplicati * per l\'abbondanza del loro frumento, del loro vino e del loro olio.',
       'In pace insieme * io dormirò, e mi riposerò.',
       'Perché tu solo, o Signore, nella speranza * mi hai fondato.',
       'Gloria al Padre, e al Figlio, * e allo Spirito Santo.',
@@ -27,7 +27,7 @@ define({
     '6': [
       'Signore, non mi riprendere nel tuo furore, * e non mi rimproverare nell\'ira tua.',
       'Abbi pietà di me, o Signore, perché sono senza forze: * risanami, o Signore, perché le mie ossa tremano.',
-      'E l\'anima mia è grandemente turbata: * ma tu, o Signore, fino a quando?.',
+      'E l\'anima mia è grandemente turbata: * ma tu, o Signore, fino a quando?',
       'Volgiti, o Signore, e libera l\'anima mia: * salvami per la tua misericordia.',
       'Poiché nella morte non è chi di te si ricordi: * e nell\'inferno chi mai ti confesserà?',
       'Sono stanco nel mio gemito, † ogni notte bagnerò di pianto il mio letto, * irrigherò con le mie lacrime il mio giaciglio.',
@@ -71,7 +71,7 @@ define({
       'Benedirò il Signore che mi diede consiglio * e di più fin nella notte il mio cuore m\'istruì.',
       'Io aveva sempre il Signore presente dinanzi a me, * perché egli è alla mia destra affinché io non sia smosso.',
       'Per questo si rallegrò il mio cuore, ed esultò la mia lingua, * e anche la mia carne riposerà nella speranza.',
-      'Perché tu non abbandonerai l\'anima mia nell\'inferno, * nè permetterai che il tuo santo veda la corruzione.',
+      'Perché tu non abbandonerai l\'anima mia nell\'inferno, * né permetterai che il tuo santo veda la corruzione.',
       'Mi facesti conoscere le vie della vita, † mi ricolmerai di allegrezza con la tua faccia: * delizie eterne sono alla tua destra.',
       'Gloria al Padre, e al Figlio, * e allo Spirito Santo.',
       'Come era nel principio e ora e sempre * nei secoli dei secoli. Amen.'
@@ -84,7 +84,7 @@ define({
       'Perché tu, o mio Dio, hai ascoltata la mia preghiera; * hai data la eredità a quelli che temono il tuo nome.',
       'Tu aggiungerai giorni ai giorni del re: * protrarrai i suoi anni di generazione in generazione.',
       'Rimanga sul trono in eterno nel cospetto di Dio. * Chi scruterà la sua misericordia e la sua verità?',
-      'Cosi inneggerò al tuo Nome nei secoli dei secoli: * per sciogliere i miei voti ogni giorno.',
+      'Così inneggerò al tuo Nome nei secoli dei secoli: * per sciogliere i miei voti ogni giorno.',
       'Gloria al Padre, e al Figlio, * e allo Spirito Santo.',
       'Come era nel principio e ora e sempre * nei secoli dei secoli. Amen.'
     ],
@@ -153,7 +153,7 @@ define({
       'Eppure osserverai con i tuoi occhi, * e vedrai la retribuzione dei peccatori.',
       'Perché tu hai detto: O Signore, sei la mia speranza; * e hai scelto l\'Altissimo per tuo rifugio.',
       'Il male non si accosterà a te, * e il flagello non si avvicinerà alla tua dimora.',
-      'Perché ha dato ordine per te ai suoi angeli, * `affinché ti custodiscano in tutte le tue vie.',
+      'Perché ha dato ordine per te ai suoi angeli, * affinché ti custodiscano in tutte le tue vie.',
       'Essi ti porteranno nelle loro mani: * affinché per disgrazia il tuo piede non inciampi nel sasso.',
       'Camminerai sull\'aspide e il basilisco; * e calpesterai il leone e il dragone.',
       'Perché egli ha sperato in me, io lo libererò: * lo proteggerò, perché ha conosciuto il mio nome.',
@@ -182,7 +182,7 @@ define({
     '141': [
       'Con la mia voce gridai al Signore: * con la mia voce supplicai il Signore:',
       'Spando al suo cospetto la mia preghiera, * ed espongo dinanzi a lui la mia tribolazione.',
-      'Mentre il mio spirito vien meno in me; * Tu hai conosciuto tutti, i miei sentieri.',
+      'Mentre il mio spirito vien meno in me; * tu hai conosciuto tutti i miei sentieri.',
       'Su questa via, per cui io camminavo, * mi hanno nascosto un laccio.',
       'Mi volgevo a destra e guardavo: * e non vi era chi mi conoscesse.',
       'Mi fu tolto ogni scampo: * e non vi è chi abbia pensiero dell\'anima mia.',
@@ -290,14 +290,14 @@ define({
       'La mia bocca annunzierà la tua giustizia: * e tutto il giorno la salute da te ricevuta.',
       'Poiché io non conosco scienza vana, entrerò a dire dei prodigi del Signore; * o Signore, mi ricorderò della sola tua giustizia.',
       'O Dio, tu mi hai ammaestrato fin dalla mia giovinezza: * e fino a quest\'ora io proclamerò le tue meraviglie.',
-      'E fino alla alla vecchiaia, e alla canizie, * o Dio, non mi abbandonare,',
+      'E fino alla vecchiaia, e alla canizie, * o Dio, non mi abbandonare,',
       'Finché io annunzi la tua forza * a tutta la generazione che verrà:',
       'e la tua potenza, e la tua giustizia, che si elevano sino ai cieli, e le grandi cose che tu hai fatte. * O Dio, chi è simile a te?',
       'Quante numerose e acerbe tribolazioni mi facesti provare! Ma poi, voltata a me la faccia, mi ridonasti la vita, * e dagli abissi della terra mi facesti di nuovo tornare.',
       'Tu moltiplicasti la tua magnificenza, * e di nuovo mi hai consolato.',
       'Perciò io pure al suono di strumenti celebrerò te e la tua verità: * o Dio, a te inneggerò sulla cetra, o santo d\'Israele.',
       'Quando inneggerò a te, esulteranno le mie labbra, * e la mia anima che tu hai riscattata.',
-      'Anche la mia lingua ridirà ogni giorno la tua giustizia: * allorché saranno confusi e svergognati, quelli che cercano il mio male,',
+      'Anche la mia lingua ridirà ogni giorno la tua giustizia: * allorché saranno confusi e svergognati, quelli che cercano il mio male.',
       'Gloria al Padre, e al Figlio, * e allo Spirito Santo.',
       'Come era nel principio e ora e sempre * nei secoli dei secoli. Amen.'
     ],
@@ -360,7 +360,7 @@ define({
       'Come era nel principio e ora e sempre * nei secoli dei secoli. Amen.'
     ],
     'nunc-dimittis': [
-      'E adesso, Signore tu lasci partire il tuo servo * in pace, come hai promesso,',
+      'E adesso, Signore, tu lasci partire il tuo servo * in pace, come hai promesso,',
       'perché i miei occhi hanno visto * il tuo Salvatore,',
       'che hai destinato * ad essere al cospetto di tutti i popoli,',
       'lume che rischiara le nazioni, * e gloria del suo popolo, Israele.',
@@ -368,7 +368,7 @@ define({
       'Come era nel principio e ora e sempre * nei secoli dei secoli. Amen.'
     ],
     'nunc-dimittis-asd': [
-      'E adesso, Signore tu lasci partire il tuo servo * in pace, come hai promesso,',
+      'E adesso, Signore, tu lasci partire il tuo servo * in pace, come hai promesso,',
       'perché i miei occhi hanno visto * il tuo Salvatore,',
       'che hai destinato * ad essere al cospetto di tutti i popoli,',
       'lume che rischiara le nazioni, * e gloria del suo popolo, Israele.',
@@ -387,7 +387,7 @@ define({
       'Il Signore onnipotente ci conceda una notte tranquilla e una fine perfetta.\nR. Amen.'
     ],
     'lesson.gabc': [
-      'Fratelli: siate temperanti e vegliate: perché il diavolo, vostro avversario, come un leone ruggente, va attorno cercando chi divorare: resistetegli forti nelle fede. E tu, o Signore, abbi pietà di noi.',
+      'Fratelli: siate temperanti e vegliate: perché il diavolo, vostro avversario, come un leone ruggente, va attorno cercando chi divorare: resistetegli forti nella fede. E tu, o Signore, abbi pietà di noi.',
       'R. Grazie a Dio.'
     ],
     'adjutorium-nostrum.gabc': [
@@ -420,7 +420,7 @@ define({
       'V. Provvedi, o Dio, al mio soccorso.',
       'R. Signore, affrettati ad aiutarmi.',
       'Gloria al Padre, e al Figlio, * e allo Spirito Santo.\nCome era nel principio e ora e sempre * nei secoli dei secoli. Amen. * Alleluia.',
-      'Lode a te o Signore, Re di eterna gloria.'
+      'Lode a te, o Signore, Re di eterna gloria.'
     ],
     'deus-in-adjutorium_alleluia.gabc': [
       'V. Provvedi, o Dio, al mio soccorso.',
@@ -430,7 +430,7 @@ define({
     'deus-in-adjutorium_laus-tibi.gabc': [
       'V. Provvedi, o Dio, al mio soccorso.',
       'R. Signore, affrettati ad aiutarmi.',
-      'Gloria al Padre, e al Figlio, e allo Spirito Santo.\nCome era nel principio e ora e sempre nei secoli dei secoli. Amen. Lode a te o Signore, Re di eterna gloria.'
+      'Gloria al Padre, e al Figlio, e allo Spirito Santo.\nCome era nel principio e ora e sempre nei secoli dei secoli. Amen. Lode a te, o Signore, Re di eterna gloria.'
     ],
     'index:christus-factus-est': [
       'Cristo s\'è fatto obbediente per noi sino a morire.'
@@ -467,42 +467,42 @@ define({
     ],
     'in-manus-tuas/ordinary_full.gabc': [
       'V. Nelle tue mani, Signore, affido il mio spirito.\nR. Nelle tue mani, Signore…',
-      'V. Tu ci hai redenti, o Signore. Dio di verità.\nR. Affido il mio spirito.',
+      'V. Tu ci hai redenti, o Signore, Dio di verità.\nR. Affido il mio spirito.',
       'V. Gloria al Padre, e al Figlio, e allo Spirito Santo.\nR. Nelle tue mani, Signore, affido il mio spirito.'
     ],
     'in-manus-tuas/ordinary.gabc': [
       'V. Nelle tue mani, Signore, * affido il mio spirito.\nR. Nelle tue mani, Signore…',
-      'V. Tu ci hai redenti, o Signore. Dio di verità.\n* Affido il…',
+      'V. Tu ci hai redenti, o Signore, Dio di verità.\n* Affido il…',
       'V. Gloria al Padre, e al Figlio, e allo Spirito Santo.\n* Nelle tue mani, Signore…'
     ],
     'in-manus-tuas/advent_full.gabc': [
       'V. Nelle tue mani, Signore, affido il mio spirito.\nR. Nelle tue mani, Signore…',
-      'V. Tu ci hai redenti, o Signore. Dio di verità.\nR. Affido il mio spirito.',
+      'V. Tu ci hai redenti, o Signore, Dio di verità.\nR. Affido il mio spirito.',
       'V. Gloria al Padre, e al Figlio, e allo Spirito Santo.\nR. Nelle tue mani, Signore, affido il mio spirito.'
     ],
     'in-manus-tuas/advent.gabc': [
       'V. Nelle tue mani, Signore, * affido il mio spirito.\nR. Nelle tue mani, Signore…',
-      'V. Tu ci hai redenti, o Signore. Dio di verità.\n* Affido il…',
+      'V. Tu ci hai redenti, o Signore, Dio di verità.\n* Affido il…',
       'V. Gloria al Padre, e al Figlio, e allo Spirito Santo.\n* Nelle tue mani, Signore…'
     ],
     'in-manus-tuas/passiontide_full.gabc': [
       'V. Nelle tue mani, Signore, affido il mio spirito.\nR. Nelle tue mani, Signore…',
-      'V. Tu ci hai redenti, o Signore. Dio di verità.\nR. Affido il mio spirito.',
+      'V. Tu ci hai redenti, o Signore, Dio di verità.\nR. Affido il mio spirito.',
       'R. Nelle tue mani, Signore, affido il mio spirito.'
     ],
     'in-manus-tuas/passiontide.gabc': [
       'V. Nelle tue mani, Signore, * affido il mio spirito.\nR. Nelle tue mani, Signore…',
-      'V. Tu ci hai redenti, o Signore. Dio di verità.\n* Affido il…',
+      'V. Tu ci hai redenti, o Signore, Dio di verità.\n* Affido il…',
       'R. Nelle tue mani, Signore…'
     ],
     'in-manus-tuas/pt_full.gabc': [
       'V. Nelle tue mani, Signore, affido il mio spirito, Alleluia, alleluia.\nR. Nelle tue mani, Signore…',
-      'V. Tu ci hai redenti, o Signore. Dio di verità.\nR. Alleluia, alleluia.',
+      'V. Tu ci hai redenti, o Signore, Dio di verità.\nR. Alleluia, alleluia.',
       'V. Gloria al Padre, e al Figlio, e allo Spirito Santo.\nR. Nelle tue mani, Signore, affido il mio spirito, Alleluia, alleluia.'
     ],
     'in-manus-tuas/pt.gabc': [
       'V. Nelle tue mani, Signore, affido il mio spirito, * Alleluia, alleluia.\nR. Nelle tue mani, Signore…',
-      'V. Tu ci hai redenti, o Signore. Dio di verità. * Alleluia, alleluia.',
+      'V. Tu ci hai redenti, o Signore, Dio di verità. * Alleluia, alleluia.',
       'V. Gloria al Padre, e al Figlio, e allo Spirito Santo. * Nelle tue mani, Signore…'
     ],
     'custodi-nos.gabc': [
@@ -521,10 +521,10 @@ define({
       'Salvaci, Signore, nella veglia, custodiscici nel sonno; affinché vegliamo con Cristo, e riposiamo in pace, alleluia.'
     ],
     'canticle-ant-po.gabc': [
-      'Allelúja, alleluia, alleluia, alleluia.'
+      'Alleluia, alleluia, alleluia, alleluia.'
     ],
     'haec-dies.gabc': [
-      'Questo è il giorno * che ha fatto il Signore : esultiamo e rallegriamoci in esso.'
+      'Questo è il giorno * che ha fatto il Signore: esultiamo e rallegriamoci in esso.'
     ],
     'index:dominus-vobiscum': [
       'V. Il Signore sia con voi.\nR. E con il tuo spirito.'
@@ -533,10 +533,10 @@ define({
       'V. O Signore, esaudisci la mia preghiera.\nR. E il mio grido giunga fino a Te.'
     ],
     'prayer.gabc': [
-      'Preghiamo.\nVisita, o Signore, te ne preghiamo, quest’abitazione e respingi lungi da essa tutte le insidie del nemico: i tuoi Santi Angeli abitino in essa, ci custodiscano in pace; e la tua benedizione sia sempre sopra di noi.\nPer il nostro Signore Gesù Cristo, tuo Figlio, che è Dio, e vive e regna con te, in unità con lo Spirito Santo, per tutti i secoli dei secoli.\nR. Amen.'
+      'Preghiamo.\nVisita, o Signore, te ne preghiamo, quest\'abitazione e respingi lungi da essa tutte le insidie del nemico: i tuoi Santi Angeli abitino in essa, ci custodiscano in pace; e la tua benedizione sia sempre sopra di noi.\nPer il nostro Signore Gesù Cristo, tuo Figlio, che è Dio, e vive e regna con te, in unità con lo Spirito Santo, per tutti i secoli dei secoli.\nR. Amen.'
     ],
     'index:visita-silent': [
-      'Visita, o Signore, te ne preghiamo, quest’abitazione e respingi lungi da essa tutte le insidie del nemico: i tuoi Santi Angeli abitino in essa, ci custodiscano in pace; e la tua benedizione sia sempre sopra di noi.'
+      'Visita, o Signore, te ne preghiamo, quest\'abitazione e respingi lungi da essa tutte le insidie del nemico: i tuoi Santi Angeli abitino in essa, ci custodiscano in pace; e la tua benedizione sia sempre sopra di noi.'
     ],
     'index:per-dominum-silent': [
       'Per il nostro Signore Gesù Cristo, tuo Figlio, che è Dio, e vive e regna con te, in unità con lo Spirito Santo, per tutti i secoli dei secoli.'
@@ -566,16 +566,16 @@ define({
       'Preghiamo.\nO Dio, il quale con la feconda Verginità della beata Maria, hai procurato al genere umano la grazia della salute eterna: fa che sperimentiamo a favor nostro l\'intercessione di colei, per cui abbiamo meritato di ricevere l\'autore della vita, il Signor nostro Gesù Cristo, tuo Figlio.\nR. Amen.'
     ],
     'marian-antiphon/ave-regina-caelorum.gabc': [
-      'Ave Regina dei cieli,\nAve, Signora degli Angeli,\nSalve, o radice, salve, o porta,\nda cui la luce al mondo è sorta.\nGodi, o Vergine gloriosa,\nsopra tutte nobilissima.\nVale, o tanto decorosa,\nprega il Cristo, o tu pietosa.'
+      'Ave, Regina dei cieli,\nAve, Signora degli Angeli,\nSalve, o radice, salve, o porta,\nda cui la luce al mondo è sorta.\nGodi, o Vergine gloriosa,\nsopra tutte nobilissima.\nVale, o tanto decorosa,\nprega il Cristo, o tu pietosa.'
     ],
     'marian-antiphon/ave-regina-caelorum-solemn.gabc': [
-      'Ave Regina dei cieli,\nAve, Signora degli Angeli,\nSalve, o radice, salve, o porta,\nda cui la luce al mondo è sorta.\nGodi, o Vergine gloriosa,\nsopra tutte nobilissima.\nVale, o tanto decorosa,\nprega il Cristo, o tu pietosa.'
+      'Ave, Regina dei cieli,\nAve, Signora degli Angeli,\nSalve, o radice, salve, o porta,\nda cui la luce al mondo è sorta.\nGodi, o Vergine gloriosa,\nsopra tutte nobilissima.\nVale, o tanto decorosa,\nprega il Cristo, o tu pietosa.'
     ],
     'index:marian-ave-versicle': [
       'V. Fammi degno di lodarti, Vergine santa.\nR. Dammi forza contro i tuoi nemici.'
     ],
     'marian-antiphon/ave-prayer.gabc': [
-      'Preghiamo.\nPorgi, o misericordioso Iddio, sostegno alla nostra fragilità: affinché noi, che celebriamo la memoria della Santa Madre di Dio; con l\'aiuto della sua intercessione possiamo sorgere dalle nostre iniquità. Per lo stesso Cristo Signor nostro.\nR. Amen.'
+      'Preghiamo.\nPorgi, o misericordioso Iddio, sostegno alla nostra fragilità: affinché noi, che celebriamo la memoria della Santa Madre di Dio, con l\'aiuto della sua intercessione possiamo sorgere dalle nostre iniquità. Per lo stesso Cristo Signor nostro.\nR. Amen.'
     ],
     'marian-antiphon/regina-caeli.gabc': [
       'Regina del cielo, rallegrati, alleluia;\nPerché colui che meritasti di portare, alleluia,\nÈ risuscitato, come disse, alleluia:\nPrega per noi Dio, alleluia.'
@@ -587,19 +587,19 @@ define({
       'V. Godi e rallegrati, o Vergine Maria, alleluia.\nR. Perché il Signore è veramente risuscitato, alleluia.'
     ],
     'marian-antiphon/regina-prayer.gabc': [
-      'Preghiamo.\nO Dio, il quale con la risurrezione di tuo Figlio, Signor nostro Gesù Cristo, ti sei degnato di rallegrare il mondo: fa che, per mezzo della sua Madre la Vergine Maria, raggiungiamo i gaudi dell\'eterna vita. Per lo stesso Cristo Signor nostro.\nR. Amen.'
+      'Preghiamo.\nO Dio, il quale con la risurrezione di tuo Figlio, Signor nostro Gesù Cristo, ti sei degnato di rallegrare il mondo: fa che, per mezzo della sua Madre, la Vergine Maria, raggiungiamo i gaudi dell\'eterna vita. Per lo stesso Cristo Signor nostro.\nR. Amen.'
     ],
     'marian-antiphon/salve-regina.gabc': [
-      'Salve Regina, Madre di misericordia:\nVita, dolcezza e speranza nostra, salve.\nA te ricorriamo, esuli figli di Eva,\nA te sospiriamo gementi e piangenti in questa valle di lacrime.\nOrsú, dunque, avvocata nostra,\nRivolgi a noi quegli occhi tuoi misericordiosi.\nE mostraci, dopo questo esilio,\nil frutto benedetto del ventre tuo, Gesù.\nO clemente, o pia, o dolce Vergine Maria.'
+      'Salve Regina, Madre di misericordia:\nVita, dolcezza e speranza nostra, salve.\nA te ricorriamo, esuli figli di Eva,\nA te sospiriamo gementi e piangenti in questa valle di lacrime.\nOrsù, dunque, avvocata nostra,\nRivolgi a noi quegli occhi tuoi misericordiosi.\nE mostraci, dopo questo esilio,\nil frutto benedetto del ventre tuo, Gesù.\nO clemente, o pia, o dolce Vergine Maria.'
     ],
     'marian-antiphon/salve-regina-solemn.gabc': [
-      'Salve Regina, Madre di misericordia:\nVita, dolcezza e speranza nostra, salve.\nA te ricorriamo, esuli figli di Eva,\nA te sospiriamo gementi e piangenti in questa valle di lacrime.\nOrsú, dunque, avvocata nostra,\nRivolgi a noi quegli occhi tuoi misericordiosi.\nE mostraci, dopo questo esilio,\nil frutto benedetto del ventre tuo, Gesù.\nO clemente, o pia, o dolce Vergine Maria.'
+      'Salve Regina, Madre di misericordia:\nVita, dolcezza e speranza nostra, salve.\nA te ricorriamo, esuli figli di Eva,\nA te sospiriamo gementi e piangenti in questa valle di lacrime.\nOrsù, dunque, avvocata nostra,\nRivolgi a noi quegli occhi tuoi misericordiosi.\nE mostraci, dopo questo esilio,\nil frutto benedetto del ventre tuo, Gesù.\nO clemente, o pia, o dolce Vergine Maria.'
     ],
     'index:marian-salve-versicle': [
       'V. Prega per noi, o Santa Madre di Dio.\nR. Affinché siam fatti degni delle promesse di Cristo.'
     ],
     'marian-antiphon/salve-prayer.gabc': [
-      'Preghiamo.\nOnnipotente sempiterno Iddio, che hai preparato con la cooperazione dello Spirito Santo, il corpo e l\'anima della gloriosa Vergine Madre Maria, affinché meritasse di essere degna abitazione di tuo Figlio, fa sì che, mentre ci rallegriamo al ricordo di lei; per la sua pietosa intercessione, siamo liberati dai mali che ci sovrastano, e dalla morte eterna. Per lo stesso Cristo Signor nostro.\nR. Amen.'
+      'Preghiamo.\nOnnipotente sempiterno Iddio, che hai preparato, con la cooperazione dello Spirito Santo, il corpo e l\'anima della gloriosa Vergine Madre Maria, affinché meritasse di essere degna abitazione di tuo Figlio, fa sì che, mentre ci rallegriamo al ricordo di lei, per la sua pietosa intercessione, siamo liberati dai mali che ci sovrastano, e dalla morte eterna. Per lo stesso Cristo Signor nostro.\nR. Amen.'
     ],
     'index:divinum-auxilium': [
       'V. Il divin aiuto sia sempre con noi.\nR. Amen.'
@@ -617,10 +617,10 @@ define({
   hymn: {
     literal: {
       stanzas: [
-        'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
+        'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia.',
         'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.'
       ],
-      doxologies: {Advent: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', Ascension: 'Sia gloria a te, o Gesù,\nche vittorioso ritorni al cielo\ninsieme con il Padre e con lo Spirito Santo\nper tutti i secoli.\nAmen.', 'Christ-the-King': 'O Gesù, sia gloria a te,\nche governi gli scettri del mondo,\ncol Padre, e collo Spirito Santo,\nper i secoli eterni.\nAmen.', Christmas: 'Sia gloria a te, o Gesù,\nche nascesti dalla Vergine,\ne gloria al Padre e allo Spirito\nnei secoli eterni.\nAmen.', Easter: 'Sia gloria a Dio Padre\ne al Figlio che risuscitò da morte\ne allo Spirito Santo\nper tutti i secoli.\nAmen.', Epiphany: 'O Gesù, sia gloria a te\nche ti sei rivelato alle genti,\ninsieme con il Padre e lo Spirito Santo,\nper tutti i secoli.\nAmen.', Ferial: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', 'Holy-Family': 'O Gesù, che ti facesti\nobbediente ai tuoi genitori,\ninsieme col sommo Padre e collo Spirito S.\nti sia sempre gloria.\nAmen.', Lent: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', Ordinary: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', 'Our-Lady': 'Sia gloria a te, o Gesù,\nche nascesti dalla Vergine,\ne gloria al Padre e allo Spirito\nnei secoli eterni.\nAmen.', Passiontide: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', Pentecost: 'A Dio Padre sia gloria,\ne al Figlio che risuscitò da morte,\ne allo Spirito Santo,\nper i secoli dei secoli.\nAmen.', 'Sacred-Heart': 'Sia gloria a te, o Gesù,\nche dal Cuore effondi la grazia,\ncon il Padre e lo Spirito Santo,\nnei secoli eterni.\nAmen.', 'Seven-Dolors': 'Sia gloria a te, o Gesù,\nche nascesti dalla Vergine,\ne gloria al Padre e allo Spirito\nnei secoli eterni.\nAmen.', Solemn: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', Transfiguration: 'O Gesù, sia gloria a te,\nche ti riveli ai pargoli,\ninsieme col Padre e collo Spirito Santo,\nper i secoli eterni.\nAmen.'}
+      doxologies: {Advent: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', Ascension: 'Sia gloria a te, o Gesù,\nche vittorioso ritorni al cielo\ninsieme con il Padre e con lo Spirito Santo\nper tutti i secoli.\nAmen.', 'Christ-the-King': 'O Gesù, sia gloria a te,\nche governi gli scettri del mondo,\ncol Padre, e collo Spirito Santo,\nper i secoli eterni.\nAmen.', Christmas: 'Sia gloria a te, o Gesù,\nche nascesti dalla Vergine,\ne gloria al Padre e allo Spirito\nnei secoli eterni.\nAmen.', Easter: 'Sia gloria a Dio Padre\ne al Figlio che risuscitò da morte\ne allo Spirito Santo\nper tutti i secoli.\nAmen.', Epiphany: 'O Gesù, sia gloria a te,\nche ti sei rivelato alle genti,\ninsieme con il Padre e lo Spirito Santo,\nper tutti i secoli.\nAmen.', Ferial: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', 'Holy-Family': 'O Gesù, che ti facesti\nobbediente ai tuoi genitori,\ninsieme col sommo Padre e collo Spirito Santo\nti sia sempre gloria.\nAmen.', Lent: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', Ordinary: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', 'Our-Lady': 'Sia gloria a te, o Gesù,\nche nascesti dalla Vergine,\ne gloria al Padre e allo Spirito\nnei secoli eterni.\nAmen.', Passiontide: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', Pentecost: 'A Dio Padre sia gloria,\ne al Figlio che risuscitò da morte,\ne allo Spirito Santo,\nper i secoli dei secoli.\nAmen.', 'Sacred-Heart': 'Sia gloria a te, o Gesù,\nche dal Cuore effondi la grazia,\ncon il Padre e lo Spirito Santo,\nnei secoli eterni.\nAmen.', 'Seven-Dolors': 'Sia gloria a te, o Gesù,\nche nascesti dalla Vergine,\ne gloria al Padre e allo Spirito\nnei secoli eterni.\nAmen.', Solemn: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', Transfiguration: 'O Gesù, sia gloria a te,\nche ti riveli ai pargoli,\ninsieme col Padre e collo Spirito Santo,\nper i secoli eterni.\nAmen.'}
     }
   }
 });

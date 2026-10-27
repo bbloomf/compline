@@ -27,14 +27,124 @@ V. Dígnate, Padre, dar tu bendición.
 # Psalm 15:9 with one *, where the Latin has it ("lingua mea: * ínsuper"); DO has two.
 # Psalm 102:7 with the * the Latin has ("Móysi, * fíliis"); DO has none.
 # Psalm 4:5: DO has "…" for the Vulgate's "quæ dícitis in córdibus vestris"; this translates it.
+# Psalm 4:7 without a full stop, as "más alegría" goes on in 4:8 ("Que si abundara…").
 [@Psalterium/Psalmorum/Psalm4]
 4:5 Temblad y no pequéis, ‡ lo que decís en vuestros corazones, * reflexionadlo en el silencio de vuestro lecho;
+4:7 Si la luz de tu rostro ha huido de nosotros?» * Pero Tú, Señor, has puesto en mi corazón más alegría
+
+# Psalm 11:5 and 11:6a, and Psalm 12:4b: the words quoted start with a capital, as every other
+# quotation in the psalter does ("«Dios es grande»"); DO has "«la lengua", "«por la", "«le he".
+[@Psalterium/Psalmorum/Psalm11]
+11:5 De los que dicen: «La lengua es nuestra fuerza, †  nuestros labios nos defienden, * ¿quién será nuestro amo?»
+11:6a El Señor responde: «Por la opresión del humilde, por el gemido del pobre, * Yo me levantaré,
+
+[@Psalterium/Psalmorum/Psalm12]
+12:4b Da luz a mis ojos para que no me duerma en la muerte, * (5a) para que no diga mi enemigo: «Le he podido»,
 
 [@Psalterium/Psalmorum/Psalm15]
 15:9 Por eso se me alegra el corazón, se gozan mis entrañas, * y mi carne descansa serena.
 
+# Psalm 33:13 with the * before "y desee", as everywhere else; DO has "ame la vida y * desee".
+[@Psalterium/Psalmorum/Psalm33]
+33:13 ¿Hay alguien que ame la vida * y desee días de prosperidad?
+
+# Psalm 87:8, "Tu cólera"; DO has "Tú cólera".
+[@Psalterium/Psalmorum/Psalm87]
+87:8 Tu cólera pesa sobre mí, * me echas encima todas tus olas.
+
+# Psalm 90:1, "al amparo"; DO has "al Amparo".
+[@Psalterium/Psalmorum/Psalm90]
+90:1 Tú que habitas al amparo del Altísimo, * que vives a la sombra del Omnipotente,
+
+# Psalm 102:17 ending with a colon, as "de hijos a nietos" goes on in 102:18 ("Para los que
+# guardan la alianza…"); DO has a full stop.
 [@Psalterium/Psalmorum/Psalm102]
 102:7 Enseñó sus caminos a Moisés * y sus hazañas a los hijos de Israel.
+102:17 Pero la misericordia del Señor dura siempre, * su justicia pasa de hijos a nietos:
+
+# The psalms' antiphons: Saturday's "mi súplica" (DO has "mi suplica", the verb), and Wednesday's
+# "El ángel del Señor", as in Psalm 33:8, which it quotes (DO has "El Ángel").
+[@Psalmi:Completorium]
+Dominica = Ten piedad * de mí, Señor, y escucha mi oración.
+4,90,133
+Feria II = Sálvame, Señor, * por tu misericordia.
+6,7(2-10),7(11-18)
+Feria III = Tú nos guardarás, Señor, * nos librarás para siempre.
+11,12,15
+Feria IV = El ángel del Señor acampa * en torno a los que le temen y los protege.
+33(2-11),33(12-23),60
+Feria V = Señor, * Tú eres mi amparo y mi libertador.
+69,70(1-12),70(13-24)
+Feria VI = Alzo mi voz * al Señor, clamando; Dios no se olvidará de compadecerme.
+76(2-13),76(14-21),85
+Sabbato = Llegue hasta ti * mi súplica, Señor.
+87,102(1-12),102(13-22)
+
+# The Pater noster's "No nos dejes caer en tentación." with a full stop, as every other versicle
+# has; DO has a colon.
+[@Prayers:Pater noster Et]
+v. Padre nuestro, que estás en los cielos, santificado sea tu nombre, venga a nosotros tu reino, hágase tu voluntad así en la tierra como en el cielo. El pan nuestro de cada día dánosle hoy; perdónanos nuestras deudas, así como nosotros perdonamos a nuestros deudores:
+V. No nos dejes caer en tentación.
+R. Mas líbranos del mal.
+
+# All Souls: "Descansen en paz." (Requiéscant, for the dead, not to them) and "R. Amén." with its
+# full stop; DO has "Descansed en paz." and "R. Amén".
+[@Prayers:Requiescant]
+V. Descansen en paz.
+R. Amén.
+
+# The Marian antiphons: "Jesucristo nuestro Señor" in the Alma's prayer, as in every other
+# conclusion (DO has "Nuestro"); the Ave Regina's vocative commas, "salve, raíz; salve, puerta", as
+# its "Salve, Reina" (DO has "salve raíz, salve puerta"); and the Salve Regina's "salve." after a
+# semicolon (DO has "Salve.").
+[@Mariaant:Advent]
+{:S-AlmaRedemptoris:}v.	Madre del Redentor, virgen fecunda, puerta del cielo siempre abierta,
+estrella del mar, ven a librar al pueblo que tropieza y quiere levantarse.
+Ante la admiración de cielo y tierra engendraste a tu santo Creador,
+y permaneces siempre virgen. Recibe el saludo del ángel Gabriel,
+y ten piedad de nosotros, pecadores.
+_
+V. {::}	El ángel del Señor anunció a María.
+R. Y concibió del Espíritu Santo.
+_
+$Oremus
+v. Derrama, Señor, tu gracia sobre nuestros corazones; y al reconocer, por el anuncio del ángel, la Encarnación de tu Hijo Jesucristo, conducidos por su Pasión y Cruz, lleguemos a la gloria de su Resurrección. Por Jesucristo nuestro Señor. Amén.
+
+[@Mariaant:Quadragesimae]
+{:S-AveRegina:} v. Salve, Reina de los cielos
+y Señora de los ángeles;
+salve, raíz; salve, puerta
+que dio paso a nuestra luz.
+_
+Alégrate, Virgen gloriosa,
+entre todas la más bella;
+salve, oh hermosa doncella,
+ruega a Cristo por nosotros.
+_
+V. {::}Permíteme cantar tus alabanzas, Virgen santa.
+R. Hazme fuerte contra tus enemigos.
+_
+$Oremus
+v. ¡Oh Dios de misericordia!, concédenos tu ayuda, pues somos débiles, para que, al recordar a la santa Madre de Dios, seamos auxiliados por su intercesión y nos levantemos de nuestra maldad. Por el mismo Jesucristo nuestro Señor. Amén.
+
+[@Mariaant:Postpentecost]
+{:S-SalveRegina:} v. Salve, Reina y Madre de misericordia,
+vida, dulzura y esperanza nuestra; salve.
+A ti llamamos los desterrados hijos de Eva;
+a ti suspiramos, gimiendo y llorando,
+en este valle de lágrimas.
+_
+Ea, pues, Señora, abogada nuestra,
+vuelve a nosotros esos tus ojos misericordiosos,
+y después de este destierro, muéstranos a Jesús,
+fruto bendito de tu vientre.
+¡Oh clementísima, oh piadosa, oh dulce Virgen María!
+_
+V. {::}Ruega por nosotros, santa Madre de Dios.
+R. Para que seamos dignos de alcanzar las promesas de Jesucristo.
+_
+$Oremus
+v. Dios todopoderoso y eterno, con la ayuda del Espíritu Santo, preparaste el cuerpo y el alma de María, la Virgen Madre, para ser digna morada de tu Hijo; al recordarla con alegría, líbranos, por su intercesión,  de los males presentes y de la muerte eterna. Por el mismo Jesucristo nuestro Señor. Amén.
 
 # All Souls' collect: DO's [Oratio mortuorum1] is another prayer ("…te ofrecemos con humildad
 # este sacrificio de alabanza…"), not the Propitiáre.  This translates the Latin.

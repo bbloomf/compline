@@ -115,7 +115,7 @@ define({
       'Boże, nieprawi powstali na mię, a zgromadzenie mocarzów szukało dusze mojéj: * i nie kładli ciebie przed oczyma swemi.',
       'A ty, Panie, Bóg litościwy i miłościwy, * cierpliwy, i wielce miłosierny, i prawdziwy,',
       'Wejrzyj na mię, a zmiłuj się nademną, * daj panowanie twoje słudze twemu: a zbaw syna służebnice twojéj.',
-      'Uczyń zemną znak ku dobremu, aby ujrzeli ci, którzy mię nienawidzą, a byli zawstydzeni: * iżeś ty. Panie, ratował mię, i pocieszyłeś mię.',
+      'Uczyń zemną znak ku dobremu, aby ujrzeli ci, którzy mię nienawidzą, a byli zawstydzeni: * iżeś ty, Panie, ratował mię, i pocieszyłeś mię.',
       'Chwała Ojcu i Synowi, * i Duchowi Świętemu.',
       'Jak była na początku, teraz i zawsze, * i na wieki wieków. Amen.'
     ],
@@ -194,7 +194,7 @@ define({
       'A światłość wiekuista * niechaj im świeci.'
     ],
     '142': [
-      'Panie, wysłuchaj modlitwę moję: przyjmij w uszy prośbę moję w prawdzie twéj * wysłuchaj mię w sprawiedliwości twojéj.',
+      'Panie, wysłuchaj modlitwę moję: przyjmij w uszy prośbę moję w prawdzie twéj: * wysłuchaj mię w sprawiedliwości twojéj.',
       'A nie wchódź do sądu z sługą twoim; * albowiem nie usprawiedliwi się przed tobą żaden żywiący.',
       'Albowiem prześladował nieprzyjaciel duszę moję: * poniżył na ziemi żywot mój.',
       'Posadził mię w ciemnych miejscach, jako zdawna pomarłe: * i zfrasował się o mię duch mój: serce moje we mnie się strwożyło.',
@@ -395,7 +395,7 @@ define({
       'R. Który stworzył niebo i ziemię.'
     ],
     'index:confiteor': [
-      'Spowiadam się Bogu wszechmogącemu, Najświętszej Maryi zawsze Dziewicy, świętemu Michałowi Archaniołowi, świętemu Janowi Chrzcicielowi, świętym Apostołom Piotrowi i Pawłowi, i wszystkim Świętym, że bardzo zgrzeszyłem, myślą, mową i uczynkiem: moja wina, moja wina, moja bardzo wielka wina. Przeto błagam Najświętszą Maryję zawsze Dziewicę, świętego Michała Archanioła, świętego Jana Chrzciciela, świętych Apostołów Piotra i Pawła, i wszystkich świętych, o modlitwę za mnie do Pana Boga naszego.'
+      'Spowiadam się Bogu wszechmogącemu, Najświętszej Maryi zawsze Dziewicy, świętemu Michałowi Archaniołowi, świętemu Janowi Chrzcicielowi, świętym Apostołom Piotrowi i Pawłowi, i wszystkim Świętym, że bardzo zgrzeszyłem, myślą, mową i uczynkiem: moja wina, moja wina, moja bardzo wielka wina. Przeto błagam Najświętszą Maryję zawsze Dziewicę, świętego Michała Archanioła, świętego Jana Chrzciciela, świętych Apostołów Piotra i Pawła, i wszystkich Świętych, o modlitwę za mnie do Pana Boga naszego.'
     ],
     'index:misereatur-nostri': [
       'Niech się zmiłuje nad nami Bóg wszechmogący, a odpuściwszy nam grzechy, doprowadzi nas do życia wiecznego.\nR. Amen.'
@@ -413,14 +413,14 @@ define({
       'Przebaczenia, rozgrzeszenia i odpuszczenia grzechów naszych, niech nam udzieli Pan wszechmogący i miłosierny.\nR. Amen.'
     ],
     'converte-nos.gabc': [
-      'V. Nawróć nas Boże, nasz zbawco.',
+      'V. Nawróć nas, Boże, nasz zbawco.',
       'R. I odwróć swój gniew od nas.'
     ],
     'deus-in-adjutorium.gabc': [
       'V. Boże, wejrzyj ku wspomożeniu memu.',
       'R. Panie, pośpiesz ku ratunkowi memu.',
       'Chwała Ojcu i Synowi, * i Duchowi Świętemu.\nJak była na początku, teraz i zawsze, * i na wieki wieków. Amen. * Alleluja.',
-      'Chwała Tobie Panie, Królu wiecznej chwały.'
+      'Chwała Tobie, Panie, Królu wiecznej chwały.'
     ],
     'deus-in-adjutorium_alleluia.gabc': [
       'V. Boże, wejrzyj ku wspomożeniu memu.',
@@ -430,7 +430,7 @@ define({
     'deus-in-adjutorium_laus-tibi.gabc': [
       'V. Boże, wejrzyj ku wspomożeniu memu.',
       'R. Panie, pośpiesz ku ratunkowi memu.',
-      'Chwała Ojcu i Synowi, i Duchowi Świętemu.\nJak była na początku, teraz i zawsze, i na wieki wieków. Amen. Chwała Tobie Panie, Królu wiecznej chwały.'
+      'Chwała Ojcu i Synowi, i Duchowi Świętemu.\nJak była na początku, teraz i zawsze, i na wieki wieków. Amen. Chwała Tobie, Panie, Królu wiecznej chwały.'
     ],
     'index:christus-factus-est': [
       'Chrystus stał się za nas posłusznym aż do śmierci.'
@@ -506,13 +506,13 @@ define({
       'V. Chwała Ojcu i Synowi, i Duchowi Świętemu. * W ręce Twoje, Panie…'
     ],
     'custodi-nos.gabc': [
-      'V. Strzeż nas Panie, jak źrenicy oka.\nR. Pod cieniem Twych skrzydeł obroń nas.'
+      'V. Strzeż nas, Panie, jak źrenicy oka.\nR. Pod cieniem Twych skrzydeł obroń nas.'
     ],
     'custodi-nos-advent.gabc': [
-      'V. Strzeż nas Panie, jak źrenicy oka.\nR. Pod cieniem Twych skrzydeł obroń nas.'
+      'V. Strzeż nas, Panie, jak źrenicy oka.\nR. Pod cieniem Twych skrzydeł obroń nas.'
     ],
     'custodi-nos-pt.gabc': [
-      'V. Strzeż nas Panie, jak źrenicy oka, alleluja.\nR. Pod cieniem Twych skrzydeł obroń nas, alleluja.'
+      'V. Strzeż nas, Panie, jak źrenicy oka, alleluja.\nR. Pod cieniem Twych skrzydeł obroń nas, alleluja.'
     ],
     'canticle-ant.gabc': [
       'Strzeż nas, Panie, gdy czuwamy, podczas snu nas osłaniaj; abyśmy czuwali z Chrystusem i odpoczywali w pokoju.'
@@ -533,13 +533,13 @@ define({
       'V. Panie, wysłuchaj modlitwy mojej.\nR. A wołanie moje niech do Ciebie przyjdzie.'
     ],
     'prayer.gabc': [
-      'Módlmy się.\nNawiedź, prosimy Cię, Panie, ten dom, i oddal od niego wszelkie wrogie zasadzki: niech mieszkają w nim Twoi święci Aniołowie i strzegą nas w pokoju; a błogosławieństwo Twoje niech zawsze będzie z nami.\nPrzez naszego Pana Jezusa Chrystusa, Twojego Syna: który z Tobą żyje i króluje w jedności Ducha Świętego Bóg, przez wszystkie wieki wieków.\nR. Amen.'
+      'Módlmy się.\nNawiedź, prosimy Cię, Panie, ten dom, i oddal od niego wszelkie wrogie zasadzki: niech mieszkają w nim Twoi święci Aniołowie i strzegą nas w pokoju; a błogosławieństwo Twoje niech zawsze będzie z nami.\nPrzez naszego Pana Jezusa Chrystusa, Twojego Syna: który z Tobą żyje i króluje w jedności Ducha Świętego, Bóg, przez wszystkie wieki wieków.\nR. Amen.'
     ],
     'index:visita-silent': [
       'Nawiedź, prosimy Cię, Panie, ten dom, i oddal od niego wszelkie wrogie zasadzki: niech mieszkają w nim Twoi święci Aniołowie i strzegą nas w pokoju; a błogosławieństwo Twoje niech zawsze będzie z nami.'
     ],
     'index:per-dominum-silent': [
-      'Przez naszego Pana Jezusa Chrystusa, Twojego Syna: który z Tobą żyje i króluje w jedności Ducha Świętego Bóg, przez wszystkie wieki wieków.'
+      'Przez naszego Pana Jezusa Chrystusa, Twojego Syna: który z Tobą żyje i króluje w jedności Ducha Świętego, Bóg, przez wszystkie wieki wieków.'
     ],
     'benedicamus-domino.gabc': [
       'V. Błogosławmy Panu.\nR. Bogu niech będą dzięki.'
@@ -548,28 +548,28 @@ define({
       'Niech nas błogosławi i strzeże wszechmogący i miłosierny Pan, Ojciec, i Syn, i Duch Święty.\nR. Amen.'
     ],
     'marian-antiphon/alma-redemptoris-mater.gabc': [
-      'Święta Odkupiciela Matko, któraś otwartą nieba bramą pozostała\nGwiazdo morza! Wspomóż upadły lud,\nGdy powstać usiłuje. Tyś zrodziła\nKu zdumieniu całej natury, Twojego Świętego Stworzyciela,\nPanną będąc przedtem i potem, Pozdrowiona usty Gabriela,\nOkaż miłosierdzie grzesznikom.'
+      'Święta Odkupiciela Matko, któraś otwartą nieba bramą pozostała,\nGwiazdo morza! Wspomóż upadły lud,\nGdy powstać usiłuje. Tyś zrodziła\nKu zdumieniu całej natury, Twojego Świętego Stworzyciela,\nPanną będąc przedtem i potem, pozdrowiona usty Gabriela,\nOkaż miłosierdzie grzesznikom.'
     ],
     'marian-antiphon/alma-redemptoris-mater-solemn.gabc': [
-      'Święta Odkupiciela Matko, któraś otwartą nieba bramą pozostała\nGwiazdo morza! Wspomóż upadły lud,\nGdy powstać usiłuje. Tyś zrodziła\nKu zdumieniu całej natury, Twojego Świętego Stworzyciela,\nPanną będąc przedtem i potem, Pozdrowiona usty Gabriela,\nOkaż miłosierdzie grzesznikom.'
+      'Święta Odkupiciela Matko, któraś otwartą nieba bramą pozostała,\nGwiazdo morza! Wspomóż upadły lud,\nGdy powstać usiłuje. Tyś zrodziła\nKu zdumieniu całej natury, Twojego Świętego Stworzyciela,\nPanną będąc przedtem i potem, pozdrowiona usty Gabriela,\nOkaż miłosierdzie grzesznikom.'
     ],
     'index:marian-alma-advent-versicle': [
       'V. Anioł Pański zwiastował Pannie Maryi.\nR. I poczęła z Ducha Świętego.'
     ],
     'marian-antiphon/alma-prayer_advent.gabc': [
-      'Módlmy się.\nŁaskę Twoją prosimy Cię Panie racz wlać w serca nasze, abyśmy, którzy za zwiastowaniem anielskim Wcielenie Chrystusa, Syna Twojego poznali, przez mękę Jego i krzyż do chwały zmartwychwstania byli doprowadzeni. Przez tegoż Chrystusa Pana naszego.\nR. Amen.'
+      'Módlmy się.\nŁaskę Twoją, prosimy Cię, Panie, racz wlać w serca nasze, abyśmy, którzy za zwiastowaniem anielskim Wcielenie Chrystusa, Syna Twojego, poznali, przez mękę Jego i krzyż do chwały zmartwychwstania byli doprowadzeni. Przez tegoż Chrystusa Pana naszego.\nR. Amen.'
     ],
     'index:marian-alma-christmas-versicle': [
-      'V. Po porodzeniu Panno niepokalaną pozostałaś.\nR. Boża Rodzicielko, wstaw się za nami.'
+      'V. Po porodzeniu, Panno, niepokalaną pozostałaś.\nR. Boża Rodzicielko, wstaw się za nami.'
     ],
     'marian-antiphon/alma-prayer_christmas.gabc': [
-      'Módlmy się.\nBoże, któryś przez płodne Dziewictwo błogosławionej Maryi Panny zgotował rodzajowi ludzkiemu nagrodę żywota wiecznego, daj prosimy Cię, doznać skutków pośrednictwa Tej, przez którą otrzymaliśmy Dawcę żywota, Pana naszego Jezusa Chrystusa Syna Twego.\nR. Amen.'
+      'Módlmy się.\nBoże, któryś przez płodne Dziewictwo błogosławionej Maryi Panny zgotował rodzajowi ludzkiemu nagrodę żywota wiecznego, daj, prosimy Cię, doznać skutków pośrednictwa Tej, przez którą otrzymaliśmy Dawcę żywota, Pana naszego Jezusa Chrystusa, Syna Twego.\nR. Amen.'
     ],
     'marian-antiphon/ave-regina-caelorum.gabc': [
-      'Witaj, niebios Królowo,\nWitaj, Pani aniołów,\nWitaj, Różdżko, witaj Bramo,\nJasność zrodziłaś światu.\nCiesz się, Panno chwalebna,\nPonad wszystkie piękniejsza,\nWitaj, o Najśliczniejsza,\nProś Chrystusa za nami.'
+      'Witaj, niebios Królowo,\nWitaj, Pani aniołów,\nWitaj, Różdżko, witaj, Bramo,\nJasność zrodziłaś światu.\nCiesz się, Panno chwalebna,\nPonad wszystkie piękniejsza,\nWitaj, o Najśliczniejsza,\nProś Chrystusa za nami.'
     ],
     'marian-antiphon/ave-regina-caelorum-solemn.gabc': [
-      'Witaj, niebios Królowo,\nWitaj, Pani aniołów,\nWitaj, Różdżko, witaj Bramo,\nJasność zrodziłaś światu.\nCiesz się, Panno chwalebna,\nPonad wszystkie piękniejsza,\nWitaj, o Najśliczniejsza,\nProś Chrystusa za nami.'
+      'Witaj, niebios Królowo,\nWitaj, Pani aniołów,\nWitaj, Różdżko, witaj, Bramo,\nJasność zrodziłaś światu.\nCiesz się, Panno chwalebna,\nPonad wszystkie piękniejsza,\nWitaj, o Najśliczniejsza,\nProś Chrystusa za nami.'
     ],
     'index:marian-ave-versicle': [
       'V. Dozwól mi chwalić Cię, o Pani święta.\nR. Daj mi moc przeciw nieprzyjaciołom Twoim.'
@@ -578,25 +578,25 @@ define({
       'Módlmy się.\nUdziel nam, prosimy Cię, miłosierny Boże, pomocy w słabościach naszych, abyśmy, którzy świętej Bożej Rodzicielce cześć oddajemy, za jej przyczyną i wstawiennictwem, powstali z nieprawości naszych. Przez tegoż Chrystusa, Pana naszego.\nR. Amen.'
     ],
     'marian-antiphon/regina-caeli.gabc': [
-      'Królowo nieba, wesel się, alleluja,\nBo Ten, któregoś nosiła, alleluja,\nZmartwychwstał jak powiedział, alleluja,\nMódl się za nami do Boga, alleluja.'
+      'Królowo nieba, wesel się, alleluja,\nBo Ten, któregoś nosiła, alleluja,\nZmartwychwstał, jak powiedział, alleluja,\nMódl się za nami do Boga, alleluja.'
     ],
     'marian-antiphon/regina-caeli-solemn.gabc': [
-      'Królowo nieba, wesel się, alleluja,\nBo Ten, któregoś nosiła, alleluja,\nZmartwychwstał jak powiedział, alleluja,\nMódl się za nami do Boga, alleluja.'
+      'Królowo nieba, wesel się, alleluja,\nBo Ten, któregoś nosiła, alleluja,\nZmartwychwstał, jak powiedział, alleluja,\nMódl się za nami do Boga, alleluja.'
     ],
     'index:marian-regina-versicle': [
       'V. Raduj się i wesel, Panno Maryjo, alleluja.\nR. Bo zmartwychwstał Pan prawdziwie, alleluja.'
     ],
     'marian-antiphon/regina-prayer.gabc': [
-      'Módlmy się.\nBoże, któryś przez zmartwychwstanie Syna swojego, Pana naszego Jezusa Chrystusa świat uweselić raczył, daj nam, prosimy, abyśmy przez Jego Rodzicielkę Pannę Maryję dostąpili radości życia wiecznego. Przez tegoż Chrystusa Pana naszego.\nR. Amen.'
+      'Módlmy się.\nBoże, któryś przez zmartwychwstanie Syna swojego, Pana naszego Jezusa Chrystusa, świat uweselić raczył, daj nam, prosimy, abyśmy przez Jego Rodzicielkę Pannę Maryję dostąpili radości życia wiecznego. Przez tegoż Chrystusa Pana naszego.\nR. Amen.'
     ],
     'marian-antiphon/salve-regina.gabc': [
-      'Witaj Królowo, Matko Miłosierdzia,\nżycie, słodyczy i nadziejo nasza, witaj!\nDo Ciebie wołamy wygnańcy, synowie Ewy;\ndo Ciebie wzdychamy jęcząc i płacząc\nna tym łez padole.\nPrzeto, Orędowniczko nasza,\none miłosierne oczy Twoje na nas zwróć,\na Jezusa, błogosławiony owoc żywota Twojego,\npo tym wygnaniu nam okaż.\nO łaskawa, o litościwa, o słodka Panno Maryjo!'
+      'Witaj, Królowo, Matko Miłosierdzia,\nżycie, słodyczy i nadziejo nasza, witaj!\nDo Ciebie wołamy wygnańcy, synowie Ewy;\ndo Ciebie wzdychamy jęcząc i płacząc\nna tym łez padole.\nPrzeto, Orędowniczko nasza,\none miłosierne oczy Twoje na nas zwróć,\na Jezusa, błogosławiony owoc żywota Twojego,\npo tym wygnaniu nam okaż.\nO łaskawa, o litościwa, o słodka Panno Maryjo!'
     ],
     'marian-antiphon/salve-regina-solemn.gabc': [
-      'Witaj Królowo, Matko Miłosierdzia,\nżycie, słodyczy i nadziejo nasza, witaj!\nDo Ciebie wołamy wygnańcy, synowie Ewy;\ndo Ciebie wzdychamy jęcząc i płacząc\nna tym łez padole.\nPrzeto, Orędowniczko nasza,\none miłosierne oczy Twoje na nas zwróć,\na Jezusa, błogosławiony owoc żywota Twojego,\npo tym wygnaniu nam okaż.\nO łaskawa, o litościwa, o słodka Panno Maryjo!'
+      'Witaj, Królowo, Matko Miłosierdzia,\nżycie, słodyczy i nadziejo nasza, witaj!\nDo Ciebie wołamy wygnańcy, synowie Ewy;\ndo Ciebie wzdychamy jęcząc i płacząc\nna tym łez padole.\nPrzeto, Orędowniczko nasza,\none miłosierne oczy Twoje na nas zwróć,\na Jezusa, błogosławiony owoc żywota Twojego,\npo tym wygnaniu nam okaż.\nO łaskawa, o litościwa, o słodka Panno Maryjo!'
     ],
     'index:marian-salve-versicle': [
-      'V. Módl się za nami święta Boża Rodzicielko.\nR. Abyśmy się stali godnymi obietnic Chrystusowych'
+      'V. Módl się za nami, święta Boża Rodzicielko.\nR. Abyśmy się stali godnymi obietnic Chrystusowych.'
     ],
     'marian-antiphon/salve-prayer.gabc': [
       'Módlmy się.\nWszechmogący, wieczny Boże, który ciało i duszę chwalebnej Dziewicy Matki Maryi, przez działanie Ducha Świętego, przygotowałeś, aby było godnym zamieszkania przez Twego Syna: daj, abyśmy przez łaskawe wstawiennictwo tej, której wspomnieniem się cieszymy, byli uwolnieni od zła doczesnego i śmierci wiecznej. Przez tegoż Chrystusa, Pana naszego.\nR. Amen.'
@@ -605,13 +605,13 @@ define({
       'V. Pomoc Boża niech będzie zawsze z nami.\nR. Amen.'
     ],
     'index:asd-preces': [
-      'V. I nie wódź nas na pokuszenie:\nR. Ale nas zbaw ode złego.\nV. Od wrót piekielnych.\nR. Wybaw, duszę ich o Panie.\nV. Niech odpoczywają w pokoju.\nR. Amen\nV. Panie, wysłuchaj modlitwy mojej.\nR. A wołanie moje niech do Ciebie przyjdzie.\nV. (Pan z wami.\nR. I z duchem twoim.)'
+      'V. I nie wódź nas na pokuszenie:\nR. Ale nas zbaw ode złego.\nV. Od wrót piekielnych.\nR. Wybaw dusze ich, Panie.\nV. Niech odpoczywają w pokoju.\nR. Amen.\nV. Panie, wysłuchaj modlitwy mojej.\nR. A wołanie moje niech do Ciebie przyjdzie.\nV. (Pan z wami.\nR. I z duchem twoim.)'
     ],
     'index:asd-collect': [
-      'Módlmy się.\nBądź miłościw, prosimy, Panie, duszom wszystkich sług i służebnic Twoich, za które pokornie błagamy majestat Twój: aby przez te pobożne błagania i modły zasłużyły dostąpić wiecznego odpoczynku.\nPrzez naszego Pana Jezusa Chrystusa, Twojego Syna: który z Tobą żyje i króluje w jedności Ducha Świętego Bóg, przez wszystkie wieki wieków.\nR. Amen.'
+      'Módlmy się.\nBądź miłościw, prosimy, Panie, duszom wszystkich sług i służebnic Twoich, za które pokornie błagamy majestat Twój: aby przez te pobożne błagania i modły zasłużyły dostąpić wiecznego odpoczynku.\nPrzez naszego Pana Jezusa Chrystusa, Twojego Syna: który z Tobą żyje i króluje w jedności Ducha Świętego, Bóg, przez wszystkie wieki wieków.\nR. Amen.'
     ],
     'index:asd-requiem': [
-      'V. Wieczny odpoczynek racz im dać, Panie.\nR. A światłość wiekuista niechaj im świeci.\nV. Niech odpoczywają w pokoju.\nR. Amen'
+      'V. Wieczny odpoczynek racz im dać, Panie.\nR. A światłość wiekuista niechaj im świeci.\nV. Niech odpoczywają w pokoju.\nR. Amen.'
     ]
   },
   hymn: {
@@ -620,7 +620,7 @@ define({
         'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
         'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.'
       ],
-      doxologies: {Advent: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Ascension: 'Jezu miej cześć z dostojeństwem,\nŻe w niebo wchodzisz zwycięstwem:\nI Ojcze, i Duchu Święty,\nNa wiek wieków niepojęty.\nAmen.', 'Christ-the-King': 'Jezu, niech Tobie będzie chwała,\nKtóry berłami świata władasz,\nZ Ojcem i Duchem Świętym, Boże,\nPrzez wszystkie wieki wieków.\nAmen.', Christmas: 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Easter: 'Bądź Ojcze Boże chwalony,\nZ Synem, który pogrzebiony\nWstał z martwych, i Duch światłości\nNiech ma chwałę na wieczności.\nAmen.', Epiphany: 'Jezusie bądź pochwalony,\nKtóryś Poganom zjawiony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Ferial: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', 'Holy-Family': 'Tobie, Jezu, któryś\nStał się posłuszny swym rodzicom,\nNiech będzie wieczna chwała,\nWraz z Ojcem i Najświętszym Duchem.\nAmen.', Lent: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Ordinary: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', 'Our-Lady': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Passiontide: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Pentecost: 'Niech Ojciec słynie Pan chwały,\nI z Synem, który umarły\nPowstał, i z Pocieszycielem,\nWiek wiekuistym weselem.\nAmen.', 'Sacred-Heart': 'Jezu, niech Tobie będzie chwała,\nKtóry nam z serca łaski zlewasz,\nZ Ojcem — z Ożywicielem, Duchem,\nI Przez nieskończone wieki.\nAmen.', 'Seven-Dolors': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Solemn: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Transfiguration: 'O Jezu, co się objawiasz Maluczkim,\nNiech Ci cześć będzie\nZ Ożywicielem i Ojcem\nW nieskończone wieki.\nAmen.'}
+      doxologies: {Advent: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Ascension: 'Jezu miej cześć z dostojeństwem,\nŻe w niebo wchodzisz zwycięstwem:\nI Ojcze, i Duchu Święty,\nNa wiek wieków niepojęty.\nAmen.', 'Christ-the-King': 'Jezu, niech Tobie będzie chwała,\nKtóry berłami świata władasz,\nZ Ojcem i Duchem Świętym, Boże,\nPrzez wszystkie wieki wieków.\nAmen.', Christmas: 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Easter: 'Bądź Ojcze Boże chwalony,\nZ Synem, który pogrzebiony\nWstał z martwych, i Duch światłości\nNiech ma chwałę na wieczności.\nAmen.', Epiphany: 'Jezusie bądź pochwalony,\nKtóryś Poganom zjawiony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Ferial: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', 'Holy-Family': 'Tobie, Jezu, któryś\nStał się posłuszny swym rodzicom,\nNiech będzie wieczna chwała,\nWraz z Ojcem i Najświętszym Duchem.\nAmen.', Lent: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Ordinary: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', 'Our-Lady': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Passiontide: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Pentecost: 'Niech Ojciec słynie Pan chwały,\nI z Synem, który umarły\nPowstał, i z Pocieszycielem,\nWiek wiekuistym weselem.\nAmen.', 'Sacred-Heart': 'Jezu, niech Tobie będzie chwała,\nKtóry nam z serca łaski zlewasz,\nZ Ojcem — z Ożywicielem, Duchem,\nI przez nieskończone wieki.\nAmen.', 'Seven-Dolors': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Solemn: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Transfiguration: 'O Jezu, co się objawiasz maluczkim,\nNiech Ci cześć będzie\nZ Ożywicielem i Ojcem\nW nieskończone wieki.\nAmen.'}
     }
   }
 });

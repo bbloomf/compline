@@ -92,7 +92,7 @@ define({
       'O God, come to my assistance; * O Lord, make haste to help me.',
       'Let them be confounded and ashamed * that seek my soul:',
       'Let them be turned backward, and blush for shame * that desire evils to me:',
-      'Let them be presently turned away blushing for shame * that say to me: ’T is well, ’t is well.',
+      'Let them be presently turned away blushing for shame * that say to me: ’Tis well, ’tis well.',
       'Let all that seek thee rejoice and be glad in thee; * and let such as love thy salvation say always: The Lord be magnified.',
       'But I am needy and poor; * O God, help me.',
       'Thou art my helper and my deliverer: * O Lord, make no delay.',
@@ -124,14 +124,14 @@ define({
       'Let my prayer come in before thee: * incline thy ear to my petition.',
       'For my soul is filled with evils: * and my life hath drawn nigh to hell.',
       'I am counted among them that go down to the pit: * I am become as a man without help, free among the dead.',
-      'Like the slain sleeping in the sepulchres, whom thou rememberest no more: * and they are cast off from thy hand.',
+      'Like the slain sleeping in the sepulchers, whom thou rememberest no more: * and they are cast off from thy hand.',
       'They have laid me in the lower pit: * in the dark places, and in the shadow of death.',
       'Thy wrath is strong over me: * and all thy waves thou hast brought in upon me.',
       'Thou hast put away my acquaintance far from me: * they have set me an abomination to themselves.',
       'I was delivered up, and came not forth: * my eyes languished through poverty.',
       'All the day I cried to thee, O Lord: * I stretched out my hands to thee.',
       'Wilt thou shew wonders to the dead? * or shall physicians raise to life, and give praise to thee?',
-      'Shall any one in the sepulchre declare thy mercy: * and thy truth in destruction?',
+      'Shall any one in the sepulcher declare thy mercy: * and thy truth in destruction?',
       'Shall thy wonders be known in the dark; * and thy justice in the land of forgetfulness?',
       'But I, O Lord, have cried to thee: * and in the morning my prayer shall prevent thee.',
       'Lord, why castest thou off my prayer: * why turnest thou away thy face from me?',
@@ -290,7 +290,7 @@ define({
       'My mouth shall shew forth thy justice; * thy salvation all the day long.',
       'Because I have not known learning, I will enter into the powers of the Lord: * O Lord, I will be mindful of thy justice alone.',
       'Thou hast taught me, O God, from my youth: * and till now I will declare thy wonderful works.',
-      'And unto old age and grey hairs: * O God, forsake me not,',
+      'And unto old age and gray hairs: * O God, forsake me not,',
       'Until I shew forth thy arm * to all the generation that is to come:',
       'Thy power, and thy justice, O God, even to the highest great things thou hast done: * O God, who is like to thee?',
       'How great troubles hast thou shewn me, many and grievous: and turning thou hast brought me to life, * and hast brought me back again from the depths of the earth:',
@@ -442,7 +442,7 @@ define({
       'Have mercy on me, O Lord, and hear my prayer.'
     ],
     'psalms/1/ant.gabc': [
-      'Deliver my soul, O Lord, save me for thy mercy\'s sake.'
+      'Deliver my soul, O Lord, save me for thy mercy’s sake.'
     ],
     'psalms/2/ant.gabc': [
       'Thou, O Lord, wilt preserve us: and keep us for ever.'
@@ -521,7 +521,7 @@ define({
       'Protect us, Lord, while we are awake and safeguard us while we sleep; that we may keep watch with Christ, and rest in peace, alleluia.'
     ],
     'canticle-ant-po.gabc': [
-      'Alleluia, Alleluia, Alleluia, Alleluia.'
+      'Alleluia, alleluia, alleluia, alleluia.'
     ],
     'haec-dies.gabc': [
       'This is the day * which the Lord hath made: let us be glad and rejoice therein.'
@@ -548,10 +548,10 @@ define({
       'The almighty and merciful Lord, the Father, the Son and the Holy Spirit, bless us and keep us.\nR. Amen.'
     ],
     'marian-antiphon/alma-redemptoris-mater.gabc': [
-      'Mother of Christ, hear thou thy people\'s cry\nStar of the deep and Portal of the sky!\nMother of Him who thee from nothing made.\nSinking we strive and call to thee for aid:\nO, by what joy which Gabriel brought to thee,\nThou Virgin first and last, let us thy mercy see.'
+      'Mother of Christ, hear thou thy people’s cry,\nStar of the deep and Portal of the sky!\nMother of Him who thee from nothing made,\nSinking we strive and call to thee for aid:\nO, by that joy which Gabriel brought to thee,\nThou Virgin first and last, let us thy mercy see.'
     ],
     'marian-antiphon/alma-redemptoris-mater-solemn.gabc': [
-      'Mother of Christ, hear thou thy people\'s cry\nStar of the deep and Portal of the sky!\nMother of Him who thee from nothing made.\nSinking we strive and call to thee for aid:\nO, by what joy which Gabriel brought to thee,\nThou Virgin first and last, let us thy mercy see.'
+      'Mother of Christ, hear thou thy people’s cry,\nStar of the deep and Portal of the sky!\nMother of Him who thee from nothing made,\nSinking we strive and call to thee for aid:\nO, by that joy which Gabriel brought to thee,\nThou Virgin first and last, let us thy mercy see.'
     ],
     'index:marian-alma-advent-versicle': [
       'V. The Angel of the Lord announced unto Mary.\nR. And she conceived of the Holy Spirit.'
@@ -563,13 +563,13 @@ define({
       'V. After childbirth thou didst remain a virgin.\nR. Intercede for us, O Mother of God.'
     ],
     'marian-antiphon/alma-prayer_christmas.gabc': [
-      'Let us pray.\nO God, who, by the fruitful virginity of blessed Mary, hast bestowed upon mankind the reward of eternal salvation: grant, we beseech thee, that we may experience her intercession, through whom we have been made worthy to receive the author of life, Our Lord Jesus Christ thy Son.\nR. Amen.'
+      'Let us pray.\nO God, who, by the fruitful virginity of blessed Mary, hast bestowed upon mankind the reward of eternal salvation: grant, we beseech thee, that we may experience her intercession, through whom we have been made worthy to receive the author of life, our Lord Jesus Christ thy Son.\nR. Amen.'
     ],
     'marian-antiphon/ave-regina-caelorum.gabc': [
-      'Hail, O Queen of heaven, enthroned!\nHail, by Angels Mistress owned!\nRoot of Jesse, Gate of morn,\nWhence the world\'s true Light was born:\nGlorious Virgin, joy to thee,\nLoveliest whom in heaven they see:\nFairest thou, where all are fair,\nPlead with Christ our sins to spare.'
+      'Hail, O Queen of heaven, enthroned!\nHail, by Angels Mistress owned!\nRoot of Jesse, Gate of morn,\nWhence the world’s true Light was born:\nGlorious Virgin, joy to thee,\nLoveliest whom in heaven they see:\nFairest thou, where all are fair,\nPlead with Christ our sins to spare.'
     ],
     'marian-antiphon/ave-regina-caelorum-solemn.gabc': [
-      'Hail, O Queen of heaven, enthroned!\nHail, by Angels Mistress owned!\nRoot of Jesse, Gate of morn,\nWhence the world\'s true Light was born:\nGlorious Virgin, joy to thee,\nLoveliest whom in heaven they see:\nFairest thou, where all are fair,\nPlead with Christ our sins to spare.'
+      'Hail, O Queen of heaven, enthroned!\nHail, by Angels Mistress owned!\nRoot of Jesse, Gate of morn,\nWhence the world’s true Light was born:\nGlorious Virgin, joy to thee,\nLoveliest whom in heaven they see:\nFairest thou, where all are fair,\nPlead with Christ our sins to spare.'
     ],
     'index:marian-ave-versicle': [
       'V. Allow me to praise thee, holy Virgin.\nR. Give me strength against thine enemies.'
@@ -578,10 +578,10 @@ define({
       'Let us pray.\nGrant, O merciful God, to our weak natures thy protection, that we who commemorate the holy Mother of God may, by the help of her intercession, arise from our iniquities. Through the same Christ our Lord.\nR. Amen.'
     ],
     'marian-antiphon/regina-caeli.gabc': [
-      'O Queen of heaven rejoice! alleluia:\nFor He whom thou didst merit to bear, alleluia,\nHath arisen as he said, alleluia.\nPray for us to God, alleluia.'
+      'O Queen of heaven, rejoice! alleluia:\nFor he whom thou didst merit to bear, alleluia,\nHath arisen as he said, alleluia.\nPray for us to God, alleluia.'
     ],
     'marian-antiphon/regina-caeli-solemn.gabc': [
-      'O Queen of heaven rejoice! alleluia:\nFor He whom thou didst merit to bear, alleluia,\nHath arisen as he said, alleluia.\nPray for us to God, alleluia.'
+      'O Queen of heaven, rejoice! alleluia:\nFor he whom thou didst merit to bear, alleluia,\nHath arisen as he said, alleluia.\nPray for us to God, alleluia.'
     ],
     'index:marian-regina-versicle': [
       'V. Rejoice and be glad, O Virgin Mary, alleluia.\nR. Because the Lord is truly risen, alleluia.'
@@ -590,22 +590,22 @@ define({
       'Let us pray.\nO God, who gave joy to the world through the resurrection of thy Son, our Lord Jesus Christ; grant, we beseech thee, that through his Mother, the Virgin Mary, we may obtain the joys of everlasting life. Through the same Christ our Lord.\nR. Amen.'
     ],
     'marian-antiphon/salve-regina.gabc': [
-      'Hail holy Queen, Mother of Mercy,\nour life, our sweetness, and our hope.\nTo thee do we cry, poor banished children of Eve.\nTo thee do we send up our sighs, mourning and weeping\nIn this valley of tears.\nTurn then, most gracious Advocate,\nthine eyes of mercy toward us.\nAnd after this our exile show unto us\nthe blessed fruit of thy womb, Jesus.\nO clement, O loving, O sweet Virgin Mary.'
+      'Hail, holy Queen, Mother of Mercy,\nour life, our sweetness, and our hope.\nTo thee do we cry, poor banished children of Eve.\nTo thee do we send up our sighs, mourning and weeping\nin this valley of tears.\nTurn then, most gracious Advocate,\nthine eyes of mercy toward us.\nAnd after this our exile show unto us\nthe blessed fruit of thy womb, Jesus.\nO clement, O loving, O sweet Virgin Mary.'
     ],
     'marian-antiphon/salve-regina-solemn.gabc': [
-      'Hail holy Queen, Mother of Mercy,\nour life, our sweetness, and our hope.\nTo thee do we cry, poor banished children of Eve.\nTo thee do we send up our sighs, mourning and weeping\nIn this valley of tears.\nTurn then, most gracious Advocate,\nthine eyes of mercy toward us.\nAnd after this our exile show unto us\nthe blessed fruit of thy womb, Jesus.\nO clement, O loving, O sweet Virgin Mary.'
+      'Hail, holy Queen, Mother of Mercy,\nour life, our sweetness, and our hope.\nTo thee do we cry, poor banished children of Eve.\nTo thee do we send up our sighs, mourning and weeping\nin this valley of tears.\nTurn then, most gracious Advocate,\nthine eyes of mercy toward us.\nAnd after this our exile show unto us\nthe blessed fruit of thy womb, Jesus.\nO clement, O loving, O sweet Virgin Mary.'
     ],
     'index:marian-salve-versicle': [
-      'V. Pray for us, O Holy Mother of God.\nR. That we may be made worthy of the promises of Christ.'
+      'V. Pray for us, O holy Mother of God.\nR. That we may be made worthy of the promises of Christ.'
     ],
     'marian-antiphon/salve-prayer.gabc': [
-      'Let us pray.\nO almighty, everlasting God, who by the cooperation of the Holy Spirit, didst prepare the body and soul of Mary, glorious Virgin and Mother, to become a worthy dwelling for Thy Son; grant that we who rejoice in her commemoration may, by her gracious intercession, be delivered from present evils and from everlasting death. Through the same Christ our Lord.\nR. Amen.'
+      'Let us pray.\nO almighty, everlasting God, who, by the cooperation of the Holy Spirit, didst prepare the body and soul of Mary, glorious Virgin and Mother, to become a worthy dwelling for thy Son; grant that we who rejoice in her commemoration may, by her gracious intercession, be delivered from present evils and from everlasting death. Through the same Christ our Lord.\nR. Amen.'
     ],
     'index:divinum-auxilium': [
       'V. May the divine assistance remain with us always.\nR. Amen.'
     ],
     'index:asd-preces': [
-      'V. And lead us not into temptation:\nR. But deliver us from evil.\nV. From the gates of hell.\nR. Deliver their souls, O Lord!\nV. May they rest in peace.\nR. Amen.\nV. O Lord, hear my prayer.\nR. And let my cry come unto thee.\nV. (The Lord be with you.\nR. And with thy spirit.)'
+      'V. And lead us not into temptation:\nR. But deliver us from evil.\nV. From the gates of hell.\nR. Deliver their souls, O Lord.\nV. May they rest in peace.\nR. Amen.\nV. O Lord, hear my prayer.\nR. And let my cry come unto thee.\nV. (The Lord be with you.\nR. And with thy spirit.)'
     ],
     'index:asd-collect': [
       'Let us pray.\nWe beseech thee, O Lord, be merciful to the souls of all thy servants and handmaids for whom we humbly entreat thy majesty, that by these offices of pious supplication they may be found worthy to enter into everlasting rest.\nThrough Jesus Christ, thy Son our Lord, Who liveth and reigneth with thee, in the unity of the Holy Ghost, God, world without end.\nR. Amen.'
@@ -620,7 +620,7 @@ define({
         'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
         'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.'
       ],
-      doxologies: {Advent: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', Ascension: 'All glory, Lord, to Thee we pay,\nAscending o’er the stars to-day;\nAll glory, as is ever meet,\nTo Father and to Paraclete.\nAmen.', 'Christ-the-King': 'All glory be, Jesu, to thee,\nThy scepter over all that be;\nAll glory, as is ever meet,\nTo Father and to Paraclete.\nAmen.', Christmas: 'All honor, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', Easter: 'All glory to the Father be,\nAnd to the Son, who from the grave\nArose; and to the Paraclete\nBe glory through eternity.\nAmen.', Epiphany: 'All glory, Jesu, be to thee\nFor this thy glad Epiphany;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', Ferial: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', 'Holy-Family': 'All praise to Thee, O Jesus,\nwho parents dost obey;\nPraise to the sovereign Father\nand Paraclete for aye.\nAmen.', Lent: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', Ordinary: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', 'Our-Lady': 'All honor, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', Passiontide: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', Pentecost: 'All praise be thine, O risen Lord,\nFrom death to endless life restored;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', 'Sacred-Heart': 'We give thee praise, who dost impart\nSuch grace, O Jesu, from thy Heart;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', 'Seven-Dolors': 'All honor, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', Solemn: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', Transfiguration: 'Jesu, to thee our praise we pay,\nTo little ones revealed today,\nWith Father and Blest Spirit One\nUntil the ages\' course is done.\nAmen.'}
+      doxologies: {Advent: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', Ascension: 'All glory, Lord, to thee we pay,\nAscending o’er the stars today;\nAll glory, as is ever meet,\nTo Father and to Paraclete.\nAmen.', 'Christ-the-King': 'All glory be, Jesu, to thee,\nThy scepter over all that be;\nAll glory, as is ever meet,\nTo Father and to Paraclete.\nAmen.', Christmas: 'All honor, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', Easter: 'All glory to the Father be,\nAnd to the Son, who from the grave\nArose; and to the Paraclete\nBe glory through eternity.\nAmen.', Epiphany: 'All glory, Jesu, be to thee\nFor this thy glad Epiphany;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', Ferial: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', 'Holy-Family': 'All praise to thee, O Jesus,\nWho parents dost obey;\nPraise to the sovereign Father\nAnd Paraclete for aye.\nAmen.', Lent: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', Ordinary: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', 'Our-Lady': 'All honor, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', Passiontide: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', Pentecost: 'All praise be thine, O risen Lord,\nFrom death to endless life restored;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', 'Sacred-Heart': 'We give thee praise, who dost impart\nSuch grace, O Jesu, from thy Heart;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', 'Seven-Dolors': 'All honor, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', Solemn: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', Transfiguration: 'Jesu, to thee our praise we pay,\nTo little ones revealed today,\nWith Father and blest Spirit One\nUntil the ages’ course is done.\nAmen.'}
     },
     literal: {
       stanzas: [
@@ -634,7 +634,7 @@ define({
         'Be-fore the end-ing of the day,\nCre-a-tor of the world, we pray\nThat with thy wont-ed fa-vor thou\nWouldst be our guard and keep-er now.',
         'From all ill dreams de-fend our eyes,\nFrom night-ly fears and fan-ta-sies;\nTread un-der foot our ghost-ly foe,\nThat no pol-lu-tion we may know.'
       ],
-      doxologies: {Advent: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', Ascension: 'All glo-ry, Lord, to Thee we pay,\nAs-cend-ing o’er the stars to-day;\nAll glo-ry, as is ev-er meet,\nTo Fa-ther and to Par-a-clete.\nA-men.', 'Christ-the-King': 'All glo-ry be, Je-su, to thee,\nThy scep-ter o-ver all that be;\nAll glo-ry, as is ev-er meet,\nTo Fa-ther and to Par-a-clete.\nA-men.', Christmas: 'All hon-or, laud, and glo-ry be,\nO Je-su, Vir-gin-Born, to thee;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', Easter: 'All glo-ry to the Fa-ther be,\nAnd to the Son, who from the grave\nA-rose; and to the Par-a-clete\nBe glo-ry through e-ter-ni-ty.\nA-men.', Epiphany: 'All glo-ry, Je-su, be to thee\nFor this thy glad E-piph-a-ny;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', Ferial: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', Lent: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', Ordinary: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', 'Our-Lady': 'All hon-or, laud, and glo-ry be,\nO Je-su, Vir-gin-Born, to thee;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', Passiontide: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', Pentecost: 'All praise be thine, O ris-en Lord,\nFrom death to end-less life re-stored;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', 'Sacred-Heart': 'We give thee praise, who dost im-part\nSuch grace, O Je-su, from thy Heart;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', 'Seven-Dolors': 'All hon-or, laud, and glo-ry be,\nO Je-su, Vir-gin-Born, to thee;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', Solemn: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', Transfiguration: 'Je-su, to thee our praise we pay,\nTo lit-tle ones re-vealed to-day,\nWith Fa-ther and Blest Spir-it One\nUn-til the a-ges\' course is done.\nA-men.'}
+      doxologies: {Advent: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', Ascension: 'All glo-ry, Lord, to thee we pay,\nAs-cend-ing o’er the stars to-day;\nAll glo-ry, as is ev-er meet,\nTo Fa-ther and to Par-a-clete.\nA-men.', 'Christ-the-King': 'All glo-ry be, Je-su, to thee,\nThy scep-ter o-ver all that be;\nAll glo-ry, as is ev-er meet,\nTo Fa-ther and to Par-a-clete.\nA-men.', Christmas: 'All hon-or, laud, and glo-ry be,\nO Je-su, Vir-gin-Born, to thee;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', Easter: 'All glo-ry to the Fa-ther be,\nAnd to the Son, who from the grave\nA-rose; and to the Par-a-clete\nBe glo-ry through e-ter-ni-ty.\nA-men.', Epiphany: 'All glo-ry, Je-su, be to thee\nFor this thy glad E-piph-a-ny;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', Ferial: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', Lent: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', Ordinary: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', 'Our-Lady': 'All hon-or, laud, and glo-ry be,\nO Je-su, Vir-gin-Born, to thee;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', Passiontide: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', Pentecost: 'All praise be thine, O ris-en Lord,\nFrom death to end-less life re-stored;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', 'Sacred-Heart': 'We give thee praise, who dost im-part\nSuch grace, O Je-su, from thy Heart;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', 'Seven-Dolors': 'All hon-or, laud, and glo-ry be,\nO Je-su, Vir-gin-Born, to thee;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', Solemn: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', Transfiguration: 'Je-su, to thee our praise we pay,\nTo lit-tle ones re-vealed to-day,\nWith Fa-ther and blest Spir-it One\nUn-til the a-ges’ course is done.\nA-men.'}
     }
   }
 });

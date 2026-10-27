@@ -16,11 +16,19 @@ Abbia misericordia di voi l'onnipotente Iddio, e, rimessi i vostri peccati, vi c
 R. Amen.
 
 # DO's editorial square brackets: the words DO supplies are kept, without the brackets, and the two
-# alternative renderings ("riandatele [respingetele]", "iattanza [tracotanza]") are left out.
-[@Psalterium/Psalmorum/Psalm4]
-4:5 Adiratevi pure, ma non vogliate peccare; ‡ le cose che dite nei vostri cuori, * riandatele con compunzione nei vostri letti.
+# alternative renderings ("riandatele [respingetele]", "iattanza [tracotanza]") are left out.  DO's
+# slips in the psalms are fixed here too, each noted above its psalm.
 
+# "perché" for "perchè" (4:3), and a comma in "del loro frumento, del loro vino e del loro olio"
+# (4:8).
+[@Psalterium/Psalmorum/Psalm4]
+4:3 Figli degli uomini, e fino a quando avrete duro il cuore? * perché amate la vanità, e cercate la menzogna?
+4:5 Adiratevi pure, ma non vogliate peccare; ‡ le cose che dite nei vostri cuori, * riandatele con compunzione nei vostri letti.
+4:8 Si sono moltiplicati * per l'abbondanza del loro frumento, del loro vino e del loro olio.
+
+# "fino a quando?" without the full stop after it (6:4).
 [@Psalterium/Psalmorum/Psalm6]
+6:4 E l'anima mia è grandemente turbata: * ma tu, o Signore, fino a quando?
 6:7 Sono stanco nel mio gemito, † ogni notte bagnerò di pianto il mio letto, * irrigherò con le mie lacrime il mio giaciglio.
 
 [@Psalterium/Psalmorum/Psalm7]
@@ -29,15 +37,156 @@ R. Amen.
 [@Psalterium/Psalmorum/Psalm11]
 11:4 Stermini il Signore tutte le labbra ingannatrici, * e la lingua che parla con iattanza.
 
+# "né" for "nè" (15:10).
+[@Psalterium/Psalmorum/Psalm15]
+15:10 Perché tu non abbandonerai l'anima mia nell'inferno, * né permetterai che il tuo santo veda la corruzione.
+
+# "Così" for "Cosi" (60:9).
 [@Psalterium/Psalmorum/Psalm60]
 60:7 Tu aggiungerai giorni ai giorni del re: * protrarrai i suoi anni di generazione in generazione.
 60:8 Rimanga sul trono in eterno nel cospetto di Dio. * Chi scruterà la sua misericordia e la sua verità?
+60:9 Così inneggerò al tuo Nome nei secoli dei secoli: * per sciogliere i miei voti ogni giorno.
+
+# "fino alla vecchiaia", where DO has "alla" twice (the first 70:18), and a full stop for the comma
+# that ends the psalm (70:24).
+[@Psalterium/Psalmorum/Psalm70]
+70:18 E fino alla vecchiaia, e alla canizie, * o Dio, non mi abbandonare,
+70:24 Anche la mia lingua ridirà ogni giorno la tua giustizia: * allorché saranno confusi e svergognati, quelli che cercano il mio male.
 
 [@Psalterium/Psalmorum/Psalm76]
 76:11 Ed io dissi: Adesso comincio: * questo cambiamento vien dalla destra dell'Altissimo.
 
+# A stray backtick before "affinché" (90:11).
 [@Psalterium/Psalmorum/Psalm90]
 90:9 Perché tu hai detto: O Signore, sei la mia speranza; * e hai scelto l'Altissimo per tuo rifugio.
+90:11 Perché ha dato ordine per te ai suoi angeli, * affinché ti custodiscano in tutte le tue vie.
 
 [@Psalterium/Psalmorum/Psalm122]
 122:2b come gli occhi dell'ancella sono volti alle mani della sua padrona: * così i nostri occhi sono volti al Signore Dio nostro, fino a che abbia pietà di noi.
+
+# "tu hai conosciuto tutti i miei sentieri", without the capital after a semicolon or the comma
+# inside "tutti i miei sentieri" (the first 141:4).
+[@Psalterium/Psalmorum/Psalm141]
+141:4 Mentre il mio spirito vien meno in me; * tu hai conosciuto tutti i miei sentieri.
+
+# The Nunc dimittis: a comma closing the vocative "Signore" (2:29).
+[@Psalterium/Psalmorum/Psalm233]
+2:29 E adesso, Signore, + tu lasci partire il tuo servo * in pace, come hai promesso,
+
+# Deus in adjutorium's "Lode a te, o Signore", with the comma before the vocative that DO has
+# everywhere else ("Visita, o Signore", "ma tu, o Signore").
+[@Prayers:Alleluia]
+v. Alleluia.
+v. Lode a te, o Signore, Re di eterna gloria.
+
+# The collect: a straight apostrophe in "quest'abitazione", as in every other Italian text, where DO
+# has a curly one.
+[@Prayers:Oratio Visita_]
+v. Visita, o Signore, te ne preghiamo, quest'abitazione e respingi lungi da essa tutte le insidie del nemico: i tuoi Santi Angeli abitino in essa, ci custodiscano in pace; e la tua benedizione sia sempre sopra di noi.
+
+# Te lucis: the full stop that ends the first stanza.
+[@Minor:Hymnus Completorium]
+v. Prima che finisca il giorno,
+Te, Creator, preghiamo,
+Che giusta la tua clemenza
+Presidio ci sia e custodia.
+_
+Lungi fuggano i sogni
+E della notte i fantasmi;
+Frena il nostro nemico,
+Che non sian macchiati i nostri corpi.
+_
+* Ascoltaci, Padre piissimo,
+O Figlio eguale al Padre,
+Che con lo Spirito Paraclito
+Regnate in sempiterno.
+Amen.
+
+# The lesson: "forti nella fede", where DO has "nelle".
+[@Minor:Lectio Completorium]
+!1 Pet 5:8-9
+Fratelli: siate temperanti e vegliate: perché il diavolo, vostro avversario, come un leone ruggente, va attorno cercando chi divorare: resistetegli forti nella fede.
+$Tu autem
+
+# In manus: "o Signore, Dio di verità", where DO's full stop breaks the vocative (Domine, Deus
+# veritatis).
+[@Minor:Responsory Completorium]
+R.br. Nelle tue mani, Signore, * affido il mio spirito.
+R. Nelle tue mani, Signore, * affido il mio spirito.
+V. Tu ci hai redenti, o Signore, Dio di verità.
+R. Affido il mio spirito.
+&Gloria1
+R. Nelle tue mani, Signore, * affido il mio spirito.
+
+# The Epiphany doxology: a comma before "che ti sei rivelato", as the Transfiguration and Christ the
+# King have before theirs.
+[@Doxologies:Epi]
+O Gesù, sia gloria a te,
+che ti sei rivelato alle genti,
+insieme con il Padre e lo Spirito Santo,
+per tutti i secoli.
+Amen.
+
+# The Holy Family doxology: "Spirito Santo" in full, where DO abbreviates it "Spirito S.".
+[@Tempora/Epi1-0:Doxology]
+O Gesù, che ti facesti
+obbediente ai tuoi genitori,
+insieme col sommo Padre e collo Spirito Santo
+ti sia sempre gloria.
+Amen.
+
+# The Easter-octave antiphon's "Alleluia", where DO has the Latin's "Allelúja", and Hæc dies without
+# the space before its colon.
+[@Tempora/Pasc0-0:Ant 43]
+Alleluia, alleluia, alleluia, alleluia.
+Questo è il giorno * che ha fatto il Signore: esultiamo e rallegriamoci in esso.
+
+# The Marian antiphons and collects: "Ave, Regina dei cieli", with the comma the next line's "Ave,
+# Signora degli Angeli" has; a comma, not a semicolon, after "Madre di Dio" and "al ricordo di
+# lei", inside their clauses; the commas that open "la Vergine Maria" and "con la cooperazione dello
+# Spirito Santo", which DO closes but doesn't open; and "Orsù" for "Orsú".
+[@Mariaant:Quadragesimae]
+v. Ave, Regina dei cieli,
+Ave, Signora degli Angeli,
+Salve, o radice, salve, o porta,
+da cui la luce al mondo è sorta.
+_
+Godi, o Vergine gloriosa,
+sopra tutte nobilissima.
+Vale, o tanto decorosa,
+prega il Cristo, o tu pietosa.
+_
+V. Fammi degno di lodarti, Vergine santa.
+R. Dammi forza contro i tuoi nemici.
+_
+$Oremus
+v. Porgi, o misericordioso Iddio, sostegno alla nostra fragilità: affinché noi, che celebriamo la memoria della Santa Madre di Dio, con l'aiuto della sua intercessione possiamo sorgere dalle nostre iniquità. Per lo stesso Cristo Signor nostro. Amen
+
+[@Mariaant:Paschalis]
+v. Regina del cielo, rallegrati, alleluia;
+Perché colui che meritasti di portare, alleluia,
+È risuscitato, come disse, alleluia:
+Prega per noi Dio, alleluia.
+_
+V. Godi e rallegrati, o Vergine Maria, alleluia.
+R. Perché il Signore è veramente risuscitato, alleluia.
+_
+$Oremus
+v. O Dio, il quale con la risurrezione di tuo Figlio, Signor nostro Gesù Cristo, ti sei degnato di rallegrare il mondo: fa che, per mezzo della sua Madre, la Vergine Maria, raggiungiamo i gaudi dell'eterna vita. Per lo stesso Cristo Signor nostro. Amen.
+
+[@Mariaant:Postpentecost]
+v. Salve Regina, Madre di misericordia:
+Vita, dolcezza e speranza nostra, salve.
+A te ricorriamo, esuli figli di Eva,
+A te sospiriamo gementi e piangenti in questa valle di lacrime.
+Orsù, dunque, avvocata nostra,
+Rivolgi a noi quegli occhi tuoi misericordiosi.
+E mostraci, dopo questo esilio,
+il frutto benedetto del ventre tuo, Gesù.
+O clemente, o pia, o dolce Vergine Maria.
+_
+V. Prega per noi, o Santa Madre di Dio.
+R. Affinché siam fatti degni delle promesse di Cristo.
+_
+$Oremus
+v. Onnipotente sempiterno Iddio, che hai preparato, con la cooperazione dello Spirito Santo, il corpo e l'anima della gloriosa Vergine Madre Maria, affinché meritasse di essere degna abitazione di tuo Figlio, fa sì che, mentre ci rallegriamo al ricordo di lei, per la sua pietosa intercessione, siamo liberati dai mali che ci sovrastano, e dalla morte eterna. Per lo stesso Cristo Signor nostro. Amen.
