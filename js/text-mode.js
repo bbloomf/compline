@@ -7,6 +7,7 @@
 //   define({
 //     meta: {name: 'English', dir: 'ltr', doCommit: '…'},
 //     // each psalm section's verses, from verse 1, with the Gloria Patri and Sicut erat last
+//     // ('' for a verse whose translation is part of the verse before's)
 //     psalter: {'4': ['When I called upon him…', …], '7.I': […], 'nunc-dimittis': […]},
 //     // each text's units, in order: the paragraphs of a GABC file, keyed by its src, or the
 //     // blocks of index.html, keyed by their data-tr attribute
@@ -110,8 +111,12 @@ define(['jquery'], function($) {
     var units = d && d.texts && d.texts[key];
     return units === undefined || units === null ? null : [].concat(units);
   };
-  // "Psalm 7. I." → '7.I'; the Nunc dimittis is 'nunc-dimittis'.
-  var psalmSection = function(label) {
+  // A psalm score's section, from its GABC header: "user-notes: Psalm 7. I.;" → '7.I', and the
+  // Nunc dimittis is 'nunc-dimittis'.  A psalm-section header says it outright, where the label
+  // isn't enough: All Souls' Nunc dimittis ends with Requiem æternam, so it's 'nunc-dimittis-asd'.
+  var psalmSection = function(header) {
+    if(header['psalm-section']) return header['psalm-section'];
+    var label = header['user-notes'];
     if(!label) return null;
     if(/Simeon|Nunc dimittis/i.test(label)) return 'nunc-dimittis';
     var match = label.match(/Psalm\s+(\d+)(?:\.\s*([IV]+))?/);
@@ -124,9 +129,12 @@ define(['jquery'], function($) {
   var hasPsalm = function(section) {
     return !!psalm(section);
   };
+  // A verse's translation, null if there isn't one, or '' if it's part of the verse before's
+  // (where the translation divides the verses differently).
   var psalmVerse = function(section, verse) {
     var verses = psalm(section);
-    return (verses && verses[verse - 1]) || null;
+    var text = verses && verses[verse - 1];
+    return typeof text === 'string' ? text : null;
   };
   var escapeHtml = function(text) {
     return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -153,16 +161,17 @@ define(['jquery'], function($) {
   var latinClass = function(hasTranslation) {
     return mode() === 'la' ? '' : hasTranslation ? 'has-tr' : 'tr-missing';
   };
-  // The translation of a psalm verse as a <p>, laid out like the Latin, or '' if there isn't one.
+  // The translation of a psalm verse as a <p>, laid out like the Latin; '' if the verse before's
+  // covers it, and null if there isn't one.
   var verseTranslationHtml = function(section, n) {
     var verse = mode() === 'la' ? null : psalmVerse(section, n);
-    return verse ? '<p' + trAttributes() + "><span class='verse-number'>" + n + '.&nbsp;</span>' + unitHtml(verse) + '</p>' : '';
+    return verse ? '<p' + trAttributes() + "><span class='verse-number'>" + n + '.&nbsp;</span>' + unitHtml(verse) + '</p>' : verse;
   };
   // A psalm verse: its Latin <p> (whose inner HTML is latinHtml), then the translation's.
   var verseHtml = function(section, n, latinHtml) {
     var translation = verseTranslationHtml(section, n);
-    return "<p lang='la' class='" + latinClass(!!translation) + "'><span class='verse-number'>" + n + '.&nbsp;</span>' +
-      latinHtml + '</p>' + translation;
+    return "<p lang='la' class='" + latinClass(translation !== null) + "'><span class='verse-number'>" + n + '.&nbsp;</span>' +
+      latinHtml + '</p>' + (translation || '');
   };
   // A Latin block and its translation (units), side by side or one under the other (style.css).
   // tag is the element for each, 'p' or 'div'.
@@ -197,8 +206,8 @@ define(['jquery'], function($) {
       $(this).children('p').each(function() {
         var $p = $(this);
         var translation = verseTranslationHtml(section, parseInt($p.children('.verse-number').text()));
-        $p.attr('lang', 'la').removeClass('has-tr tr-missing').addClass(latinClass(!!translation));
-        $p.after(translation);
+        $p.attr('lang', 'la').removeClass('has-tr tr-missing').addClass(latinClass(translation !== null));
+        if(translation) $p.after(translation);
       });
     });
   };

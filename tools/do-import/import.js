@@ -1,0 +1,184 @@
+#!/usr/bin/env node
+// Generates the translations in js/i18n/<lang>.js from Divinum Officium (TRANSLATIONS_PLAN.md §3).
+//
+//   node tools/do-import/import.js [--do <dir>] [--verbose] [lang …]
+//
+// It always prints the report for every language below.  It writes only the languages named,
+// for example `node tools/do-import/import.js en`, so a language goes into js/i18n/ only once
+// someone has checked it.  The DO checkout is the one fetch-do.sh makes: by default
+// divinum-officium/ next to this repository (or, in a git worktree, next to the main checkout).
+//
+// So far it generates the psalter (Phase 2).  A module's other parts (texts) are kept as they
+// are in the file until Phase 3 generates them.
+'use strict';
+var fs = require('fs');
+var path = require('path');
+var childProcess = require('child_process');
+var psalter = require('./psalter');
+
+// Every language the plan names (§2).  keys renames a translation's verse keys where DO has a
+// typo; groups pairs runs of verses as a whole where a translation divides them differently.
+var LANGUAGES = [
+  {code: 'en', folder: 'English', name: 'English'},
+  {code: 'fr', folder: 'Francais', name: 'Français'},
+  {code: 'es', folder: 'Espanol', name: 'Español', groups: [['102:17', '102:18']]},
+  {code: 'it', folder: 'Italiano', name: 'Italiano', keys: {'11:6': '11:6b'}},
+  {code: 'pt', folder: 'Portugues', name: 'Português'},
+  {code: 'pl', folder: 'Polski', name: 'Polski', keys: {'11:6': '11:6b'}},
+  {code: 'la-bea', folder: 'Latin-Bea', name: 'Latin (Pius XII psalter)'},
+  // not offered yet (§2)
+  {code: 'de', folder: 'Deutsch', name: 'Deutsch'},
+  {code: 'nl', folder: 'Nederlands', name: 'Nederlands'},
+  {code: 'hu', folder: 'Magyar', name: 'Magyar'},
+  {code: 'da', folder: 'Dansk', name: 'Dansk'},
+  {code: 'vi', folder: 'Vietnamice', name: 'Tiếng Việt'}
+];
+
+var root = path.resolve(__dirname, '../..');
+var here = __dirname;
+
+var args = process.argv.slice(2);
+var options = {verbose: false, doDir: null, write: []};
+for(var i = 0; i < args.length; i++) {
+  if(args[i] === '--do') options.doDir = path.resolve(args[++i]);
+  else if(args[i] === '--verbose' || args[i] === '-v') options.verbose = true;
+  else if(/^-/.test(args[i])) {
+    console.error('Usage: node tools/do-import/import.js [--do <dir>] [--verbose] [lang …]');
+    process.exit(1);
+  } else options.write.push(args[i]);
+}
+options.write.forEach(function(code) {
+  if(!LANGUAGES.some(function(l) { return l.code === code; })) {
+    console.error('No language "' + code + '". The languages: ' + LANGUAGES.map(function(l) { return l.code; }).join(' '));
+    process.exit(1);
+  }
+});
+
+// The DO checkout: --do, else divinum-officium/ next to this checkout or the main one.
+var findDO = function() {
+  if(options.doDir) return options.doDir;
+  var candidates = [path.join(root, '../divinum-officium')];
+  try {
+    var common = childProcess.execSync('git rev-parse --path-format=absolute --git-common-dir', {cwd: root}).toString().trim();
+    candidates.push(path.join(path.dirname(common), '../divinum-officium'));
+  } catch(e) {}
+  return candidates.filter(function(dir) { return fs.existsSync(path.join(dir, 'web/www/horas')); })[0];
+};
+var doDir = findDO();
+if(!doDir) {
+  console.error('No DO checkout: run tools/do-import/fetch-do.sh, or give its directory with --do.');
+  process.exit(1);
+}
+var doCommit = fs.readFileSync(path.join(here, 'DO_COMMIT'), 'utf8').trim();
+try {
+  var head = childProcess.execSync('git rev-parse HEAD', {cwd: doDir}).toString().trim();
+  if(head !== doCommit) {
+    console.error('The DO checkout in ' + doDir + ' is at ' + head + ', not DO_COMMIT ' + doCommit + '. Run fetch-do.sh.');
+    process.exit(1);
+  }
+} catch(e) {
+  console.warn('Warning: can\'t tell which commit ' + doDir + ' is at.');
+}
+
+// The report.
+var report = psalter.build(doDir, root, LANGUAGES);
+var list = function(title, lines) {
+  if(!lines.length) return;
+  console.log('  ' + title + ':');
+  var shown = options.verbose ? lines : lines.slice(0, 12);
+  shown.forEach(function(line) { console.log('    ' + line); });
+  if(shown.length < lines.length) console.log('    … and ' + (lines.length - shown.length) + ' more (--verbose lists them)');
+};
+console.log('Divinum Officium ' + doCommit.slice(0, 7) + ' in ' + doDir + '\n');
+console.log('The app\'s Latin psalms against DO\'s Latin (!! = below ' + psalter.THRESHOLD + '):');
+var flagged = report.latin.filter(function(line) { return /^!!|verses \+ /.test(line); });
+var latinLines = options.verbose ? report.latin : flagged;
+if(!latinLines.length) console.log('  every verse matches' + (report.latin.length ? ' above the threshold (' + report.latin.length + ' small differences; --verbose lists them)' : ''));
+latinLines.forEach(function(line) { console.log('  ' + line); });
+if(!options.verbose && flagged.length && report.latin.length > flagged.length) {
+  console.log('  (and ' + (report.latin.length - flagged.length) + ' small differences; --verbose lists them)');
+}
+if(report.app.length) {
+  console.log('\nThe app\'s own files:');
+  report.app.forEach(function(line) { console.log('  ' + line); });
+}
+console.log('\nPsalter coverage:');
+console.log('  language   sections   verses        missing  extra  mediant  flex+  flex-  unsafe');
+LANGUAGES.forEach(function(lang) {
+  var r = report.languages[lang.code];
+  var pad = function(s, n) { s = String(s); return s + new Array(Math.max(0, n - s.length) + 1).join(' '); };
+  console.log('  ' + pad(lang.code, 10) + ' ' + pad(r.ok + '/' + r.sections, 10) + ' ' + pad(r.translated + '/' + r.verses, 13) + ' ' +
+    pad(r.missing.length, 8) + ' ' + pad(r.extra.length, 6) + ' ' + pad(r.markers.length, 8) + ' ' +
+    pad(r.flex.added.length, 6) + ' ' + pad(r.flex.dropped.length, 6) + ' ' + r.unsafe.length);
+});
+console.log('  (sections: with every verse, by key; mediant: verses whose * doesn\'t match the Latin; flex+: verses\n' +
+  '  where the app\'s pointing adds a † that DO hasn\'t; flex-: where DO has a † the app hasn\'t, which goes;\n' +
+  '  unsafe: verses with characters GABC can\'t take, §7a)');
+LANGUAGES.forEach(function(lang) {
+  var r = report.languages[lang.code];
+  if(!r.missing.length && !r.extra.length && !r.notes.length && !r.unsafe.length && !r.markers.length) return;
+  console.log('\n' + lang.code + ' (' + lang.folder + '):');
+  list('missing', r.missing);
+  list('extra lines', r.extra);
+  list('notes', r.notes);
+  list('characters GABC can\'t take', r.unsafe);
+  list('mediants', r.markers);
+  if(options.verbose) {
+    list('flex added by the app\'s pointing', [r.flex.added.join(' ')].filter(Boolean));
+    list('flex dropped', [r.flex.dropped.join(' ')].filter(Boolean));
+  }
+});
+
+// Writing the modules.
+var quote = function(s) {
+  return '\'' + s.replace(/\\/g, '\\\\').replace(/'/g, '\\\'').replace(/\n/g, '\\n') + '\'';
+};
+var serialise = function(value, indent) {
+  indent = indent || '';
+  var inner = indent + '  ';
+  if(value === null || value === undefined) return 'null';
+  if(typeof value === 'string') return quote(value);
+  if(typeof value !== 'object') return JSON.stringify(value);
+  if(Array.isArray(value)) {
+    if(!value.length) return '[]';
+    return '[\n' + value.map(function(v) { return inner + serialise(v, inner); }).join(',\n') + '\n' + indent + ']';
+  }
+  var keys = Object.keys(value);
+  if(!keys.length) return '{}';
+  var key = function(k) { return /^[a-zA-Z_$][\w$]*$/.test(k) ? k : quote(k); };
+  if(keys.every(function(k) { return typeof value[k] !== 'object' || value[k] === null; })) {
+    return '{' + keys.map(function(k) { return key(k) + ': ' + serialise(value[k]); }).join(', ') + '}';
+  }
+  return '{\n' + keys.map(function(k) { return inner + key(k) + ': ' + serialise(value[k], inner); }).join(',\n') + '\n' + indent + '}';
+};
+// The module as it is now, or {}.
+var readModule = function(file) {
+  if(!fs.existsSync(file)) return {};
+  var result = {};
+  new Function('define', fs.readFileSync(file, 'utf8'))(function(m) { result = m; });
+  return result;
+};
+
+options.write.forEach(function(code) {
+  var lang = LANGUAGES.filter(function(l) { return l.code === code; })[0];
+  var file = path.join(root, 'js/i18n', code + '.js');
+  var old = readModule(file);
+  var meta = Object.assign({}, old.meta || {}, {name: lang.name, dir: 'ltr', doCommit: doCommit.slice(0, 7)});
+  var module = {meta: meta, psalter: report.languages[code].psalter};
+  Object.keys(old).forEach(function(k) {
+    if(!(k in module)) module[k] = old[k];
+  });
+  var header = [
+    '// ' + lang.name + ', from Divinum Officium (https://github.com/DivinumOfficium/divinum-officium) at ' + doCommit.slice(0, 7) + ',',
+    '// Copyright (c) 2026 Divinum Officium, MIT licence (js/i18n/LICENSE-divinum-officium.txt).',
+    '//',
+    '// The psalter is generated by tools/do-import/import.js (TRANSLATIONS_PLAN.md §3): fix the importer',
+    '// or DO, not this file.  Each section\'s verses are in the app\'s order, with the Gloria Patri and',
+    '// Sicut erat last; \'\' is a verse whose translation is part of the verse before.'
+  ];
+  if(meta.stub) {
+    header.push('// texts is still the hand-written stub of Phase 1, which Phase 3 replaces.');
+  }
+  fs.writeFileSync(file, header.join('\n') + '\ndefine(' + serialise(module) + ');\n');
+  console.log('\nWrote ' + path.relative(root, file));
+});

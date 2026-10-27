@@ -1,6 +1,6 @@
 # Translations for Compline: plan (rev. 2, multi-language from Divinum Officium)
 
-Status: Phase 0 done (2026-10-26, results in §7a). Phase 1a, the notation levels, done (2026-10-26, notes in §7b). Phase 1, the display, done against a hand-written English stub (2026-10-26, notes and the module format in §7c). Next: the importer (Phases 2–3). Rev. 3 (2026-10-24) records the answers to the open questions, the full coverage check, the notation levels with six menus (§4c) and the Spanish doxologies. Written against `master` @ 28f86f6, with Divinum Officium (DO) `master` @ b9064d7 (2026-10-23) checked out sparsely for the research below. DO is now pinned at `ad87836` (2026-10-26); §7a lists what that changed.
+Status: Phase 0 done (2026-10-26, results in §7a). Phase 1a, the notation levels, done (2026-10-26, notes in §7b). Phase 1, the display, done against a hand-written English stub (2026-10-26, notes and the module format in §7c). Phase 2, the psalter importer, done (2026-10-27, notes and every language's coverage in §7d): `js/i18n/en.js` now has the whole English psalter from DO, and its `texts` are still the stub. Next: Phase 3, the importer for everything else. Rev. 3 (2026-10-24) records the answers to the open questions, the full coverage check, the notation levels with six menus (§4c) and the Spanish doxologies. Written against `master` @ 28f86f6, with Divinum Officium (DO) `master` @ b9064d7 (2026-10-23) checked out sparsely for the research below. DO is now pinned at `ad87836` (2026-10-26); §7a lists what that changed.
 
 **What changed from rev. 1:** every translation now comes from the [Divinum Officium](https://github.com/DivinumOfficium/divinum-officium) data files (MIT licence), not hand-collected sources. That means the app can offer **every language DO has**, and Latin-Bea, instead of English only.
 
@@ -120,7 +120,10 @@ The data is **generated from DO by a dev-time importer**, and the output is comm
 
 ```
 tools/do-import/
-  import.js          # node script: reads a pinned DO checkout, writes js/i18n/<lang>.js
+  import.js          # node script: reads a pinned DO checkout, writes js/i18n/<lang>.js (Phase 2: done)
+  psalter.js         # the psalter, checked against app-latin.js (Phase 2: done)
+  app-latin.js       # the app's own Latin psalms, from the pointed HTML and the GABC (Phase 2: done)
+  text.js            # reading DO's files, normalising and comparing texts (Phase 2: done)
   manifest.json      # app text key -> DO file/section (+ transforms)
   DO_COMMIT          # pinned DO commit hash (Phase 0: done)
   fetch-do.sh        # sparse checkout of DO at DO_COMMIT (Phase 0: done)
@@ -378,7 +381,7 @@ Follow the existing pattern (localStorage strings plus controls in `#options-men
 | **0. Decisions and spikes** ✅ | Answer §9. Pin a DO commit (decided: re-import by hand; the data should rarely change). Spike (a) exsurge `[translation]` lines and (b) splitting scores into units (layout time on a long full psalm on a phone). **Done 2026-10-26; results in §7a.** | ½–1 day |
 | **1a. Notation levels** (§4c) ✅ | The six `notation*` selects and their migration, body classes, CSS that switches off the pointing, and the GABC plain-text renderer in `chant-element`. Independent of translations; can ship on its own first. **Done 2026-10-26; notes in §7b.** | S–M: about 150 lines |
 | **1. Display infrastructure** ✅ | `js/text-mode.js` (settings, body classes, query parameters, lazy `require` of `i18n/<lang>`), the menu `<select>`s, `[lang]`/grid/stack/print CSS, the notated-toggle refactor, `chant-element` unit splitting with translation blocks plus the translation-only text render, the psalm-verse interleaver, `data-tr` filling for `index.html`, and the missing-text fallback. Test against a hand-written `en.js` stub. **Done 2026-10-26; notes in §7c.** | M: about 400 lines, 1–2 days |
-| **2. DO importer: psalter** | Section ranges from `Psalmi minor`, key-matched extraction, fuzzy alignment against the app's Latin, Gloria split, marker handling, mismatch report. | M: about 1 day |
+| **2. DO importer: psalter** ✅ | Section ranges from `Psalmi minor`, key-matched extraction, fuzzy alignment against the app's Latin, Gloria split, marker handling, mismatch report. **Done 2026-10-27; notes in §7d.** | M: about 1 day |
 | **3. DO importer: everything else** | `manifest.json` for about 60 keys (index HTML prayers, about 40 chant files, 17 Te lucis files built from the hymn plus a doxology, Marian antiphons and collects), the `@`/`$`/`&`/`s///` resolver, the 1960 variant choice, generated Paschal alleluia forms, splitting into units. | M–L: 1–2 days, mostly mapping |
 | **4. English end to end** | Generate `en.js`, check every part of the office in all three modes (Sunday, weekdays, PT, Easter octave, Triduum, All Souls, each Marian season, each Te lucis tone). Fix the manifest. | M |
 | **5. More languages** | Run the importer for fr, es, it, pt, pl and la-bea, confirm 100% in the coverage report, add font subsets, spot-check each language (ideally with a reader of that language). | S–M, mostly QA |
@@ -443,7 +446,7 @@ define({
   texts: {'te-lucis/Ferial.gabc': [unit, unit, unit], 'index:confiteor': [unit], …}
 });
 ```
-- **Psalter keys** are the app's psalm sections: the number, then `.I`/`.II` for a part (from the labels "Psalm 7. I."), and `nunc-dimittis`. Index *i* is verse *i* + 1 in the app's numbering, so the Gloria Patri and Sicut erat are the last two (the Triduum, which leaves them out, just doesn't ask for them). Each pointed fragment's `<div class="verses">` now has `data-psalm='<key>'`. A chanted psalm's key comes from its `user-notes` header.
+- **Psalter keys** are the app's psalm sections: the number, then `.I`/`.II` for a part (from the labels "Psalm 7. I."), and `nunc-dimittis`. Index *i* is verse *i* + 1 in the app's numbering, so the Gloria Patri and Sicut erat are the last two (the Triduum, which leaves them out, just doesn't ask for them). Each pointed fragment's `<div class="verses">` now has `data-psalm='<key>'`. A chanted psalm's key comes from its `user-notes` header. (Phase 2 added `nunc-dimittis-asd`, a `psalm-section` header that overrides `user-notes`, and `''` for a verse whose translation is part of the verse before's: §7d.)
 - **Text keys** are a chant's `src` (`te-lucis/Ferial.gabc`, `marian-antiphon/salve-prayer.gabc`, …), or an `index:` key for the blocks of `index.html` that have no GABC twin. The pointed chapter and prayers use their GABC file's key. The `index:` keys: `confiteor`, `confiteor-priest`, `misereatur-nostri`, `misereatur-tui`, `misereatur-vestri`, `indulgentiam`, `christus-factus-est`, `mortem-autem-crucis`, `dominus-vobiscum`, `domine-exaudi`, `visita-silent`, `per-dominum-silent` (the Triduum collect, said and then concluded silently), `benedicat`, `marian-<alma-advent|alma-christmas|salve|ave|regina>-versicle`, `divinum-auxilium`, `asd-preces` (*Et ne nos* to *Et cum spíritu tuo*), `asd-collect` (*Orémus. Propitiáre…*) and `asd-requiem`.
 - **A unit** is plain text, one per paragraph of the chant (blank-line paragraphs, across all its scores, in order). A paragraph with no words (only neumes or bars) belongs to the paragraph before it, or to the next if it comes first; `unitParagraphs` in `chant-element.js` is the one place that decides this, for both the words and the chant. Lines are split by `\n`. A line starting `V. ` or `R. ` gets ℣ or ℟. `*` and `†` show in red. No other markup, and no HTML.
 - **If a text's units don't match the chant's paragraphs**, the display doesn't fail: all the units follow the whole chant (after its red labels), and the console says so. The importer's report should catch these first.
@@ -456,6 +459,45 @@ define({
 - **`index.html`:** each Latin block is now `<div class='tr-pair' data-tr='key'><p|div lang='la'>…</p|div></div>`, and the translation is added after the Latin as the same kind of element, with class `tr`. Where the pointed chapter or a prayer is the block, the pair sits inside the `.pointed-chapter`/`.pointed-prayer` element, so the notation levels still hide it. Three blocks continued a line in Latin (*Christus factus est* … *Mortem autem crucis*, and *Et ne nos* after "Pater noster is said in silence until"). They are `<span class='tr-pair'><span lang='la'>`, inline in Latin only and blocks once there's a translation, so the minified build keeps the spaces between them. In Latin only, the page's layout matches master to the pixel on an ordinary Sunday, All Souls, Holy Thursday and Good Friday.
 - **Layout:** side by side (a two-column grid, rows aligned) at 768 px and wider and in print; stacked below that. Beside the Latin the translation is grey (`--tr-color` in `theme.css`, with a dark-mode value). In translation only, a text with no translation shows its Latin in that grey.
 - **Still to do in later phases:** the hymn's literal, metrical or sung choice (Phase 7: the stub's hymn is just `texts['te-lucis/Ferial.gabc']`), Latin-Bea pairing (Phase 6), font subsets for accented letters (Phase 5), and a check of the per-unit split's timing on a real phone (§7a).
+
+### 7d. Phase 2 notes (2026-10-27)
+
+Built as §2 and §3 describe. `npm run import-do` (or `node tools/do-import/import.js`) prints the report for every language. It writes only the languages named, for example `npm run import-do -- en`, so a language reaches `js/i18n/` only once someone has checked it. It finds the DO checkout next to the repository, or, from a git worktree, next to the main checkout (`--do <dir>` to say where), and stops if the checkout isn't at `DO_COMMIT`. Running it twice gives the same file.
+
+**What it does:**
+- **Sections:** the 21 from `Psalmi minor` `[Completorium]`, where a psalm said in parts gets `.I`, `.II` in order, plus `nunc-dimittis` (`Psalm233.txt`), `nunc-dimittis-asd`, and All Souls' 122, 141 and 142, whole: 26 sections, 313 verses. The app's sections (every `data-psalm` and every psalm score) and DO's have to be the same, and are.
+- **Lines by key,** with the *n*-th of a repeated key paired with the *n*-th, the overrides of §2 (Italiano and Polski `11:6` → `11:6b`), and Español's Ps 102:17–18 as one group (below). Lines without a key (titles such as "(Canticum Simeonis * Luc. 2:29-32)") are skipped. A verse that starts partway through a line has its number inline, "* (4a) réspice", and that goes.
+- **The Latin check** reads every file the app has the Latin in: the pointed HTML (`psalm-verses*.html`, `canticle-psalm*.html`) and the GABC (`psalm*.gabc`, `canticle-psalm*.gabc`, including `_full`). The files have to agree with each other, and DO's Latin line *i* has to match the app's verse *i*: normalised (no tags, accents or punctuation, æ/œ written out) and compared by Levenshtein similarity, with 0.9 as the threshold. **Every verse matches.** The lowest score is 0.983. The 7 verses below 1 are all spelling, where DO follows the Clementine and the app the older forms: *adjicies/adicies*, *projicias/proicias*, *adjiciam/adiciam*, *brachium/bracchium*, *projiciet/proiciet*, *brachio/bracchio*, *foenum/faenum*. `--verbose` lists them.
+- **The ending:** Prayers.txt `[Gloria]`, split at `V.`/`R.` into the Gloria Patri and Sicut erat. A language without it would get the Latin (none lacks it, except Latin-Bea, which has no `Prayers.txt`).
+- **Markers:** the `*` and `†` are kept, because the display shows them in red (§7c), and they follow the app's Latin. DO's `‡` is a flex too (Latin 4:5 "peccáre: ‡ quæ dícitis" is "peccáre: † quæ dícitis" in the app), so it becomes `†`. A flex stays only where the app's verse has one. That drops none: every flex in DO is in the app too. But the app's pointing adds a flex to about 20 long verses that DO hasn't, and the translations of those have none (the report's "flex+": 22 verses in English, 19–25 in the others). DO's `+` (a sign of the cross, in the Nunc dimittis) goes, and so does a marker at the very end of a verse (French 90:14 ends with `*`). Each marker gets a space on either side, as the display expects.
+- **Characters GABC can't take (§7a).** The psalter keeps them, because a psalm's translation is only ever shown as HTML, after the Latin, never put into the GABC. §7a's rule applies to text set *under the chant* (the interlinear line, Phase 9), which would have to clean it up there. The report lists them. English has none; Italiano has editorial insertions in square brackets in 9 verses ("Adiratevi [pure], …"), and Deutsch has parentheses in 2.
+
+**Changes to the app it needed:**
+- **All Souls' Day** ends every psalm with *Requiem æternam* and *Et lux perpétua* in place of the Gloria (verified against `psalms/asd/` and `canticle-psalm-asd*`). Psalms 122, 141 and 142 are said only that day, so their sections just end that way (Prayers.txt `[Requiem]`). The Nunc dimittis is said every day, so All Souls' has a section of its own, **`nunc-dimittis-asd`**: `canticle-psalm-asd.html` has `data-psalm='nunc-dimittis-asd'`, and `canticle-psalm-asd.gabc` and `canticle-psalm-asd_full.gabc` have a new header, `psalm-section: nunc-dimittis-asd;`. `psalmSection` in `js/text-mode.js` now takes the score's header, and a `psalm-section` header overrides `user-notes`.
+- **`psalms/5/psalm-PT_full.gabc`** labelled its first psalm "Psalm 76. II." instead of "Psalm 76. I.", so the fully notated Friday psalms in Paschaltide showed the wrong label, and would have taken 76.II's translation. Fixed.
+- **Grouped verses.** Where a translation divides verses differently, the group's translation goes on its first verse, one line for each of its lines, and each other verse of the group is `''`. The display shows nothing beside those verses, and in translation only hides their Latin (`psalmVerse` returns `''`, not `null`). Only Español uses it so far: its two lines `102:17` and `102:18` go with Latin 102:17, 102:17, 102:18 (102.II verses 4–6). Phase 6 can use the same for Latin-Bea.
+
+**Coverage at `ad87836`** ("sections" counts the sections with every verse paired by key; "mediant" the verses whose `*` doesn't match the Latin):
+
+| Language | Sections | Verses | Mediant | Still to do, in its phase |
+|---|---|---|---|---|
+| English | 26/26 | 313/313 | 0 | **Written to `js/i18n/en.js`.** |
+| Français | 26/26 | 313/313 | 24 | The Sicut erat has no `*` ("…maintenant et toujours, et dans les siècles…"), nor does Nunc dimittis verse 4. Phase 5: put one in with an `extra/fr/` override, or show it without. |
+| Español | 26/26 | 313/313 | 2 | 15:9 has two `*`, and 102:7 (102.I verse 7) none; the Ps 102 group above. |
+| Italiano | 26/26 | 313/313 | 0 | The square brackets above. |
+| Português | 26/26 | 313/313 | 0 | — |
+| Polski | 26/26 | 313/313 | 0 | — |
+| Latin-Bea | 10/26 | 285/313 | 2 | As expected: Bea divides verses differently (§2b). Phase 6's grouping. |
+| Deutsch (not offered) | 24/26 | 310/313 | 44 | Ps 60:9 (§2), and Ps 69 is divided differently too (an extra 69:1, and no second 69:4 or 69:6). No `*` in the Gloria. |
+| Nederlands, Dansk (not offered) | 26/26 | 313/313 | 0 | — |
+| Magyar (not offered) | 26/26 | 313/313 | 15 | Some verses have no `*`, and three have two. |
+| Vietnamice (not offered) | 26/26 | 313/313 | 1 | 76:17 has no `*`. |
+
+**Written:** only English, whose `texts` (and `meta.stub`) are kept from the Phase 1 stub until Phase 3 replaces them; the generated psalms Sunday's stub had are word for word the same. The other languages' modules wait for Phases 5 and 6, when they're checked. Nothing was added to `languages` in `js/text-mode.js`.
+
+**Checked in the browser** (`?text=both&lang=en` and `?text=tr&lang=en`): every pointed verse is followed by its translation with the same number, and every chanted verse 1 has its translation, on each day of the week, each day of Paschaltide, in the Easter octave, on Holy Thursday and Good Friday, and on All Souls' Day (where 122, 141, 142 and the Nunc dimittis end "Eternal rest… And let perpetual light…"). The same with the psalms fully notated: one translation per verse, in order, on All Souls, an ordinary Friday and a Friday in Paschaltide. Read side by side on Saturday's 102.II, with its repeated 102:17. The grouped verses were checked with a Spanish file that isn't committed: in both modes, and in translation only, where the Latin of 102.II verses 5 and 6 is hidden.
+
+The DO checkout used is `~/src/divinum-officium`, next to the main checkout (`fetch-do.sh ~/src/divinum-officium`).
 
 ---
 
