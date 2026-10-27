@@ -8,6 +8,7 @@ define(['moment','moment.easter'], function(moment){
       "5": {title:"Commemoration of St. Telesphorus Pope and Martyr", rank:5},
       "6": {title:"On the Epiphany of the Lord", rank:1},
       "11": {title:"Commemoration of St. Hyginus Pope and Martyr", rank:5},
+      // not lord:1, because on a Sunday, 13 January is the Holy Family
       "13": {title:"On the Commemoration of the Baptism of our Lord Jesus Christ", rank:2},
       "14": {title:"St. Hilary Bishop, Confessor, and Doctor of the Church", rank:3, com:"St. Felix Priest and Martyr"},
       "15": {title:"St. Paul first hermit, Confessor", rank:3, com:"St. Maurus Abbot"},
@@ -31,7 +32,7 @@ define(['moment','moment.easter'], function(moment){
 
     {//February
       "1": {title:"St. Ignatius Bishop and Martyr", rank:3},
-      "2": {title:"On the Purification of the Blessed Virgin Mary", rank:2},
+      "2": {title:"On the Purification of the Blessed Virgin Mary", rank:2, lord:1, ol:1},
       "3": {title:"Commemoration of St. Blase Bishop and Martyr", rank:5},
       "4": {title:"St. Andrew Corsini Bishop and Confessor", rank:3},
       "5": {title:"St. Agatha Virgin and Martyr", rank:3},
@@ -40,7 +41,7 @@ define(['moment','moment.easter'], function(moment){
       "8": {title:"St. John of Matha Confessor", rank:3},
       "9": {title:"St. Cyril Bishop of Alexandria, Confessor, and Doctor of the Church", rank:3, com:"St. Apollonia Virgin and Martyr"},
       "10": {title:"St. Scholastica Virgin", rank:3},
-      "11": {title:"On the Apparition of the Blessed Virgin Mary Immaculate", rank:3},
+      "11": {title:"On the Apparition of the Blessed Virgin Mary Immaculate", rank:3, ol:1},
       "12": {title:"The Seven Holy Founders of the Order of Servants of the Blessed Virgin Mary Confessors", rank:3},
       "14": {title:"Commemoration of St. Valentine Priest and Martyr", rank:5},
       "15": {title:"Commemoration of Ss.Faustinus and Jovita Martyrs", rank:5},
@@ -65,7 +66,7 @@ define(['moment','moment.easter'], function(moment){
       "19": {title:"St. Joseph, Spouse of the Blessed Virgin Mary, Confessor, and Patron of the Universal Church", rank:1, plusOne:"ifSunday"},
       "21": {title:"St. Benedict Abbot", rank:3},
       "24": {title:"St. Gabriel the Archangel", rank:3},
-      "25": {title:"Annunciation of the Blessed Virgin Mary", rank:1, plusOne:"ifSunday"},
+      "25": {title:"Annunciation of the Blessed Virgin Mary", rank:1, ol:1, plusOne:"ifSunday"},
       "27": {title:"St. John Damascene Confessor and Doctor of the Church", rank:3},
       "28": {title:"St. John Capistran Confessor", rank:3}
     },
@@ -115,7 +116,7 @@ define(['moment','moment.easter'], function(moment){
       "28": {title:"St. Augustine Bishop and Confessor", rank:3},
       "29": {title:"St. Mary Magdalen de Pazzi Virgin", rank:3},
       "30": {title:"Commemoration of St. Felix I Pope and Martyr", rank:5},
-      "31": {title:"Blessed Virgin Mary, Queen", rank:2, com:"St. Petronilla Virgin"}
+      "31": {title:"Blessed Virgin Mary, Queen", rank:2, ol:1, com:"St. Petronilla Virgin"}
     },
 
     {//June
@@ -148,7 +149,7 @@ define(['moment','moment.easter'], function(moment){
 
     {//July
       "1": {title:"The Most Precious Blood of our Lord Jesus Christ", rank:1},
-      "2": {title:"On the Visitation of the Blessed Virgin Mary", rank:2, com:"Ss. Processus and Martinian Martyrs"},
+      "2": {title:"On the Visitation of the Blessed Virgin Mary", rank:2, ol:1, com:"Ss. Processus and Martinian Martyrs"},
       "3": {title:"St. Irenaeus Bishop and Martyr", rank:3},
       "5": {title:"St. Anthony Mary Zaccaria Confessor", rank:3},
       "7": {title:"Ss. Cyril and Methodius Bishops and Confessors", rank:3},
@@ -181,7 +182,7 @@ define(['moment','moment.easter'], function(moment){
       "2": {title:"St. Alphonsus Mary of Liguori Bishop, Confessor, and Doctor of the Church", rank:3, com:"St. Stephen I Pope and Martyr"},
       "4": {title:"St. Dominic Confessor, Greater", rank:3},
       "5": {title:"On the Dedication of Our Lady of the Snows", rank:3, ol:1},
-      "6": {title:"On the Transfiguration of our Lord Jesus Christ", rank:2, com:"Ss. Xystus II Pope, Felicissimus, and Agapitus Martyrs"},
+      "6": {title:"On the Transfiguration of our Lord Jesus Christ", rank:2, lord:1, com:"Ss. Xystus II Pope, Felicissimus, and Agapitus Martyrs"},
       "7": {title:"St. Cajetan Confessor", rank:3, com:"St. Donatus Bishop and Martyr"},
       "8": {title:"St. John Mary Vianney Confessor and Priest", rank:3, com:"Ss. Cyriacus, Largus, and Smaragdus Martyrs"},
       "9": {title:"Vigil", rank:3, com:"St. Romanus Martyr"},
@@ -190,14 +191,14 @@ define(['moment','moment.easter'], function(moment){
       "12": {title:"St. Clare Virgin", rank:3},
       "13": {title:"Commemoration of Ss. Hippolytus and Cassian Martyrs", rank:5},
       "14": {title:"Vigil", rank:2, com:"St. Eusebius Confessor"},
-      "15": {title:"On the Assumption of the Blessed Virgin Mary", rank:1},
+      "15": {title:"On the Assumption of the Blessed Virgin Mary", rank:1, ol:1},
       "16": {title:"St. Joachim Father of the Blessed Virgin Mary, Confessor", rank:2},
       "17": {title:"St. Hyacinth of Poland Confessor", rank:3},
       "18": {title:"Commemoration of St. Agapitus Martyr", rank:5},
       "19": {title:"St. John Eudes Confessor", rank:3},
       "20": {title:"St. Bernard Abbot and Doctor of the Church", rank:3},
       "21": {title:"St. Jane Frances de Chantal, Widow", rank:3},
-      "22": {title:"Immaculate Heart of the Blessed Virgin Mary", rank:2, com:"Ss. Timothy and Companions Martyrs"},
+      "22": {title:"Immaculate Heart of the Blessed Virgin Mary", rank:2, ol:1, com:"Ss. Timothy and Companions Martyrs"},
       "23": {title:"St. Philip Benizi Confessor", rank:3},
       "24": {title:"St. Bartholomew Apostle", rank:2},
       "25": {title:"St. Louis King, Confessor", rank:3},
@@ -214,12 +215,12 @@ define(['moment','moment.easter'], function(moment){
       "2": {title:"St. Stephen King, Confessor", rank:3},
       "3": {title:"St. Pius X Pope and Confessor", rank:3},
       "5": {title:"St. Laurence Justinian Bishop and Confessor", rank:3},
-      "8": {title:"On the Nativity of the Blessed Virgin Mary", rank:2, com:"St. Hadrian Martyr"},
+      "8": {title:"On the Nativity of the Blessed Virgin Mary", rank:2, ol:1, com:"St. Hadrian Martyr"},
       "9": {title:"Commemoration of St. Gorgonius Martyr", rank:5},
       "10": {title:"St. Nicholas of Tolentino Confessor", rank:3},
       "11": {title:"Commemoration of Ss. Protus and Hyacinth Martyrs", rank:5},
-      "12": {title:"The Most Holy Name of Mary", rank:3},
-      "14": {title:"On the Exaltation of the Holy Cross", rank:2},
+      "12": {title:"The Most Holy Name of Mary", rank:3, ol:1},
+      "14": {title:"On the Exaltation of the Holy Cross", rank:2, lord:1},
       "15": {title:"Seven Sorrows of the Blessed Virgin Mary", rank:2, com:"St. Nicomedes Martyr"},
       "16": {title:"St. Cornelius Pope and St. Cyprian Bishop, Martyrs", rank:3, com:"Ss. Euphemia Virgin, Lucy and Geminianus Martyrs"},
       "17": {title:"Commemoration of the Impression of the sacred Stigmata of St. Francis Confessor", rank:5},
@@ -244,11 +245,11 @@ define(['moment','moment.easter'], function(moment){
       "4": {title:"St. Francis of Assisi Confessor", rank:3},
       "5": {title:"Commemoration of St. Placid and companions Martyrs", rank:5},
       "6": {title:"St. Bruno Confessor", rank:3},
-      "7": {title:"Blessed Virgin Mary of the Rosary", rank:2, com:"St. Mark Pope and Confessor"},
+      "7": {title:"Blessed Virgin Mary of the Rosary", rank:2, ol:1, com:"St. Mark Pope and Confessor"},
       "8": {title:"St. Bridget, Widow", rank:3, com:"Ss. Sergius, Bacchus, Marcellus and Apuleius Martyrs"},
       "9": {title:"St. John Leonard Confessor", rank:3, com:"St. Denis Bishop, Rusticus Priest, and Eleutherius Martyrs"},
       "10": {title:"St. Francis Borgia Confessor", rank:3},
-      "11": {title:"The Maternity of the Blessed Virgin Mary", rank:2},
+      "11": {title:"The Maternity of the Blessed Virgin Mary", rank:2, ol:1},
       "13": {title:"St. Edward King, Confessor", rank:3},
       "14": {title:"St. Callistus I Pope and Martyr", rank:3},
       "15": {title:"St. Teresa Virgin", rank:3},
@@ -270,7 +271,7 @@ define(['moment','moment.easter'], function(moment){
       "2": {title:"On the Commemoration of all the Faithful Departed", rank:1, plusOne:"ifSunday"},
       "4": {title:"St. Charles Bishop and Confessor", rank:3, com:"Ss. Vitalis and Agricola Martyrs"},
       "8": {title:"Commemoration of the Holy Four Crowned Martyrs", rank:5},
-      "9": {title:"On the Dedication of the Archbasilica of the most Holy Saviour", rank:2, com:"St. Theodore Martyr"},
+      "9": {title:"On the Dedication of the Archbasilica of the most Holy Saviour", rank:2, lord:1, com:"St. Theodore Martyr"},
       "10": {title:"St. Andrew Avellino Confessor", rank:3, com:"Ss. Tryphon, Respicius, and Nympha Martyrs"},
       "11": {title:"St. Martin Bishop and Confessor", rank:3, com:"St. Mennas Martyr"},
       "12": {title:"St. Martin I Pope and Martyr", rank:3},
@@ -282,7 +283,7 @@ define(['moment','moment.easter'], function(moment){
       "18": {title:"On the Dedication of the Basilicas of Ss. Peter and Paul", rank:3},
       "19": {title:"St. Elisabeth, Widow", rank:3, com:"St. Pontianus Pope and Martyr"},
       "20": {title:"St. Felix of Valois Confessor", rank:3},
-      "21": {title:"On the Presentation of the Blessed Virgin Mary", rank:3},
+      "21": {title:"On the Presentation of the Blessed Virgin Mary", rank:3, ol:1},
       "22": {title:"St. Cecilia Virgin and Martyr", rank:3},
       "23": {title:"St. Clement I Pope and Martyr", rank:3, com:"St. Felicitas Martyr"},
       "24": {title:"St. John of the Cross Confessor and Doctor of the Church", rank:3, com:"St. Chrysogonus Martyr"},
@@ -299,7 +300,7 @@ define(['moment','moment.easter'], function(moment){
       "5": {title:"Commemoration of St. Sabbas Abbot", rank:5},
       "6": {title:"St. Nicholas Bishop and Confessor", rank:3},
       "7": {title:"St. Ambrose Bishop, Confessor, and Doctor of the Church", rank:3},
-      "8": {title:"On the Immaculate Conception of the Blessed Virgin Mary", rank:1},
+      "8": {title:"On the Immaculate Conception of the Blessed Virgin Mary", rank:1, ol:1},
       "10": {title:"Commemoration of St. Melchiades Pope and Martyr", rank:5},
       "11": {title:"St. Damasus I Pope and Confessor", rank:3},
       "13": {title:"St. Lucy Virgin and Martyr", rank:3},
@@ -336,7 +337,7 @@ define(['moment','moment.easter'], function(moment){
       key: SundayObject.title.replace(/%([a-z])/g, function(match,callback) {
         return SundayObject[callback](date,dates);
       }),
-      rank: SundayObject.rank || 2
+      rank: (SundayObject.r ? SundayObject.r(date,dates) : SundayObject.rank) || 2
     };
   };
   var CalendarSundays = [
@@ -374,6 +375,11 @@ define(['moment','moment.easter'], function(moment){
       var weeksSinceLastWeekOfOctober = weeksBetween('10/25',date);
       if(weeksSinceLastWeekOfOctober>=0 && weeksSinceLastWeekOfOctober<1) return 'Our Lord Jesus Christ the King';
       return weeksSincePentecost + '. Sunday after Pentecost';
+    }, r: function(date,dates) {
+      // Trinity Sunday and Christ the King are I class feasts
+      if(weeksBetween('pentecost', date) === 1) return 1;
+      var weeksSinceLastWeekOfOctober = weeksBetween('10/25',date);
+      if(weeksSinceLastWeekOfOctober>=0 && weeksSinceLastWeekOfOctober<1) return 1;
     }},
     { before: '12/25', title: '%n. Sunday of Advent', rank: 1, key: 'adv%n', n: function(date,dates) { return weeksBetween('advent1', date) + 1; }},
     { on: '12/25', feast: romanCalendar[11][25], key: ['NatMD','NatMane','NatInterdiu']},
@@ -399,7 +405,7 @@ define(['moment','moment.easter'], function(moment){
   // regional calendars:
   var regionalCalendars = {
     "United States": {
-      "12/08": {title:"On the Immaculate Conception of the Blessed Virgin Mary, Principal Patroness of the United States", rank:1},
+      "12/08": {title:"On the Immaculate Conception of the Blessed Virgin Mary, Principal Patroness of the United States", rank:1, ol:1},
       "12/12": {title:"Our Lady of Guadalupe, Patroness of the Americas", rank:3, ol:1},
       "01/04": {title:"St. Elizabeth Ann Seton, Widow", rank:3},
       "01/22": {title:"Votive Mass for Peace", rank:2, plusOne:"ifSunday"},
@@ -521,6 +527,32 @@ define(['moment','moment.easter'], function(moment){
       }
     }
   }
+  // 1960 rubrics (General Rubrics 15 and the table of precedence): a I class Sunday gives way only to the
+  // Immaculate Conception and the Vigil of Christmas; a II class Sunday gives way to every I class feast and
+  // to the II class feasts of the Lord (marked lord:1).  A feast moved to Monday when it falls on a Sunday
+  // (All Souls) doesn't compete.
+  function outranksSunday(date, sunday, feast) {
+    if(!feast || feast.plusOne === 'ifSunday') return false;
+    if(sunday.rank === 1 || dateMatches(date, firstClassSundays.join(' '))) {
+      return feast.rank === 1 && dateMatches(date, '12/08 12/24');
+    }
+    return feast.rank === 1 || (feast.rank === 2 && !!feast.lord);
+  }
+  // The Sunday, or the saint's day that outranks it.  Of a saint's day's regional alternates, only those that
+  // outrank the Sunday are kept; elsewhere the Sunday is kept.
+  function sundayOrFeast(date, sunday, feast) {
+    if(!feast.alternates) return outranksSunday(date, sunday, feast) ? feast : sunday;
+    var alternates = $.grep(feast.alternates, function(alt, i) {
+      return i === 0 || outranksSunday(date, sunday, alt);
+    });
+    if(!outranksSunday(date, sunday, alternates[0])) alternates[0] = sunday;
+    var selected = $.inArray(feast, alternates) >= 0 ? feast : alternates[0];
+    // a copy, so that the calendar's own entry keeps its weekday alternates
+    selected = $.extend({}, selected);
+    if(alternates.length > 1) selected.alternates = alternates;
+    else delete selected.alternates;
+    return selected;
+  }
   function FeriaWithAlternates(alternates,selectedAlternate) {
     if(alternates && !alternates.length) alternates = undefined;
     var feria = {title:'Feria', rank: 10};
@@ -537,7 +569,7 @@ define(['moment','moment.easter'], function(moment){
   function getFeastForDate(date,currentRegion) {
     if('feast' in date) return date.feast;
     if(date.day() === 0) {
-      return (date.feast = getSunday(date));
+      return (date.feast = sundayOrFeast(date, getSunday(date), getSanctoralFeast(date,currentRegion)));
     }
     if(dateMatches(date,'corpusChristi')) return (date.feast = {title:'Corpus Christi', rank:1, key: 'CorpusChristi'});
     if(dateMatches(date,'sacredHeart')) return (date.feast = {title:'The Most Sacred Heart of Jesus', rank:1, key: 'SCJ'});
@@ -546,9 +578,12 @@ define(['moment','moment.easter'], function(moment){
     if(dateMatches(date,'easter-2')) return (date.feast = {title:'Good Friday', rank:1});
     if(dateMatches(date,'easter-1')) return (date.feast = {title:'Holy Saturday', rank:1});
     if(dateMatches(date,'lent1-4')) return (date.feast = {title:'Ash Wednesday', rank:5, key: 'AshWed'});
-    var dates = dateCache[date.year()];
-    if(dates.annunciation.feast && dateMatches(date,'annunciation')) return (date.feast = dates.annunciation.feast);
-    if(dates.stJoseph.feast && dateMatches(date,'stJoseph')) return (date.feast = dates.stJoseph.feast);
+    return (date.feast = getSanctoralFeast(date,currentRegion));
+  }
+  function getSanctoralFeast(date,currentRegion) {
+    var dates = datesForMoment(date);
+    if(dates.annunciation.feast && dateMatches(date,'annunciation')) return dates.annunciation.feast;
+    if(dates.stJoseph.feast && dateMatches(date,'stJoseph')) return dates.stJoseph.feast;
     var options = [];
     var selectedOption;
     if(regionalCalendars) {
@@ -585,11 +620,11 @@ define(['moment','moment.easter'], function(moment){
       if(!d) {
         if(day > 1) {
           d = romanCalendar[month][day-1];
-          if(!d || !d.plusOne) return (date.feast = FeriaWithAlternates(options,selectedOption));
-          else if(d.plusOne === 'ifLeapYear' && !date.isLeapYear()) return (date.feast = FeriaWithAlternates(options,selectedOption));
-          else if(d.plusOne === 'ifSunday' && date.day()!==1) return (date.feast = FeriaWithAlternates(options,selectedOption));
+          if(!d || !d.plusOne) return FeriaWithAlternates(options,selectedOption);
+          else if(d.plusOne === 'ifLeapYear' && !date.isLeapYear()) return FeriaWithAlternates(options,selectedOption);
+          else if(d.plusOne === 'ifSunday' && date.day()!==1) return FeriaWithAlternates(options,selectedOption);
         } else {
-          return (date.feast = FeriaWithAlternates(options,selectedOption));
+          return FeriaWithAlternates(options,selectedOption);
         }
       }
       if(d == dates.stJoseph.feast || d == dates.annunciation.feast) d = null;
@@ -600,9 +635,9 @@ define(['moment','moment.easter'], function(moment){
         }
         d.alternates = options;
       }
-      if(d) return (date.feast = d);
+      if(d) return d;
     }
-    return (date.feast = FeriaWithAlternates(options,selectedOption));
+    return FeriaWithAlternates(options,selectedOption);
   }
   Dates.prototype.firstClassFeast = function(date) {
     var d = getFeastForDate(date);

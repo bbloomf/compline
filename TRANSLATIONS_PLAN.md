@@ -546,13 +546,23 @@ Built as §3 describes. `import.js` now also prints, for every language, which t
 
 ## 8. Unrelated things noticed (not fixed)
 
-Nothing outstanding. Fixed since this list was first written:
+Found while fixing the Sunday precedence below:
+
+- **The feast menu doesn't preselect the user's region.** `localStorage.region` holds a code (`US`, `GB-ENG`), but `setDate` in `js/compline.js` looks for it among the alternates' region names (`United States`, `England`), so the menu always shows the universal entry, while the office (Te lucis, psalms) follows the regional feast. On a weekday too, e.g. Our Lady of Guadalupe for a US user.
+- **The Lent and Passiontide Sundays and Low Sunday show as "II Class".** They are I class Sundays. The precedence now treats them as I class (`firstClassSundays`), but giving them `rank:1` would also make `firstClassFeast` true, and the Passiontide Te lucis rule (`select-day='!firstClassFeast'`) would then give Passion and Palm Sundays the Solemn tone.
+- **When Christmas is a Sunday, the Sunday within the Octave belongs on 30 December.** The app shows "Of the VI day within the Octave" (DO's transfer table for dominical letter b).
+- **The Sunday of the Holy Family is titled "1. Sunday after Epiphany".** Its Te lucis is right.
+- **Some Te lucis rules start on the eve of a II class feast** (`holyFamily-1`, `sevenDolors-1`, `transfiguration-1`), but II class feasts have no first Vespers in 1960, so the eve's Compline is of its own day. On 14 September the Exaltation gets the Seven Sorrows tone.
+- **The Easter and Advent Te lucis rules don't except I class feasts**, though their notes say so. St. Joseph the Workman gets the Easter tone, not the Solemn one.
+
+Fixed since this list was first written:
 
 - The `setPsalms` early-return guard, which never matched. It now compares against what is on screen.
 - The "consciense" typo in `index.html`.
 - The stale `sw.js` cache list, which also had 8 entries for files that no longer exist, so the service worker couldn't have installed. Registration is still commented out.
 - On All Souls Day, `setCanticle('-asd')` asked for `canticle-ant-asd.gabc`, which never existed. There is no Nunc dimittis antiphon that day, so it is now left out.
 - The gulp `copy` task now excludes `platforms/` and `.claude/`, so a local Cordova build or Claude worktree no longer puts extra copies of the chant files into `dist/`.
+- **A feast on a Sunday was lost** (found in Phase 4). `getFeastForDate` returned the Sunday without looking at the saints' days, so All Saints on Sunday 2026-11-01 and the Assumption on Sunday 2027-08-15 showed as Sundays after Pentecost. Sundays now follow the 1960 precedence (`outranksSunday` in `js/calendar.js`): a II class Sunday gives way to every I class feast and to the II class feasts of the Lord (marked `lord:1`: the Purification, the Transfiguration, the Exaltation of the Cross and the Lateran's dedication, as in DO's `Festum Domini` rule); a I class Sunday gives way only to the Immaculate Conception and the Vigil of Christmas. Regional feasts follow the same rule, and All Souls still moves to Monday. Trinity Sunday and Christ the King are now I class, so Trinity Sunday gets the Solemn tone. The Marian feasts were also missing the `ol:1` the Our Lady Te lucis rule reads, so the Assumption had the Solemn tone even on a weekday; they all have it now, except the Seven Sorrows, which has its own tone. Checked in the browser on those dates and on the Purification, Transfiguration, Exaltation and Lateran on Sundays, the Immaculate Conception on the 2nd Sunday of Advent, Christmas Eve on the 4th, Ss. Peter and Paul, St. John the Baptist, St. Joseph the Workman, St. George in England, and Sundays a II class feast doesn't displace (the Immaculate Heart, a vigil, the Sunday within the Christmas octave, Passion Sunday with St. Patrick in Australia).
 
 ---
 
