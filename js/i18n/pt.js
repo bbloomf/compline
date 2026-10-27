@@ -5,7 +5,8 @@
 // manifest.json, extra/ or DO, not this file.  Each psalter section's verses are in the app's
 // order, with the Gloria Patri and Sicut erat last; '' is a verse whose translation is part of
 // the verse before.  Each text's units are the paragraphs of its chant, or its index.html block
-// (§7c).
+// (§7c).  The hymn, Te lucis, is the first two stanzas and each tone's doxology, in each kind of
+// translation the language has (§4b; tools/do-import/hymn.js).
 define({
   meta: {name: 'Português', dir: 'ltr', doCommit: 'ad87836'},
   psalter: {
@@ -461,91 +462,6 @@ define({
     'psalms/ant-PT.gabc': [
       'Aleluia, aleluia, aleluia.'
     ],
-    'te-lucis/Ferial.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.'
-    ],
-    'te-lucis/Ordinary.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.'
-    ],
-    'te-lucis/Solemn.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.'
-    ],
-    'te-lucis/Advent.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.'
-    ],
-    'te-lucis/Lent.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.'
-    ],
-    'te-lucis/Passiontide.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.'
-    ],
-    'te-lucis/Christmas.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'Ó Jesus, a Vós seja a glória,\nQue nascestes da Virgem,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.'
-    ],
-    'te-lucis/Our-Lady.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'Ó Jesus, a Vós seja a glória,\nQue nascestes da Virgem,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.'
-    ],
-    'te-lucis/Seven-Dolors.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'Ó Jesus, a Vós seja a glória,\nQue nascestes da Virgem,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.'
-    ],
-    'te-lucis/Epiphany.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'Ó Jesus, a Vós seja a glória,\nQue aparecestes aos gentios,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.'
-    ],
-    'te-lucis/Holy-Family.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'Ó Jesus, que Vos fizestes\nObediente a vossos pais,\nCom o Pai supremo e o Espírito,\nGlória a Vós para sempre.\nAmém.'
-    ],
-    'te-lucis/Easter.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'A Deus Pai seja a glória,\nE ao Filho, que dos mortos\nRessuscitou, e ao Paráclito,\nPelos séculos eternos.\nAmém.'
-    ],
-    'te-lucis/Ascension.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'Ó Jesus, a Vós seja a glória,\nQue, vencedor, voltais ao céu,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.'
-    ],
-    'te-lucis/Pentecost.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'A Deus Pai seja a glória,\nE ao Filho, que dos mortos\nRessuscitou, e ao Paráclito,\nPelos séculos dos séculos.\nAmém.'
-    ],
-    'te-lucis/Sacred-Heart.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'Ó Jesus, a Vós seja a glória,\nQue do Coração derramais a graça,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.'
-    ],
-    'te-lucis/Transfiguration.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'Ó Jesus, a Vós seja a glória,\nQue Vos revelais aos pequeninos,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.'
-    ],
-    'te-lucis/Christ-the-King.gabc': [
-      'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
-      'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.',
-      'Ó Jesus, a Vós seja a glória,\nQue governais os ceptros do mundo,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.'
-    ],
     'chapter.gabc': [
       'Vós, porém, Senhor, estais entre nós, e o vosso santo nome tem sido invocado sobre nós; não nos desampareis, Senhor, nosso Deus.\nR. Graças a Deus.'
     ],
@@ -697,5 +613,14 @@ define({
     'index:asd-requiem': [
       'V. Dai-lhes, Senhor, o eterno descanso.\nR. E a luz perpétua lhes brilhe.\nV. Descansem em paz.\nR. Amém.'
     ]
+  },
+  hymn: {
+    literal: {
+      stanzas: [
+        'Antes que a luz desapareça,\nNós Vos suplicamos, Criador de todas as coisas,\nQue sejais, por vossa clemência,\nNosso protector e nosso guarda.',
+        'Longe de nós os sonhos\nE os fantasmas da noite;\nReprimi o nosso inimigo,\nA fim de que nada manche os nossos corpos.'
+      ],
+      doxologies: {Advent: 'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.', Ascension: 'Ó Jesus, a Vós seja a glória,\nQue, vencedor, voltais ao céu,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.', 'Christ-the-King': 'Ó Jesus, a Vós seja a glória,\nQue governais os ceptros do mundo,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.', Christmas: 'Ó Jesus, a Vós seja a glória,\nQue nascestes da Virgem,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.', Easter: 'A Deus Pai seja a glória,\nE ao Filho, que dos mortos\nRessuscitou, e ao Paráclito,\nPelos séculos eternos.\nAmém.', Epiphany: 'Ó Jesus, a Vós seja a glória,\nQue aparecestes aos gentios,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.', Ferial: 'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.', 'Holy-Family': 'Ó Jesus, que Vos fizestes\nObediente a vossos pais,\nCom o Pai supremo e o Espírito,\nGlória a Vós para sempre.\nAmém.', Lent: 'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.', Ordinary: 'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.', 'Our-Lady': 'Ó Jesus, a Vós seja a glória,\nQue nascestes da Virgem,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.', Passiontide: 'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.', Pentecost: 'A Deus Pai seja a glória,\nE ao Filho, que dos mortos\nRessuscitou, e ao Paráclito,\nPelos séculos dos séculos.\nAmém.', 'Sacred-Heart': 'Ó Jesus, a Vós seja a glória,\nQue do Coração derramais a graça,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.', 'Seven-Dolors': 'Ó Jesus, a Vós seja a glória,\nQue nascestes da Virgem,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.', Solemn: 'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.', Transfiguration: 'Ó Jesus, a Vós seja a glória,\nQue Vos revelais aos pequeninos,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.'}
+    }
   }
 });

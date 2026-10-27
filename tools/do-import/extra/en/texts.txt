@@ -19,15 +19,6 @@ R. Amen.
 May almighty God have mercy on you, forgive you your sins, and bring you to everlasting life.
 R. Amen.
 
-# Easter's doxology, chosen in TRANSLATIONS_PLAN.md §4b, in place of DO's 7.7.7.7 "Hymns of glory,
-# songs of praise" (Phase 7 moves it to hymn-sung.txt).
-[@Doxologies:Pasch]
-All glory to the Father be,
-And to the Son, who from the grave
-Arose; and to the Paraclete
-Be glory through eternity.
-Amen.
-
 # The priest's form: DO has "Grant, Lord, a blessing." for both, but domne addresses the priest.
 [jube-domne.gabc]
 V. Pray, Father, a blessing.

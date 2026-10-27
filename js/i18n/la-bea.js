@@ -5,7 +5,8 @@
 // manifest.json, extra/ or DO, not this file.  Each psalter section's verses are in the app's
 // order, with the Gloria Patri and Sicut erat last; '' is a verse whose translation is part of
 // the verse before.  Each text's units are the paragraphs of its chant, or its index.html block
-// (§7c).
+// (§7c).  The hymn, Te lucis, is the first two stanzas and each tone's doxology, in each kind of
+// translation the language has (§4b; tools/do-import/hymn.js).
 define({
   meta: {name: 'Latin (Pius XII psalter)', dir: 'ltr', doCommit: 'ad87836', latin: true, lang: 'la-x-bea'},
   psalter: {

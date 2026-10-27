@@ -1,6 +1,6 @@
 # Translations for Compline: plan (rev. 2, multi-language from Divinum Officium)
 
-Status: Phase 0 done (2026-10-26, results in §7a). Phase 1a, the notation levels, done (2026-10-26, notes in §7b). Phase 1, the display, done against a hand-written English stub (2026-10-26, notes and the module format in §7c). Phase 2, the psalter importer, done (2026-10-27, notes and every language's coverage in §7d): Phase 3, the importer for everything else, done (2026-10-27, notes and every language's coverage in §7e): `js/i18n/en.js` is now wholly generated from DO, psalter and texts. Phase 4, English end to end, done (2026-10-27, notes in §7f): English is offered in the menu. Phase 5, more languages, done (2026-10-27, notes in §7g): Français, Español, Italiano, Português and Polski are offered too, with font subsets for their letters; the hand-written texts in each are kept as drafted until a reader of the language checks them in Phase 8 (§7g). Phase 6, Latin-Bea, done (2026-10-27, notes in §7h): the Pius XII psalter is offered last in the menu, as a comparison text, its psalms paired with the Vulgate's by content. Next: Phase 7, the hymn. Rev. 3 (2026-10-24) records the answers to the open questions, the full coverage check, the notation levels with six menus (§4c) and the Spanish doxologies. Written against `master` @ 28f86f6, with Divinum Officium (DO) `master` @ b9064d7 (2026-10-23) checked out sparsely for the research below. DO is now pinned at `ad87836` (2026-10-26); §7a lists what that changed.
+Status: Phase 0 done (2026-10-26, results in §7a). Phase 1a, the notation levels, done (2026-10-26, notes in §7b). Phase 1, the display, done against a hand-written English stub (2026-10-26, notes and the module format in §7c). Phase 2, the psalter importer, done (2026-10-27, notes and every language's coverage in §7d): Phase 3, the importer for everything else, done (2026-10-27, notes and every language's coverage in §7e): `js/i18n/en.js` is now wholly generated from DO, psalter and texts. Phase 4, English end to end, done (2026-10-27, notes in §7f): English is offered in the menu. Phase 5, more languages, done (2026-10-27, notes in §7g): Français, Español, Italiano, Português and Polski are offered too, with font subsets for their letters; the hand-written texts in each are kept as drafted until a reader of the language checks them in Phase 8 (§7g). Phase 6, Latin-Bea, done (2026-10-27, notes in §7h): the Pius XII psalter is offered last in the menu, as a comparison text, its psalms paired with the Vulgate's by content. Phase 7, the hymn, done (2026-10-27, notes in §7i): *Te lucis* can be shown as a literal or a metrical translation, or sung in English or Spanish to any of the 17 tones. Next: Phase 8, the release. Rev. 3 (2026-10-24) records the answers to the open questions, the full coverage check, the notation levels with six menus (§4c) and the Spanish doxologies. Written against `master` @ 28f86f6, with Divinum Officium (DO) `master` @ b9064d7 (2026-10-23) checked out sparsely for the research below. DO is now pinned at `ad87836` (2026-10-26); §7a lists what that changed.
 
 **What changed from rev. 1:** every translation now comes from the [Divinum Officium](https://github.com/DivinumOfficium/divinum-officium) data files (MIT licence), not hand-collected sources. That means the app can offer **every language DO has**, and Latin-Bea, instead of English only.
 
@@ -127,7 +127,8 @@ tools/do-import/
   texts.js           # everything else, from manifest.json, checked against the app's Latin (Phase 3: done)
   resolve.js         # DO's conditionals and @/$/& references, for the 1960 Roman office (Phase 3: done)
   manifest.json      # app text key -> DO file/section (+ transforms) (Phase 3: done)
-  extra/<lang>/      # written by hand: texts.txt, texts DO doesn't have or that replace DO's, or DO sections in DO's syntax (Phase 3: the priest's forms, with their Latin; Phase 4: three English fixes; Phase 5: each new language's priest's forms and fixes, psalm lines among them), and spelling.txt (Phase 4: English)
+  hymn.js            # the hymn: literal, metrical and sung, and the validator against the 17 tones (Phase 7: done)
+  extra/<lang>/      # written by hand: texts.txt, texts DO doesn't have or that replace DO's, or DO sections in DO's syntax (Phase 3: the priest's forms, with their Latin; Phase 4: three English fixes; Phase 5: each new language's priest's forms and fixes, psalm lines among them), spelling.txt (Phase 4: English), and hymn-literal.txt and hymn-sung.txt (Phase 7: English and Español)
   DO_COMMIT          # pinned DO commit hash (Phase 0: done)
   fetch-do.sh        # sparse checkout of DO at DO_COMMIT (Phase 0: done)
 js/i18n/
@@ -389,7 +390,7 @@ Follow the existing pattern (localStorage strings plus controls in `#options-men
 | **4. English end to end** ✅ | Generate `en.js`, check every part of the office in all three modes (Sunday, weekdays, PT, Easter octave, Triduum, All Souls, each Marian season, each Te lucis tone). Fix the manifest. **Done 2026-10-27; notes in §7f.** | M |
 | **5. More languages** ✅ | Run the importer for fr, es, it, pt, pl and la-bea, confirm 100% in the coverage report, add font subsets, spot-check each language (ideally with a reader of that language). **Done 2026-10-27 for fr, es, it, pt and pl; notes in §7g. Latin-Bea moved to Phase 6.** | S–M, mostly QA |
 | **6. Latin-Bea as a comparison text** ✅ | Verse-group pairing with a block fallback. Suppress the "translation" where Bea is identical to Latin. **Done 2026-10-27; notes in §7h.** | S |
-| **7. Hymn: literal and sung** | Literal: the extra-text merge in the importer, plus the English literal hymn and doxologies (content). Sung: hyphenation drafts, the hand-reviewed `hymn-sung.txt` per metrical language, the validator (note count, stanzas, each doxology against each of the 17 tones), lyric swapping in `chant-element`, the `hymnMode` select with its fallbacks and disabled choices, merging the `extra/` overrides (Britt's literal English, the new English and Spanish Easter doxologies). Check every tone in en and es. | M code (about 150 lines) + S per language to review hyphenation. Entering Britt's English and checking his doxology coverage: S. Entering the Spanish doxologies: S. |
+| **7. Hymn: literal and sung** ✅ | Literal: the extra-text merge in the importer, plus the English literal hymn and doxologies (content). Sung: hyphenation drafts, the hand-reviewed `hymn-sung.txt` per metrical language, the validator (note count, stanzas, each doxology against each of the 17 tones), lyric swapping in `chant-element`, the `hymnMode` select with its fallbacks and disabled choices, merging the `extra/` overrides (Britt's literal English, the new English and Spanish Easter doxologies). Check every tone in en and es. **Done 2026-10-27; notes in §7i.** | M code (about 150 lines) + S per language to review hyphenation. Entering Britt's English and checking his doxology coverage: S. Entering the Spanish doxologies: S. |
 | **8. Release** | **Typo pass** over every generated language file and the `extra/` texts (spell-check per language, plus reading the new hymn texts aloud, and a native speaker's check of the Spanish doxologies); fix in `extra/` overrides and report upstream to DO. Wide-screen layout polish, print, accessibility, credits/licence in the app ("Translations: Divinum Officium, MIT", plus the source of the literal hymn), gh-pages publish, Cordova merge, rebuild and store submission. | M |
 | *9. Optional* | Localise the interface (rubrics, menu, feast titles), exsurge interlinear lines. Out of scope: singing anything in the vernacular other than the hymn, and singing the Bea psalter. | M–XL each |
 
@@ -632,6 +633,102 @@ Latin-Bea is generated (`node tools/do-import/import.js la-bea`, `js/i18n/la-bea
 - In "translation only", a group's later Vulgate verses are hidden with their `''`, so the verse numbers skip (Ps 11: 5, then 7), as for Español's Ps 102 group. Bea's own verse numbers would be its keys, which aren't reliable (above), so they aren't shown.
 - DO's Bea keys could be fixed upstream (Phase 8's report to DO); the pairing doesn't depend on them.
 
+### 7i. Phase 7 notes (2026-10-27)
+
+Built as §4b and §5 describe. *Te lucis* can be shown as a literal or a metrical translation, or sung in the translation to the chant. All the modules are regenerated (`node tools/do-import/import.js en fr es it pt pl la-bea`). Apart from the hymn, each is unchanged.
+
+**The data** (`tools/do-import/hymn.js`, called by `import.js`). Each module's `hymn` takes the place of its 17 `te-lucis/` texts:
+```js
+hymn: {literal: {stanzas: [stanza 1, stanza 2], doxologies: {Advent: stanza 3, …}}, metrical: {…}, sung: {…}}
+```
+- **Keys:** a doxology is keyed by its tone (`te-lucis/<tone>.gabc`) and ends with its Amen. `sung` is hyphenated and has only the tones the whole hymn fits.
+- **Which kinds:** DO's hymn is a language's literal or metrical text, as `hymn` in `import.js`'s `LANGUAGES` says (§4b's table).
+  - English has all three kinds.
+  - Español has metrical and sung. §4b decided it has no literal, so DO's prose doxologies are no longer shown.
+  - Français, Italiano, Português and Polski have the literal one.
+  - Latin-Bea has none.
+- **The report** has a section for the hymn: each kind's coverage, each `new` text, and every tone that can't be sung, with the reason.
+
+**The `extra/` files.** The format:
+- `[hymn]` holds the first two stanzas.
+- Every other section is the doxology, with its Amen, for the tones it names (`[Christmas Our-Lady Seven-Dolors]`).
+
+The files:
+- **`extra/en/hymn-literal.txt`:** the literal English (below).
+- **`extra/<lang>/hymn-sung.txt`:** the metrical text, hyphenated by hand.
+  - `-` divides syllables, one to a note; `‿` joins two words' vowels on one note.
+  - A section has to be DO's text once the hyphens are taken out (so DO's "Virgin-Born" can be sung Vir-gin-Born), or the import stops.
+  - A section marked `new` (`[Easter] new`) is a text DO hasn't. It also takes the place of DO's as the metrical text, with spaces for the `‿`.
+- **The English Easter doxology** (§4b) has moved there from `extra/en/texts.txt`'s `[@Doxologies:Pasch]`, as `[Easter] new`. The English metrical text is word for word what Phase 4 showed.
+
+**The English literal text: Britt.**
+- **What was found:** the first edition (1922; the 1924 revision is the same here, and both are on archive.org) opens each stanza's note with a literal prose rendering. It has renderings of:
+  - *Te lucis*' first two stanzas (p. 39, notes 1 and 2);
+  - the *Præsta, Pater* doxology, under the Terce hymn *Nunc Sancte nobis Spiritus*, which ends with it (p. 36, note 3);
+  - the Transfiguration doxology (p. 284, note 5).
+- **What wasn't used:** every other doxology's rendering is only in the 1952 edition, whose renewal wasn't verified. Its Sacred Heart is also another doxology ("Gloria tibi, Domine, Qui Corde fundis").
+- **Decided by the user:** the 1922 text where it exists. The doxologies it lacks are written for the app in Britt's manner, and the user approved them (2026-10-27): Christmas (with Our Lady and the Seven Sorrows), the Epiphany, Easter, Pentecost, the Ascension, the Sacred Heart, the Holy Family and Christ the King.
+  - *almo Spíritu* is "the gracious Spirit".
+  - *In sempitérna sǽcula* is "for everlasting ages", and *In sæculórum sǽcula* (Pentecost) "unto ages of ages".
+- **The form of the text:** Britt's renderings are prose, a paragraph to a stanza, so under the notes they have no slashes. Britt (1872–1955, Library of Congress authority nr98043157) is public domain in the US.
+- **Not in the app** (no tone uses it): Britt's 1922 Seven Sorrows doxology, *Qui passus es pro servulis*.
+
+**Hyphenation.**
+- **Drafting:** the drafts came from PR #42's Hypher patterns (English and Spanish, used locally, as that PR isn't merged). They divide words for line ends, not for singing ("al-l", "s-tars", "Crea-do-r"), so every line was set by hand from them.
+- **English:** "Spir-it", "Par-a-clete", "ev-er-more"; "o’er" and "our" are one syllable each.
+- **Spanish:** the synalephas are those of §4b, plus DO's own "re-pri-me‿a nues-tro‿ad-ver-sa-rio" and "Hi-jo‿al".
+
+**The validator** counts each tone's note-bearing syllables per line, per stanza. A syllable with an empty `()` neume is elided and doesn't count. All 17 tones are 8.8.8.8 three times, then a two-syllable Amen. The sung text has to match line by line on each tone. Results:
+- **English: 16 of 17 tones.** Holy Family, DO's 7.6.7.6 (§7f), doesn't fit, so in that season "Sung" shows the metrical text with a note.
+- **Español: all 17**, once three of DO's lines were rewritten (below).
+
+**Español.**
+- **The problem:** three of DO's lines end with a word stressed on the third syllable from the end. Spanish verse counts them as eight, but they have nine sung syllables for eight notes:
+  - "y las nocturnas imágenes" (stanza 2, which every tone has);
+  - "Hazlo así, Padre piísimo" and "que reinas con el Espíritu" (the Ferial doxology).
+- **The user's choice:** proper eight-syllable lines, with a repeated note only if none could be found.
+- **The new lines:**
+  - "y visiones fantasmales", which keeps the even lines' *á–e* assonance;
+  - "Hazlo así, Padre amoroso";
+  - "con el Espíritu reinas".
+- **Where they're used:** they are `new` sections (`[hymn] new`, `[Ferial … Passiontide] new`), so they are also the metrical text, as the user chose (2026-10-27): what's read matches what's sung. A native speaker should check them in Phase 8, with the doxologies.
+
+**The display.**
+- **The menu:** "Hymn translation: Literal / Metrical / Sung with chant" (`#selectHymnMode`, `localStorage.hymnMode`, default literal). It sits under the tone menu and the hymn's notation menu.
+  - It's hidden in "Latin only" and for a language with no hymn (Latin-Bea).
+  - A choice the language hasn't is disabled, and so is "Sung" while the hymn is plain text. In "translation only" the notation menus don't apply, so there the hymn can be sung whatever the menu says.
+  - A disabled choice is kept but not shown: the menu shows what is shown in its place.
+- **Choosing the text:** `textMode.hymn(key, notated)` puts the hymn together for a `te-lucis/` key, with §4b's fallbacks:
+  - sung falls back to metrical, with `unsung` set where the language sings but not this season;
+  - literal falls back to metrical, and metrical to literal.
+  - `textMode.texts()` gives the same for a `te-lucis/` key.
+  - The hymn's render key includes `hymnMode`, so changing it redraws only the hymn.
+- **Sung** (`swapLyrics` in `chant-element.js`): after `setGabc`'s rewrites, each syllable with notes gets the next translated syllable, a line for a line.
+  - Elided syllables go. The clef, the bars and the stanza numbers stay.
+  - The drop cap is the translation's first letter. The rest of the syllable isn't put in capitals as the Latin's "TE" is, so it reads "B efore".
+  - In "Latin & translation" the Latin follows each stanza, with red slashes, in the translation's grey. In "translation only" the sung score is the only notation on the page, with nothing under it.
+  - Where the season can't be sung, a red note under the tone menu says "Not available to sing in English for this season.", and the metrical text is shown.
+- **The undertie:** Crimson has no ‿, so `fonts/undertie.py` draws one: a thin arc under the gap, reaching under the letters either side. It is a one-glyph font, `fonts/crimson-undertie.woff2` (340 bytes) and `.woff`, with the roman subset's metrics. `style.css` gives it `unicode-range: U+203F`, so only a page with a sung Spanish hymn downloads it. The copy globs already include it.
+
+**Checked in the browser:**
+- **The hymn, in English and Español:** all 17 tones, in "Latin & translation" and "translation only", with each `hymnMode` and the hymn fully notated or plain text (`.claude/hymn-check.js`). Each combination did what §4b's table says, with no warnings.
+  - Under the chant, the doxologies with elisions (Christmas, the Epiphany with two, Easter) are set syllable for syllable.
+  - The Spanish synalephas show their undertie.
+- **The menu:**
+  - Español shows "Metrical" when "Literal" is stored, Français "Literal" with the other two disabled, and English goes back to the stored choice.
+  - Latin-Bea hides the menu.
+  - Plain-text notation disables "Sung", except in "translation only".
+- **The rest of the office** (Phase 4's `check.js`), on 17 dates covering every tone, in English and Español, in both modes, with the hymn literal and sung: all 272 runs pass. With the hymn sung in "translation only", `check.js` flags only the hymn itself: three scores and no translation block, as §4b means it. The exceptions are English Holy Family, which falls back to text, and All Souls, which has no hymn.
+- **Print** with real print media (`print.mjs`): Spanish, Christmas tone, sung in "Latin & translation". The doxology is under the notes and the Latin follows each stanza.
+- **Phone width:** Spanish sung in "Latin & translation", with no sideways scroll.
+
+**Left for later:**
+- **Phase 8:**
+  - a native speaker's check of the three Spanish lines;
+  - the Spanish and English hymn texts read aloud as sung.
+- **English Holy Family:** an 8.8.8.8 text would let it be sung. DO's text stays as the metrical one.
+- **Britt's 1952 renderings** could replace the drafts if their copyright is found to have lapsed.
+
 ---
 
 ## 8. Unrelated things noticed (not fixed)
@@ -667,7 +764,8 @@ Resolved:
 - Latin-Bea is for comparison only and is never sung (§2b).
 - Hebrew, Bohemice and Polski-Newer are left out, and so is Cesky-Schaller, which has only 3 psalms (§3).
 - New users default to Latin only. When they turn translations on, the language defaults to the browser language (§5).
-- The literal English hymn comes from Britt (1922), once his doxology coverage and public-domain status are confirmed (§4b).
+- The literal English hymn comes from Britt (1922) where his first edition has it, and the doxologies it lacks are written for the app in his manner and reviewed by the user (§7i).
+- Spanish: DO's three lines of nine sung syllables are rewritten to eight, and the new lines are the metrical text too (§7i).
 - When the hymn isn't sung, the user chooses literal or metrical with `hymnMode` (default literal) (§4b, §5).
 - The English Pentecost doxology in DO is correct, and the earlier flag on it was withdrawn (§4b).
 - English Easter doxology: the line-by-line text "All glory to the Father be…" (§4b).

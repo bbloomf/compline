@@ -5,7 +5,8 @@
 // manifest.json, extra/ or DO, not this file.  Each psalter section's verses are in the app's
 // order, with the Gloria Patri and Sicut erat last; '' is a verse whose translation is part of
 // the verse before.  Each text's units are the paragraphs of its chant, or its index.html block
-// (§7c).
+// (§7c).  The hymn, Te lucis, is the first two stanzas and each tone's doxology, in each kind of
+// translation the language has (§4b; tools/do-import/hymn.js).
 define({
   meta: {name: 'Français', dir: 'ltr', doCommit: 'ad87836'},
   psalter: {
@@ -461,91 +462,6 @@ define({
     'psalms/ant-PT.gabc': [
       'Alléluia, alléluia, alléluia.'
     ],
-    'te-lucis/Ferial.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.'
-    ],
-    'te-lucis/Ordinary.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.'
-    ],
-    'te-lucis/Solemn.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.'
-    ],
-    'te-lucis/Advent.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.'
-    ],
-    'te-lucis/Lent.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.'
-    ],
-    'te-lucis/Passiontide.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.'
-    ],
-    'te-lucis/Christmas.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'Gloire soit à vous, ô Jésus !\nQui êtes né de la Vierge :\nGloire au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.'
-    ],
-    'te-lucis/Our-Lady.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'Gloire soit à vous, ô Jésus !\nQui êtes né de la Vierge :\nGloire au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.'
-    ],
-    'te-lucis/Seven-Dolors.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'Gloire soit à vous, ô Jésus !\nQui êtes né de la Vierge :\nGloire au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.'
-    ],
-    'te-lucis/Epiphany.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'À Vous soit la gloire, Jésus,\nQui Vous êtes révélé aux Gentils,\nAinsi qu’au Père et à l’auguste Esprit,\nDans les siècles sempiternels.\nAinsi soit-il.'
-    ],
-    'te-lucis/Holy-Family.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'À Vous, Jésus, qui Vous êtes fait\nObéissant à Vos parents,\nAinsi qu’au Père suprême et à l’Esprit,\nGloire soit éternellement\nAinsi soit-il.'
-    ],
-    'te-lucis/Easter.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'À Dieu le Père soit la gloire,\nAinsi qu’au Fils ressuscité des morts,\nEt au Consolateur,\nDurant les siècles éternels.\nAinsi soit-il.'
-    ],
-    'te-lucis/Ascension.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'Ô Jésus, à Vous soit la gloire,\nQui rentrez en vainqueur au ciel,\nAinsi qu’au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.'
-    ],
-    'te-lucis/Pentecost.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'À Dieu le Père soit la gloire,\nAinsi qu’au Fils ressuscité des morts,\nEt au Consolateur,\nDans les siècles des siècles.\nAinsi soit-il.'
-    ],
-    'te-lucis/Sacred-Heart.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'À vous soit la gloire, Jésus,\nQui par Votre Cœur répandez la grâce,\nAinsi qu’au Père et à l’auguste Esprit,\nDans les siècles sempiternels.\nAinsi soit-il.'
-    ],
-    'te-lucis/Transfiguration.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'Ô Jésus, à vous soit la gloire,\nQui Vous révélez aux petits,\nAvec le Père et l’Esprit vivifiant,\nDans les siècles éternels.\nAinsi soit-il.'
-    ],
-    'te-lucis/Christ-the-King.gabc': [
-      'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
-      'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !',
-      'Ô Jésus, gloire soit à vous,\nQui gouvernez les sceptres du monde,\nAinsi qu’au Père et à l’Esprit de vie,\nDans les siècles éternels.\nAinsi soit-il.'
-    ],
     'chapter.gabc': [
       'Mais vous, vous êtes au milieu de nous, Seigneur, et votre saint nom est invoqué sur nous ; ne nous abandonnez pas, ô Seigneur notre Dieu.\nR. Rendons grâces à Dieu.'
     ],
@@ -697,5 +613,14 @@ define({
     'index:asd-requiem': [
       'V. Seigneur, donnez-leur le repos éternel,\nR. Et faites luire pour eux la lumière sans déclin.\nV. Qu’ils reposent en paix.\nR. Amen.'
     ]
+  },
+  hymn: {
+    literal: {
+      stanzas: [
+        'Avant que la lumière disparaisse,\nNous vous supplions, ô Créateur de toutes choses,\nD’être, dans votre clémence,\nNotre protecteur et notre gardien.',
+        'Que les songes s’enfuient loin de nous\nEt les fantômes de la nuit.\nComprimez notre ennemi ;\nQue nos corps restent purs !'
+      ],
+      doxologies: {Advent: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', Ascension: 'Ô Jésus, à Vous soit la gloire,\nQui rentrez en vainqueur au ciel,\nAinsi qu’au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.', 'Christ-the-King': 'Ô Jésus, gloire soit à vous,\nQui gouvernez les sceptres du monde,\nAinsi qu’au Père et à l’Esprit de vie,\nDans les siècles éternels.\nAinsi soit-il.', Christmas: 'Gloire soit à vous, ô Jésus !\nQui êtes né de la Vierge :\nGloire au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.', Easter: 'À Dieu le Père soit la gloire,\nAinsi qu’au Fils ressuscité des morts,\nEt au Consolateur,\nDurant les siècles éternels.\nAinsi soit-il.', Epiphany: 'À Vous soit la gloire, Jésus,\nQui Vous êtes révélé aux Gentils,\nAinsi qu’au Père et à l’auguste Esprit,\nDans les siècles sempiternels.\nAinsi soit-il.', Ferial: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', 'Holy-Family': 'À Vous, Jésus, qui Vous êtes fait\nObéissant à Vos parents,\nAinsi qu’au Père suprême et à l’Esprit,\nGloire soit éternellement\nAinsi soit-il.', Lent: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', Ordinary: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', 'Our-Lady': 'Gloire soit à vous, ô Jésus !\nQui êtes né de la Vierge :\nGloire au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.', Passiontide: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', Pentecost: 'À Dieu le Père soit la gloire,\nAinsi qu’au Fils ressuscité des morts,\nEt au Consolateur,\nDans les siècles des siècles.\nAinsi soit-il.', 'Sacred-Heart': 'À vous soit la gloire, Jésus,\nQui par Votre Cœur répandez la grâce,\nAinsi qu’au Père et à l’auguste Esprit,\nDans les siècles sempiternels.\nAinsi soit-il.', 'Seven-Dolors': 'Gloire soit à vous, ô Jésus !\nQui êtes né de la Vierge :\nGloire au Père et à l’Esprit Saint,\nDans les siècles éternels.\nAinsi soit-il.', Solemn: 'Faites-nous cette grâce, ô Père très miséricordieux,\nEt vous, ô Fils unique, égal au Père ;\nVous qui, avec l’Esprit Consolateur,\nRégnez dans tous les siècles.\nAinsi soit-il.', Transfiguration: 'Ô Jésus, à vous soit la gloire,\nQui Vous révélez aux petits,\nAvec le Père et l’Esprit vivifiant,\nDans les siècles éternels.\nAinsi soit-il.'}
+    }
   }
 });

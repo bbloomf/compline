@@ -9,14 +9,16 @@
 // divinum-officium/ next to this repository (or, in a git worktree, next to the main checkout).
 //
 // It generates the psalter (Phase 2, psalter.js) and the texts (Phase 3, texts.js, from
-// manifest.json), then respells the words in extra/<lang>/spelling.txt (§7f).  Any other part of a
-// module already in the file is kept.
+// manifest.json), then respells the words in extra/<lang>/spelling.txt (§7f), and puts the hymn
+// together from DO's and extra/<lang>/hymn-*.txt (Phase 7, hymn.js).  Any other part of a module
+// already in the file is kept.
 'use strict';
 var fs = require('fs');
 var path = require('path');
 var childProcess = require('child_process');
 var psalter = require('./psalter');
 var texts = require('./texts');
+var hymns = require('./hymn');
 
 // Every language the plan names (§2).  keys renames a translation's verse keys where DO has a
 // typo; groups pairs runs of verses as a whole where a translation divides them differently;
@@ -24,22 +26,23 @@ var texts = require('./texts');
 // false leaves out the texts, as Latin-Bea's are the Vulgate's (§2b).  align pairs the psalms'
 // lines by content in groups, as Latin-Bea's keys are its own (psalter.js); latin leaves out
 // (null) what is the Latin's word for word, and the module's meta says latin: true, so the
-// display shows the Latin there as the text, not as a missing translation (§2b).
+// display shows the Latin there as the text, not as a missing translation (§2b).  hymn is the kind
+// of translation DO's Te lucis is, 'metrical' or 'literal' (§4b, hymn.js).
 var LANGUAGES = [
-  {code: 'en', folder: 'English', name: 'English'},
-  {code: 'fr', folder: 'Francais', name: 'Français'},
-  {code: 'es', folder: 'Espanol', name: 'Español', groups: [['102:17', '102:18']]},
-  {code: 'it', folder: 'Italiano', name: 'Italiano', keys: {'11:6': '11:6b'}},
-  {code: 'pt', folder: 'Portugues', name: 'Português'},
-  {code: 'pl', folder: 'Polski', name: 'Polski', keys: {'11:6': '11:6b'}},
+  {code: 'en', folder: 'English', name: 'English', hymn: 'metrical'},
+  {code: 'fr', folder: 'Francais', name: 'Français', hymn: 'literal'},
+  {code: 'es', folder: 'Espanol', name: 'Español', groups: [['102:17', '102:18']], hymn: 'metrical'},
+  {code: 'it', folder: 'Italiano', name: 'Italiano', keys: {'11:6': '11:6b'}, hymn: 'literal'},
+  {code: 'pt', folder: 'Portugues', name: 'Português', hymn: 'literal'},
+  {code: 'pl', folder: 'Polski', name: 'Polski', keys: {'11:6': '11:6b'}, hymn: 'literal'},
   {code: 'la-bea', folder: 'Latin-Bea', name: 'Latin (Pius XII psalter)', fallback: 'Latin', texts: false,
     align: true, latin: true, htmlLang: 'la-x-bea'},
   // not offered yet (§2)
-  {code: 'de', folder: 'Deutsch', name: 'Deutsch'},
-  {code: 'nl', folder: 'Nederlands', name: 'Nederlands'},
-  {code: 'hu', folder: 'Magyar', name: 'Magyar'},
-  {code: 'da', folder: 'Dansk', name: 'Dansk'},
-  {code: 'vi', folder: 'Vietnamice', name: 'Tiếng Việt'}
+  {code: 'de', folder: 'Deutsch', name: 'Deutsch', hymn: 'metrical'},
+  {code: 'nl', folder: 'Nederlands', name: 'Nederlands', hymn: 'metrical'},
+  {code: 'hu', folder: 'Magyar', name: 'Magyar', hymn: 'metrical'},
+  {code: 'da', folder: 'Dansk', name: 'Dansk', hymn: 'metrical'},
+  {code: 'vi', folder: 'Vietnamice', name: 'Tiếng Việt', hymn: 'metrical'}
 ];
 
 var root = path.resolve(__dirname, '../..');
@@ -98,6 +101,7 @@ var textReport = texts.build(doDir, root, LANGUAGES);
 
 // Each language's extra/<lang>/spelling.txt (texts.spelling), applied to its psalter and texts.
 var spellings = {};
+var spellingFix = {};
 LANGUAGES.forEach(function(lang) {
   var spelling = texts.spelling(lang.code);
   if(!spelling) return;
@@ -107,6 +111,22 @@ LANGUAGES.forEach(function(lang) {
     });
   });
   spellings[lang.code] = spelling.words;
+  spellingFix[lang.code] = spelling.fix;
+});
+
+// The hymn (hymn.js): DO's Te lucis, as texts.js built it for each tone and respelled, with
+// extra/<lang>/hymn-*.txt.  It takes the place of the te-lucis/ texts in the module.
+var tones = hymns.tones(root);
+var hymnReport = {};
+LANGUAGES.forEach(function(lang) {
+  var t = textReport.languages[lang.code].texts;
+  if(!t) return;
+  var doHymn = {};
+  Object.keys(tones).forEach(function(tone) {
+    var key = 'te-lucis/' + tone + '.gabc';
+    if(t[key]) doHymn[tone] = t[key];
+  });
+  hymnReport[lang.code] = hymns.build(lang, doHymn, tones, spellingFix[lang.code]);
 });
 
 var list = function(title, lines) {
@@ -192,6 +212,18 @@ LANGUAGES.forEach(function(lang) {
   list('notes', r.notes);
   list('characters GABC can\'t take', r.unsafe);
 });
+console.log('\nThe hymn (extra/<lang>/hymn-*.txt; sung: the whole hymn against each of the ' + Object.keys(tones).length + ' tones\' notes, !! = not sung):');
+LANGUAGES.forEach(function(lang) {
+  var h = hymnReport[lang.code];
+  if(!h) return;
+  console.log('  ' + lang.code + ': ' + (h.report.kinds.join('; ') || 'none'));
+  h.report.errors.forEach(function(line) { console.log('    !! ' + line); });
+  var sung = h.report.sung;
+  (options.verbose ? sung : sung.filter(function(line) { return /^!!/.test(line); })).forEach(function(line) { console.log('    ' + line); });
+  if(!options.verbose && sung.some(function(line) { return !/^!!/.test(line); })) {
+    console.log('    (and ' + sung.filter(function(line) { return !/^!!/.test(line); }).length + ' notes; --verbose lists them)');
+  }
+});
 Object.keys(spellings).forEach(function(code) {
   console.log('\n' + code + ' spelling (extra/' + code + '/spelling.txt):');
   console.log('  ' + spellings[code].map(function(w) {
@@ -238,9 +270,22 @@ options.write.forEach(function(code) {
   if(lang.latin) meta.latin = true;
   if(lang.htmlLang) meta.lang = lang.htmlLang;
   var module = {meta: meta, psalter: report.languages[code].psalter};
-  if(textReport.languages[code].texts) module.texts = textReport.languages[code].texts;
+  var moduleTexts = textReport.languages[code].texts;
+  if(moduleTexts) {
+    module.texts = {};
+    Object.keys(moduleTexts).forEach(function(key) {
+      if(!/^te-lucis\//.test(key)) module.texts[key] = moduleTexts[key];
+    });
+  }
+  if(hymnReport[code] && hymnReport[code].hymn) module.hymn = hymnReport[code].hymn;
+  if(hymnReport[code] && hymnReport[code].report.errors.length) {
+    console.error('\n' + code + '\'s hymn has errors (above): not written.');
+    process.exitCode = 1;
+    return;
+  }
   Object.keys(old).forEach(function(k) {
-    if(!(k in module)) module[k] = old[k];
+    // the hymn is generated, so one the language no longer has goes
+    if(!(k in module) && k !== 'hymn') module[k] = old[k];
   });
   var header = [
     '// ' + lang.name + ', from Divinum Officium (https://github.com/DivinumOfficium/divinum-officium) at ' + doCommit.slice(0, 7) + ',',
@@ -250,7 +295,8 @@ options.write.forEach(function(code) {
     '// manifest.json, extra/ or DO, not this file.  Each psalter section\'s verses are in the app\'s',
     '// order, with the Gloria Patri and Sicut erat last; \'\' is a verse whose translation is part of',
     '// the verse before.  Each text\'s units are the paragraphs of its chant, or its index.html block',
-    '// (§7c).'
+    '// (§7c).  The hymn, Te lucis, is the first two stanzas and each tone\'s doxology, in each kind of',
+    '// translation the language has (§4b; tools/do-import/hymn.js).'
   ];
   fs.writeFileSync(file, header.join('\n') + '\ndefine(' + serialize(module) + ');\n');
   console.log('\nWrote ' + path.relative(root, file));

@@ -101,6 +101,16 @@
     font-style: normal;
     unicode-range: U+300-30C,U+312,U+315,U+323,U+326-327;
 }
+/* The undertie ‿ of the hymn sung in Spanish, which Crimson hasn't: drawn by fonts/undertie.py
+   (TRANSLATIONS_PLAN.md §7i).  Only the lyrics have it, and they're roman. */
+@font-face {
+    font-family: 'Crimson Text';
+    src: url('fonts/crimson-undertie.woff2') format('woff2'),
+         url('fonts/crimson-undertie.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    unicode-range: U+203F;
+}
 .lyric-font {
   font-family: 'Crimson Text', serif;
 }
@@ -447,6 +457,13 @@ body.text-tr .notation-choice {
 body.text-both .tr,
 body.text-tr .tr-missing {
   color: var(--tr-color);
+}
+/* How the hymn is translated (TRANSLATIONS_PLAN.md §4b), and the note where it can't be sung. */
+.hymn-mode-choice label {
+  font-weight: normal;
+}
+chant-gabc > .hymn-note {
+  margin: 0 0 0.4615em;
 }
 chant-gabc.plain-text > .tr-pair > p,
 chant-gabc > .chant-tr > p {

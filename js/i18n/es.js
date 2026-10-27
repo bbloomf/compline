@@ -5,7 +5,8 @@
 // manifest.json, extra/ or DO, not this file.  Each psalter section's verses are in the app's
 // order, with the Gloria Patri and Sicut erat last; '' is a verse whose translation is part of
 // the verse before.  Each text's units are the paragraphs of its chant, or its index.html block
-// (§7c).
+// (§7c).  The hymn, Te lucis, is the first two stanzas and each tone's doxology, in each kind of
+// translation the language has (§4b; tools/do-import/hymn.js).
 define({
   meta: {name: 'Español', dir: 'ltr', doCommit: 'ad87836'},
   psalter: {
@@ -461,91 +462,6 @@ define({
     'psalms/ant-PT.gabc': [
       'Aleluya, aleluya, aleluya.'
     ],
-    'te-lucis/Ferial.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      'Hazlo así, Padre piísimo,\nHijo al Padre semejante,\nque reinas con el Espíritu,\npor siglos interminables.\nAmén'
-    ],
-    'te-lucis/Ordinary.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      'Hazlo así, Padre piísimo,\nHijo al Padre semejante,\nque reinas con el Espíritu,\npor siglos interminables.\nAmén'
-    ],
-    'te-lucis/Solemn.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      'Hazlo así, Padre piísimo,\nHijo al Padre semejante,\nque reinas con el Espíritu,\npor siglos interminables.\nAmén'
-    ],
-    'te-lucis/Advent.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      'Hazlo así, Padre piísimo,\nHijo al Padre semejante,\nque reinas con el Espíritu,\npor siglos interminables.\nAmén'
-    ],
-    'te-lucis/Lent.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      'Hazlo así, Padre piísimo,\nHijo al Padre semejante,\nque reinas con el Espíritu,\npor siglos interminables.\nAmén'
-    ],
-    'te-lucis/Passiontide.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      'Hazlo así, Padre piísimo,\nHijo al Padre semejante,\nque reinas con el Espíritu,\npor siglos interminables.\nAmén'
-    ],
-    'te-lucis/Christmas.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      '¡Oh Jesús, que naciste de la Virgen!,\ngloria sea dada a Ti, en unión\ncon el Padre y el Espíritu Santo,\npor los siglos sempiternos.\nAmén.'
-    ],
-    'te-lucis/Our-Lady.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      '¡Oh Jesús, que naciste de la Virgen!,\ngloria sea dada a Ti, en unión\ncon el Padre y el Espíritu Santo,\npor los siglos sempiternos.\nAmén.'
-    ],
-    'te-lucis/Seven-Dolors.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      '¡Oh Jesús, que naciste de la Virgen!,\ngloria sea dada a Ti, en unión\ncon el Padre y el Espíritu Santo,\npor los siglos sempiternos.\nAmén.'
-    ],
-    'te-lucis/Epiphany.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      '¡Oh Jesús, que te mostraste a los gentiles!,\ngloria sea dada a ti en unión\ncon el Padre y el Espíritu Santo,\npor los siglos sempiternos.\nAmén.'
-    ],
-    'te-lucis/Holy-Family.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      '¡Oh Jesús, que te hiciste obediente a tus padres!,\ngloria sea dada siempre a ti\nen unión con el Padre excelso\ny el Espíritu Santo.\nAmén.'
-    ],
-    'te-lucis/Easter.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      'Gloria sea dada a Dios Padre,\ny al Hijo, que resucitó\nde entre los muertos, y al Paráclito,\npor los siglos de los siglos.\nAmén.'
-    ],
-    'te-lucis/Ascension.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      'Gloria a ti, Señor,\nque asciendes por encima de los astros,\ncon el Padre y el Espíritu Santo\npor los siglos eternos.\nAmén.'
-    ],
-    'te-lucis/Pentecost.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      'Gloria sea dada a Dios Padre,\ny al Hijo, que resucitó\nde entre los muertos, y al Paráclito,\npor los siglos de los siglos.\nAmén.'
-    ],
-    'te-lucis/Sacred-Heart.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      '¡Oh Jesús, que derramas la gracia por tu Corazón!,\ngloria sea dada a Ti, en unión\ncon el Padre y el Espíritu Santo,\npor los siglos sempiternos.\nAmén.'
-    ],
-    'te-lucis/Transfiguration.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      '¡Oh Jesús, que te muestras a los humildes!,\ngloria sea dada a ti,\ncon el Padre y el Espíritu Santo,\npor los siglos sempiternos.\nAmén.'
-    ],
-    'te-lucis/Christ-the-King.gabc': [
-      'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
-      'Aleja los malos sueños,\ny las nocturnas imágenes;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.',
-      '¡Oh Jesús, que riges los reinos del mundo!,\ngloria sea dada a ti,\ncon el Padre y el Espíritu Santo,\npor los siglos sempiternos.\nAmén.'
-    ],
     'chapter.gabc': [
       'Tú estás con nosotros, Señor; sobre nosotros se ha invocado tu nombre: no nos abandones, Señor Dios nuestro.\nR. Demos gracias a Dios.'
     ],
@@ -697,5 +613,21 @@ define({
     'index:asd-requiem': [
       'V. Dales, Señor, el descanso eterno.\nR. Y brille para ellos una luz perpetua.\nV. Descansed en paz.\nR. Amén'
     ]
+  },
+  hymn: {
+    metrical: {
+      stanzas: [
+        'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
+        'Aleja los malos sueños,\ny visiones fantasmales;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.'
+      ],
+      doxologies: {Advent: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén', Ascension: 'Gloria a ti, Jesús bendito,\nque al cielo vuelves triunfante,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', 'Christ-the-King': 'Gloria a ti, Jesús bendito,\ndel mundo Rey gobernante,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', Christmas: 'Gloria a ti, Jesús bendito,\nnacido de Virgen Madre,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', Easter: 'Gloria al Padre, gloria al Hijo\nque de la muerte hoy renace,\ny al Paráclito divino,\npor siglos interminables.\nAmén.', Epiphany: 'Gloria a ti, Jesús bendito,\nque a las gentes te mostraste,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', Ferial: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén', 'Holy-Family': 'Jesús, que humilde quisiste\na tus padres sujetarte,\ncon el Padre y el Espíritu\nsiempre gloria se te cante.\nAmén.', Lent: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén', Ordinary: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén', 'Our-Lady': 'Gloria a ti, Jesús bendito,\nnacido de Virgen Madre,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', Passiontide: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén', Pentecost: 'Gloria al Padre, gloria al Hijo\nque de la muerte hoy renace,\ny al Paráclito divino,\npor siglos interminables.\nAmén.', 'Sacred-Heart': 'Gloria a ti, Jesús bendito:\ntu Corazón gracia esparce.\nCon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', 'Seven-Dolors': 'Gloria a ti, Jesús bendito,\nnacido de Virgen Madre,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', Solemn: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén', Transfiguration: 'Gloria a ti, Jesús bendito,\nque a los pequeñuelos te abres,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.'}
+    },
+    sung: {
+      stanzas: [
+        'A Ti, Cre-a-dor, pe-di-mos,\nan-tes que la luz a-ca-be,\nse-as por tu gran cle-men-cia\ncen-ti-ne-la que nos guar-de.',
+        'A-le-ja los ma-los sue-ños,\ny vi-sio-nes fan-tas-ma-les;\nre-pri-me‿a nues-tro‿ad-ver-sa-rio,\nque nues-tros cuer-pos no man-che.'
+      ],
+      doxologies: {Advent: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén', Ascension: 'Glo-ria‿a ti, Je-sús ben-di-to,\nque‿al cie-lo vuel-ves triun-fan-te,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', 'Christ-the-King': 'Glo-ria‿a ti, Je-sús ben-di-to,\ndel mun-do Rey go-ber-nan-te,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Christmas: 'Glo-ria‿a ti, Je-sús ben-di-to,\nna-ci-do de Vir-gen Ma-dre,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Easter: 'Glo-ria‿al Pa-dre, glo-ria‿al Hi-jo\nque de la muer-te‿hoy re-na-ce,\ny‿al Pa-rá-cli-to di-vi-no,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Epiphany: 'Glo-ria‿a ti, Je-sús ben-di-to,\nque‿a las gen-tes te mos-tras-te,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Ferial: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén', 'Holy-Family': 'Je-sús, que‿hu-mil-de qui-sis-te\na tus pa-dres su-je-tar-te,\ncon el Pa-dre‿y‿el Es-pí-ri-tu\nsiem-pre glo-ria se te can-te.\nA-mén.', Lent: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén', Ordinary: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén', 'Our-Lady': 'Glo-ria‿a ti, Je-sús ben-di-to,\nna-ci-do de Vir-gen Ma-dre,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Passiontide: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén', Pentecost: 'Glo-ria‿al Pa-dre, glo-ria‿al Hi-jo\nque de la muer-te‿hoy re-na-ce,\ny‿al Pa-rá-cli-to di-vi-no,\npor si-glos in-ter-mi-na-bles.\nA-mén.', 'Sacred-Heart': 'Glo-ria‿a ti, Je-sús ben-di-to:\ntu Co-ra-zón gra-cia‿es-par-ce.\nCon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', 'Seven-Dolors': 'Glo-ria‿a ti, Je-sús ben-di-to,\nna-ci-do de Vir-gen Ma-dre,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Solemn: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén', Transfiguration: 'Glo-ria‿a ti, Je-sús ben-di-to,\nque‿a los pe-que-ñue-los te‿a-bres,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.'}
+    }
   }
 });

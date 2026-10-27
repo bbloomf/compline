@@ -5,7 +5,8 @@
 // manifest.json, extra/ or DO, not this file.  Each psalter section's verses are in the app's
 // order, with the Gloria Patri and Sicut erat last; '' is a verse whose translation is part of
 // the verse before.  Each text's units are the paragraphs of its chant, or its index.html block
-// (§7c).
+// (§7c).  The hymn, Te lucis, is the first two stanzas and each tone's doxology, in each kind of
+// translation the language has (§4b; tools/do-import/hymn.js).
 define({
   meta: {name: 'Italiano', dir: 'ltr', doCommit: 'ad87836'},
   psalter: {
@@ -461,91 +462,6 @@ define({
     'psalms/ant-PT.gabc': [
       'Alleluia, alleluia, alleluia.'
     ],
-    'te-lucis/Ferial.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.'
-    ],
-    'te-lucis/Ordinary.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.'
-    ],
-    'te-lucis/Solemn.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.'
-    ],
-    'te-lucis/Advent.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.'
-    ],
-    'te-lucis/Lent.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.'
-    ],
-    'te-lucis/Passiontide.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.'
-    ],
-    'te-lucis/Christmas.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'Sia gloria a te, o Gesù,\nche nascesti dalla Vergine,\ne gloria al Padre e allo Spirito\nnei secoli eterni.\nAmen.'
-    ],
-    'te-lucis/Our-Lady.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'Sia gloria a te, o Gesù,\nche nascesti dalla Vergine,\ne gloria al Padre e allo Spirito\nnei secoli eterni.\nAmen.'
-    ],
-    'te-lucis/Seven-Dolors.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'Sia gloria a te, o Gesù,\nche nascesti dalla Vergine,\ne gloria al Padre e allo Spirito\nnei secoli eterni.\nAmen.'
-    ],
-    'te-lucis/Epiphany.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'O Gesù, sia gloria a te\nche ti sei rivelato alle genti,\ninsieme con il Padre e lo Spirito Santo,\nper tutti i secoli.\nAmen.'
-    ],
-    'te-lucis/Holy-Family.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'O Gesù, che ti facesti\nobbediente ai tuoi genitori,\ninsieme col sommo Padre e collo Spirito S.\nti sia sempre gloria.\nAmen.'
-    ],
-    'te-lucis/Easter.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'Sia gloria a Dio Padre\ne al Figlio che risuscitò da morte\ne allo Spirito Santo\nper tutti i secoli.\nAmen.'
-    ],
-    'te-lucis/Ascension.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'Sia gloria a te, o Gesù,\nche vittorioso ritorni al cielo\ninsieme con il Padre e con lo Spirito Santo\nper tutti i secoli.\nAmen.'
-    ],
-    'te-lucis/Pentecost.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'A Dio Padre sia gloria,\ne al Figlio che risuscitò da morte,\ne allo Spirito Santo,\nper i secoli dei secoli.\nAmen.'
-    ],
-    'te-lucis/Sacred-Heart.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'Sia gloria a te, o Gesù,\nche dal Cuore effondi la grazia,\ncon il Padre e lo Spirito Santo,\nnei secoli eterni.\nAmen.'
-    ],
-    'te-lucis/Transfiguration.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'O Gesù, sia gloria a te,\nche ti riveli ai pargoli,\ninsieme col Padre e collo Spirito Santo,\nper i secoli eterni.\nAmen.'
-    ],
-    'te-lucis/Christ-the-King.gabc': [
-      'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
-      'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.',
-      'O Gesù, sia gloria a te,\nche governi gli scettri del mondo,\ncol Padre, e collo Spirito Santo,\nper i secoli eterni.\nAmen.'
-    ],
     'chapter.gabc': [
       'Ma tu, o Signore, sei in noi e il tuo santo nome è stato invocato sopra di noi: non ci abbandonare, Signore, Dio nostro.\nR. Grazie a Dio.'
     ],
@@ -697,5 +613,14 @@ define({
     'index:asd-requiem': [
       'V. L\'eterno riposo dona loro, o Signore.\nR. E splenda ad essi la luce perpetua.\nV. Riposino in pace.\nR. Amen.'
     ]
+  },
+  hymn: {
+    literal: {
+      stanzas: [
+        'Prima che finisca il giorno,\nTe, Creator, preghiamo,\nChe giusta la tua clemenza\nPresidio ci sia e custodia',
+        'Lungi fuggano i sogni\nE della notte i fantasmi;\nFrena il nostro nemico,\nChe non sian macchiati i nostri corpi.'
+      ],
+      doxologies: {Advent: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', Ascension: 'Sia gloria a te, o Gesù,\nche vittorioso ritorni al cielo\ninsieme con il Padre e con lo Spirito Santo\nper tutti i secoli.\nAmen.', 'Christ-the-King': 'O Gesù, sia gloria a te,\nche governi gli scettri del mondo,\ncol Padre, e collo Spirito Santo,\nper i secoli eterni.\nAmen.', Christmas: 'Sia gloria a te, o Gesù,\nche nascesti dalla Vergine,\ne gloria al Padre e allo Spirito\nnei secoli eterni.\nAmen.', Easter: 'Sia gloria a Dio Padre\ne al Figlio che risuscitò da morte\ne allo Spirito Santo\nper tutti i secoli.\nAmen.', Epiphany: 'O Gesù, sia gloria a te\nche ti sei rivelato alle genti,\ninsieme con il Padre e lo Spirito Santo,\nper tutti i secoli.\nAmen.', Ferial: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', 'Holy-Family': 'O Gesù, che ti facesti\nobbediente ai tuoi genitori,\ninsieme col sommo Padre e collo Spirito S.\nti sia sempre gloria.\nAmen.', Lent: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', Ordinary: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', 'Our-Lady': 'Sia gloria a te, o Gesù,\nche nascesti dalla Vergine,\ne gloria al Padre e allo Spirito\nnei secoli eterni.\nAmen.', Passiontide: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', Pentecost: 'A Dio Padre sia gloria,\ne al Figlio che risuscitò da morte,\ne allo Spirito Santo,\nper i secoli dei secoli.\nAmen.', 'Sacred-Heart': 'Sia gloria a te, o Gesù,\nche dal Cuore effondi la grazia,\ncon il Padre e lo Spirito Santo,\nnei secoli eterni.\nAmen.', 'Seven-Dolors': 'Sia gloria a te, o Gesù,\nche nascesti dalla Vergine,\ne gloria al Padre e allo Spirito\nnei secoli eterni.\nAmen.', Solemn: 'Ascoltaci, Padre piissimo,\nO Figlio eguale al Padre,\nChe con lo Spirito Paraclito\nRegnate in sempiterno.\nAmen.', Transfiguration: 'O Gesù, sia gloria a te,\nche ti riveli ai pargoli,\ninsieme col Padre e collo Spirito Santo,\nper i secoli eterni.\nAmen.'}
+    }
   }
 });
