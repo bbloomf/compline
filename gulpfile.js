@@ -11,7 +11,7 @@ var pump = require('pump');
 
 // Lint JavaScript
 gulp.task('jshint', function() {
-  return gulp.src(['js/compline.js', 'js/chant-element.js', 'js/chant-playback.js', 'js/text-mode.js', 'js/calendar.js', 'js/theme.js'])
+  return gulp.src(['js/compline.js', 'js/chant-element.js', 'js/chant-playback.js', 'js/text-mode.js', 'js/hyphenate.js', 'js/calendar.js', 'js/theme.js'])
     .pipe($.jshint())
     .pipe($.jshint.reporter('jshint-stylish'));
 });
@@ -24,6 +24,7 @@ gulp.task('copy', function() {
     'js/theme.js',
     'js/i18n/*.js',
     'js/i18n/LICENSE-divinum-officium.txt',
+    'js/hyphenation/*.js',
     'fonts/*.woff',
     'fonts/*.woff2',
     '!dist/**/*',
