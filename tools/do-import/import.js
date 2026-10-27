@@ -92,39 +92,17 @@ try {
 var report = psalter.build(doDir, root, LANGUAGES);
 var textReport = texts.build(doDir, root, LANGUAGES);
 
-// A language's extra/<lang>/spelling.txt: words DO spells otherwise than the app does, one
-// "honour honor" a line (# for a comment).  Each is replaced as a whole word, keeping its capital,
-// in the psalter and the texts, and the report counts them.
-var respell = function(code) {
-  var file = path.join(here, 'extra', code, 'spelling.txt');
-  if(!fs.existsSync(file)) return null;
-  var words = fs.readFileSync(file, 'utf8').split(/\r?\n/).filter(function(line) {
-    return /\S/.test(line) && !/^\s*#/.test(line);
-  }).map(function(line) {
-    var pair = line.trim().split(/\s+/);
-    return {from: pair[0], to: pair[1], count: 0};
-  });
-  var fix = function(s) {
-    return words.reduce(function(s, w) {
-      return s.replace(new RegExp('\\b' + w.from + '\\b', 'gi'), function(found) {
-        w.count++;
-        return found[0] === found[0].toUpperCase() ? w.to[0].toUpperCase() + w.to.slice(1) : w.to;
-      });
-    }, s);
-  };
-  var fixAll = function(sections) {
-    Object.keys(sections || {}).forEach(function(key) {
-      sections[key] = sections[key].map(fix);
-    });
-  };
-  fixAll(report.languages[code].psalter);
-  fixAll(textReport.languages[code].texts);
-  return words;
-};
+// Each language's extra/<lang>/spelling.txt (texts.spelling), applied to its psalter and texts.
 var spellings = {};
 LANGUAGES.forEach(function(lang) {
-  var words = respell(lang.code);
-  if(words) spellings[lang.code] = words;
+  var spelling = texts.spelling(lang.code);
+  if(!spelling) return;
+  [report.languages[lang.code].psalter, textReport.languages[lang.code].texts].forEach(function(sections) {
+    Object.keys(sections || {}).forEach(function(key) {
+      sections[key] = sections[key].map(spelling.fix);
+    });
+  });
+  spellings[lang.code] = spelling.words;
 });
 
 var list = function(title, lines) {

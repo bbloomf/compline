@@ -127,7 +127,7 @@ tools/do-import/
   texts.js           # everything else, from manifest.json, checked against the app's Latin (Phase 3: done)
   resolve.js         # DO's conditionals and @/$/& references, for the 1960 Roman office (Phase 3: done)
   manifest.json      # app text key -> DO file/section (+ transforms) (Phase 3: done)
-  extra/<lang>/      # written by hand: texts.txt, texts DO doesn't have or that replace DO's (Phase 3: the priest's forms; Phase 4: three English fixes; each with its Latin), and spelling.txt (Phase 4: English)
+  extra/<lang>/      # written by hand: texts.txt, texts DO doesn't have or that replace DO's, or DO sections in DO's syntax (Phase 3: the priest's forms, with their Latin; Phase 4: three English fixes), and spelling.txt (Phase 4: English)
   DO_COMMIT          # pinned DO commit hash (Phase 0: done)
   fetch-do.sh        # sparse checkout of DO at DO_COMMIT (Phase 0: done)
 js/i18n/
@@ -558,11 +558,11 @@ English is checked end to end and offered: `languages` in `js/text-mode.js` now 
 **Fixes:**
 - **Passiontide's short In manus** (`in-manus-tuas/passiontide.gabc`) had no ℣ or ℟ in its English second and third units, where the Latin's scores have them as annotations. `manifest.json` now keeps DO's `V.` and `R.` there. (The other forms' first line is "V." as Phase 3 had it, because every In manus score's annotation is ℣.)
 - **`extra/<lang>/texts.txt`:** a blank line before a `#` comment left a newline at the end of the unit above it. `texts.js` trims each unit.
-- **Decided by the user,** written in `extra/en/texts.txt`, with the Latin they were written against in `extra/la/texts.txt`:
-  - **Easter's Te lucis** has the doxology chosen in §4b, "All glory to the Father be, / And to the Son, who from the grave / Arose; and to the Paraclete / Be glory through eternity.", in place of DO's 7.7.7.7 "Hymns of glory, songs of praise". Phase 7 moves it to `hymn-sung.txt`.
+- **Decided by the user,** written in `extra/en/texts.txt`. Where only part of a text changes, the file now takes one of DO's sections, `[@file:section]` in DO's own syntax, which the language's resolver reads in DO's place (`resolve.js`), so the rest still comes from DO and its Latin check is DO's. A whole text replaced (*Jube, domne*) has its Latin in `extra/la/texts.txt`, which is checked as well as DO's Latin, not instead of it, for any text DO has:
+  - **Easter's Te lucis** (`[@Doxologies:Pasch]`) has the doxology chosen in §4b, "All glory to the Father be, / And to the Son, who from the grave / Arose; and to the Paraclete / Be glory through eternity.", in place of DO's 7.7.7.7 "Hymns of glory, songs of praise". Phase 7 moves it to `hymn-sung.txt`.
   - **_Jube, domne_** (the priest's form) is "Pray, Father, a blessing." DO had "Grant, Lord, a blessing." for both forms; the form without a priest keeps it.
-  - **All Souls' collect** is in *thee* and *thy*, like its conclusion and the rest of the office: "We beseech thee, O Lord, be merciful to the souls of all thy servants and handmaids for whom we humbly entreat thy majesty, …". DO has *you* and *your*.
-  - **American spelling.** DO's English is mostly American ("favor"), but has seven British words. `extra/en/spelling.txt` lists them (favourable, honour, labour, laboured, labours, neighbour, saviour), and `import.js` replaces each as a whole word, keeping its capital, in the psalter and the texts. The report counts each and flags one that no longer matches anything. Another language can have its own `spelling.txt`.
+  - **All Souls' collect** (`[@Sancti/11-02:Oratio mortuorum1]`, whose `$Oremus` and `$Per Dominum` are still DO's) is in *thee* and *thy*, like its conclusion and the rest of the office: "We beseech thee, O Lord, be merciful to the souls of all thy servants and handmaids for whom we humbly entreat thy majesty, …". DO has *you* and *your*.
+  - **American spelling.** DO's English is mostly American ("favor"), but has seven British words. `extra/en/spelling.txt` lists them (favourable, honour, labour, laboured, labours, neighbour, saviour), and `import.js` replaces each as a whole word (with Unicode word boundaries, so accented words work), keeping its case, in the psalter and the texts (`spelling` in `texts.js`). A line that isn't two words stops the import with its line number. The report counts each and flags one that no longer matches anything. Another language can have its own `spelling.txt`.
 
 **Left for later** (none of these stops English being offered):
 - **Phase 7:** DO's Holy Family doxology is 7.6.7.6 with lower-case lines ("All praise to Thee, O Jesus, / who parents dost obey; …"), so it can't be sung to Te lucis; the sung validator will drop it.
