@@ -21,3 +21,7 @@ R. Amen.
 # Jube domne, which extra/en/texts.txt replaces: checked as well as DO's Latin.
 [jube-domne.gabc]
 V. Jube, domne, benedícere.
+
+# Jube Domine, which extra/pl/texts.txt replaces: checked as well as DO's Latin.
+[jube-domine.gabc]
+V. Jube, Dómine, benedícere.

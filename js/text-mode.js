@@ -32,7 +32,12 @@ define(['jquery'], function($) {
   // added once it has been checked end to end (English in Phase 4, the others in Phase 5).
   // compline.js hides the Text and Translation menus while there are none.
   var languages = [
-    {code: 'en', name: 'English'}
+    {code: 'en', name: 'English'},
+    {code: 'fr', name: 'Français'},
+    {code: 'es', name: 'Español'},
+    {code: 'it', name: 'Italiano'},
+    {code: 'pt', name: 'Português'},
+    {code: 'pl', name: 'Polski'}
   ];
   var isLanguage = function(code) {
     return languages.some(function(l) { return l.code === code; });

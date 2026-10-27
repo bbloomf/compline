@@ -34,6 +34,73 @@
     font-weight: 600;
     font-style: normal;
 }
+/* The letters the subsets above haven't, for the translations (TRANSLATIONS_PLAN.md §4 "Fonts"):
+   made by fonts/ext-subsets.py, which prints each unicode-range.  A browser downloads one only for
+   a page with one of its characters. */
+@font-face {
+    font-family: 'Crimson Text';
+    src: url('fonts/crimson-bold-ext.woff2') format('woff2'),
+         url('fonts/crimson-bold-ext.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    unicode-range: U+23-25,U+3C-3E,U+40,U+5C,U+5E-60,U+7B-7E,U+A1-AC,U+AE-C0,U+C2-C5,U+C7-C8,U+CA-CC,U+CE-D2,U+D4-D9,U+DB-DC,U+DE-E0,U+E2-E3,U+E5,U+E7-E8,U+EA,U+EC,U+EE,U+F0-F2,U+F4-F5,U+F7-F9,U+FB,U+FE,U+100-148,U+14A-151,U+154-17E,U+1A0-1A1,U+1AF-1B0,U+1CD-1DC,U+1DE-1DF,U+1E2-1E3,U+1E6-1ED,U+1F0,U+1F4-1F5,U+1F8-1FC,U+1FE-1FF,U+218-21B,U+21E-21F,U+226-233,U+237,U+2D8,U+200B,U+2015,U+201A,U+201E,U+2021-2022,U+2024,U+2026,U+2030,U+2032-2033,U+2038-203A,U+203E,U+20AC;
+}
+@font-face {
+    font-family: 'Crimson Text';
+    src: url('fonts/crimson-bold-vi.woff2') format('woff2'),
+         url('fonts/crimson-bold-vi.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    unicode-range: U+300,U+302-30C,U+312,U+315,U+323,U+326-327,U+1E00-1E99,U+1EA0-1EF9;
+}
+@font-face {
+    font-family: 'Crimson Text';
+    src: url('fonts/crimson-italic-ext.woff2') format('woff2'),
+         url('fonts/crimson-italic-ext.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    unicode-range: U+23-25,U+3C-3E,U+40,U+5C,U+5E-60,U+7B-7E,U+A1-AC,U+AE-C0,U+C2-C5,U+C7-C8,U+CA-CC,U+CE-D2,U+D4-D9,U+DB-DC,U+DE-E0,U+E2-E3,U+E5,U+E7-E8,U+EA,U+EC,U+EE,U+F0-F2,U+F4-F5,U+F7-F9,U+FB,U+FE,U+100-151,U+154-17E,U+218-21B,U+237,U+2BB-2BC,U+2C0,U+2C6-2C7,U+2D8-2DD,U+2015,U+201A,U+201E,U+2021-2022,U+2024,U+2026,U+2030,U+2032-2033,U+2038-203A,U+203E,U+20AC;
+}
+@font-face {
+    font-family: 'Crimson Text';
+    src: url('fonts/crimson-italic-vi.woff2') format('woff2'),
+         url('fonts/crimson-italic-vi.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+    unicode-range: U+300,U+302-30C,U+312,U+315,U+323,U+326-328,U+1E00-1E1B,U+1E1E-1E99,U+1EA2-1ED9;
+}
+@font-face {
+    font-family: 'Crimson Text';
+    src: url('fonts/crimson-roman-ext.woff2') format('woff2'),
+         url('fonts/crimson-roman-ext.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    unicode-range: U+23-25,U+3C-3E,U+40,U+5C,U+5E-60,U+7B-7E,U+A1-AC,U+AE-C0,U+C2-C5,U+C7-C8,U+CA-CC,U+CE-D2,U+D4-D9,U+DB-DC,U+DE-E0,U+E2-E3,U+E5,U+E7-E8,U+EA,U+EC,U+EE,U+F0-F2,U+F4-F5,U+F7-F9,U+FB,U+FE,U+100-148,U+14A-151,U+154-17F,U+189,U+1A0-1A1,U+1AF-1B0,U+1CD-1DC,U+1E2-1E3,U+1FA-1FC,U+1FE-1FF,U+202-203,U+218-21B,U+232-233,U+237,U+2BB-2BC,U+2C0,U+2C6-2C7,U+2D8-2DD,U+200B-200F,U+2015,U+201A,U+201E,U+2021-2022,U+2024,U+2026,U+2030,U+2032-2033,U+2038-203A,U+203E,U+2044,U+2060,U+20A4,U+20AC,U+2122;
+}
+@font-face {
+    font-family: 'Crimson Text';
+    src: url('fonts/crimson-roman-vi.woff2') format('woff2'),
+         url('fonts/crimson-roman-vi.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    unicode-range: U+300,U+302-30C,U+312,U+314-315,U+323,U+326-328,U+1E00-1E1B,U+1E1E-1E99,U+1EA0-1EF9;
+}
+@font-face {
+    font-family: 'Crimson Text';
+    src: url('fonts/crimson-semibold-ext.woff2') format('woff2'),
+         url('fonts/crimson-semibold-ext.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    unicode-range: U+A1-AC,U+AE-148,U+14A-17F,U+1D5-1DC,U+1E2-1E3,U+1FA-1FF,U+218-21B,U+232-233,U+237,U+2D8,U+2015,U+201A,U+201E,U+2020-2022,U+2024,U+2030,U+2032-2033,U+2038-203A,U+203E,U+20AC;
+}
+@font-face {
+    font-family: 'Crimson Text';
+    src: url('fonts/crimson-semibold-vi.woff2') format('woff2'),
+         url('fonts/crimson-semibold-vi.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    unicode-range: U+300-30C,U+312,U+315,U+323,U+326-327;
+}
 .lyric-font {
   font-family: 'Crimson Text', serif;
 }
