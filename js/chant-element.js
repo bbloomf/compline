@@ -204,8 +204,10 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       });
     });
     if(!units) return result;
+    // Under the notes, a hymn's or a Marian antiphon's lines run together, with a red slash between them.
+    var slashes = /^(te-lucis|marian-antiphon)\/(?!.*-prayer)/.test(translation.key);
     var unitHtml = function(units) {
-      return '<div class="chant-tr"><p' + textMode.trAttributes() + '>' + textMode.unitsHtml(units) + '</p></div>';
+      return '<div class="chant-tr"><p' + textMode.trAttributes() + '>' + textMode.unitsHtml(units, slashes) + '</p></div>';
     };
     if(units.length !== unitCount) {
       console.warn('The translation has ' + units.length + ' units, the chant ' + unitCount, translation.key);

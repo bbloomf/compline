@@ -150,17 +150,18 @@ define(['jquery'], function($) {
   var escapeHtml = function(text) {
     return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   };
-  // A unit as HTML, marked up like the Latin.
-  var unitHtml = function(text) {
+  // A unit as HTML, marked up like the Latin.  With slashes, its lines are run together with a red
+  // slash between them, as under a notated hymn's verse.
+  var unitHtml = function(text, slashes) {
     return text.split('\n').map(function(line) {
       return escapeHtml(line.trim())
         .replace(/^V\. /, "<span class='versiculum'>v</span>&nbsp;")
         .replace(/^R\. /, "<span class='versiculum'>r</span>&nbsp;")
         .replace(/ (\*|†)(?= |$)/g, "&nbsp;<span class='red'>$1</span>");
-    }).join('<br>');
+    }).join(slashes ? "&nbsp;<span class='red'>/</span> " : '<br>');
   };
-  var unitsHtml = function(units) {
-    return units.map(unitHtml).join('<br>');
+  var unitsHtml = function(units, slashes) {
+    return units.map(function(unit) { return unitHtml(unit, slashes); }).join('<br>');
   };
   // The attributes of the translation that follows a Latin element.
   var trAttributes = function() {
