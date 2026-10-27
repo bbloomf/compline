@@ -598,7 +598,9 @@ define(['moment','moment.easter'], function(moment){
           if(d.plusOne === 'ifSunday' && date.day()===1) option = d;
         }
         if(option) {
-          var selectThisOption = (region === currentRegion || romanCalendar.regionCodeMap[localStorage.region] === region);
+          // currentRegion is a region's name, or '' for the universal calendar; without it, the user's region
+          var selectThisOption = (typeof currentRegion === 'string'? region === currentRegion :
+              romanCalendar.regionCodeMap[localStorage.region] === region);
           option.region = [region];
           var sameFeast = $.grep(options, function(o,i){
             return o.title == option.title && o.rank === option.rank;
