@@ -9,7 +9,8 @@
 // divinum-officium/ next to this repository (or, in a git worktree, next to the main checkout).
 //
 // It generates the psalter (Phase 2, psalter.js) and the texts (Phase 3, texts.js, from
-// manifest.json).  Any other part of a module already in the file is kept.
+// manifest.json), then respells the words in extra/<lang>/spelling.txt (§7f).  Any other part of a
+// module already in the file is kept.
 'use strict';
 var fs = require('fs');
 var path = require('path');
@@ -90,6 +91,42 @@ try {
 // The report.
 var report = psalter.build(doDir, root, LANGUAGES);
 var textReport = texts.build(doDir, root, LANGUAGES);
+
+// A language's extra/<lang>/spelling.txt: words DO spells otherwise than the app does, one
+// "honour honor" a line (# for a comment).  Each is replaced as a whole word, keeping its capital,
+// in the psalter and the texts, and the report counts them.
+var respell = function(code) {
+  var file = path.join(here, 'extra', code, 'spelling.txt');
+  if(!fs.existsSync(file)) return null;
+  var words = fs.readFileSync(file, 'utf8').split(/\r?\n/).filter(function(line) {
+    return /\S/.test(line) && !/^\s*#/.test(line);
+  }).map(function(line) {
+    var pair = line.trim().split(/\s+/);
+    return {from: pair[0], to: pair[1], count: 0};
+  });
+  var fix = function(s) {
+    return words.reduce(function(s, w) {
+      return s.replace(new RegExp('\\b' + w.from + '\\b', 'gi'), function(found) {
+        w.count++;
+        return found[0] === found[0].toUpperCase() ? w.to[0].toUpperCase() + w.to.slice(1) : w.to;
+      });
+    }, s);
+  };
+  var fixAll = function(sections) {
+    Object.keys(sections || {}).forEach(function(key) {
+      sections[key] = sections[key].map(fix);
+    });
+  };
+  fixAll(report.languages[code].psalter);
+  fixAll(textReport.languages[code].texts);
+  return words;
+};
+var spellings = {};
+LANGUAGES.forEach(function(lang) {
+  var words = respell(lang.code);
+  if(words) spellings[lang.code] = words;
+});
+
 var list = function(title, lines) {
   if(!lines.length) return;
   console.log('  ' + title + ':');
@@ -170,6 +207,12 @@ LANGUAGES.forEach(function(lang) {
   list('unit counts', r.counts);
   list('notes', r.notes);
   list('characters GABC can\'t take', r.unsafe);
+});
+Object.keys(spellings).forEach(function(code) {
+  console.log('\n' + code + ' spelling (extra/' + code + '/spelling.txt):');
+  console.log('  ' + spellings[code].map(function(w) {
+    return w.from + ' → ' + w.to + ' ' + (w.count ? '×' + w.count : '(not found: remove it?)');
+  }).join(', '));
 });
 
 // Writing the modules.

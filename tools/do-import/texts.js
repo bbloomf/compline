@@ -50,7 +50,9 @@ var extraTexts = function(code) {
   var sections = text.sections(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n'));
   Object.keys(sections).forEach(function(key) {
     sections[key] = sections[key].filter(function(line) { return !/^\s*#/.test(line); })
-      .map(function(line) { return line.trim(); }).join('\n').split(/\n{2,}/).filter(Boolean);
+      .map(function(line) { return line.trim(); }).join('\n').split(/\n{2,}/)
+      // a blank line before a comment would leave a \n at the end of the unit
+      .map(function(unit) { return unit.trim(); }).filter(Boolean);
   });
   return sections;
 };

@@ -1,6 +1,6 @@
 # Translations for Compline: plan (rev. 2, multi-language from Divinum Officium)
 
-Status: Phase 0 done (2026-10-26, results in §7a). Phase 1a, the notation levels, done (2026-10-26, notes in §7b). Phase 1, the display, done against a hand-written English stub (2026-10-26, notes and the module format in §7c). Phase 2, the psalter importer, done (2026-10-27, notes and every language's coverage in §7d): Phase 3, the importer for everything else, done (2026-10-27, notes and every language's coverage in §7e): `js/i18n/en.js` is now wholly generated from DO, psalter and texts. Next: Phase 4, English end to end. Rev. 3 (2026-10-24) records the answers to the open questions, the full coverage check, the notation levels with six menus (§4c) and the Spanish doxologies. Written against `master` @ 28f86f6, with Divinum Officium (DO) `master` @ b9064d7 (2026-10-23) checked out sparsely for the research below. DO is now pinned at `ad87836` (2026-10-26); §7a lists what that changed.
+Status: Phase 0 done (2026-10-26, results in §7a). Phase 1a, the notation levels, done (2026-10-26, notes in §7b). Phase 1, the display, done against a hand-written English stub (2026-10-26, notes and the module format in §7c). Phase 2, the psalter importer, done (2026-10-27, notes and every language's coverage in §7d): Phase 3, the importer for everything else, done (2026-10-27, notes and every language's coverage in §7e): `js/i18n/en.js` is now wholly generated from DO, psalter and texts. Phase 4, English end to end, done (2026-10-27, notes in §7f): English is offered in the menu. Next: Phase 5, more languages. Rev. 3 (2026-10-24) records the answers to the open questions, the full coverage check, the notation levels with six menus (§4c) and the Spanish doxologies. Written against `master` @ 28f86f6, with Divinum Officium (DO) `master` @ b9064d7 (2026-10-23) checked out sparsely for the research below. DO is now pinned at `ad87836` (2026-10-26); §7a lists what that changed.
 
 **What changed from rev. 1:** every translation now comes from the [Divinum Officium](https://github.com/DivinumOfficium/divinum-officium) data files (MIT licence), not hand-collected sources. That means the app can offer **every language DO has**, and Latin-Bea, instead of English only.
 
@@ -127,7 +127,7 @@ tools/do-import/
   texts.js           # everything else, from manifest.json, checked against the app's Latin (Phase 3: done)
   resolve.js         # DO's conditionals and @/$/& references, for the 1960 Roman office (Phase 3: done)
   manifest.json      # app text key -> DO file/section (+ transforms) (Phase 3: done)
-  extra/<lang>/      # texts DO doesn't have, written by hand: texts.txt (Phase 3: the priest's forms in English, and their Latin)
+  extra/<lang>/      # written by hand: texts.txt, texts DO doesn't have or that replace DO's (Phase 3: the priest's forms; Phase 4: three English fixes; each with its Latin), and spelling.txt (Phase 4: English)
   DO_COMMIT          # pinned DO commit hash (Phase 0: done)
   fetch-do.sh        # sparse checkout of DO at DO_COMMIT (Phase 0: done)
 js/i18n/
@@ -386,7 +386,7 @@ Follow the existing pattern (localStorage strings plus controls in `#options-men
 | **1. Display infrastructure** ✅ | `js/text-mode.js` (settings, body classes, query parameters, lazy `require` of `i18n/<lang>`), the menu `<select>`s, `[lang]`/grid/stack/print CSS, the notated-toggle refactor, `chant-element` unit splitting with translation blocks plus the translation-only text render, the psalm-verse interleaver, `data-tr` filling for `index.html`, and the missing-text fallback. Test against a hand-written `en.js` stub. **Done 2026-10-26; notes in §7c.** | M: about 400 lines, 1–2 days |
 | **2. DO importer: psalter** ✅ | Section ranges from `Psalmi minor`, key-matched extraction, fuzzy alignment against the app's Latin, Gloria split, marker handling, mismatch report. **Done 2026-10-27; notes in §7d.** | M: about 1 day |
 | **3. DO importer: everything else** ✅ | `manifest.json` for about 60 keys (index HTML prayers, about 40 chant files, 17 Te lucis files built from the hymn plus a doxology, Marian antiphons and collects), the `@`/`$`/`&`/`s///` resolver, the 1960 variant choice, generated Paschal alleluia forms, splitting into units. **Done 2026-10-27; notes in §7e.** | M–L: 1–2 days, mostly mapping |
-| **4. English end to end** | Generate `en.js`, check every part of the office in all three modes (Sunday, weekdays, PT, Easter octave, Triduum, All Souls, each Marian season, each Te lucis tone). Fix the manifest. | M |
+| **4. English end to end** ✅ | Generate `en.js`, check every part of the office in all three modes (Sunday, weekdays, PT, Easter octave, Triduum, All Souls, each Marian season, each Te lucis tone). Fix the manifest. **Done 2026-10-27; notes in §7f.** | M |
 | **5. More languages** | Run the importer for fr, es, it, pt, pl and la-bea, confirm 100% in the coverage report, add font subsets, spot-check each language (ideally with a reader of that language). | S–M, mostly QA |
 | **6. Latin-Bea as a comparison text** | Verse-group pairing with a block fallback. Suppress the "translation" where Bea is identical to Latin. | S |
 | **7. Hymn: literal and sung** | Literal: the extra-text merge in the importer, plus the English literal hymn and doxologies (content). Sung: hyphenation drafts, the hand-reviewed `hymn-sung.txt` per metrical language, the validator (note count, stanzas, each doxology against each of the 17 tones), lyric swapping in `chant-element`, the `hymnMode` select with its fallbacks and disabled choices, merging the `extra/` overrides (Britt's literal English, the new English and Spanish Easter doxologies). Check every tone in en and es. | M code (about 150 lines) + S per language to review hyphenation. Entering Britt's English and checking his doxology coverage: S. Entering the Spanish doxologies: S. |
@@ -542,11 +542,43 @@ Built as §3 describes. `import.js` now also prints, for every language, which t
 
 **Checked in the browser** (`?text=both&lang=en` and `?text=tr&lang=en`): an ordinary Sunday and weekday, All Saints, All Souls, Holy Thursday, Good Friday, the Easter octave, Paschaltide, Ascensiontide, Advent, Christmastide and Lent. Every visible chant and `index.html` block has its translation, each chant's units pair with its paragraphs (no "units" warning in the console), and in "translation only" no Latin is left showing. All 17 Te lucis tones, the 8 In manus forms and the 8 Marian antiphons (simple and solemn) were swapped in on one page and each paired unit for unit; the priest's blocks have theirs too, now from `extra/en/texts.txt`. All Souls' collect shows the whole *Per Dominum* in both columns.
 
+### 7f. Phase 4 notes (2026-10-27)
+
+English is checked end to end and offered: `languages` in `js/text-mode.js` now has `{code: 'en', name: 'English'}`, so the Text and Translation menus show. `js/i18n/en.js` is still wholly generated (`node tools/do-import/import.js en`; running it twice gives the same file).
+
+**What was checked,** in "Latin only", "Latin & translation" and "translation only", at 1100 px and at phone width:
+- **Dates:** every day of an ordinary week (2026-11-08 to 11-14), All Saints, All Souls, Advent (Sunday, a weekday, the Immaculate Conception), Christmas Eve and Day, the Holy Innocents, the Epiphany, the Holy Family, the Purification and the day after (Alma to Ave), Ash Wednesday, a Lenten feria, Passion and Palm Sundays, Holy Thursday, Good Friday, Holy Saturday, Easter Sunday and Monday, Low Saturday and Sunday, Paschaltide weekdays, the Ascension and the Saturday after, Pentecost, the Saturday after (Regina cæli to Salve), Trinity Sunday, the Sacred Heart, the Transfiguration, the Seven Sorrows and Christ the King. A script set each date and checked that every visible chant, `index.html` block and psalm verse had its translation, that no chant's units mismatched its paragraphs, that "translation only" left no Latin and drew no score, and which Te lucis tone, In manus form, Marian antiphon and psalms the date chose. Every date passed.
+- **All 17 Te lucis tones** (each with its doxology), **all 8 In manus forms** (the four the menu offers and the four short ones no page uses yet) and **all 8 Marian antiphons** (simple and solemn, each season's versicle and collect), swapped in on one page.
+- **The priest's officiant mode,** in both modes: *Jube, domne*, the *Misereatur tui*, the *Confiteor* with "and to thee, Father", the *Misereatur vestri* and both *Dominus vobiscum*.
+- **The notation levels:** every section plain text, and the psalms fully notated with the chapter pointed and the prayers fully notated, on a Sunday, a Friday, All Souls, Easter Monday, a Paschaltide weekday, Good Friday and Christmas. Each fully notated psalm verse is followed by its own translation.
+- **Print,** with real print media (headless Chrome's `Page.printToPDF`, as the browser pane can't print): a Sunday in "Latin & translation" (11 pages, translations beside the prayers and verses, under each chant unit), the same Sunday in "translation only" (6 pages), All Souls with the psalms fully notated, and a Paschaltide weekday with everything plain text.
+- **The menus,** from empty storage: Latin by default with Translation disabled; "Latin & translation" and "Translation" draw and remove the translations, show English, and survive a reload; choosing in the menu drops `?text=` from the address; "Translation" hides the notation menus and "Solemn Tone"; back to Latin, no translation is left and the scores return.
+- **A close reading** of every English text and the psalms that differ by season.
+
+**Fixes:**
+- **Passiontide's short In manus** (`in-manus-tuas/passiontide.gabc`) had no ℣ or ℟ in its English second and third units, where the Latin's scores have them as annotations. `manifest.json` now keeps DO's `V.` and `R.` there. (The other forms' first line is "V." as Phase 3 had it, because every In manus score's annotation is ℣.)
+- **`extra/<lang>/texts.txt`:** a blank line before a `#` comment left a newline at the end of the unit above it. `texts.js` trims each unit.
+- **Decided by the user,** written in `extra/en/texts.txt`, with the Latin they were written against in `extra/la/texts.txt`:
+  - **Easter's Te lucis** has the doxology chosen in §4b, "All glory to the Father be, / And to the Son, who from the grave / Arose; and to the Paraclete / Be glory through eternity.", in place of DO's 7.7.7.7 "Hymns of glory, songs of praise". Phase 7 moves it to `hymn-sung.txt`.
+  - **_Jube, domne_** (the priest's form) is "Pray, Father, a blessing." DO had "Grant, Lord, a blessing." for both forms; the form without a priest keeps it.
+  - **All Souls' collect** is in *thee* and *thy*, like its conclusion and the rest of the office: "We beseech thee, O Lord, be merciful to the souls of all thy servants and handmaids for whom we humbly entreat thy majesty, …". DO has *you* and *your*.
+  - **American spelling.** DO's English is mostly American ("favor"), but has seven British words. `extra/en/spelling.txt` lists them (favourable, honour, labour, laboured, labours, neighbour, saviour), and `import.js` replaces each as a whole word, keeping its capital, in the psalter and the texts. The report counts each and flags one that no longer matches anything. Another language can have its own `spelling.txt`.
+
+**Left for later** (none of these stops English being offered):
+- **Phase 7:** DO's Holy Family doxology is 7.6.7.6 with lower-case lines ("All praise to Thee, O Jesus, / who parents dost obey; …"), so it can't be sung to Te lucis; the sung validator will drop it.
+- **Phase 8 typo pass**, DO's English as it stands: *Thee* capitalized in some doxologies and *thee* in others; "to-day" and a curly ’ in the Ascension doxology; the Alma Redemptoris Mater's punctuation ("hear thou thy people's cry / Star of the deep…", "from nothing made. / Sinking we strive…"); "Holy Spirit" in the *Benedicat*, the Advent Marian versicle and the Salve Regina's collect beside "Holy Ghost" everywhere else; the Easter-octave antiphon's capitals ("Alleluia, Alleluia, Alleluia, Alleluia."); and the *Per Dominum* as DO renders it ("Through Jesus Christ, thy Son our Lord, Who liveth…").
+- **Rubrics that quote Latin** (§4: "can get a gloss") aren't glossed in "translation only": "the Lector says “Dómine”", "at the words “Tu autem...nobis”", "the threefold “Mea culpa”", "without *Orémus*". A gloss has to be in the translation's language, so it needs a key per cue in each module.
+- **On a phone** the chant is laid out 624 px wide and scaled down, so in "Latin & translation" its Latin lyrics are about 60% of the size of the translation under them. In "Latin only" the same chant sits beside full-size rubrics, as it always has. Worth a look when the layout is polished (Phase 8).
+- **The Latin's plain text** of the unused `in-manus-tuas/advent.gabc` shows "*Commendo" without a space, because its GABC has none.
+
 ---
 
 ## 8. Unrelated things noticed (not fixed)
 
-Nothing outstanding. Fixed since this list was first written:
+- **A first-class feast on a Sunday is lost.** `getFeastForDate` in `js/calendar.js` returns the Sunday for every Sunday without looking at the saints' days, so All Saints on Sunday 2026-11-01 and the Assumption on Sunday 2027-08-15 show as Sundays after Pentecost, and the date rules that read the feast see a Sunday: the Assumption gets the ordinary Sunday Te lucis, not Our Lady's. Found in Phase 4.
+- **`gulp` doesn't run under Node 26:** `buffer-equal-constant-time` (under `jwa`, which a gulp plugin pulls in) uses `SlowBuffer`, which Node 25 removed. It builds under Node 22. Found in Phase 4.
+
+Fixed since this list was first written:
 
 - The `setPsalms` early-return guard, which never matched. It now compares against what is on screen.
 - The "consciense" typo in `index.html`.

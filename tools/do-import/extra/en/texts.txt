@@ -1,4 +1,5 @@
-# Texts DO doesn't have, written by hand (TRANSLATIONS_PLAN.md §7e).  Each [key] is a text of
+# Texts DO doesn't have, or that take the place of DO's, written by hand (TRANSLATIONS_PLAN.md §7e
+# and §7f).  extra/la/texts.txt has the Latin each was written against.  Each [key] is a text of
 # manifest.json; its units are separated by blank lines, and a line that starts "V. " or "R. "
 # starts with ℣ or ℟.  A line that starts with # is a comment.
 #
@@ -14,4 +15,35 @@ R. Amen.
 
 [index:misereatur-vestri]
 May almighty God have mercy on you, forgive you your sins, and bring you to everlasting life.
+R. Amen.
+
+# Easter's Te lucis: DO's hymn, with the doxology chosen in TRANSLATIONS_PLAN.md §4b in place of
+# DO's 7.7.7.7 "Hymns of glory, songs of praise" (Phase 7 moves it to hymn-sung.txt).
+[te-lucis/Easter.gabc]
+Before the ending of the day,
+Creator of the world, we pray
+That with thy wonted favor thou
+Wouldst be our guard and keeper now.
+
+From all ill dreams defend our eyes,
+From nightly fears and fantasies;
+Tread under foot our ghostly foe,
+That no pollution we may know.
+
+All glory to the Father be,
+And to the Son, who from the grave
+Arose; and to the Paraclete
+Be glory through eternity.
+Amen.
+
+# The priest's form: DO has "Grant, Lord, a blessing." for both, but domne addresses the priest.
+[jube-domne.gabc]
+V. Pray, Father, a blessing.
+
+# All Souls' collect: DO's [Oratio mortuorum1], in thee and thy like its conclusion and the rest of
+# the office, where DO has you and your.
+[index:asd-collect]
+Let us pray.
+We beseech thee, O Lord, be merciful to the souls of all thy servants and handmaids for whom we humbly entreat thy majesty, that by these offices of pious supplication they may be found worthy to enter into everlasting rest.
+Through Jesus Christ, thy Son our Lord, Who liveth and reigneth with thee, in the unity of the Holy Ghost, God, world without end.
 R. Amen.
