@@ -134,8 +134,10 @@ var expand = function(line) {
   return line;
 };
 
-// DO's markup taken out of resolved lines, leaving the lines of a unit (§7c).
-var clean = function(lines) {
+// DO's markup taken out of resolved lines, leaving the lines of a unit (§7c).  label: the
+// language's own word for DO's "Benedictio." label, if it has one (words()).
+var clean = function(lines, label) {
+  var labels = new RegExp('^\\s*(?:Ant|Benedictio' + (label ? '|' + escapeRegExp(label) : '') + ')\\.\\s*', 'u');
   var out = [];
   lines.forEach(function(line) {
     if(out.length && /~$/.test(out[out.length - 1])) {
@@ -148,14 +150,14 @@ var clean = function(lines) {
     return /\S/.test(line) && !/^\s*(_|!|#|&|\$rubrica\b)/.test(line);
   }).map(function(line) {
     return line
-      // a rubric, and the space before a comma after it (Español's "obra /:…:/, por")
-      .replace(/\s*\/:.*?:\/(\s*,)?/g, function(m, comma) { return comma ? ', ' : ' '; })
+      // a rubric, and the space before punctuation after it (Español's "obra /:…:/, por")
+      .replace(/\s*\/:.*?:\/(?:\s*([,.;:!?]))?/g, function(m, mark) { return mark ? mark + ' ' : ' '; })
       .replace(/\{:.*?:\}/g, '')
       .replace(/^\s*R\.br\.\s*/, '')
       .replace(/^\s*[vr]\.\s+/, '')
       .replace(/^\s*([VR])\.\s*/, '$1. ')
-      // the label, which the app's chant hasn't (Español translates it)
-      .replace(/^\s*(?:Ant|Benedictio|Bendición)\.\s*/, '')
+      // the label, which the app's chant hasn't
+      .replace(labels, '')
       .replace(/(^|\s)\++(?=\s|$)/g, ' ')
       .replace(/‡/g, '†')
       .replace(/(\p{L})\[(\p{L}+)\]/gu, '$1$2')
@@ -178,7 +180,9 @@ var words = function(r) {
   var duplex = last(r.reference(resolve.PRAYERS, 'Alleluia Duplex')) ||
     (alleluia ? alleluia + ', ' + alleluia.toLowerCase() + '.' : null);
   var gloria = clean(r.reference(resolve.PRAYERS, 'Gloria1'))[0];
-  return {amen: amen, alleluia: alleluia, duplex: duplex, gloria: gloria};
+  // the blessing's label, where the language translates "Benedictio." (Español's "Bendición.")
+  var label = ((r.reference(resolve.PRAYERS, 'Benedictio Completorium_')[0] || '').match(/^\s*(\p{L}+)\.\s/u) || [])[1];
+  return {amen: amen, alleluia: alleluia, duplex: duplex, gloria: gloria, label: label};
 };
 
 // DO's Paschal forms (LanguageTextTools.pm).
@@ -261,7 +265,7 @@ var piece = function(p, ctx) {
     var at = lines.map(function(l) { return l.trim(); }).indexOf(p.start);
     lines = at < 0 ? ['⟨no ' + p.start + ' in ' + p.ref + '⟩'] : lines.slice(at + 1);
   }
-  lines = clean(lines);
+  lines = clean(lines, ctx.w.label);
   if(p.lines) lines = pickLines(lines, p.lines);
   if(p.tail) lines = lines.slice(-p.tail);
   if(p.paschal === 'single') {
@@ -334,9 +338,9 @@ var hymn = function(spec, ctx) {
       // the last line (Italiano's Transfiguration), which is split off; else the hymn's
       var word = amen.trim().replace(/\p{P}+$/u, '');
       var last = doxology[doxology.length - 1];
-      var own = last.match(new RegExp('^(.*\\S)\\s+(' + escapeRegExp(word) + '\\p{P}*)\\s*$', 'u'));
+      var own = last.match(new RegExp('^(.*\\S)\\s+(' + escapeRegExp(word) + '\\p{P}*)\\s*$', 'iu'));
       if(own) doxology = doxology.slice(0, -1).concat(own[1], own[2]);
-      else if(last.trim().replace(/\p{P}+$/u, '') !== word) {
+      else if(last.trim().replace(/\p{P}+$/u, '').toLowerCase() !== word.toLowerCase()) {
         doxology = doxology.concat(amen);
         notes.push(spec.doxology + ' has no "' + amen.trim() + '": the hymn\'s is added');
       }

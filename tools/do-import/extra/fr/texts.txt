@@ -20,6 +20,13 @@ R. Ainsi soit-il.
 V. Gloire au Père, au Fils, * et au Saint-Esprit.
 R. Comme il était au commencement, maintenant et toujours, * et dans les siècles des siècles. Ainsi soit-il.
 
+# The same in Deus in adjutorium, whose Gloria is DO's own lines, not [Gloria].
+[@Prayers:Deus in adjutorium]
+V. Dieu + venez à mon aide.
+R. Seigneur, hâtez-vous de me secourir.
+v. Gloire au Père, au Fils, * et au Saint-Esprit.
+Comme il était au commencement, maintenant et toujours, * et dans les siècles des siècles. Ainsi soit-il.
+
 # Nunc dimittis verse 4, with the * where the Latin has it ("géntium, * et glóriam"); DO has none.
 [@Psalterium/Psalmorum/Psalm233]
 2:32 lumière pour éclairer les nations, * et gloire d’Israël Votre peuple.

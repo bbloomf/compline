@@ -400,7 +400,7 @@ define({
       'Niech się zmiłuje nad nami Bóg wszechmogący, a odpuściwszy nam grzechy, doprowadzi nas do życia wiecznego.\nR. Amen.'
     ],
     'index:confiteor-priest': [
-      'Spowiadam się Bogu wszechmogącemu, Najświętszej Maryi zawsze Dziewicy, świętemu Michałowi Archaniołowi, świętemu Janowi Chrzcicielowi, świętym Apostołom Piotrowi i Pawłowi, wszystkim Świętym i tobie, ojcze, że bardzo zgrzeszyłem, myślą, mową i uczynkiem: moja wina, moja wina, moja bardzo wielka wina. Przeto błagam Najświętszą Maryję zawsze Dziewicę, świętego Michała Archanioła, świętego Jana Chrzciciela, świętych Apostołów Piotra i Pawła, wszystkich świętych i ciebie, ojcze, o modlitwę za mnie do Pana Boga naszego.'
+      'Spowiadam się Bogu wszechmogącemu, Najświętszej Maryi zawsze Dziewicy, świętemu Michałowi Archaniołowi, świętemu Janowi Chrzcicielowi, świętym Apostołom Piotrowi i Pawłowi, wszystkim Świętym i tobie, ojcze, że bardzo zgrzeszyłem, myślą, mową i uczynkiem: moja wina, moja wina, moja bardzo wielka wina. Przeto błagam Najświętszą Maryję zawsze Dziewicę, świętego Michała Archanioła, świętego Jana Chrzciciela, świętych Apostołów Piotra i Pawła, wszystkich Świętych i ciebie, ojcze, o modlitwę za mnie do Pana Boga naszego.'
     ],
     'index:misereatur-tui': [
       'Niech się zmiłuje nad tobą Bóg wszechmogący, a odpuściwszy ci grzechy, doprowadzi cię do życia wiecznego.\nR. Amen.'

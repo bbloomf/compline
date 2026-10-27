@@ -51,6 +51,9 @@ def main(full_dir):
         full = TTFont(full_path).getBestCmap()
         for suffix, blocks in SUBSETS:
             codes = [c for c in full if c not in has and any(a <= c <= b for a, b in blocks)]
+            if not codes:
+                print('crimson-%s-%s: nothing the base subset lacks, so none made' % (name, suffix))
+                continue
             make(full_path, base, codes, os.path.join(here, 'crimson-%s-%s' % (name, suffix)))
             print('crimson-%s-%s: %d characters, %d bytes\n  unicode-range: %s;' % (
                 name, suffix, len(codes), os.path.getsize(os.path.join(here, 'crimson-%s-%s.woff2' % (name, suffix))),
@@ -59,26 +62,26 @@ def main(full_dir):
 
 def make(full_path, base, codes, out):
     """out.woff2 and out.woff: codes from the full font, with base's vertical metrics."""
+    options = subset.Options()
+    # no kerning, as the app's subsets have none (generator_config.txt)
+    options.layout_features = [f for f in options.layout_features if f != 'kern']
+    options.drop_tables += ['kern']
+    options.name_IDs = ['*']
+    options.notdef_outline = True
+    font = subset.load_font(full_path, options)
+    subsetter = subset.Subsetter(options)
+    subsetter.populate(unicodes=codes)
+    subsetter.subset(font)
+    # The subsets' vertical metrics (Font Squirrel's "fix_vertical_metrics"), so a line
+    # with these letters is no taller than one without.
+    scale = font['head'].unitsPerEm / base['head'].unitsPerEm
+    for table, fields in (('hhea', ('ascent', 'descent', 'lineGap')),
+                          ('OS/2', ('sTypoAscender', 'sTypoDescender', 'sTypoLineGap',
+                                    'usWinAscent', 'usWinDescent'))):
+        for field in fields:
+            setattr(font[table], field, round(getattr(base[table], field) * scale))
     for flavor in ('woff2', 'woff'):
-        options = subset.Options()
         options.flavor = flavor
-        # no kerning, as the app's subsets have none (generator_config.txt)
-        options.layout_features = [f for f in options.layout_features if f != 'kern']
-        options.drop_tables += ['kern']
-        options.name_IDs = ['*']
-        options.notdef_outline = True
-        font = subset.load_font(full_path, options)
-        subsetter = subset.Subsetter(options)
-        subsetter.populate(unicodes=codes)
-        subsetter.subset(font)
-        # The subsets' vertical metrics (Font Squirrel's "fix_vertical_metrics"), so a line
-        # with these letters is no taller than one without.
-        scale = font['head'].unitsPerEm / base['head'].unitsPerEm
-        for table, fields in (('hhea', ('ascent', 'descent', 'lineGap')),
-                              ('OS/2', ('sTypoAscender', 'sTypoDescender', 'sTypoLineGap',
-                                        'usWinAscent', 'usWinDescent'))):
-            for field in fields:
-                setattr(font[table], field, round(getattr(base[table], field) * scale))
         subset.save_font(font, out + '.' + flavor, options)
 
 

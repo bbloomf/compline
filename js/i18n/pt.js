@@ -400,7 +400,7 @@ define({
       'Compadeça-se de nós Deus omnipotente, e, perdoados os nossos pecados, conduza-nos à vida eterna.\nR. Amém.'
     ],
     'index:confiteor-priest': [
-      'Eu me confesso a Deus, todo-poderoso, à bem-aventurada sempre Virgem Maria, ao bem-aventurado S. Miguel Arcanjo, ao bem-aventurado S. João Baptista, aos Santos Apóstolos S. Pedro e S. Paulo, a todos os santos, e a vós, Padre, que pequei muitas vezes por pensamentos, palavras e obras: por minha culpa, por minha culpa, por minha tão grande culpa. Portanto rogo à bem-aventurada sempre Virgem Maria, ao bem-aventurado S. Miguel Arcanjo, ao bem-aventurado S. João Baptista, aos Santos Apóstolos S. Pedro e S. Paulo, a todos os Santos, e a vós, Padre, que rogueis a Deus, Nosso Senhor, por mim.'
+      'Eu me confesso a Deus, todo-poderoso, à bem-aventurada sempre Virgem Maria, ao bem-aventurado S. Miguel Arcanjo, ao bem-aventurado S. João Baptista, aos Santos Apóstolos S. Pedro e S. Paulo, a todos os Santos, e a vós, Padre, que pequei muitas vezes por pensamentos, palavras e obras: por minha culpa, por minha culpa, por minha tão grande culpa. Portanto rogo à bem-aventurada sempre Virgem Maria, ao bem-aventurado S. Miguel Arcanjo, ao bem-aventurado S. João Baptista, aos Santos Apóstolos S. Pedro e S. Paulo, a todos os Santos, e a vós, Padre, que rogueis a Deus, Nosso Senhor, por mim.'
     ],
     'index:misereatur-tui': [
       'Compadeça-se de vós Deus omnipotente, e, perdoados os vossos pecados, conduza-vos à vida eterna.\nR. Amém.'

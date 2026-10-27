@@ -418,7 +418,7 @@ define({
     'deus-in-adjutorium.gabc': [
       'V. Dieu venez à mon aide.',
       'R. Seigneur, hâtez-vous de me secourir.',
-      'Gloire au Père, au Fils, * et au Saint-Esprit.\nComme il était au commencement, maintenant et toujours, et dans les siècles des siècles. Ainsi soit-il. * Alléluia.',
+      'Gloire au Père, au Fils, * et au Saint-Esprit.\nComme il était au commencement, maintenant et toujours, * et dans les siècles des siècles. Ainsi soit-il. * Alléluia.',
       'Louange à Vous Seigneur, Roi d’éternelle gloire.'
     ],
     'deus-in-adjutorium_alleluia.gabc': [

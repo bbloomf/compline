@@ -51,7 +51,7 @@ var sectionsFromDO = function(doDir) {
 // (titles such as "(Canticum Simeonis * Luc. 2:29-32)").
 // own: the language's own lines for the file, from extra/<lang>/texts.txt, each of which takes
 // the place of DO's line with the same key (the n-th of a repeated key, the n-th); unused lists
-// any that DO hasn't.
+// any that DO hasn't, and unparsed any that aren't "N:v text".
 var psalmLines = function(doDir, folder, psalm, own) {
   var source = text.read(doDir, folder, 'Psalterium/Psalmorum/Psalm' + psalm + '.txt');
   if(source === null) return null;
@@ -67,21 +67,26 @@ var psalmLines = function(doDir, folder, psalm, own) {
     });
     return {lines: lines, other: other};
   };
-  var result = parse(source.split('\n'));
-  result.unused = [];
-  if(own) {
+  // Each line's key, with the n-th of a repeated key told apart: '4:2a#1'.
+  var ids = function(lines) {
     var seen = {};
-    var ids = result.lines.map(function(l) {
+    return lines.map(function(l) {
       seen[l.key] = (seen[l.key] || 0) + 1;
       return l.key + '#' + seen[l.key];
     });
-    seen = {};
-    parse(own).lines.forEach(function(l) {
-      seen[l.key] = (seen[l.key] || 0) + 1;
-      var i = ids.indexOf(l.key + '#' + seen[l.key]);
-      if(i < 0) result.unused.push(l.key);
-      else result.lines[i] = l;
+  };
+  var result = parse(source.split('\n'));
+  result.unused = [];
+  result.unparsed = [];
+  if(own) {
+    var at = {};
+    ids(result.lines).forEach(function(id, i) { at[id] = i; });
+    var mine = parse(own);
+    ids(mine.lines).forEach(function(id, i) {
+      if(id in at) result.lines[at[id]] = mine.lines[i];
+      else result.unused.push(mine.lines[i].key);
     });
+    result.unparsed = mine.other;
   }
   return result;
 };
@@ -222,6 +227,10 @@ exports.build = function(doDir, root, languages) {
     var langEnding = function(section) {
       var name = section.ending || 'Gloria';
       if(!(name in endings)) {
+        var mine = own.sections['Psalterium/Common/Prayers:' + name];
+        if(mine && mine.length !== 2) {
+          throw new Error('extra/' + lang.code + '/texts.txt [@Prayers:' + name + '] isn\'t two lines, V. and R.: ' + mine.join(' / '));
+        }
         endings[name] = ending(doDir, lang.folder, name, own.sections);
         if(!endings[name] && lang.fallback) {
           endings[name] = ending(doDir, lang.fallback, name);
@@ -241,6 +250,10 @@ exports.build = function(doDir, root, languages) {
         r.missing.push(section.key + ': no Psalm' + section.psalm + '.txt');
         r.verses += p.count;
         return;
+      }
+      if(file.unparsed.length) {
+        throw new Error('extra/' + lang.code + '/texts.txt [@Psalterium/Psalmorum/Psalm' + section.psalm +
+          '] has a line that isn\'t "N:v text": ' + file.unparsed[0]);
       }
       file.unused.forEach(function(key) {
         var note = 'extra/' + lang.code + '/texts.txt has Psalm' + section.psalm + ' ' + key + ', which DO hasn\'t';
