@@ -25,7 +25,8 @@
 // A text can instead be {units, version}: version is the DO version its conditions are read for.
 // A hymn is {hymn, doxology}: the doxology takes the place of the hymn's stanza from its * on, and
 // the units are the stanzas.  A text DO doesn't have is {extra: why}: it comes only from
-// extra/<lang>/texts.txt, and a language without it there has the text missing.
+// extra/<lang>/texts.txt, and a language without it there has the text missing.  Its Latin, in
+// extra/la/texts.txt, is checked against the app's in place of DO's.
 //
 // extra/<lang>/texts.txt is texts written by hand, which take the place of DO's (§7, "Texts that
 // don't come from DO"): each [key] is followed by its units, separated by blank lines, and a line
@@ -45,24 +46,13 @@ var manifest = JSON.parse(fs.readFileSync(path.join(__dirname, 'manifest.json'),
 // A language's extra/<lang>/texts.txt, as {key: units}; {} if it has none.
 var extraTexts = function(code) {
   var file = path.join(__dirname, 'extra', code, 'texts.txt');
-  var result = {};
-  if(!fs.existsSync(file)) return result;
-  var key = null;
-  fs.readFileSync(file, 'utf8').split('\n').forEach(function(line) {
-    line = line.trim();
-    var m = line.match(/^\[(.+)\]$/);
-    if(m) result[key = m[1]] = [''];
-    else if(/^#/.test(line) || key === null) return;
-    else if(!line) result[key].push('');
-    else {
-      var units = result[key];
-      units[units.length - 1] += (units[units.length - 1] ? '\n' : '') + line;
-    }
+  if(!fs.existsSync(file)) return {};
+  var sections = text.sections(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n'));
+  Object.keys(sections).forEach(function(key) {
+    sections[key] = sections[key].filter(function(line) { return !/^\s*#/.test(line); })
+      .map(function(line) { return line.trim(); }).join('\n').split(/\n{2,}/).filter(Boolean);
   });
-  Object.keys(result).forEach(function(k) {
-    result[k] = result[k].filter(Boolean);
-  });
-  return result;
+  return sections;
 };
 
 // Characters GABC can't take (§7a), apart from * and †, as in the psalter.
@@ -121,7 +111,8 @@ var words = function(r) {
   var alleluia = /^⟨/.test(alleluiaLine) ? null : alleluiaLine.replace(/^v\. (.*?)\..*/, '$1');
   var duplex = last(r.reference(resolve.PRAYERS, 'Alleluia Duplex')) ||
     (alleluia ? alleluia + ', ' + alleluia.toLowerCase() + '.' : null);
-  return {amen: amen, alleluia: alleluia, duplex: duplex};
+  var gloria = clean(r.reference(resolve.PRAYERS, 'Gloria1'))[0];
+  return {amen: amen, alleluia: alleluia, duplex: duplex, gloria: gloria};
 };
 
 // DO's Paschal forms (LanguageTextTools.pm).
@@ -139,13 +130,13 @@ var ensureDouble = function(line, w) {
     .replace(/\p{P}?\s*$/u, ', * ' + w.alleluia + ', ' + w.alleluia.toLowerCase() + '.');
 };
 // The short responsory (R.br. … the third R.): the R. after a V. is the double alleluia, and the
-// other R.s end with it.  The Gloria (&Gloria1, gloria here) isn't a V. for this, as in DO,
+// other R.s end with it.  The Gloria (&Gloria1, w.gloria here) isn't a V. for this, as in DO,
 // where postprocess_short_resp sees it unexpanded.
-var paschalResponsory = function(lines, w, gloria) {
+var paschalResponsory = function(lines, w) {
   var afterV = false;
   return lines.map(function(line) {
     if(/^V\./.test(line)) {
-      afterV = clean([line])[0] !== gloria;
+      afterV = clean([line])[0] !== w.gloria;
       return line;
     }
     if(/^R\.br\./.test(line)) return ensureDouble(line, w);
@@ -184,7 +175,7 @@ var pickLines = function(lines, spec) {
   return lines.slice(from - 1, to);
 };
 
-// One piece's lines.  ctx: {r, w, gloria}.
+// One piece's lines.  ctx: {r, w}.
 var piece = function(p, ctx) {
   if(typeof p === 'string') p = {ref: p};
   var lines;
@@ -193,11 +184,12 @@ var piece = function(p, ctx) {
     var a = ctx.w.alleluia;
     return [a + ', * ' + a.toLowerCase() + ', ' + a.toLowerCase() + '.'];
   }
+  if(p.paschal && !ctx.w.alleluia) return ['⟨no Prayers.txt [Alleluia]⟩'];
   var ref = expand(p.ref);
   var m = ref.match(/^@([^:]*):([^:]*)(?::(.*))?$/) || ref.match(/^\$()(.+)$/);
   if(m) lines = ctx.r.reference(m[1] || resolve.PRAYERS, m[2], m[3] || '');
   else lines = [ref];
-  if(p.paschal === 'responsory') lines = paschalResponsory(lines, ctx.w, ctx.gloria);
+  if(p.paschal === 'responsory') lines = paschalResponsory(lines, ctx.w);
   if(p.part) lines = mariaantPart(lines, p.part);
   if(p.start) {
     var at = lines.map(function(l) { return l.trim(); }).indexOf(p.start);
@@ -258,6 +250,7 @@ var unit = function(u, ctx) {
 // Where the doxology has no Amen, the hymn's is kept.
 var hymn = function(spec, ctx) {
   var lines = ctx.r.reference.apply(null, refParts(spec.hymn));
+  if(/⟨/.test(lines.join('\n'))) return {units: [lines.join('\n')], notes: []};
   if(spec.doxology) {
     var star = -1;
     lines.forEach(function(l, i) { if(star < 0 && /^\s*\*/.test(l)) star = i; });
@@ -298,7 +291,6 @@ var build = function(key, spec, lang, doDir, w0, extra) {
   if(spec.extra) return {units: ['⟨not in extra/' + lang.code + '/texts.txt⟩'], notes: []};
   var r = resolve.resolver(doDir, lang, spec.version);
   var ctx = {r: r, w: w0 || words(r)};
-  ctx.gloria = clean(r.reference(resolve.PRAYERS, 'Gloria1'))[0];
   return spec.hymn ? hymn(spec, ctx) : {units: spec.units.map(function(u) { return unit(u, ctx); }), notes: []};
 };
 
@@ -332,9 +324,9 @@ var abbreviated = function(doUnit, appUnit) {
 
 // Builds every language's texts, and a report.  languages: [{code, folder, fallback, texts}].
 exports.build = function(doDir, root, languages) {
-  var app = appLatin.texts(root);
-  var keys = Object.keys(manifest.texts);
   var report = {latin: [], app: [], languages: {}};
+  var app = appLatin.texts(root, report.app);
+  var keys = Object.keys(manifest.texts);
   Object.keys(app).forEach(function(key) {
     if(!manifest.texts[key]) report.app.push('The app has ' + key + ', which manifest.json doesn\'t map.');
   });
@@ -344,10 +336,11 @@ exports.build = function(doDir, root, languages) {
 
   // DO's Latin against the app's, unit by unit.
   var latin = {code: 'la', folder: 'Latin'};
+  var latinWords = words(resolve.resolver(doDir, latin));
+  var latinExtra = extraTexts('la');
   keys.forEach(function(key) {
     var spec = manifest.texts[key];
-    if(spec.extra) return;
-    var built = build(key, spec, latin, doDir);
+    var built = build(key, spec, latin, doDir, latinWords, latinExtra);
     var appUnits = app[key] || [];
     if(built.units.length !== appUnits.length) {
       report.latin.push('!! ' + key + ': DO has ' + built.units.length + ' units, the app ' + appUnits.length);

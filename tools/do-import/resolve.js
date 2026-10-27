@@ -149,7 +149,7 @@ var processConditionals = function(lines, version) {
 // whose header has a condition that doesn't hold is left out, and a later section of the same
 // name replaces an earlier one.  @ lines get their file and section filled in.
 var parsed = {};
-var parse = exports.parse = function(doDir, folder, file, version) {
+var parse = function(doDir, folder, file, version) {
   version = version || VERSION;
   var id = [folder, file, version].join('|');
   if(id in parsed) return parsed[id];
@@ -246,9 +246,9 @@ exports.resolver = function(doDir, lang, version) {
         out = out.concat(reference(m[1], m[2], m[3], depth));
       } else if((m = line.match(/^\s*\$(.+?)\s*$/)) && !/^rubrica\b/i.test(m[1])) {
         out = out.concat(reference(PRAYERS, m[1], '', depth));
-      } else if((m = line.match(/^\s*&(\w+)\s*$/)) && MACROS[m[1]]) {
-        var parts = MACROS[m[1]].split(':');
-        out = out.concat(reference(PRAYERS, parts[0], parts[1] || '', depth));
+      } else if((m = line.match(/^\s*&(\w+)\s*$/))) {
+        var parts = MACROS[m[1]] && MACROS[m[1]].split(':');
+        out = out.concat(parts ? reference(PRAYERS, parts[0], parts[1] || '', depth) : ['⟨no macro &' + m[1] + '⟩']);
       } else {
         out.push(line);
       }
@@ -265,9 +265,8 @@ exports.resolver = function(doDir, lang, version) {
     var result = substitute(lines.join('\n'), subs);
     return result.split('\n');
   };
-  return {reference: reference, lookup: lookup};
+  return {reference: reference};
 };
 
 exports.VERSION = VERSION;
 exports.PRAYERS = PRAYERS;
-exports.vero = vero;

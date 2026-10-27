@@ -173,7 +173,8 @@ var blockUnit = function(html) {
 // The texts that have translations (§7c), {key: [unit, …]}: every chant that isn't a psalm,
 // keyed by its src, and the blocks of index.html with a data-tr key of their own (index:…),
 // one unit each.  A chant's pointed twin in index.html (chapter.gabc, …) uses the chant's units.
-exports.texts = function(root) {
+// A key used by blocks whose Latin differs is listed in problems, as they share a translation.
+exports.texts = function(root, problems) {
   var result = {};
   var dirs = ['.', 'te-lucis', 'in-manus-tuas', 'marian-antiphon', 'psalms'].concat(
     fs.readdirSync(path.join(root, 'psalms')).filter(function(d) {
@@ -189,7 +190,9 @@ exports.texts = function(root) {
   var index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
   var pairs = /<(div|span) [^>]*class='tr-pair' data-tr='(index:[^']+)'>\s*<(p|div|span) lang='la'>([\s\S]*?)<\/\3><\/\1>/g, m;
   while((m = pairs.exec(index))) {
-    if(!result[m[2]]) result[m[2]] = [blockUnit(m[4])];
+    var unit = blockUnit(m[4]);
+    if(!result[m[2]]) result[m[2]] = [unit];
+    else if(result[m[2]][0] !== unit && problems) problems.push('index.html has two ' + m[2] + ' blocks whose Latin differs.');
   }
   return result;
 };
