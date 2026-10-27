@@ -437,6 +437,9 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       // keep the vertical spacing that exsurge had before 2.0
       ctxt.minSpaceAboveStaff = 1;
       ctxt.spaceBetweenSystems = 0;
+      // choose the line breaks of the whole score together, as Gregorio does, rather than filling
+      // each line in turn; doLayout() lays out the screen and print renders the same way
+      ctxt.lineBreaking = 'optimal';
 
       ctxt.specialCharProperties['font-family'] = "'Versiculum'";
       ctxt.specialCharProperties['font-variant'] = 'normal';
