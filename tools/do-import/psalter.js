@@ -138,8 +138,9 @@ var canonicalLatin = function(verses, report) {
 // marker at the very end of a verse.  Returns the text; problems, where the mediant doesn't
 // match the Latin; and flex, where the flex doesn't: 'added' where only the app's Latin has one
 // (its pointing adds a flex to some long verses, which the translation can't follow), 'dropped'
-// where only DO has one.
-var markers = function(translation, latin) {
+// where only DO has one.  most: how many mediants the verse may have, where it stands for that
+// many of the Latin's (a group, below); 1 if not given.
+var markers = function(translation, latin, most) {
   var problems = [];
   var flex = null;
   var t = translation
@@ -153,19 +154,93 @@ var markers = function(translation, latin) {
     t = t.replace(/†/g, ' ');
   }
   var stars = (t.match(/\*/g) || []).length;
-  if(/\*/.test(latin) && stars !== 1) problems.push(stars ? stars + ' mediants (*)' : 'no mediant (*)');
+  if(/\*/.test(latin) && (stars < 1 || stars > (most || 1))) problems.push(stars ? stars + ' mediants (*)' : 'no mediant (*)');
   t = t.replace(/\s*([*†])\s*/g, ' $1 ').replace(/\s+/g, ' ').trim();
   return {text: t, problems: problems, flex: flex};
+};
+
+// Pairing by content, for a translation whose verse keys are its own (Latin-Bea, §2b): DO numbers
+// some of Bea's psalms from the title, so its 87:1 is the Latin's 87:2, and Bea divides verses
+// its own way, so its 4:2 is the Latin's 4:2a and 4:2b.  Both are Latin, so the lines pair by the
+// words they share: a group is one or more Latin lines and one or more of the translation's, in
+// order, and the groups chosen are the ones that pair the most words, where a group of more than
+// one line on each side costs GROUP_COST for each line over one each, and a group whose first
+// lines have the same verse number gains SAME_VERSE.  So the lines pair one to one wherever the
+// two have as many, and otherwise the groups are as few and as small as they can be, and follow
+// the verse numbers where the words don't decide.  A group never crosses the start of a section.
+var GROUP_COST = 0.6;
+var SAME_VERSE = 0.3;
+var SHAPES = [[1, 1], [2, 1], [1, 2], [3, 1], [1, 3], [3, 2], [2, 3], [4, 3], [3, 4]];
+// A psalm whose groups share fewer words than this, on average, is shown as one block per section.
+var BLOCK_BELOW = 0.3;
+// A text's words, cut to their first four letters, as a rough stem: clamávi and clamo are 'clam'.
+var stems = function(t) {
+  return text.normalize(t).split(' ').filter(function(w) { return w.length >= 3; }).map(function(w) { return w.slice(0, 4); });
+};
+// How many words two lists of stems share, from 0 to 1 (Dice's coefficient).
+var shared = function(a, b) {
+  if(!a.length || !b.length) return 0;
+  var count = {};
+  a.forEach(function(w) { count[w] = (count[w] || 0) + 1; });
+  var n = 0;
+  b.forEach(function(w) {
+    if(count[w] > 0) {
+      count[w]--;
+      n++;
+    }
+  });
+  return 2 * n / (a.length + b.length);
+};
+// latin and lines: a psalm's lines, [{key, verse, text}]; cuts: the indexes in latin where a
+// section starts.  Returns [{latin: [from, to), lines: [from, to), score}], or null if they can't
+// be paired.
+var alignLines = function(latin, lines, cuts) {
+  var a = latin.map(function(l) { return stems(l.text); });
+  var b = lines.map(function(l) { return stems(l.text); });
+  var best = [], back = [];
+  for(var i = 0; i <= latin.length; i++) {
+    best.push(new Array(lines.length + 1).fill(-Infinity));
+    back.push([]);
+  }
+  best[0][0] = 0;
+  for(i = 0; i <= latin.length; i++) {
+    for(var j = 0; j <= lines.length; j++) {
+      if(best[i][j] === -Infinity) continue;
+      SHAPES.forEach(function(shape) {
+        var x = i + shape[0], y = j + shape[1];
+        if(x > latin.length || y > lines.length) return;
+        if(cuts.some(function(c) { return c > i && c < x; })) return;
+        var score = shared([].concat.apply([], a.slice(i, x)), [].concat.apply([], b.slice(j, y)));
+        var total = best[i][j] + score * (shape[0] + shape[1]) - GROUP_COST * (shape[0] + shape[1] - 2) +
+          (latin[i].verse === lines[j].verse ? SAME_VERSE : 0);
+        if(total > best[x][y]) {
+          best[x][y] = total;
+          back[x][y] = {i: i, j: j, score: score};
+        }
+      });
+    }
+  }
+  if(best[latin.length][lines.length] === -Infinity) return null;
+  var groups = [];
+  for(i = latin.length, j = lines.length; i > 0 || j > 0; ) {
+    var step = back[i][j];
+    groups.unshift({latin: [step.i, i], lines: [step.j, j], score: step.score});
+    i = step.i;
+    j = step.j;
+  }
+  return groups;
 };
 
 // Characters that would break a GABC lyric or translation if the text were ever set under the
 // chant (§7a), apart from * and †, which are the markers.
 var UNSAFE = /[()[\]{}<>_^%|\\#$@~]/g;
 
-// Builds the psalter of every language, and a report.  languages: [{code, folder, keys, groups}],
-// where keys renames a translation's keys ({'11:6': '11:6b'}) and groups lists runs of keys that
-// pair as a whole ([['102:17', '102:18']]): the translation of the run goes on its first verse,
-// and the others get '' (covered by the verse before).
+// Builds the psalter of every language, and a report.  languages: [{code, folder, keys, groups,
+// align, latin}], where keys renames a translation's keys ({'11:6': '11:6b'}) and groups lists
+// runs of keys that pair as a whole ([['102:17', '102:18']]): the translation of the run goes on
+// its first verse, and the others get '' (covered by the verse before).  align pairs the lines by
+// content instead of by key, in groups the same way (alignLines).  latin is a Latin text: a verse
+// that is the Latin's word for word is null, as the display shows the Latin there (§2b).
 exports.build = function(doDir, root, languages) {
   var app = appLatin.read(root);
   var sections = sectionsFromDO(doDir);
@@ -213,13 +288,13 @@ exports.build = function(doDir, root, languages) {
           (latin[n - 1] ? latin[n - 1].key : section.ending || 'Gloria') + ') ' + score.toFixed(3) + '  ' + text.wordDiff(a, b));
       }
     }
-    plan[section.key] = {section: section, latin: latin, verses: verses, count: count};
+    plan[section.key] = {section: section, latin: latin, verses: verses, count: count, doVerses: doVerses};
   });
 
   // Each language, by key.
   languages.forEach(function(lang) {
     var r = report.languages[lang.code] = {sections: 0, ok: 0, verses: 0, translated: 0, missing: [], extra: [],
-      markers: [], flex: {added: [], dropped: []}, unsafe: [], notes: [], psalter: {}};
+      markers: [], flex: {added: [], dropped: []}, unsafe: [], notes: [], groups: [], same: [], psalter: {}};
     // A language's ending, or null.  Only a language with a fallback (as DO falls back for it)
     // borrows another's; otherwise the ending is missing, not the Latin.
     var own = texts.extra(lang.code);
@@ -241,6 +316,73 @@ exports.build = function(doDir, root, languages) {
     };
     var rename = lang.keys || {};
     var groups = lang.groups || [];
+    // Where the lines pair by content (lang.align), each psalm's groups, worked out once for all
+    // its sections: {latin, groups, block}, where block is true if they're shown one block per
+    // section instead (BLOCK_BELOW).
+    var aligned = {};
+    var alignPsalm = function(psalm, file) {
+      if(aligned[psalm]) return aligned[psalm];
+      var latin = psalmLines(doDir, 'Latin', psalm).lines;
+      var cuts = sections.filter(function(s) { return s.psalm === psalm && s.from; }).map(function(s) {
+        return latin.findIndex(function(l) { return l.verse >= s.from; });
+      }).filter(function(c) { return c > 0; });
+      var found = alignLines(latin, file.lines, cuts);
+      var score = found && found.reduce(function(sum, g) { return sum + g.score; }, 0) / found.length;
+      aligned[psalm] = {latin: latin, groups: found, block: !found || score < BLOCK_BELOW};
+      if(aligned[psalm].block) {
+        r.groups.push('Psalm ' + psalm + ': one block per section' + (found ? ', as its groups share only ' +
+          score.toFixed(2) + ' of their words' : ', as its lines can\'t be paired'));
+      }
+      return aligned[psalm];
+    };
+    // A section's verses where the lines pair by content: each group's lines go on its first
+    // Latin verse, and its other verses are '' (as groups, above).  The groups are reported, and
+    // so are lines that pair one to one with keys that aren't the Latin's (a run of them at once).
+    var alignSection = function(section, p, file, out, grouped) {
+      var a = alignPsalm(section.psalm, file);
+      var start = a.latin.findIndex(function(l) { return !section.from || l.verse >= section.from; });
+      var end = start + p.latin.length;
+      var runs;
+      if(!a.block) {
+        runs = a.groups.filter(function(g) { return g.latin[0] >= start && g.latin[0] < end; }).map(function(g) {
+          return {latin: g.latin[1] - g.latin[0], lines: file.lines.slice(g.lines[0], g.lines[1])};
+        });
+      } else {
+        runs = [{latin: p.latin.length, lines: a.groups ? file.lines.filter(function(l, i) {
+          return a.groups.some(function(g) { return g.latin[0] >= start && g.latin[0] < end && i >= g.lines[0] && i < g.lines[1]; });
+        }) : sectionLines(file.lines, section)}];
+      }
+      var shifted = [];
+      var flush = function() {
+        if(!shifted.length) return;
+        var last = shifted[shifted.length - 1];
+        r.groups.push(section.key + ': ' + shifted[0].latin + (shifted.length > 1 ? '–' + last.latin : '') + ' ↔ ' +
+          shifted[0].line + (shifted.length > 1 ? '–' + last.line + ', line by line' : ''));
+        shifted = [];
+      };
+      runs.forEach(function(run) {
+        var first = out.length + 1;
+        var latinKeys = p.latin.slice(first - 1, first - 1 + run.latin).map(function(l) { return l.key; });
+        var texts = run.lines.map(function(t, k) {
+          var n = first + Math.min(k, run.latin - 1);
+          var m = markers(t.text, (p.verses[n] || {text: ''}).text, Math.max(1, run.latin - run.lines.length + 1));
+          if(m.problems.length) r.markers.push(section.key + ':' + n + ' ' + m.problems.join(', ') + ': ' + m.text);
+          if(m.flex) r.flex[m.flex].push(section.key + ':' + n);
+          return m.text;
+        });
+        if(run.latin === 1 && run.lines.length === 1) {
+          if(latinKeys[0] !== run.lines[0].key) shifted.push({latin: latinKeys[0], line: run.lines[0].key});
+          else flush();
+        } else {
+          flush();
+          r.groups.push(section.key + ': ' + latinKeys.join('+') + ' ↔ ' + run.lines.map(function(t) { return t.key; }).join('+'));
+        }
+        grouped[out.length] = true;
+        out.push(texts.join('\n'));
+        for(var k = 1; k < run.latin; k++) out.push('');
+      });
+      flush();
+    };
     sections.forEach(function(section) {
       var p = plan[section.key];
       if(!p) return;
@@ -268,7 +410,8 @@ exports.build = function(doDir, root, languages) {
       var grouped = {};
       var out = [];
       var problems = 0;
-      for(var i = 0; i < p.latin.length; i++) {
+      if(lang.align) alignSection(section, p, file, out, grouped);
+      for(var i = 0; !lang.align && i < p.latin.length; i++) {
         var l = p.latin[i];
         var group = groups.filter(function(g) { return g.indexOf(l.key) >= 0; })[0];
         if(group) {
@@ -314,7 +457,7 @@ exports.build = function(doDir, root, languages) {
         out.push(t.text);
       }
       lines.forEach(function(t) {
-        if(!used[t.id]) {
+        if(!used[t.id] && !lang.align) {
           r.extra.push(section.key + ': ' + t.key + ' "' + t.text.slice(0, 50) + '…"');
           problems++;
         }
@@ -343,8 +486,22 @@ exports.build = function(doDir, root, languages) {
         r.notes.push(section.key + ': ' + out.length + ' verses for the app\'s ' + p.count);
         problems++;
       }
+      // A Latin text's verses that are the Latin's word for word (DO's, or the app's).
+      var same = 0;
+      if(lang.latin) {
+        out = out.map(function(verse, k) {
+          if(!verse) return verse;
+          var words = text.normalize(verse);
+          if(words !== text.normalize(p.doVerses[k] || '') && !(p.verses[k + 1] && words === text.normalize(p.verses[k + 1].text))) {
+            return verse;
+          }
+          r.same.push(section.key + ':' + (k + 1));
+          same++;
+          return null;
+        });
+      }
       r.verses += p.count;
-      r.translated += out.filter(function(v) { return v !== null; }).length;
+      r.translated += out.filter(function(v) { return v !== null; }).length + same;
       if(!problems) r.ok++;
       r.psalter[section.key] = out;
     });

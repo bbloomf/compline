@@ -6,6 +6,8 @@
 // Each language is a module js/i18n/<lang>.js, loaded only when it's needed:
 //   define({
 //     meta: {name: 'English', dir: 'ltr', doCommit: '…'},
+//     // (Latin-Bea's meta also has latin: true, as where it has nothing of its own its text is the
+//     // Latin's, and lang: 'la-x-bea', its lang attribute)
 //     // each psalm section's verses, from verse 1, with the Gloria Patri and Sicut erat last
 //     // ('' for a verse whose translation is part of the verse before's)
 //     psalter: {'4': ['When I called upon him…', …], '7.I': […], 'nunc-dimittis': […]},
@@ -29,7 +31,8 @@ define(['jquery'], function($) {
   if(!('textMode' in localStorage)) localStorage.textMode = 'la';
   var modes = ['la', 'both', 'tr'];
   // The languages offered in the menu, each with a module in js/i18n/ (TRANSLATIONS_PLAN.md §2),
-  // added once it has been checked end to end (English in Phase 4, the others in Phase 5).
+  // added once it has been checked end to end (English in Phase 4, the others in Phase 5, Latin
+  // with the Pius XII psalter, for comparison, in Phase 6).
   // compline.js hides the Text and Translation menus while there are none.
   var languages = [
     {code: 'en', name: 'English'},
@@ -37,7 +40,8 @@ define(['jquery'], function($) {
     {code: 'es', name: 'Español'},
     {code: 'it', name: 'Italiano'},
     {code: 'pt', name: 'Português'},
-    {code: 'pl', name: 'Polski'}
+    {code: 'pl', name: 'Polski'},
+    {code: 'la-bea', name: 'Latin (Pius XII psalter)'}
   ];
   var isLanguage = function(code) {
     return languages.some(function(l) { return l.code === code; });
@@ -161,12 +165,16 @@ define(['jquery'], function($) {
   // The attributes of the translation that follows a Latin element.
   var trAttributes = function() {
     var meta = data().meta || {};
-    return " class='tr' lang='" + lang() + "'" + (meta.dir === 'rtl' ? " dir='rtl'" : '');
+    return " class='tr' lang='" + (meta.lang || lang()) + "'" + (meta.dir === 'rtl' ? " dir='rtl'" : '');
   };
   // Classes for a Latin element: in 'tr' mode it hides when it has a translation, and is shown
-  // in a subtle style when it doesn't (style.css).
+  // in a subtle style when it doesn't (style.css).  A Latin translation (meta.latin, Latin-Bea)
+  // has nothing where it's the same as the Latin, so there the Latin is its text: tr-same, shown
+  // as it is.
   var latinClass = function(hasTranslation) {
-    return mode() === 'la' ? '' : hasTranslation ? 'has-tr' : 'tr-missing';
+    if(mode() === 'la') return '';
+    if(hasTranslation) return 'has-tr';
+    return ((data() || {}).meta || {}).latin ? 'tr-same' : 'tr-missing';
   };
   // The translation of a psalm verse as a <p>, laid out like the Latin; '' if the verse before's
   // covers it, and null if there isn't one.
@@ -201,7 +209,7 @@ define(['jquery'], function($) {
         return;
       }
       var units = mode() === 'la' ? null : texts($pair.attr('data-tr'));
-      $latin.removeClass('has-tr tr-missing').addClass(latinClass(!!units));
+      $latin.removeClass('has-tr tr-missing tr-same').addClass(latinClass(!!units));
       if(units) {
         var tag = $latin.prop('tagName').toLowerCase();
         $latin.after('<' + tag + trAttributes() + '>' + unitsHtml(units) + '</' + tag + '>');
@@ -213,7 +221,7 @@ define(['jquery'], function($) {
       $(this).children('p').each(function() {
         var $p = $(this);
         var translation = verseTranslationHtml(section, parseInt($p.children('.verse-number').text()));
-        $p.attr('lang', 'la').removeClass('has-tr tr-missing').addClass(latinClass(translation !== null));
+        $p.attr('lang', 'la').removeClass('has-tr tr-missing tr-same').addClass(latinClass(translation !== null));
         if(translation) $p.after(translation);
       });
     });

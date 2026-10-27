@@ -408,7 +408,9 @@ chant-gabc.plain-text > p {
 /* Translations (TRANSLATIONS_PLAN.md §4).  js/text-mode.js puts text-la, text-both or text-tr on
    <body>, and follows each Latin block (lang=la) with its translation (.tr), inside a .tr-pair or
    a psalm's .verses.  A Latin block has the class has-tr when it has a translation, and
-   tr-missing when it doesn't.  In a chant, each unit's translation follows it in a .chant-tr. */
+   tr-missing when it doesn't, or tr-same where the translation is Latin (Latin-Bea) and the
+   same, so the Latin is its text and shows as it is.  In a chant, each unit's translation
+   follows it in a .chant-tr. */
 /* A <span class='tr-pair'> continues the line before it in Latin only; with a translation it's a
    block like the others (and a grid when they're side by side, below).  With the translation
    only, its Latin still hides when it has a translation (.has-tr, below). */
