@@ -21,7 +21,10 @@ var texts = require('./texts');
 // Every language the plan names (§2).  keys renames a translation's verse keys where DO has a
 // typo; groups pairs runs of verses as a whole where a translation divides them differently;
 // fallback is the folder whose prayers a language borrows where it has none, as DO does; texts
-// false leaves out the texts, as Latin-Bea's are the Vulgate's (§2b).
+// false leaves out the texts, as Latin-Bea's are the Vulgate's (§2b).  align pairs the psalms'
+// lines by content in groups, as Latin-Bea's keys are its own (psalter.js); latin leaves out
+// (null) what is the Latin's word for word, and the module's meta says latin: true, so the
+// display shows the Latin there as the text, not as a missing translation (§2b).
 var LANGUAGES = [
   {code: 'en', folder: 'English', name: 'English'},
   {code: 'fr', folder: 'Francais', name: 'Français'},
@@ -29,7 +32,8 @@ var LANGUAGES = [
   {code: 'it', folder: 'Italiano', name: 'Italiano', keys: {'11:6': '11:6b'}},
   {code: 'pt', folder: 'Portugues', name: 'Português'},
   {code: 'pl', folder: 'Polski', name: 'Polski', keys: {'11:6': '11:6b'}},
-  {code: 'la-bea', folder: 'Latin-Bea', name: 'Latin (Pius XII psalter)', fallback: 'Latin', texts: false},
+  {code: 'la-bea', folder: 'Latin-Bea', name: 'Latin (Pius XII psalter)', fallback: 'Latin', texts: false,
+    align: true, latin: true, htmlLang: 'la-x-bea'},
   // not offered yet (§2)
   {code: 'de', folder: 'Deutsch', name: 'Deutsch'},
   {code: 'nl', folder: 'Nederlands', name: 'Nederlands'},
@@ -139,11 +143,13 @@ console.log('  (sections: with every verse, by key; mediant: verses whose * does
   '  unsafe: verses with characters GABC can\'t take, §7a)');
 LANGUAGES.forEach(function(lang) {
   var r = report.languages[lang.code];
-  if(!r.missing.length && !r.extra.length && !r.notes.length && !r.unsafe.length && !r.markers.length) return;
+  if(!r.missing.length && !r.extra.length && !r.notes.length && !r.unsafe.length && !r.markers.length && !r.groups.length) return;
   console.log('\n' + lang.code + ' (' + lang.folder + '):');
   list('missing', r.missing);
   list('extra lines', r.extra);
   list('notes', r.notes);
+  list('groups, by content (Latin ↔ ' + lang.folder + ')', r.groups);
+  if(r.same.length) list('the Latin\'s word for word, so left out (null)', [r.same.join(' ')]);
   list('characters GABC can\'t take', r.unsafe);
   list('mediants', r.markers);
   if(options.verbose) {
@@ -229,6 +235,8 @@ options.write.forEach(function(code) {
   var old = readModule(file);
   var meta = Object.assign({}, old.meta || {}, {name: lang.name, dir: 'ltr', doCommit: doCommit.slice(0, 7)});
   delete meta.stub;
+  if(lang.latin) meta.latin = true;
+  if(lang.htmlLang) meta.lang = lang.htmlLang;
   var module = {meta: meta, psalter: report.languages[code].psalter};
   if(textReport.languages[code].texts) module.texts = textReport.languages[code].texts;
   Object.keys(old).forEach(function(k) {
