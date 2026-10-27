@@ -1,0 +1,18 @@
+# The Latin of the texts written by hand in extra/<lang>/texts.txt, as the translations were
+# written against it.  It isn't written to any module: the importer checks it against the app's
+# Latin, as it checks DO's, so that a change to the app's Latin shows which translations to
+# change too.  Format as in extra/en/texts.txt.
+#
+# The priest's Confiteor and Misereatur: DO's [Confiteor] and [Misereatur], with "et tibi pater"
+# and "tui" or "vestri".
+
+[index:confiteor-priest]
+Confíteor Deo omnipoténti, beátæ Maríæ semper Vírgini, beáto Michaéli Archángelo, beáto Joánni Baptístæ, sanctis Apóstolis Petro et Paulo, ómnibus Sanctis et tibi pater, quia peccávi nimis, cogitatióne, verbo et ópere: mea culpa, mea culpa, mea máxima culpa. Ideo precor beátam Maríam semper Vírginem, beátum Michaélem Archángelum, beátum Joánnem Baptístam, sanctos Apóstolos Petrum et Paulum, omnes Sanctos, et te pater: oráre pro me ad Dóminum Deum nostrum.
+
+[index:misereatur-tui]
+Misereátur tui omnípotens Deus, et dimíssis peccátis tuis, perdúcat te ad vitam ætérnam.
+R. Amen.
+
+[index:misereatur-vestri]
+Misereátur vestri omnípotens Deus, et dimíssis peccátis vestris, perdúcat vos ad vitam ætérnam.
+R. Amen.

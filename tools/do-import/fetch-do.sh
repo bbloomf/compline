@@ -17,7 +17,10 @@ git -C "$dir" sparse-checkout set --no-cone \
   'web/www/horas/*/Ordinarium/' \
   'web/www/horas/*/Sancti/08-06.txt' \
   'web/www/horas/*/Sancti/10-DU.txt' \
+  'web/www/horas/*/Sancti/11-02.txt' \
+  'web/www/horas/*/Commune/C9.txt' \
   'web/www/horas/*/Tempora/Epi1-0.txt' \
+  'web/www/horas/*/Tempora/Pasc0-0.txt' \
   'web/www/horas/*/Tempora/Quad6-4.txt' \
   'web/www/horas/*/Tempora/Quad6-5.txt'
 git -C "$dir" cat-file -e "$commit^{commit}" 2>/dev/null || git -C "$dir" fetch origin
