@@ -348,7 +348,14 @@ define(['moment','moment.easter'], function(moment){
     { on: '01/01', feast: romanCalendar[0][1], key: 'jan1' },
     { before: '01/06', title: 'The Most Holy Name of Jesus', key: 'nat2', isFeast: function() { return true; }},
     { on: '01/06', feast: romanCalendar[0][6], key: 'epi'},
-    { before: 'septuagesima', title: '%n. Sunday after Epiphany', key: 'epi%n', n: function(date,dates) {return Math.ceil(weeksBetween('epiphany', date)); }},
+    { before: 'septuagesima', title: '%t', key: 'epi%n', n: function(date,dates) {return Math.ceil(weeksBetween('epiphany', date)); },
+      t: function(date,dates) {
+        // the I Sunday after Epiphany is the feast of the Holy Family
+        var n = this.n(date,dates);
+        return n === 1 ? 'The Most Holy Family of Jesus, Mary, Joseph' : n + '. Sunday after Epiphany';
+      }, isFeast: function(date,dates) {
+        return this.n(date,dates) === 1;
+      }},
     { before: 'lent1', title: '%tgesima', key: '%t', t: function(date,dates) {return (['Septua','Sexa','Quinqua'])[weeksBetween('septuagesima', date)]; }},
     { before: 'easter', title: '%t', rank: 1, key: 'quad%n', n: function(date, dates) {
       return 1 + weeksBetween('lent1', date);
@@ -488,8 +495,7 @@ define(['moment','moment.easter'], function(moment){
     this.christTheKing.subtract(this.christTheKing.day(),'days');
     this.sevenDolors = moment([Y,8,15]);
     this.epiphany = moment([Y,0,6]);
-    // The Feast of the Holy Family is on the Sunday following Epiphany, unless Epiphany falls on a Sunday,
-    // in which case The Holy Family will be on the Saturday following.
+    // The Feast of the Holy Family is on the Sunday following Epiphany, so on 13 January when Epiphany is a Sunday.
     this.holyFamily = moment(this.epiphany).add(7 - (this.epiphany.day()), 'days');
     this.transfiguration = moment([Y,7,6]);
     this.stJoseph = moment([Y,2,19]);
