@@ -29,7 +29,7 @@ define({
       'And my soul is troubled exceedingly: * but thou, O Lord, how long?',
       'Turn to me, O Lord, and deliver my soul: * O save me for thy mercy’s sake.',
       'For there is no one in death, that is mindful of thee: * and who shall confess to thee in hell?',
-      'I have laboured in my groanings, † every night I will wash my bed: * I will water my couch with my tears.',
+      'I have labored in my groanings, † every night I will wash my bed: * I will water my couch with my tears.',
       'My eye is troubled through indignation: * I have grown old amongst all my enemies.',
       'Depart from me, all ye workers of iniquity: * for the Lord hath heard the voice of my weeping.',
       'The Lord hath heard my supplication: * the Lord hath received my prayer.',
@@ -39,7 +39,7 @@ define({
     ],
     '11': [
       'Save me, O Lord, for there is now no saint: * truths are decayed from among the children of men.',
-      'They have spoken vain things every one to his neighbour: * with deceitful lips, and with a double heart have they spoken.',
+      'They have spoken vain things every one to his neighbor: * with deceitful lips, and with a double heart have they spoken.',
       'May the Lord destroy all deceitful lips, * and the tongue that speaketh proud things.',
       'Who have said: We will magnify our tongue; † our lips are our own; * who is Lord over us?',
       'By reason of the misery of the needy, and the groans of the poor, * now will I arise, saith the Lord.',
@@ -134,10 +134,10 @@ define({
       'Shall thy wonders be known in the dark; * and thy justice in the land of forgetfulness?',
       'But I, O Lord, have cried to thee: * and in the morning my prayer shall prevent thee.',
       'Lord, why castest thou off my prayer: * why turnest thou away thy face from me?',
-      'I am poor, and in labours from my youth: * and being exalted have been humbled and troubled.',
+      'I am poor, and in labors from my youth: * and being exalted have been humbled and troubled.',
       'Thy wrath hath come upon me: * and thy terrors have troubled me.',
       'They have come round about me like water all the day: * they have compassed me about together.',
-      'Friend and neighbour thou hast put far from me: * and my acquaintance, because of misery.',
+      'Friend and neighbor thou hast put far from me: * and my acquaintance, because of misery.',
       'Glory be to the Father, and to the Son, * and to the Holy Ghost.',
       'As it was in the beginning, is now, * and ever shall be, world without end. Amen.'
     ],
@@ -229,7 +229,7 @@ define({
       'God is a just judge, strong and patient: * is he angry every day?',
       'Except you will be converted, he will brandish his sword: * he hath bent his bow, and made it ready.',
       'And in it he hath prepared the instruments of death, * he hath made ready his arrows for them that burn.',
-      'Behold he hath been in labour with injustice; * he hath conceived sorrow, and brought forth iniquity.',
+      'Behold he hath been in labor with injustice; * he hath conceived sorrow, and brought forth iniquity.',
       'He hath opened a pit and dug it: * and he is fallen into the hole he made.',
       'His sorrow shall be turned on his own head: * and his iniquity shall come down upon his crown.',
       'I will give glory to the Lord according to his justice: * and will sing to the name of the Lord the most High.',
@@ -307,7 +307,7 @@ define({
       'My eyes prevented the watches: * I was troubled, and I spoke not.',
       'I thought upon the days of old: * and I had in my mind the eternal years.',
       'And I meditated in the night with my own heart: * and I was exercised and I swept my spirit.',
-      'Will God then cast off for ever? * or will he never be more favourable again?',
+      'Will God then cast off for ever? * or will he never be more favorable again?',
       'Or will he cut off his mercy for ever, * from generation to generation?',
       'Or will God forget to shew mercy? * or will he in his anger shut up his mercies?',
       'And I said, Now have I begun: * this is the change of the right hand of the most High.',
@@ -380,7 +380,7 @@ define({
       'V. Grant, Lord, a blessing.'
     ],
     'jube-domne.gabc': [
-      'V. Grant, Lord, a blessing.'
+      'V. Pray, Father, a blessing.'
     ],
     'blessing.gabc': [
       'May almighty God grant us a quiet night and a perfect end.\nR. Amen.'
@@ -412,7 +412,7 @@ define({
       'May the almighty and merciful Lord grant us pardon, absolution and remission of our sins.\nR. Amen.'
     ],
     'converte-nos.gabc': [
-      'V. Turn us then, O God, our saviour:',
+      'V. Turn us then, O God, our savior:',
       'R. And let thy anger cease from us.'
     ],
     'deus-in-adjutorium.gabc': [
@@ -494,17 +494,17 @@ define({
     'te-lucis/Christmas.gabc': [
       'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
       'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'All honour, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.'
+      'All honor, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.'
     ],
     'te-lucis/Our-Lady.gabc': [
       'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
       'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'All honour, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.'
+      'All honor, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.'
     ],
     'te-lucis/Seven-Dolors.gabc': [
       'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
       'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'All honour, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.'
+      'All honor, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.'
     ],
     'te-lucis/Epiphany.gabc': [
       'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
@@ -519,7 +519,7 @@ define({
     'te-lucis/Easter.gabc': [
       'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
       'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'Hymns of glory, songs of praise,\nFather, unto Thee we raise;\nRisen Lord, all praise to Thee,\nEver with the Spirit be\nAmen.'
+      'All glory to the Father be,\nAnd to the Son, who from the grave\nArose; and to the Paraclete\nBe glory through eternity.\nAmen.'
     ],
     'te-lucis/Ascension.gabc': [
       'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
@@ -576,8 +576,8 @@ define({
     ],
     'in-manus-tuas/passiontide.gabc': [
       'V. Into thy hands, O Lord, * do I commend my spirit.\nR. Into thy hands, O Lord…',
-      'For thou hast redeemed us, O Lord, God of truth.\n* I commend…',
-      'Into thy hands, O Lord…'
+      'V. For thou hast redeemed us, O Lord, God of truth.\n* I commend…',
+      'R. Into thy hands, O Lord…'
     ],
     'in-manus-tuas/pt_full.gabc': [
       'V. Into thy hands, O Lord, do I commend my spirit, Alleluia, alleluia.\nR. Into thy hands, O Lord…',
@@ -692,7 +692,7 @@ define({
       'V. And lead us not into temptation:\nR. But deliver us from evil.\nV. From the gates of hell.\nR. Deliver their souls, O Lord!\nV. May they rest in peace.\nR. Amen.\nV. O Lord, hear my prayer.\nR. And let my cry come unto thee.\nV. (The Lord be with you.\nR. And with thy spirit.)'
     ],
     'index:asd-collect': [
-      'Let us pray.\nWe beseech you, O Lord, to be merciful to the souls of all your servants and handmaids for whom we humbly entreat your majesty, that by these offices of pious supplication they may be found worthy to enter into everlasting rest.\nThrough Jesus Christ, thy Son our Lord, Who liveth and reigneth with thee, in the unity of the Holy Ghost, God, world without end.\nR. Amen.'
+      'Let us pray.\nWe beseech thee, O Lord, be merciful to the souls of all thy servants and handmaids for whom we humbly entreat thy majesty, that by these offices of pious supplication they may be found worthy to enter into everlasting rest.\nThrough Jesus Christ, thy Son our Lord, Who liveth and reigneth with thee, in the unity of the Holy Ghost, God, world without end.\nR. Amen.'
     ],
     'index:asd-requiem': [
       'V. Eternal rest grant unto them, O Lord.\nR. And let perpetual light shine upon them.\nV. May they rest in peace.\nR. Amen.'

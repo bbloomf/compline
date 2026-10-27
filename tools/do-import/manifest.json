@@ -110,8 +110,8 @@
     "in-manus-tuas/passiontide.gabc": {
       "units": [
         [{"ref": "@Minor:Responsory Completorium", "lines": "1", "prefix": "V. "}, {"ref": "@Minor:Responsory Completorium", "lines": "2", "abbrev": true}],
-        [{"ref": "@Minor:Responsory Completorium", "lines": "3", "prefix": ""}, {"ref": "@Minor:Responsory Completorium", "lines": "4", "abbrev": true, "prefix": "* "}],
-        {"ref": "@Minor:Responsory Completorium", "lines": "6", "abbrev": true, "prefix": ""}
+        ["@Minor:Responsory Completorium:3", {"ref": "@Minor:Responsory Completorium", "lines": "4", "abbrev": true, "prefix": "* "}],
+        {"ref": "@Minor:Responsory Completorium", "lines": "6", "abbrev": true}
       ]
     },
     "in-manus-tuas/pt_full.gabc": {

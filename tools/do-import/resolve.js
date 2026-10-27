@@ -218,8 +218,10 @@ var MACROS = {
 };
 var PRAYERS = 'Psalterium/Common/Prayers';
 
-// Resolves sections of one language.  lang: {folder, fallback}.  Missing references come out as
-// a line '⟨missing file:section⟩', so the caller can tell what a text lacks.
+// Resolves sections of one language.  lang: {folder, fallback, sections}, where sections are the
+// language's own versions of DO's, {'file:section': lines}, read in their place (texts.js, from
+// extra/<lang>/texts.txt).  Missing references come out as a line '⟨missing file:section⟩', so the
+// caller can tell what a text lacks.
 exports.resolver = function(doDir, lang, version) {
   // A section's own lines, from the language, else from Latin where Latin has only references
   // (resolved in the language), else from the fallback folder; null if there is none.
@@ -233,6 +235,8 @@ exports.resolver = function(doDir, lang, version) {
     return null;
   };
   var lookup = function(file, section) {
+    var own = lang.sections && lang.sections[file + ':' + section];
+    if(own) return {folder: lang.folder, lines: own};
     var found = find(lang.folder, file, section);
     if(!found && lang.fallback) found = find(lang.fallback, file, section);
     return found;

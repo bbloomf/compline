@@ -1,7 +1,8 @@
 # The Latin of the texts written by hand in extra/<lang>/texts.txt, as the translations were
 # written against it.  It isn't written to any module: the importer checks it against the app's
-# Latin, as it checks DO's, so that a change to the app's Latin shows which translations to
-# change too.  Format as in extra/en/texts.txt.
+# Latin, in place of DO's for a text DO doesn't have and as well as DO's for one it does, so that
+# a change to the app's Latin shows which translations to change too.  Format as in
+# extra/en/texts.txt.
 #
 # The priest's Confiteor and Misereatur: DO's [Confiteor] and [Misereatur], with "et tibi pater"
 # and "tui" or "vestri".
@@ -16,3 +17,7 @@ R. Amen.
 [index:misereatur-vestri]
 Misereátur vestri omnípotens Deus, et dimíssis peccátis vestris, perdúcat vos ad vitam ætérnam.
 R. Amen.
+
+# Jube domne, which extra/en/texts.txt replaces: checked as well as DO's Latin.
+[jube-domne.gabc]
+V. Jube, domne, benedícere.

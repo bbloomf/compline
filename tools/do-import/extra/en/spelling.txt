@@ -1,0 +1,9 @@
+# British spellings DO's English has, and the American ones the app uses (TRANSLATIONS_PLAN.md §7f).
+# import.js replaces each as a whole word, keeping its capital, in the psalter and the texts.
+favourable favorable
+honour honor
+labour labor
+laboured labored
+labours labors
+neighbour neighbor
+saviour savior

@@ -9,7 +9,8 @@
 // divinum-officium/ next to this repository (or, in a git worktree, next to the main checkout).
 //
 // It generates the psalter (Phase 2, psalter.js) and the texts (Phase 3, texts.js, from
-// manifest.json).  Any other part of a module already in the file is kept.
+// manifest.json), then respells the words in extra/<lang>/spelling.txt (§7f).  Any other part of a
+// module already in the file is kept.
 'use strict';
 var fs = require('fs');
 var path = require('path');
@@ -90,6 +91,20 @@ try {
 // The report.
 var report = psalter.build(doDir, root, LANGUAGES);
 var textReport = texts.build(doDir, root, LANGUAGES);
+
+// Each language's extra/<lang>/spelling.txt (texts.spelling), applied to its psalter and texts.
+var spellings = {};
+LANGUAGES.forEach(function(lang) {
+  var spelling = texts.spelling(lang.code);
+  if(!spelling) return;
+  [report.languages[lang.code].psalter, textReport.languages[lang.code].texts].forEach(function(sections) {
+    Object.keys(sections || {}).forEach(function(key) {
+      sections[key] = sections[key].map(spelling.fix);
+    });
+  });
+  spellings[lang.code] = spelling.words;
+});
+
 var list = function(title, lines) {
   if(!lines.length) return;
   console.log('  ' + title + ':');
@@ -170,6 +185,12 @@ LANGUAGES.forEach(function(lang) {
   list('unit counts', r.counts);
   list('notes', r.notes);
   list('characters GABC can\'t take', r.unsafe);
+});
+Object.keys(spellings).forEach(function(code) {
+  console.log('\n' + code + ' spelling (extra/' + code + '/spelling.txt):');
+  console.log('  ' + spellings[code].map(function(w) {
+    return w.from + ' → ' + w.to + ' ' + (w.count ? '×' + w.count : '(not found: remove it?)');
+  }).join(', '));
 });
 
 // Writing the modules.
