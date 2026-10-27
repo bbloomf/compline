@@ -165,7 +165,7 @@ define(['jquery'], function($) {
   };
   // The attributes of the translation that follows a Latin element.
   var trAttributes = function() {
-    var meta = data().meta || {};
+    var meta = (data() || {}).meta || {};
     return " class='tr' lang='" + (meta.lang || lang()) + "'" + (meta.dir === 'rtl' ? " dir='rtl'" : '');
   };
   // Classes for a Latin element: in 'tr' mode it hides when it has a translation, and is shown
