@@ -159,7 +159,7 @@ js/i18n/
 
 ## 4. How each mode displays
 
-Modes are set as body classes: `text-la` | `text-both` | `text-tr`. Every text node gets a correct `lang` attribute. All the included languages are left-to-right.
+Modes are set as classes, `text-la` | `text-both` | `text-tr`, on each block of text (a `.tr-pair`, a psalm's `.verses` and each `<chant-gabc>`), as its section shows: the Text menu's mode, or `tr` where the section's notation menu says "Translation only" (§4c). The Text menu's mode is also on `<body>`, as `page-text-<mode>`, for the menus. Every text node gets a correct `lang` attribute. All the included languages are left-to-right.
 
 ### Latin + translation (`both`)
 
@@ -328,6 +328,8 @@ Today there are three checkboxes, "Fully Notated Psalms / Chapter / Prayers", an
 - Marian antiphon set to plain text: hide the "Solemn Tone" checkbox. The Te lucis tone selector stays, because it also picks the doxology.
 - This doesn't depend on translations at all, so it can ship first (Phase 1a, §7).
 
+**Translation only, per section (added in Phase 8, at the user's request).** Each of the menus also has "Translation only". That section shows the translation as plain text, as if the Text menu said "Translation only", whatever the Text menu says. With the Text menu on Latin, the translation is then loaded for that section alone, and the Translation menu is enabled so that a language can be chosen. For example, the chant can be sung in Latin with the psalms read in English. A hymn in "Translation only" can still be sung in the translation, as with the Text menu on "Translation only". The non-chant texts of `index.html` that aren't in a section (the Confiteor, the Misereatur and so on) follow the Text menu.
+
 ---
 
 ## 5. Settings
@@ -337,9 +339,9 @@ Follow the existing pattern (localStorage strings plus controls in `#options-men
 | Key | Values | Default | Control |
 |---|---|---|---|
 | `textMode` | `'la'` \| `'both'` \| `'tr'` | `'la'` | "Text: Latin / Latin & translation / Translation" |
-| `trLang` | `'en'`, `'fr'`, `'es'`, `'it'`, `'pt'`, `'pl'`, `'la-bea'` at launch (the languages at 100%, §2) | **not stored** until the user picks one. Until then it is worked out each time from the browser: the first entry in `navigator.languages` whose main part (`de-AT` → `de`) is an offered language, else `'en'`. Latin-Bea is never picked automatically. | "Translation: …", disabled while `textMode == 'la'`. When the user switches Text away from Latin, it already shows the browser-language choice. Bea is listed as "Latin (Pius XII psalter)". |
-| `hymnMode` | `'literal'` \| `'metrical'` \| `'sung'` | `'literal'` | `<select>` "Hymn: Literal / Metrical / Sung with chant", next to the Te lucis tone selector. Hidden while `textMode == 'la'`. Choices the language can't provide are disabled; fallbacks are in §4b. |
-| `notationPsalms` | `'text'` \| `'pointed'` \| `'full'` | `'pointed'` | "Psalms: Plain text / Pointed / Fully notated" (§4c). Replaces the `fullNotation` checkbox. |
+| `trLang` | `'en'`, `'fr'`, `'es'`, `'it'`, `'pt'`, `'pl'`, `'la-bea'` at launch (the languages at 100%, §2) | **not stored** until the user picks one. Until then it is worked out each time from the browser: the first entry in `navigator.languages` whose main part (`de-AT` → `de`) is an offered language, else `'en'`. Latin-Bea is never picked automatically. | "Translation: …", disabled while `textMode == 'la'` and no section is in "Translation only" (§4c). When the user switches Text away from Latin, it already shows the browser-language choice. Bea is listed as "Latin (Pius XII psalter)". |
+| `hymnMode` | `'literal'` \| `'metrical'` \| `'sung'` | `'literal'` | `<select>` "Hymn: Literal / Metrical / Sung with chant", next to the Te lucis tone selector. Hidden while the hymn is shown in Latin only. Choices the language can't provide are disabled; fallbacks are in §4b. |
+| `notationPsalms` | `'text'` \| `'pointed'` \| `'full'` \| `'tr'` | `'pointed'` | "Psalms: Plain text / Pointed / Fully notated / Translation only" (§4c). Replaces the `fullNotation` checkbox. Each `notation*` key below can also be `'tr'`. |
 | `notationChapter` | `'text'` \| `'pointed'` \| `'full'` | `'full'` | "Chapter: …". Replaces `fullNotationChapter`. |
 | `notationPrayers` | `'text'` \| `'pointed'` \| `'full'` | `'pointed'` | "Prayers: …". Replaces `fullNotationPrayers`. |
 | `notationHymn` | `'text'` \| `'full'` | `'full'` | "Hymn: Plain text / Fully notated". New. Placed next to `hymnMode` and the Te lucis tone selector. |
@@ -705,7 +707,7 @@ The files:
   - The hymn's render key includes `hymnMode`, so changing it redraws only the hymn.
 - **Sung** (`swapLyrics` in `chant-element.js`): after `setGabc`'s rewrites, each syllable with notes gets the next translated syllable, a line for a line.
   - Elided syllables go. The clef, the bars and the stanza numbers stay.
-  - The drop cap is the translation's first letter. The rest of the syllable isn't put in capitals as the Latin's "TE" is, so it reads "B efore".
+  - The drop cap is the translation's first letter. At first the rest of the syllable wasn't put in capitals as the Latin's "TE" is, so it read "B efore". Phase 8 gives it the Latin's capitals (§7j).
   - In "Latin & translation" the Latin follows each stanza, with red slashes, in the translation's grey. In "translation only" the sung score is the only notation on the page, with nothing under it.
   - Where the season can't be sung, a red note under the tone menu says "Not available to sing in English for this season.", and the metrical text is shown.
 - **The undertie:** Crimson has no ‿, so `fonts/undertie.py` draws one: a thin arc under the gap, reaching under the letters either side. It is a one-glyph font, `fonts/crimson-undertie.woff2` (340 bytes) and `.woff`, with the roman subset's metrics. `style.css` gives it `unicode-range: U+203F`, so only a page with a sung Spanish hymn downloads it. The copy globs already include it.
@@ -906,6 +908,24 @@ The built `dist/`, served on its own, was checked with `check.js`:
   each date.
 - The license opens.
 - A French page loads `crimson-roman-ext.woff2`. There were no console errors.
+
+**After the code review, at the user's request.**
+- **The capitals after the sung hymn's drop cap** follow the rule the Latin GABC files already
+  keep (`raiseDropCapCaps` in `chant-element.js`):
+  - none where the first syllable is a single letter ("A-ve", Spanish "A Ti");
+  - the whole word where it is one syllable of three letters ("HÆC");
+  - otherwise the first two letters ("TE", "AL-ma", "SAl-ve", "FRa-tres", English "BE-fore").
+  
+  They are put in when the hymn is drawn, so `hymn-sung.txt` keeps the text as written.
+- **"Translation only" for each section** (§4c). Each block of text now has its own mode class in
+  place of the one on `<body>`. `text-mode.js` gives each block its section's mode (`modeOf`), and
+  `style.css` reads the class on the block. The Text menu's mode stays on `<body>` as
+  `page-text-<mode>`, for the menus. Checked:
+  - Psalms in English with the rest in Latin;
+  - in "Latin & translation", the chapter and the sung hymn in English only, the chapter one column
+    wide;
+  - "Other chants" to "Translation only" and back, which once left "Everything else" behind;
+  - `check.js` in both modes, in each of the six languages, on eight dates.
 
 **Left for later:**
 - the native readers' checklist, and any fixes it brings;

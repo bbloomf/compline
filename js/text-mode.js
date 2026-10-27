@@ -87,6 +87,39 @@ define(['jquery'], function($) {
     if(isLanguage(query.lang)) return query.lang;
     return isLanguage(localStorage.trLang) ? localStorage.trLang : browserLang();
   };
+  // The sections whose notation menu says 'Translation only' (compline.js), which show the
+  // translation only whatever the Text menu says.  Each block of text shows as its section's mode
+  // says (modeOf), and has the class text-<mode>, which style.css reads.
+  var trSections = {};
+  var setTrSections = function(sections) {
+    trSections = {};
+    sections.forEach(function(section) { trSections[section] = true; });
+  };
+  var sectionMode = function(section) {
+    var m = mode();
+    return section && trSections[section] ? 'tr' : m;
+  };
+  // A block's section: a <chant-gabc>'s notation ('chants' without one), the psalms' verses, and the
+  // pointed chapter and prayers.  Anything else follows the Text menu.
+  var sectionOf = function(el) {
+    var $el = $(el);
+    if($el.is('chant-gabc')) return $el.attr('notation') || 'chants';
+    if($el.is('.verses[data-psalm]')) return 'psalms';
+    if($el.closest('.pointed-chapter').length) return 'chapter';
+    if($el.closest('.pointed-prayer').length) return 'prayers';
+    return null;
+  };
+  var modeOf = function(el) {
+    return sectionMode(sectionOf(el));
+  };
+  // Whether any translation is shown.
+  var translated = function() {
+    return mode() !== 'la' || Object.keys(trSections).length > 0;
+  };
+  // The class of a block that shows as m.
+  var markMode = function(el, m) {
+    $(el).removeClass('text-la text-both text-tr').addClass('text-' + m);
+  };
   var setMode = function(m) {
     dropQuery('text');
     localStorage.textMode = m;
@@ -107,7 +140,7 @@ define(['jquery'], function($) {
   // Calls back once the current language is loaded.  A language that fails to load has no texts.
   var load = function(callback) {
     var l = lang();
-    if(mode() === 'la' || modules[l]) {
+    if(!translated() || modules[l]) {
       callback();
       return;
     }
@@ -121,11 +154,11 @@ define(['jquery'], function($) {
     });
   };
   var data = function() {
-    return mode() === 'la' ? null : modules[lang()] || null;
+    return translated() ? modules[lang()] || null : null;
   };
-  // What a chant (whose src is key) was drawn for, so it's drawn again only when this changes.
-  var renderKey = function(key) {
-    var m = mode();
+  // What a chant (whose src is key, shown as m) was drawn for, so it's drawn again only when this
+  // changes.
+  var renderKey = function(key, m) {
     return m === 'la' ? m : m + ':' + lang() + (modules[lang()] ? '' : ':loading') + (hymnTone(key) ? ':' + hymnMode() : '');
   };
 
@@ -235,33 +268,34 @@ define(['jquery'], function($) {
   // in a subtle style when it doesn't (style.css).  A Latin translation (meta.latin, Latin-Bea)
   // has nothing where it's the same as the Latin, so there the Latin is its text: tr-same, shown
   // as it is.
-  var latinClass = function(hasTranslation) {
-    if(mode() === 'la') return '';
+  var latinClass = function(hasTranslation, m) {
+    if((m || mode()) === 'la') return '';
     if(hasTranslation) return 'has-tr';
     return ((data() || {}).meta || {}).latin ? 'tr-same' : 'tr-missing';
   };
   // The translation of a psalm verse as a <p>, laid out like the Latin; '' if the verse before's
-  // covers it, and null if there isn't one.
-  var verseTranslationHtml = function(section, n) {
-    var verse = mode() === 'la' ? null : psalmVerse(section, n);
+  // covers it, and null if there isn't one.  m is the mode it's shown in.
+  var verseTranslationHtml = function(section, n, m) {
+    var verse = (m || mode()) === 'la' ? null : psalmVerse(section, n);
     return verse ? '<p' + trAttributes() + "><span class='verse-number'>" + n + '.&nbsp;</span>' + unitHtml(verse) + '</p>' : verse;
   };
   // A psalm verse: its Latin <p> (whose inner HTML is latinHtml), then the translation's.
-  var verseHtml = function(section, n, latinHtml) {
-    var translation = verseTranslationHtml(section, n);
-    return "<p lang='la' class='" + latinClass(translation !== null) + "'><span class='verse-number'>" + n + '.&nbsp;</span>' +
+  var verseHtml = function(section, n, latinHtml, m) {
+    var translation = verseTranslationHtml(section, n, m);
+    return "<p lang='la' class='" + latinClass(translation !== null, m) + "'><span class='verse-number'>" + n + '.&nbsp;</span>' +
       latinHtml + '</p>' + (translation || '');
   };
   // A Latin block and its translation (units), side by side or one under the other (style.css).
   // tag is the element for each, 'p' or 'div'.
-  var pairHtml = function(latinHtml, units, tag) {
+  var pairHtml = function(latinHtml, units, tag, m) {
     tag = tag || 'p';
-    return "<div class='tr-pair'><" + tag + " lang='la' class='" + latinClass(!!units) + "'>" + latinHtml + '</' + tag + '>' +
+    return "<div class='tr-pair'><" + tag + " lang='la' class='" + latinClass(!!units, m) + "'>" + latinHtml + '</' + tag + '>' +
       (units ? '<' + tag + trAttributes() + '>' + unitsHtml(units) + '</' + tag + '>' : '') + '</div>';
   };
 
   // Adds the translations to the page, or takes them away in 'la' mode: each .tr-pair[data-tr]
-  // block of index.html, and each verse of the pointed psalms (.verses[data-psalm]).
+  // block of index.html, and each verse of the pointed psalms (.verses[data-psalm]), each in its
+  // section's mode.
   var translate = function(root) {
     var $root = $(root);
     $root.find('.tr-pair[data-tr]').each(function() {
@@ -272,8 +306,10 @@ define(['jquery'], function($) {
         console.warn('A .tr-pair needs one Latin child (lang=la)', this);
         return;
       }
-      var units = mode() === 'la' ? null : texts($pair.attr('data-tr'));
-      $latin.removeClass('has-tr tr-missing tr-same').addClass(latinClass(!!units));
+      var m = modeOf(this);
+      markMode(this, m);
+      var units = m === 'la' ? null : texts($pair.attr('data-tr'));
+      $latin.removeClass('has-tr tr-missing tr-same').addClass(latinClass(!!units, m));
       if(units) {
         var tag = $latin.prop('tagName').toLowerCase();
         $latin.after('<' + tag + trAttributes() + '>' + unitsHtml(units) + '</' + tag + '>');
@@ -281,11 +317,13 @@ define(['jquery'], function($) {
     });
     $root.find('.verses[data-psalm]').each(function() {
       var section = $(this).attr('data-psalm');
+      var m = modeOf(this);
+      markMode(this, m);
       $(this).children('p.tr').remove();
       $(this).children('p').each(function() {
         var $p = $(this);
-        var translation = verseTranslationHtml(section, parseInt($p.children('.verse-number').text()));
-        $p.attr('lang', 'la').removeClass('has-tr tr-missing tr-same').addClass(latinClass(translation !== null));
+        var translation = verseTranslationHtml(section, parseInt($p.children('.verse-number').text()), m);
+        $p.attr('lang', 'la').removeClass('has-tr tr-missing tr-same').addClass(latinClass(translation !== null, m));
         if(translation) $p.after(translation);
       });
     });
@@ -293,7 +331,7 @@ define(['jquery'], function($) {
   var updateBodyClasses = function() {
     var m = mode();
     $.each(modes, function(i, each) {
-      $(document.body).toggleClass('text-' + each, each === m);
+      $(document.body).toggleClass('page-text-' + each, each === m);
     });
   };
 
@@ -302,6 +340,11 @@ define(['jquery'], function($) {
     query: query,
     languages: languages,
     mode: mode,
+    setTrSections: setTrSections,
+    sectionMode: sectionMode,
+    modeOf: modeOf,
+    markMode: markMode,
+    translated: translated,
     lang: lang,
     setMode: setMode,
     setLang: setLang,
