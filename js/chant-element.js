@@ -104,14 +104,19 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
   // three letters ("HÆC"), and otherwise the first two letters ("TE", "AL-ma", "SAl-ve").
   var raiseDropCapCaps = function(gabc) {
     return gabc.replace(/^((?:\s|\([^)]*\))*)([^\s(]+)(\([^)]*\))(\S?)/, function(match, start, syllable, neume, next) {
-      var letters = syllable.match(/\p{L}/gu) || [];
+      // the letters of its words, not of its tags (<i>, <sp>)
+      var letters = syllable.replace(/<[^>]*>/g, '').match(/\p{L}/gu) || [];
       if(letters.length < 2) return match;
       var count = !next && letters.length === 3 ? 3 : 2;
       var n = 0;
-      return start + syllable.replace(/\p{L}/gu, function(letter) {
-        return n++ < count ? letter.toUpperCase() : letter;
+      return start + syllable.replace(/<[^>]*>|\p{L}/gu, function(letter) {
+        return letter.charAt(0) !== '<' && n++ < count ? letter.toUpperCase() : letter;
       }) + neume + next;
     });
+  };
+  // Whether a GABC file has a heading, user-notes or commentary, which the rubrics translate.
+  var hasNotes = function(gabc) {
+    return /^\uFEFF?\s*(user-notes|commentary)\s*:/m.test(gabc || '');
   };
   // The whole of a GABC file as HTML.  Blank lines separate paragraphs, and in a psalm, a
   // paragraph whose lines all start with a number is laid out like the pointed verses.  Only the
@@ -477,7 +482,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
 
     // Draws the chant again if the text mode or translation has changed since it was drawn.
     updateText() {
-      if(this._gabc && this._textKey !== textMode.renderKey(this.getAttribute('src'), textMode.modeOf(this))) {
+      if(this._gabc && this._textKey !== textMode.renderKey(this.getAttribute('src'), textMode.modeOf(this), hasNotes(this._gabc))) {
         this.setGabc(this._gabc, this._annotationAttr, this._useDropCapAttr);
       }
     }
@@ -490,12 +495,12 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       this._width = 0;
       var mode = textMode.modeOf(this);
       textMode.markMode(this, mode);
-      this._textKey = textMode.renderKey(this.getAttribute('src'), mode);
+      this._textKey = textMode.renderKey(this.getAttribute('src'), mode, hasNotes(gabc));
       var translation = this.translation();
       var unsung = textMode.rubric('hymn-unsung');
       this._noteHtml = translation && translation.unsung?
         "<p class='red hymn-note'" + (unsung ? " lang='" + textMode.langAttr() + "'" : '') + '><i>' +
-        (unsung || 'Not available to sing in ' + textMode.langName() + ' for this season.') + '</i></p>' : '';
+        (unsung ? textMode.rubricHtml(unsung) : 'Not available to sing in ' + textMode.langName() + ' for this season.') + '</i></p>' : '';
       var useDropCap = [];
       if (useDropCapAttr === 'false') {
         useDropCapAttr = false;

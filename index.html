@@ -118,7 +118,7 @@ In private recitation, compline is said as follows:
 <chant-gabc exclude='septuagesima:easter-1' src='deus-in-adjutorium_alleluia.gabc'></chant-gabc>
 <chant-gabc include='septuagesima:easter-1' src='deus-in-adjutorium_laus-tibi.gabc'></chant-gabc>
 </div>
-<div id='placeholder'></div>
+<div id='placeholder' data-section='psalms'></div>
 <div include='easter-3:easter-2'>
 <br/>
 <p class='red' data-rubric='christus-factus-est'><i>Then all kneel and say:</i></p>
@@ -191,13 +191,13 @@ Tu autem in nobis es, Dómine,&nbsp;<span class='red'>†</span> et nomen sanctu
 <div class='in-manus-tuas pt_full'><chant-gabc src='custodi-nos-pt.gabc'></chant-gabc></div>
 <br/>
 </div>
-<div id="canticle" exclude='easter-3:easter-1'>
+<div id="canticle" data-section='psalms' exclude='easter-3:easter-1'>
 <chant-gabc src='canticle-ant.gabc'></chant-gabc>
 <chant-gabc notation='psalms' text-lines='1' src='canticle-psalm.gabc'></chant-gabc>
 <div class="verses" data-psalm='nunc-dimittis'><p><span class="verse-number">2.&nbsp;</span><i>Quia</i> vidérunt <b>ó</b>culi <b>me</b>i&nbsp;<span class='red'>*</span> salutá<i>re</i> <b>tu</b>um:<br></p><p><span class="verse-number">3.&nbsp;</span><b>Quod</b> pa<b>rá</b>sti&nbsp;<span class='red'>*</span> ante fáciem ómnium po<i>pu</i><b>ló</b>rum:<br></p><p><span class="verse-number">4.&nbsp;</span><i>Lumen</i> ad revelati<b>ó</b>nem <b>gén</b><b>ti</b>um,&nbsp;<span class='red'>*</span> et glóriam plebis tu<i>æ</i> <b>Is</b>raël.<br></p><p><span class="verse-number">5.&nbsp;</span><i>Glóri</i>a <b>Pá</b>tri, et <b>Fí</b><b>li</b>o,&nbsp;<span class='red'>*</span> et Spirítu<i>i</i> <b>Sán</b>cto.<br></p><p><span class="verse-number">6.&nbsp;</span><i>Sicut</i> érat in princípio, et <b>núnc</b>, et <b>sém</b>per,&nbsp;<span class='red'>*</span> et in sǽcula sæculó<i>rum</i>. <b>A</b>men.<br></p></div>
 <chant-gabc src='canticle-ant.gabc'></chant-gabc>
 </div>
-<div exclude='easter-3:easter-1 allSouls'>
+<div data-section='prayers' exclude='easter-3:easter-1 allSouls'>
 <div class='officiant priest' style='display:none;'>
 <i class='red' data-rubric='dominus-vobiscum'>The Officiant introduces the Collect:</i>
 <div class='tr-pair' data-tr='index:dominus-vobiscum'><div lang='la'><span class='versiculum'>v</span>&nbsp;Dóminus vobíscum.
@@ -218,7 +218,7 @@ Vísita, quǽsumus Dómine, habitatiónem istam, et omnes insídias inimíci ab 
 Per Dóminum nostrum Jesum Christum Fílium tuum:&nbsp;<span class='red'>†</span> qui tecum vivit et regnat in unitáte Spíritus <i>Sancti</i> <b>De</b>us,&nbsp;<span class='red'>*</span> per ómnia sǽcula sæculórum. <span class='versiculum'>r</span>&nbsp;Amen.</div></div></div>
 <chant-gabc class='notated-prayer' notation='prayers' src='prayer.gabc'></chant-gabc>
 </span>
-<span include='easter-3:easter-1'>
+<span data-section='prayers' include='easter-3:easter-1'>
 <div class='tr-pair' data-tr='index:visita-silent'><div lang='la'>Vísita, quǽsumus Dómine, habitatiónem istam, et omnes insídias inimíci ab ea longe repélle:&nbsp;<span class='red'>†</span> Angeli tui sancti hábitent in ea, qui nos in pace custódiant;&nbsp;<span class='red'>*</span> et benedíctio tua sit super nos semper.
 </div></div>
 <i class='red' data-rubric='conclusion-silent'>The conclusion is said silently:</i>
@@ -226,12 +226,12 @@ Per Dóminum nostrum Jesum Christum Fílium tuum:&nbsp;<span class='red'>†</sp
 </span>
 </span><span exclude='easter-3:easter-1 allSouls'>
 <br/>
-<div class='officiant priest' style='display:none;'>
+<div class='officiant priest' data-section='prayers' style='display:none;'>
 <i class='red' data-rubric='dominus-vobiscum-again'>The Officiant says again:</i>
 <div class='tr-pair' data-tr='index:dominus-vobiscum'><div lang='la'><span class='versiculum'>v</span>&nbsp;Dóminus vobíscum.
 <br/><span class='versiculum'>r</span>&nbsp;Et cum spíritu tuo.</div></div>
 </div>
-<div class='officiant no-priest'>
+<div class='officiant no-priest' data-section='prayers'>
 <i class='red' data-rubric='domine-exaudi'>The Officiant says:</i>
 <div class='tr-pair' data-tr='index:domine-exaudi'><div lang='la'><span class='versiculum'>v</span>&nbsp;Dómine, exáudi oratiónem meam.
 <br/><span class='versiculum'>r</span>&nbsp;Et clamor meus ad te véniat.</div></div>

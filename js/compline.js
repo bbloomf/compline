@@ -65,11 +65,16 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     return notation('psalms') === 'full';
   };
   // The notated chapter and prayers are hidden below 'full', so they skip exsurge layout too.
+  // A chant shows in its own section's mode (text-mode.js modeOf): the psalms' antiphons are
+  // 'chants' here, but plain text in the psalms' 'Translation only', and notated (the default) in
+  // the chants' unless the psalms are in it too.
   var markPlainText = function(section) {
-    var level = notation(section);
-    var plainText = section === 'psalms'? level === 'text' : level !== 'full';
-    $(section === 'chants'? 'chant-gabc:not([notation])' : 'chant-gabc[notation=' + section + ']')
-      .attr('plain-text', plainText? '' : null);
+    var stored = storedNotation(section);
+    $(section === 'chants'? 'chant-gabc:not([notation])' : 'chant-gabc[notation=' + section + ']').each(function(){
+      var level = textMode.modeOf(this) === 'tr'? 'text' : stored === 'tr'? notationSections[section].defaultLevel : stored;
+      var plainText = section === 'psalms'? level === 'text' : level !== 'full';
+      $(this).attr('plain-text', plainText? '' : null);
+    });
   };
   // for chants added to the page after updateNotation
   var markAllPlainText = function() {
@@ -84,23 +89,30 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     markPlainText(section);
   };
   $.each(notationSections, updateNotation);
-  $('select[notation]').change(function(e){
-    var section = $(this).attr('notation');
-    var wasTr = storedNotation(section) === 'tr';
-    localStorage[notationSections[section].key] = $(this).val();
-    // to or from the translation only: the translation may need loading, and the section's text
+  // Sets the sections' notation to level.
+  var setNotation = function(sections, level) {
+    var wasTr = trSections().join();
+    sections.forEach(function(section) {
+      localStorage[notationSections[section].key] = level;
+    });
+    // to or from the translation only: the translation may need loading, and the sections' text
     // is translated again
-    if(wasTr !== (storedNotation(section) === 'tr')) {
+    if(wasTr !== trSections().join()) {
       textMode.setTrSections(trSections());
       updateTextMode();
       return;
     }
-    updateNotation(section);
-    if(section === 'hymn') showHymnMode();
-    if(section === 'psalms') {
-      setPsalms();
-      setCanticle();
-    }
+    sections.forEach(function(section) {
+      updateNotation(section);
+      if(section === 'hymn') showHymnMode();
+      if(section === 'psalms') {
+        setPsalms();
+        setCanticle();
+      }
+    });
+  };
+  $('select[notation]').change(function(e){
+    setNotation([$(this).attr('notation')], $(this).val());
   });
   // "Other chants" in the options menu sets the hymn, the Marian antiphon and every
   // chant without a section of its own at once, and reads "Mixed" when they differ.
@@ -116,11 +128,10 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     return mixed;
   };
   $otherChants.change(function(e){
-    // each in turn, as a change to or from the translation only sets every menu again
-    var level = $(this).val();
-    $otherChantsList.find('select[notation]').each(function(){
-      $(this).val(level).change();
-    });
+    // all at once, so the page is set up once for a change to or from the translation only
+    var $selects = $otherChantsList.find('select[notation]').val($(this).val());
+    setNotation($selects.map(function(){ return $(this).attr('notation'); }).get(), $(this).val());
+    updateOtherChants();
   });
   $('select[notation]').change(updateOtherChants);
   var $otherChantsButton = $('#options-menu button[aria-controls=notation-other-chants-list]');

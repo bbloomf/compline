@@ -99,15 +99,17 @@ define(['jquery'], function($) {
     var m = mode();
     return section && trSections[section] ? 'tr' : m;
   };
-  // A block's section: a <chant-gabc>'s notation ('chants' without one), the psalms' verses, and the
-  // pointed chapter and prayers.  Anything else follows the Text menu.
+  // A block's section: a <chant-gabc>'s notation, the psalms' verses, the pointed chapter and
+  // prayers, or the data-section of the part of index.html it's in (the psalms' antiphons, in
+  // #placeholder and #canticle, and the versicles of the collect).  Any other chant is 'chants', and
+  // anything else follows the Text menu.
   var sectionOf = function(el) {
     var $el = $(el);
-    if($el.is('chant-gabc')) return $el.attr('notation') || 'chants';
+    if($el.is('chant-gabc[notation]')) return $el.attr('notation');
     if($el.is('.verses[data-psalm]')) return 'psalms';
     if($el.closest('.pointed-chapter').length) return 'chapter';
     if($el.closest('.pointed-prayer').length) return 'prayers';
-    return null;
+    return $el.closest('[data-section]').attr('data-section') || ($el.is('chant-gabc') ? 'chants' : null);
   };
   var modeOf = function(el) {
     return sectionMode(sectionOf(el));
@@ -157,10 +159,10 @@ define(['jquery'], function($) {
     return translated() ? modules[lang()] || null : null;
   };
   // What a chant (whose src is key, shown as m) was drawn for, so it's drawn again only when this
-  // changes.
-  var renderKey = function(key, m) {
+  // changes.  notes: whether it has a heading (user-notes or commentary) for the rubrics to translate.
+  var renderKey = function(key, m, notes) {
     return (m === 'la' ? m : m + ':' + lang() + (modules[lang()] ? '' : ':loading') + (hymnTone(key) ? ':' + hymnMode() : '')) +
-      (rubrics() ? ':rubrics-' + lang() : '');
+      (notes && rubrics() ? ':rubrics-' + lang() : '');
   };
 
   // The rubrics (§4d), in the translation's language while a translation is shown, where its module
@@ -176,14 +178,14 @@ define(['jquery'], function($) {
     var r = rubrics();
     return r && typeof r[key] === 'string' ? r[key] : null;
   };
-  // A heading translated, or null where the rubrics don't translate it (Polish's "Psalm" is
-  // translated, though it's the same word).
-  var rubricNote = function(text) {
+  // A heading (as HTML) translated, or null where the rubrics don't translate it (Polish's "Psalm"
+  // is translated, though it's the same word).
+  var rubricNote = function(html) {
     var r = rubrics();
-    if(!r || !text) return null;
+    if(!r || !html) return null;
     for(var key in r) {
       var en = key.replace(/^note:/, '');
-      if(en !== key && text.indexOf(en) === 0 && /^[ .]?$/.test(text.charAt(en.length))) return r[key] + text.slice(en.length);
+      if(en !== key && html.indexOf(en) === 0 && /^[ .]?$/.test(html.charAt(en.length))) return rubricHtml(r[key]) + html.slice(en.length);
     }
     return null;
   };
@@ -218,12 +220,13 @@ define(['jquery'], function($) {
       if(text === null) $el.removeAttr('lang');
       else $el.attr('lang', langAttr());
     });
-    // the pointed psalms' headings ("Psalm 90"); a chant's are drawn by chant-element.js
-    $root.find('i.red:not([data-rubric])').not('chant-gabc i').each(function() {
-      if(!('_rubricText' in this)) this._rubricText = this._rubricShown = $(this).text();
+    // the pointed psalms' headings ("Psalm 90"), in the psalms' and the canticle's HTML; a chant's
+    // are drawn by chant-element.js
+    $root.find('#placeholder, #canticle').addBack('#placeholder, #canticle').find('i.red').not('chant-gabc i').each(function() {
+      if(!('_rubricText' in this)) this._rubricText = this._rubricShown = this.innerHTML;
       var note = rubricNote(this._rubricText);
       var shown = note === null ? this._rubricText : note;
-      if(this._rubricShown !== shown) $(this).text(this._rubricShown = shown);
+      if(this._rubricShown !== shown) this.innerHTML = this._rubricShown = shown;
       if(note === null) $(this).removeAttr('lang');
       else $(this).attr('lang', langAttr());
     });
@@ -424,6 +427,7 @@ define(['jquery'], function($) {
     renderKey: renderKey,
     texts: texts,
     rubric: rubric,
+    rubricHtml: rubricHtml,
     noteHtml: noteHtml,
     psalmSection: psalmSection,
     hasPsalm: hasPsalm,

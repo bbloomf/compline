@@ -18,21 +18,22 @@ var NOTES = ['note:Psalm', 'note:Canticle of Simeon', 'note:Short Lesson', 'note
 var keys = function(root) {
   var html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
   var result = [];
-  html.replace(/data-rubric='([^']+)'/g, function(match, key) {
+  html.replace(/data-rubric=(['"])(.+?)\1/g, function(match, quote, key) {
     if(result.indexOf(key) < 0) result.push(key);
     return match;
   });
   return result.concat(NOTES);
 };
 
-// A language's rubrics, {rubrics, report: {missing, unknown, errors}}, or null if it has no
-// extra/<lang>/rubrics.txt.
+// A language's rubrics, {rubrics, report: {missing, errors}}, or null if it has no
+// extra/<lang>/rubrics.txt.  A [key] that isn't one is an error, as it's most likely a line of text
+// that starts with [, which starts a new key.
 exports.build = function(root, code) {
   var file = path.join(__dirname, 'extra', code, 'rubrics.txt');
   if(!fs.existsSync(file)) return null;
   var sections = text.sections(fs.readFileSync(file, 'utf8').replace(/^﻿/, '').replace(/\r\n?/g, '\n'));
   var wanted = keys(root);
-  var report = {missing: [], unknown: [], errors: []};
+  var report = {missing: [], errors: []};
   var rubrics = {};
   wanted.forEach(function(key) {
     if(!(key in sections)) {
@@ -47,7 +48,7 @@ exports.build = function(root, code) {
     rubrics[key] = value;
   });
   Object.keys(sections).forEach(function(key) {
-    if(wanted.indexOf(key) < 0) report.unknown.push(key);
+    if(wanted.indexOf(key) < 0) report.errors.push('[' + key + '] isn\'t a rubric of the page (a line of text can\'t start with [)');
   });
   return {rubrics: rubrics, report: report};
 };

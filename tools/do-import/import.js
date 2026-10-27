@@ -237,8 +237,7 @@ console.log('\nThe rubrics (extra/<lang>/rubrics.txt; the others are in English)
 Object.keys(rubricReport).forEach(function(code) {
   var r = rubricReport[code].report;
   console.log('  ' + code + ': ' + Object.keys(rubricReport[code].rubrics).length + ' rubrics' +
-    (r.missing.length ? ', missing ' + r.missing.join(' ') : '') +
-    (r.unknown.length ? ', not on the page (remove them?) ' + r.unknown.join(' ') : ''));
+    (r.missing.length ? ', missing ' + r.missing.join(' ') : ''));
   r.errors.forEach(function(line) { console.log('    !! ' + line); });
 });
 Object.keys(spellings).forEach(function(code) {
