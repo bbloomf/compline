@@ -17,27 +17,9 @@
     "adjutorium-nostrum.gabc": ["@Prayers:Adjutorium nostrum:1", "@Prayers:Adjutorium nostrum:2"],
     "index:confiteor": ["$Confiteor"],
     "index:misereatur-nostri": [{"ref": "$Misereatur", "amen": true}],
-    "index:confiteor-priest": {
-      "units": ["$Confiteor"],
-      "subs": {
-        "la": "s/et ómnibus Sanctis, quia/ómnibus Sanctis et tibi pater, quia/ s/et omnes Sanctos, oráre/omnes Sanctos, et te pater: oráre/",
-        "en": "s/and to all the Saints, that/to all the Saints, and to thee, Father, that/ s/and all the Saints, to pray/all the Saints, and thee, Father, to pray/"
-      }
-    },
-    "index:misereatur-tui": {
-      "units": [{"ref": "$Misereatur", "amen": true}],
-      "subs": {
-        "la": "s/nostri/tui/ s/nostris/tuis/ s/nos ad/te ad/",
-        "en": "s/on us/on thee/ s/forgive us our/forgive thee thy/ s/bring us/bring thee/"
-      }
-    },
-    "index:misereatur-vestri": {
-      "units": [{"ref": "$Misereatur", "amen": true}],
-      "subs": {
-        "la": "s/nostri/vestri/ s/nostris/vestris/ s/nos ad/vos ad/",
-        "en": "s/on us/on you/ s/forgive us our/forgive you your/ s/bring us/bring you/"
-      }
-    },
+    "index:confiteor-priest": {"extra": "DO has no priest's forms"},
+    "index:misereatur-tui": {"extra": "DO has no priest's forms"},
+    "index:misereatur-vestri": {"extra": "DO has no priest's forms"},
     "index:indulgentiam": [{"ref": "$Indulgentiam", "amen": true}],
     "converte-nos.gabc": ["@Prayers:Converte nos:1", "@Prayers:Converte nos:2"],
     "deus-in-adjutorium.gabc": [
@@ -190,10 +172,7 @@
       "@Prayers:Dominus:3-4",
       "@Prayers:Dominus:1-2 s/^V\\. /V. (/ s/$/)/"
     ]],
-    "index:asd-collect": {
-      "note": "DO concludes with the whole Per Dominum; the app with its first words",
-      "units": [{"ref": "@Sancti/11-02:Oratio mortuorum1", "tail": 4}]
-    },
+    "index:asd-collect": [{"ref": "@Sancti/11-02:Oratio mortuorum1", "tail": 4}],
     "index:asd-requiem": [["$Requiem", "$Requiescant"]]
   }
 }

@@ -190,7 +190,7 @@ var pureInclusion = function(lines) {
 
 // Line selection and substitutions after an @ reference: "2", "3-4", "!1", "s/x/y/g", in turn,
 // as SetupString.pl's do_inclusion_substitutions.  The text is lines joined by \n.
-var substitute = exports.substitute = function(textIn, subs) {
+var substitute = function(textIn, subs) {
   var t = textIn;
   var pattern = /(?:s\/([^\/]*)\/([^\/]*)\/([gism]*))|(?:(!?)(\d+)(-(\d+))?)/g, m;
   while((m = pattern.exec(subs || ''))) {

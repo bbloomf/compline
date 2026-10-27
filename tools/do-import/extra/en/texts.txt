@@ -1,0 +1,17 @@
+# Texts DO doesn't have, written by hand (TRANSLATIONS_PLAN.md §7e).  Each [key] is a text of
+# manifest.json; its units are separated by blank lines, and a line that starts "V. " or "R. "
+# starts with ℣ or ℟.  A line that starts with # is a comment.
+#
+# The priest's Confiteor and Misereatur: DO's [Confiteor] and [Misereatur], with "and to thee,
+# Father" and "on thee" or "on you".
+
+[index:confiteor-priest]
+I confess to almighty God, to blessed Mary ever Virgin, to blessed Michael the Archangel, to blessed John the Baptist, to the holy Apostles Peter and Paul, to all the Saints, and to thee, Father, that I have sinned exceedingly in thought, word and deed: through my fault, through my fault, through my most grievous fault. Therefore I beseech blessed Mary ever Virgin, blessed Michael the Archangel, blessed John the Baptist, the holy Apostles Peter and Paul, all the Saints, and thee, Father, to pray for me to the Lord our God.
+
+[index:misereatur-tui]
+May almighty God have mercy on thee, forgive thee thy sins, and bring thee to everlasting life.
+R. Amen.
+
+[index:misereatur-vestri]
+May almighty God have mercy on you, forgive you your sins, and bring you to everlasting life.
+R. Amen.

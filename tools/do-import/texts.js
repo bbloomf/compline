@@ -22,11 +22,14 @@
 //   inline    joins the piece's first line onto the line before, with this between
 //   amen      the last line's Amen becomes a line "R. Amen." of its own (added if it has none)
 //   generate  'alleluia-antiphon': "Alleluia, * alleluia, alleluia.", as DO's alleluia_ant
-// A text can instead be {units, version, subs, note}: version is the DO version its conditions
-// are read for; subs, by language code ('la' for Latin), are s/// substitutions done on each unit,
-// where DO has only a related text (a language without one has the text missing); note
-// explains a known difference from the app's Latin.  A hymn is {hymn, doxology}: the doxology
-// takes the place of the hymn's stanza from its * on, and the units are the stanzas.
+// A text can instead be {units, version}: version is the DO version its conditions are read for.
+// A hymn is {hymn, doxology}: the doxology takes the place of the hymn's stanza from its * on, and
+// the units are the stanzas.  A text DO doesn't have is {extra: why}: it comes only from
+// extra/<lang>/texts.txt, and a language without it there has the text missing.
+//
+// extra/<lang>/texts.txt is texts written by hand, which take the place of DO's (§7, "Texts that
+// don't come from DO"): each [key] is followed by its units, separated by blank lines, and a line
+// that starts with # is a comment.
 'use strict';
 var fs = require('fs');
 var path = require('path');
@@ -38,6 +41,29 @@ var appLatin = require('./app-latin');
 var THRESHOLD = 0.9;
 
 var manifest = JSON.parse(fs.readFileSync(path.join(__dirname, 'manifest.json'), 'utf8'));
+
+// A language's extra/<lang>/texts.txt, as {key: units}; {} if it has none.
+var extraTexts = function(code) {
+  var file = path.join(__dirname, 'extra', code, 'texts.txt');
+  var result = {};
+  if(!fs.existsSync(file)) return result;
+  var key = null;
+  fs.readFileSync(file, 'utf8').split('\n').forEach(function(line) {
+    line = line.trim();
+    var m = line.match(/^\[(.+)\]$/);
+    if(m) result[key = m[1]] = [''];
+    else if(/^#/.test(line) || key === null) return;
+    else if(!line) result[key].push('');
+    else {
+      var units = result[key];
+      units[units.length - 1] += (units[units.length - 1] ? '\n' : '') + line;
+    }
+  });
+  Object.keys(result).forEach(function(k) {
+    result[k] = result[k].filter(Boolean);
+  });
+  return result;
+};
 
 // Characters GABC can't take (§7a), apart from * and †, as in the psalter.
 var UNSAFE = /[()[\]{}<>_^%|\\#$@~]/g;
@@ -265,20 +291,15 @@ var refParts = function(ref) {
 };
 
 // The units of one text in one language, {units, notes}; a unit that is missing something has
-// a ⟨…⟩ in it.
-var build = function(key, spec, lang, doDir, w0) {
+// a ⟨…⟩ in it.  extra: the language's extra/<lang>/texts.txt.
+var build = function(key, spec, lang, doDir, w0, extra) {
+  if(extra && extra[key]) return {units: extra[key], notes: []};
   if(Array.isArray(spec)) spec = {units: spec};
+  if(spec.extra) return {units: ['⟨not in extra/' + lang.code + '/texts.txt⟩'], notes: []};
   var r = resolve.resolver(doDir, lang, spec.version);
   var ctx = {r: r, w: w0 || words(r)};
   ctx.gloria = clean(r.reference(resolve.PRAYERS, 'Gloria1'))[0];
-  var result = spec.hymn ? hymn(spec, ctx) : {units: spec.units.map(function(u) { return unit(u, ctx); }), notes: []};
-  if(spec.subs) {
-    var subs = spec.subs[lang.code];
-    result.units = result.units.map(function(u) {
-      return subs === undefined ? '⟨no substitution for ' + lang.code + ' in the manifest⟩' : resolve.substitute(u, subs);
-    });
-  }
-  return result;
+  return spec.hymn ? hymn(spec, ctx) : {units: spec.units.map(function(u) { return unit(u, ctx); }), notes: []};
 };
 
 // The * and † a unit keeps: only those the app's Latin unit has too.
@@ -325,6 +346,7 @@ exports.build = function(doDir, root, languages) {
   var latin = {code: 'la', folder: 'Latin'};
   keys.forEach(function(key) {
     var spec = manifest.texts[key];
+    if(spec.extra) return;
     var built = build(key, spec, latin, doDir);
     var appUnits = app[key] || [];
     if(built.units.length !== appUnits.length) {
@@ -340,7 +362,7 @@ exports.build = function(doDir, root, languages) {
       var score = text.similarity(a, b);
       if(score < 1) {
         report.latin.push((score < THRESHOLD ? '!! ' : '   ') + key + ':' + (i + 1) + ' ' + score.toFixed(3) + '  ' +
-          text.wordDiff(a, b) + (spec.note && score < THRESHOLD ? '  (' + spec.note + ')' : ''));
+          text.wordDiff(a, b));
       }
     });
   });
@@ -351,10 +373,14 @@ exports.build = function(doDir, root, languages) {
     if(lang.texts === false) return;
     r.texts = {};
     var w = words(resolve.resolver(doDir, lang));
+    var extra = extraTexts(lang.code);
+    Object.keys(extra).forEach(function(key) {
+      if(!manifest.texts[key]) r.notes.push('extra/' + lang.code + '/texts.txt has ' + key + ', which manifest.json doesn\'t map');
+    });
     keys.forEach(function(key) {
       var appUnits = app[key] || [];
       r.units += appUnits.length;
-      var built = build(key, manifest.texts[key], lang, doDir, w);
+      var built = build(key, manifest.texts[key], lang, doDir, w, extra);
       built.notes.forEach(function(n) { r.notes.push(key + ': ' + n); });
       var missing = built.units.map(function(u) { return (u.match(/⟨[^⟩]*⟩/) || [])[0]; }).filter(Boolean);
       if(missing.length) {
