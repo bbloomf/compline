@@ -111,6 +111,21 @@
   line-height: 1;
   margin: 0.4615em 0;
 }
+/* The text that's hyphenated (js/hyphenate.js) is justified: the psalms, the Latin and translation
+   of each .tr-pair, a chant's plain text and the translations under its notes.  A paragraph's last
+   line, and each line that ends in a <br>, as a hymn's do, stays as it is. */
+.verses>p,
+.tr-pair>[lang],
+chant-gabc.plain-text>p,
+chant-gabc>.chant-tr>p {
+  text-align: justify;
+}
+/* but not the hymn's or a Marian antiphon's lines under the notes, run together with a red slash
+   between them (chant-element.js), which justified would stand unevenly apart */
+chant-gabc[src^="te-lucis/"]>.chant-tr>p,
+chant-gabc[src^="marian-antiphon/"]:not([src*="-prayer"])>.chant-tr>p {
+  text-align: start;
+}
 .verses span.verse-number {
   float:left;
   width:1.923em;
@@ -443,6 +458,21 @@ chant-gabc > .chant-tr {
 /* right under the notes it belongs to */
 chant-gabc > svg + .chant-tr {
   margin-top: 0;
+}
+/* On a narrow screen a psalm verse's translation is under it, nearer to it than to the next verse,
+   so that each pair reads as one.  (Not under the notes, where the next verse's notes are below.) */
+@media screen and (max-width: 767px) {
+  body.text-both .verses>p.has-tr {
+    margin-bottom: 0.2em;
+  }
+  body.text-both .verses:not(.chant-tr)>p.tr {
+    margin: 0.2em 0 0.75em;
+  }
+  /* Verse 2, after the translation of verse 1 under the pointed psalm's intonation, as far from it as
+     from the translation of any other verse (the verses' -0.4615em top margin takes back the rest) */
+  body.text-both chant-gabc:not(.plain-text)+.verses>p.has-tr:first-child {
+    margin-top: calc(0.75em + 0.4615em);
+  }
 }
 /* On a narrow screen the translation is under the Latin; on a wide one, and in print, beside it. */
 @media print, screen and (min-width: 768px) {
