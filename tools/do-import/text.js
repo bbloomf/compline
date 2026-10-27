@@ -4,10 +4,14 @@ var fs = require('fs');
 var path = require('path');
 
 // A DO file of one language, e.g. read(doDir, 'English', 'Psalterium/Psalmorum/Psalm4.txt'),
-// or null if the language doesn't have it.
+// or null if the language doesn't have it.  Each file is read once.
+var cache = {};
 exports.read = function(doDir, folder, file) {
   var p = path.join(doDir, 'web/www/horas', folder, file);
-  return fs.existsSync(p) ? fs.readFileSync(p, 'utf8').replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n') : null;
+  if(!(p in cache)) {
+    cache[p] = fs.existsSync(p) ? fs.readFileSync(p, 'utf8').replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n') : null;
+  }
+  return cache[p];
 };
 
 // The [Section]s of a DO file, as {name: [line, …]}, without blank lines at either end.  A
@@ -33,8 +37,8 @@ exports.sections = function(text) {
 
 // Latin (or any text) reduced to lower-case letters and single spaces, for comparing: no
 // accents, ligatures written out, and no punctuation or * † ‡ + markers.
-exports.normalise = function(text) {
-  return text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+exports.normalize = function(text) {
+  return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
     .replace(/æ/g, 'ae').replace(/œ/g, 'oe')
     .replace(/[^a-z]+/g, ' ').trim();
 };
@@ -56,7 +60,7 @@ exports.similarity = function(a, b) {
   return 1 - prev[m] / Math.max(n, m);
 };
 
-// The words that differ between two normalised texts, for the report: "-old +new".
+// The words that differ between two normalized texts, for the report: "-old +new".
 exports.wordDiff = function(a, b) {
   var x = a.split(' '), y = b.split(' ');
   // longest common subsequence of words

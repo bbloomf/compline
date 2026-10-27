@@ -93,9 +93,9 @@ var canonicalLatin = function(verses, report) {
       sources.filter(function(s) { return /\.html$/.test(s.file); })[0] || sources[0];
     result[n] = best;
     sources.forEach(function(s) {
-      if(text.normalise(s.text) !== text.normalise(best.text)) {
+      if(text.normalize(s.text) !== text.normalize(best.text)) {
         report.push('verse ' + n + ': ' + s.file + ' differs from ' + best.file + ': ' +
-          text.wordDiff(text.normalise(best.text), text.normalise(s.text)));
+          text.wordDiff(text.normalize(best.text), text.normalize(s.text)));
       }
     });
   });
@@ -151,7 +151,12 @@ exports.build = function(doDir, root, languages) {
   });
 
   // Check DO's Latin against the app's, verse by verse.
-  var latinEnding = function(section) { return ending(doDir, 'Latin', section.ending || 'Gloria'); };
+  var latinEnding = function(section) {
+    var name = section.ending || 'Gloria';
+    var lines = ending(doDir, 'Latin', name);
+    if(!lines) throw new Error('Latin Prayers.txt has no [' + name + '] of two lines, for section ' + section.key);
+    return lines;
+  };
   var plan = {};
   sections.forEach(function(section) {
     if(!app.sections[section.key]) return;
@@ -170,7 +175,7 @@ exports.build = function(doDir, root, languages) {
     var scores = [];
     for(n = 1; n <= Math.min(count, doVerses.length); n++) {
       if(!verses[n]) continue;
-      var a = text.normalise(verses[n].text), b = text.normalise(doVerses[n - 1]);
+      var a = text.normalize(verses[n].text), b = text.normalize(doVerses[n - 1]);
       var score = text.similarity(a, b);
       scores.push(score);
       if(score < 1) {
@@ -185,14 +190,16 @@ exports.build = function(doDir, root, languages) {
   languages.forEach(function(lang) {
     var r = report.languages[lang.code] = {sections: 0, ok: 0, verses: 0, translated: 0, missing: [], extra: [],
       markers: [], flex: {added: [], dropped: []}, unsafe: [], notes: [], psalter: {}};
+    // A language's ending, or null.  Only a language with a fallback (as DO falls back for it)
+    // borrows another's; otherwise the ending is missing, not the Latin.
     var endings = {};
     var langEnding = function(section) {
       var name = section.ending || 'Gloria';
-      if(!endings[name]) {
+      if(!(name in endings)) {
         endings[name] = ending(doDir, lang.folder, name);
-        if(!endings[name]) {
-          endings[name] = ending(doDir, 'Latin', name);
-          r.notes.push('no Prayers.txt [' + name + ']: the Latin is used');
+        if(!endings[name] && lang.fallback) {
+          endings[name] = ending(doDir, lang.fallback, name);
+          r.notes.push('no Prayers.txt [' + name + ']: the ' + lang.fallback + ' is used');
         }
       }
       return endings[name];
@@ -215,6 +222,7 @@ exports.build = function(doDir, root, languages) {
       var byId = {};
       lines.forEach(function(l) { byId[l.id] = l; });
       var used = {};
+      var grouped = {};
       var out = [];
       var problems = 0;
       for(var i = 0; i < p.latin.length; i++) {
@@ -235,13 +243,19 @@ exports.build = function(doDir, root, languages) {
           }
           var first = out.length + 1;
           var texts = tr.map(function(t, k) {
-            // the markers of the Latin verse the line most likely sits beside
-            var m = markers(t.text, (p.verses[first + Math.min(k, run.length - 1)] || {text: ''}).text);
-            if(m.problems.length) r.markers.push(section.key + ':' + first + ' ' + m.problems.join(', ') + ': ' + m.text);
+            // the markers of the Latin verse with the line's key (the last, where the Latin
+            // repeats it), else the one in the same place
+            var j = -1;
+            run.forEach(function(l, x) { if(l.key === t.key) j = x; });
+            var n = first + (j < 0 ? Math.min(k, run.length - 1) : j);
+            var m = markers(t.text, (p.verses[n] || {text: ''}).text);
+            if(m.problems.length) r.markers.push(section.key + ':' + n + ' ' + m.problems.join(', ') + ': ' + m.text);
+            if(m.flex) r.flex[m.flex].push(section.key + ':' + n);
             return m.text;
           });
           r.notes.push(section.key + ': ' + tr.length + ' lines (' + tr.map(function(t) { return t.key; }).join(', ') +
             ') pair as one group with the ' + run.length + ' Latin verses ' + run.map(function(t) { return t.key; }).join(', '));
+          grouped[out.length] = true;
           out.push(texts.join('\n'));
           run.slice(1).forEach(function() { out.push(''); });
           continue;
@@ -262,14 +276,20 @@ exports.build = function(doDir, root, languages) {
           problems++;
         }
       });
-      out = out.concat(langEnding(section));
+      var end = langEnding(section);
+      if(!end) {
+        r.missing.push(section.key + ': no Prayers.txt [' + (section.ending || 'Gloria') + ']');
+        problems++;
+        end = [null, null];
+      }
+      out = out.concat(end);
       // Markers, against the app's Latin verse by verse.
       out = out.map(function(verse, k) {
         if(!verse) return verse;
         var latinVerse = p.verses[k + 1];
         if(!latinVerse) return verse;
         // A group's lines were done above.
-        var m = /\n/.test(verse) ? {text: verse, problems: []} : markers(verse, latinVerse.text);
+        var m = grouped[k] ? {text: verse, problems: [], flex: null} : markers(verse, latinVerse.text);
         if(m.problems.length) r.markers.push(section.key + ':' + (k + 1) + ' ' + m.problems.join(', ') + ': ' + m.text);
         if(m.flex) r.flex[m.flex].push(section.key + ':' + (k + 1));
         var unsafe = m.text.match(UNSAFE);

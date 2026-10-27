@@ -72,12 +72,25 @@ exports.read = function(root) {
     }
   });
   gabc.forEach(function(file) {
-    var section = null;
-    fs.readFileSync(path.join(root, file), 'utf8').split(/\r?\n/).forEach(function(line) {
-      var notes = line.match(/^user-notes:\s*(.*);/);
-      if(notes) section = psalmSection(notes[1]);
-      var named = line.match(/^psalm-section:\s*(.*);/);
-      if(named) section = named[1];
+    // Each score's section from its own header, as psalmSection in js/text-mode.js decides it:
+    // psalm-section, else user-notes, else none.
+    var header = {}, inBody = false, section = null;
+    fs.readFileSync(path.join(root, file), 'utf8').replace(/^﻿/, '').split(/\r?\n/).forEach(function(line) {
+      var field = line.match(/^([\w-]+):\s*(.*?);\s*$/);
+      if(field) {
+        if(inBody) {
+          header = {};
+          inBody = false;
+        }
+        header[field[1]] = field[2];
+        return;
+      }
+      if(/^%%/.test(line)) {
+        inBody = true;
+        section = header['psalm-section'] || (header['user-notes'] ? psalmSection(header['user-notes']) : null);
+        return;
+      }
+      if(!inBody) return;
       var verse = line.match(/^(?:\(c\d\))?\s*(\d+)\.\s/);
       // The intonation files also show how verses 2 and 3 start ("Quia...", "Quod parásti * etc.").
       if(verse && section && !/\.\.\.|\betc\./.test(line)) add(section, parseInt(verse[1]), file, gabcText(line));
