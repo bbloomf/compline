@@ -83,7 +83,7 @@ Depois todos se ajoelham e dizem:
 Diz-se o {Pater noster} todo em silêncio.
 Depois acrescenta-se em voz alta, sem {Orémus}, a oração:
 
-# The Officiant then intones the Hymn {Te lucis} which is sung in one of the tones given below.  All bow slightly for the first three stanzas of the third verse.
+# The Officiant then intones the Hymn {Te lucis} which is sung in one of the tones given below.  All bow slightly for the first three lines of the third stanza.
 [hymn]
 O Oficiante entoa então o hino {Te lucis}, que se canta num dos tons dados abaixo. Todos fazem uma leve inclinação durante os três primeiros versos da terceira estrofe.
 

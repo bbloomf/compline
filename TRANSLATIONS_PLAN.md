@@ -946,7 +946,7 @@ The built `dist/`, served on its own, was checked with `check.js`:
 - the Triduum's and All Souls' rubrics around the Latin "Pater noster" and "Orémus";
 - `check.js` in both modes, in each of the six languages, on eight dates, with a new check that no visible rubric is left in English.
 
-The English hymn rubric says "the first three stanzas of the third verse"; the drafts say "the first three lines of the third stanza", where the doxology names the Trinity.
+The English hymn rubric said "All bow slightly for the first three stanzas of the third verse". It now says "the first three lines of the third stanza", where the doxology names the Trinity, as the drafts do.
 
 **Left for later:**
 - the native readers' checklist, and any fixes it brings;

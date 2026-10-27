@@ -83,7 +83,7 @@ Potem wszyscy klękają i mówią:
 {Pater noster} odmawia się w całości po cichu.
 Następnie dodaje się na głos, bez {Orémus}, kolektę:
 
-# The Officiant then intones the Hymn {Te lucis} which is sung in one of the tones given below.  All bow slightly for the first three stanzas of the third verse.
+# The Officiant then intones the Hymn {Te lucis} which is sung in one of the tones given below.  All bow slightly for the first three lines of the third stanza.
 [hymn]
 Następnie przewodniczący intonuje hymn {Te lucis}, śpiewany jednym z podanych niżej tonów. Wszyscy lekko się kłaniają przy pierwszych trzech wersach trzeciej zwrotki.
 

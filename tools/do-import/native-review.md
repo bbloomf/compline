@@ -76,8 +76,6 @@ Claude drafted all 48, from the English. Divinum Officium has only a few rubrics
 these. Each entry has its English above it. Read them on the page in "Latin & translation".
 
 - [ ] **Each rubric reads naturally** and uses the words a Spanish book of the old office would use.
-- [ ] **The hymn's rubric:** the English says "the first three stanzas of the third verse". The
-  draft says "the first three lines of the third stanza", where the doxology names the Trinity.
 - [ ] **Words chosen:** *Oficiante*, *Lector*, *Cantor*, *santiguarse*, *la oración* for the
   collect (DO's *Oración*), *la denudación de los altares*.
 
@@ -156,8 +154,6 @@ Claude drafted all 48, from the English. Divinum Officium has only a few rubrics
 these. Each entry has its English above it. Read them on the page in "Latin & translation".
 
 - [ ] **Each rubric reads naturally** and uses the words a French book of the old office would use.
-- [ ] **The hymn's rubric:** the English says "the first three stanzas of the third verse". The
-  draft says "the first three lines of the third stanza", where the doxology names the Trinity.
 - [ ] **Words chosen:** *l’Officiant*, *le Lecteur*, *le Chantre*, *le Capitule*, *l’oraison*,
   *l’hymne* (feminine), and a no-break space before : ; ? ! and inside « »?
 
@@ -203,8 +199,6 @@ Claude drafted all 48, from the English. Divinum Officium has only a few rubrics
 these. Each entry has its English above it. Read them on the page in "Latin & translation".
 
 - [ ] **Each rubric reads naturally** and uses the words a Italian book of the old office would use.
-- [ ] **The hymn's rubric:** the English says "the first three stanzas of the third verse". The
-  draft says "the first three lines of the third stanza", where the doxology names the Trinity.
 - [ ] **Words chosen:** *l’Officiante*, *il Lettore*, *il Cantore*, *Compieta* without an
   article, *l’orazione*.
 
@@ -243,8 +237,6 @@ Claude drafted all 48, from the English. Divinum Officium has only a few rubrics
 these. Each entry has its English above it. Read them on the page in "Latin & translation".
 
 - [ ] **Each rubric reads naturally** and uses the words a Portuguese book of the old office would use.
-- [ ] **The hymn's rubric:** the English says "the first three stanzas of the third verse". The
-  draft says "the first three lines of the third stanza", where the doxology names the Trinity.
 - [ ] **Words chosen:** *o Oficiante*, *o Leitor*, *o Cantor*, *a oração*, and European
   Portuguese spelling (*ação*, *diretamente*), as in DO's texts?
 
@@ -286,8 +278,6 @@ Claude drafted all 48, from the English. Divinum Officium has only a few rubrics
 these. Each entry has its English above it. Read them on the page in "Latin & translation".
 
 - [ ] **Each rubric reads naturally** and uses the words a Polish book of the old office would use.
-- [ ] **The hymn's rubric:** the English says "the first three stanzas of the third verse". The
-  draft says "the first three lines of the third stanza", where the doxology names the Trinity.
 - [ ] **Words chosen:** *przewodniczący* for the Officiant, *lektor*, *kantor*, *kolekta*, and
   the Bible abbreviations *Łk 2* and *1 P 5* in the headings.
 - [ ] **Quotation marks:** „…”, where DO's Polish rubrics have «…».
