@@ -667,7 +667,7 @@ The files:
   - the *Præsta, Pater* doxology, under the Terce hymn *Nunc Sancte nobis Spiritus*, which ends with it (p. 36, note 3);
   - the Transfiguration doxology (p. 284, note 5).
 - **What wasn't used:** every other doxology's rendering is only in the 1952 edition, whose renewal wasn't verified. Its Sacred Heart is also another doxology ("Gloria tibi, Domine, Qui Corde fundis").
-- **Decided by the user:** the 1922 text where it exists. The doxologies it lacks are written for the app in Britt's manner, for the user to review: Christmas (with Our Lady and the Seven Sorrows), the Epiphany, Easter, Pentecost, the Ascension, the Sacred Heart, the Holy Family and Christ the King.
+- **Decided by the user:** the 1922 text where it exists. The doxologies it lacks are written for the app in Britt's manner, and the user approved them (2026-10-27): Christmas (with Our Lady and the Seven Sorrows), the Epiphany, Easter, Pentecost, the Ascension, the Sacred Heart, the Holy Family and Christ the King.
   - *almo Spíritu* is "the gracious Spirit".
   - *In sempitérna sǽcula* is "for everlasting ages", and *In sæculórum sǽcula* (Pentecost) "unto ages of ages".
 - **The form of the text:** Britt's renderings are prose, a paragraph to a stanza, so under the notes they have no slashes. Britt (1872–1955, Library of Congress authority nr98043157) is public domain in the US.
@@ -691,7 +691,7 @@ The files:
   - "y visiones fantasmales", which keeps the even lines' *á–e* assonance;
   - "Hazlo así, Padre amoroso";
   - "con el Espíritu reinas".
-- **Where they're used:** they are `new` sections (`[hymn] new`, `[Ferial … Passiontide] new`), so they are also the metrical text. A native speaker should check them in Phase 8, with the doxologies.
+- **Where they're used:** they are `new` sections (`[hymn] new`, `[Ferial … Passiontide] new`), so they are also the metrical text, as the user chose (2026-10-27): what's read matches what's sung. A native speaker should check them in Phase 8, with the doxologies.
 
 **The display.**
 - **The menu:** "Hymn translation: Literal / Metrical / Sung with chant" (`#selectHymnMode`, `localStorage.hymnMode`, default literal). It sits under the tone menu and the hymn's notation menu.
@@ -725,7 +725,6 @@ The files:
 **Left for later:**
 - **Phase 8:**
   - a native speaker's check of the three Spanish lines;
-  - the user's review of the new literal doxologies, if not done before merging;
   - the Spanish and English hymn texts read aloud as sung.
 - **English Holy Family:** an 8.8.8.8 text would let it be sung. DO's text stays as the metrical one.
 - **Britt's 1952 renderings** could replace the drafts if their copyright is found to have lapsed.
@@ -766,7 +765,7 @@ Resolved:
 - Hebrew, Bohemice and Polski-Newer are left out, and so is Cesky-Schaller, which has only 3 psalms (§3).
 - New users default to Latin only. When they turn translations on, the language defaults to the browser language (§5).
 - The literal English hymn comes from Britt (1922) where his first edition has it, and the doxologies it lacks are written for the app in his manner and reviewed by the user (§7i).
-- Spanish: DO's three lines of nine sung syllables are rewritten to eight for singing (§7i).
+- Spanish: DO's three lines of nine sung syllables are rewritten to eight, and the new lines are the metrical text too (§7i).
 - When the hymn isn't sung, the user chooses literal or metrical with `hymnMode` (default literal) (§4b, §5).
 - The English Pentecost doxology in DO is correct, and the earlier flag on it was withdrawn (§4b).
 - English Easter doxology: the line-by-line text "All glory to the Father be…" (§4b).
