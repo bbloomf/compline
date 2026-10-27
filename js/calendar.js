@@ -580,6 +580,12 @@ define(['moment','moment.easter'], function(moment){
     if(dateMatches(date,'easter-2')) return (date.feast = {title:'Good Friday', rank:1});
     if(dateMatches(date,'easter-1')) return (date.feast = {title:'Holy Saturday', rank:1});
     if(dateMatches(date,'lent1-4')) return (date.feast = {title:'Ash Wednesday', rank:5, key: 'AshWed'});
+    // When Christmas is a Sunday, the Sunday within its octave (the last of CalendarSundays) is kept on 30 December,
+    // as in DO's transfer table for dominical letter b.
+    var dates = datesForMoment(date);
+    if(dates.christmas.day() === 0 && dateMatches(date,'12/30')) {
+      return (date.feast = SundayFeast(CalendarSundays[CalendarSundays.length - 1], date, dates));
+    }
     return (date.feast = getSanctoralFeast(date,currentRegion));
   }
   function getSanctoralFeast(date,currentRegion) {
