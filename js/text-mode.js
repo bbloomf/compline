@@ -13,10 +13,15 @@
 //     psalter: {'4': ['When I called upon him…', …], '7.I': […], 'nunc-dimittis': […]},
 //     // each text's units, in order: the paragraphs of a GABC file, keyed by its src, or the
 //     // blocks of index.html, keyed by their data-tr attribute
-//     texts: {'te-lucis/Ferial.gabc': ['Before the ending of the day,\n…', …], 'index:confiteor': […]}
+//     texts: {'index:confiteor': […], …},
+//     // the hymn, Te lucis (§4b): its first two stanzas and each tone's doxology (keyed as
+//     // te-lucis/<tone>.gabc), in each kind the language has; sung is hyphenated, with only the
+//     // tones the whole hymn fits
+//     hymn: {literal: {stanzas: […], doxologies: {Ferial: '…', …}}, metrical: {…}, sung: {…}}
 //   });
 // A unit is plain text.  Its lines are split by \n, and a line that starts "V. " or "R. " starts
-// with ℣ or ℟.  * and † are shown in red, as in the Latin.
+// with ℣ or ℟.  * and † are shown in red, as in the Latin.  How to show the hymn is
+// localStorage.hymnMode: 'literal' (the default), 'metrical' or 'sung' (§4b, §5).
 define(['jquery'], function($) {
   'use strict';
   // The app's settings, which compline.js uses too: an object in their place where storage throws.
@@ -90,6 +95,13 @@ define(['jquery'], function($) {
     dropQuery('lang');
     localStorage.trLang = l;
   };
+  var hymnModes = ['literal', 'metrical', 'sung'];
+  var hymnMode = function() {
+    return hymnModes.indexOf(localStorage.hymnMode) >= 0 ? localStorage.hymnMode : 'literal';
+  };
+  var setHymnMode = function(m) {
+    localStorage.hymnMode = m;
+  };
 
   var modules = {};
   // Calls back once the current language is loaded.  A language that fails to load has no texts.
@@ -111,13 +123,56 @@ define(['jquery'], function($) {
   var data = function() {
     return mode() === 'la' ? null : modules[lang()] || null;
   };
-  // What a chant was drawn for, so it's drawn again only when this changes.
-  var renderKey = function() {
+  // What a chant (whose src is key) was drawn for, so it's drawn again only when this changes.
+  var renderKey = function(key) {
     var m = mode();
-    return m === 'la' ? m : m + ':' + lang() + (modules[lang()] ? '' : ':loading');
+    return m === 'la' ? m : m + ':' + lang() + (modules[lang()] ? '' : ':loading') + (hymnTone(key) ? ':' + hymnMode() : '');
   };
-  // A text's units, or null if the translation doesn't have it.
+
+  // The hymn (§4b).  The tone of a te-lucis/<tone>.gabc key, or null for any other.
+  var hymnTone = function(key) {
+    var match = /^te-lucis\/(.+)\.gabc$/.exec(key || '');
+    return match && match[1];
+  };
+  // Which kinds of the hymn the language has, {literal, metrical, sung}, or null if it has none.
+  var hymnKinds = function() {
+    var h = (data() || {}).hymn;
+    return h ? {literal: !!h.literal, metrical: !!h.metrical, sung: !!h.sung} : null;
+  };
+  // The hymn of a te-lucis/ key as the user chose to show it: {kind, units, unsung}, or null where
+  // the translation has no hymn.  notated: whether it can be drawn as notes, which singing needs.
+  // A kind the language hasn't for this tone falls back as §4b says: sung to metrical (unsung is
+  // then true where the language sings, but not this tone's doxology), literal to metrical, and
+  // metrical to literal.
+  var hymn = function(key, notated) {
+    var tone = hymnTone(key);
+    var h = tone && (data() || {}).hymn;
+    if(!h) return null;
+    var units = function(kind) {
+      var k = h[kind];
+      return k && typeof k.doxologies[tone] === 'string' ? k.stanzas.concat(k.doxologies[tone]) : null;
+    };
+    var wanted = hymnMode();
+    var unsung = false;
+    if(wanted === 'sung') {
+      if(notated && units('sung')) return {kind: 'sung', units: units('sung'), unsung: false};
+      unsung = !!(notated && h.sung);
+      wanted = 'metrical';
+    }
+    var kinds = wanted === 'literal' ? ['literal', 'metrical'] : ['metrical', 'literal'];
+    for(var i = 0; i < kinds.length; ++i) {
+      if(units(kinds[i])) return {kind: kinds[i], units: units(kinds[i]), unsung: unsung};
+    }
+    return null;
+  };
+
+  // A text's units, or null if the translation doesn't have it.  The hymn's are as hymnMode chooses
+  // them, as text.
   var texts = function(key) {
+    if(hymnTone(key)) {
+      var h = hymn(key, false);
+      return h ? h.units : null;
+    }
     var d = data();
     var units = d && d.texts && d.texts[key];
     return units === undefined || units === null ? null : [].concat(units);
@@ -162,6 +217,11 @@ define(['jquery'], function($) {
   };
   var unitsHtml = function(units, slashes) {
     return units.map(function(unit) { return unitHtml(unit, slashes); }).join('<br>');
+  };
+  // The name of the translation's language, as the menu shows it.
+  var langName = function() {
+    var l = lang();
+    return languages.filter(function(each) { return each.code === l; }).map(function(each) { return each.name; })[0] || l;
   };
   // The attributes of the translation that follows a Latin element.
   var trAttributes = function() {
@@ -242,6 +302,10 @@ define(['jquery'], function($) {
     lang: lang,
     setMode: setMode,
     setLang: setLang,
+    hymnMode: hymnMode,
+    setHymnMode: setHymnMode,
+    hymnKinds: hymnKinds,
+    hymn: hymn,
     load: load,
     renderKey: renderKey,
     texts: texts,
@@ -249,6 +313,7 @@ define(['jquery'], function($) {
     hasPsalm: hasPsalm,
     psalmVerse: psalmVerse,
     unitsHtml: unitsHtml,
+    langName: langName,
     trAttributes: trAttributes,
     verseTranslationHtml: verseTranslationHtml,
     verseHtml: verseHtml,

@@ -1,0 +1,91 @@
+# Te lucis sung in English to the chant (TRANSLATIONS_PLAN.md §4b and §7i): DO's metrical text,
+# hyphenated by hand.  [hymn] is the first two stanzas; each other section is the third stanza, the
+# doxology with its Amen, for the tones it names (te-lucis/<tone>.gabc).  A - divides a word's
+# syllables, one to a note, and ‿ joins two words' vowels sung on one note.  A section has to be
+# DO's text apart from the hyphens (tools/do-import/hymn.js checks it); one marked "new" is a text
+# DO doesn't have, which takes the place of DO's as the metrical text too.  The importer sets each
+# against every tone's notes, and a tone whose doxology doesn't fit isn't offered for singing.
+
+[hymn]
+Be-fore the end-ing of the day,
+Cre-a-tor of the world, we pray
+That with thy wont-ed fa-vor thou
+Wouldst be our guard and keep-er now.
+
+From all ill dreams de-fend our eyes,
+From night-ly fears and fan-ta-sies;
+Tread un-der foot our ghost-ly foe,
+That no pol-lu-tion we may know.
+
+[Ferial Ordinary Solemn Advent Lent Passiontide]
+O Fa-ther, that we ask be done,
+Through Je-sus Christ, thine on-ly Son;
+Who, with the Ho-ly Ghost and thee,
+Doth live and reign e-ter-nal-ly.
+A-men.
+
+[Christmas Our-Lady Seven-Dolors]
+All hon-or, laud, and glo-ry be,
+O Je-su, Vir-gin-Born, to thee;
+Whom with the Fa-ther we a-dore,
+And Ho-ly Ghost, for ev-er-more.
+A-men.
+
+[Epiphany]
+All glo-ry, Je-su, be to thee
+For this thy glad E-piph-a-ny;
+Whom with the Fa-ther we a-dore,
+And Ho-ly Ghost, for ev-er-more.
+A-men.
+
+# DO's is 7.6.7.6, so it can't be sung to this melody (§7f): the importer leaves it out.
+[Holy-Family]
+All praise to Thee, O Je-sus,
+who par-ents dost o-bey;
+Praise to the sov-er-eign Fa-ther
+and Par-a-clete for aye.
+A-men.
+
+# Chosen in §4b, in place of DO's 7.7.7.7 "Hymns of glory, songs of praise"; it follows the Latin
+# line by line.  For Easter only: Pentecost keeps DO's.
+[Easter] new
+All glo-ry to the Fa-ther be,
+And to the Son, who from the grave
+A-rose; and to the Par-a-clete
+Be glo-ry through e-ter-ni-ty.
+A-men.
+
+[Ascension]
+All glo-ry, Lord, to Thee we pay,
+As-cend-ing o’er the stars to-day;
+All glo-ry, as is ev-er meet,
+To Fa-ther and to Par-a-clete.
+A-men.
+
+[Pentecost]
+All praise be thine, O ris-en Lord,
+From death to end-less life re-stored;
+Whom with the Fa-ther we a-dore,
+And Ho-ly Ghost, for ev-er-more.
+A-men.
+
+[Sacred-Heart]
+We give thee praise, who dost im-part
+Such grace, O Je-su, from thy Heart;
+Whom with the Fa-ther we a-dore,
+And Ho-ly Ghost, for ev-er-more.
+A-men.
+
+[Transfiguration]
+Je-su, to thee our praise we pay,
+To lit-tle ones re-vealed to-day,
+With Fa-ther and Blest Spir-it One
+Un-til the a-ges' course is done.
+A-men.
+
+[Christ-the-King]
+All glo-ry be, Je-su, to thee,
+Thy scep-ter o-ver all that be;
+All glo-ry, as is ev-er meet,
+To Fa-ther and to Par-a-clete.
+A-men.

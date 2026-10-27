@@ -5,7 +5,8 @@
 // manifest.json, extra/ or DO, not this file.  Each psalter section's verses are in the app's
 // order, with the Gloria Patri and Sicut erat last; '' is a verse whose translation is part of
 // the verse before.  Each text's units are the paragraphs of its chant, or its index.html block
-// (§7c).
+// (§7c).  The hymn, Te lucis, is the first two stanzas and each tone's doxology, in each kind of
+// translation the language has (§4b; tools/do-import/hymn.js).
 define({
   meta: {name: 'English', dir: 'ltr', doCommit: 'ad87836'},
   psalter: {
@@ -461,91 +462,6 @@ define({
     'psalms/ant-PT.gabc': [
       'Alleluia, alleluia, alleluia.'
     ],
-    'te-lucis/Ferial.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.'
-    ],
-    'te-lucis/Ordinary.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.'
-    ],
-    'te-lucis/Solemn.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.'
-    ],
-    'te-lucis/Advent.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.'
-    ],
-    'te-lucis/Lent.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.'
-    ],
-    'te-lucis/Passiontide.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.'
-    ],
-    'te-lucis/Christmas.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'All honor, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.'
-    ],
-    'te-lucis/Our-Lady.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'All honor, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.'
-    ],
-    'te-lucis/Seven-Dolors.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'All honor, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.'
-    ],
-    'te-lucis/Epiphany.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'All glory, Jesu, be to thee\nFor this thy glad Epiphany;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.'
-    ],
-    'te-lucis/Holy-Family.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'All praise to Thee, O Jesus,\nwho parents dost obey;\nPraise to the sovereign Father\nand Paraclete for aye.\nAmen.'
-    ],
-    'te-lucis/Easter.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'All glory to the Father be,\nAnd to the Son, who from the grave\nArose; and to the Paraclete\nBe glory through eternity.\nAmen.'
-    ],
-    'te-lucis/Ascension.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'All glory, Lord, to Thee we pay,\nAscending o’er the stars to-day;\nAll glory, as is ever meet,\nTo Father and to Paraclete.\nAmen.'
-    ],
-    'te-lucis/Pentecost.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'All praise be thine, O risen Lord,\nFrom death to endless life restored;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.'
-    ],
-    'te-lucis/Sacred-Heart.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'We give thee praise, who dost impart\nSuch grace, O Jesu, from thy Heart;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.'
-    ],
-    'te-lucis/Transfiguration.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'Jesu, to thee our praise we pay,\nTo little ones revealed today,\nWith Father and Blest Spirit One\nUntil the ages\' course is done.\nAmen.'
-    ],
-    'te-lucis/Christ-the-King.gabc': [
-      'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
-      'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.',
-      'All glory be, Jesu, to thee,\nThy scepter over all that be;\nAll glory, as is ever meet,\nTo Father and to Paraclete.\nAmen.'
-    ],
     'chapter.gabc': [
       'But thou, O Lord, art among us, and thy name is called upon by us: forsake us not, O Lord our God.\nR. Thanks be to God.'
     ],
@@ -697,5 +613,28 @@ define({
     'index:asd-requiem': [
       'V. Eternal rest grant unto them, O Lord.\nR. And let perpetual light shine upon them.\nV. May they rest in peace.\nR. Amen.'
     ]
+  },
+  hymn: {
+    metrical: {
+      stanzas: [
+        'Before the ending of the day,\nCreator of the world, we pray\nThat with thy wonted favor thou\nWouldst be our guard and keeper now.',
+        'From all ill dreams defend our eyes,\nFrom nightly fears and fantasies;\nTread under foot our ghostly foe,\nThat no pollution we may know.'
+      ],
+      doxologies: {Advent: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', Ascension: 'All glory, Lord, to Thee we pay,\nAscending o’er the stars to-day;\nAll glory, as is ever meet,\nTo Father and to Paraclete.\nAmen.', 'Christ-the-King': 'All glory be, Jesu, to thee,\nThy scepter over all that be;\nAll glory, as is ever meet,\nTo Father and to Paraclete.\nAmen.', Christmas: 'All honor, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', Easter: 'All glory to the Father be,\nAnd to the Son, who from the grave\nArose; and to the Paraclete\nBe glory through eternity.\nAmen.', Epiphany: 'All glory, Jesu, be to thee\nFor this thy glad Epiphany;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', Ferial: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', 'Holy-Family': 'All praise to Thee, O Jesus,\nwho parents dost obey;\nPraise to the sovereign Father\nand Paraclete for aye.\nAmen.', Lent: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', Ordinary: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', 'Our-Lady': 'All honor, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', Passiontide: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', Pentecost: 'All praise be thine, O risen Lord,\nFrom death to endless life restored;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', 'Sacred-Heart': 'We give thee praise, who dost impart\nSuch grace, O Jesu, from thy Heart;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', 'Seven-Dolors': 'All honor, laud, and glory be,\nO Jesu, Virgin-Born, to thee;\nWhom with the Father we adore,\nAnd Holy Ghost, for evermore.\nAmen.', Solemn: 'O Father, that we ask be done,\nThrough Jesus Christ, thine only Son;\nWho, with the Holy Ghost and thee,\nDoth live and reign eternally.\nAmen.', Transfiguration: 'Jesu, to thee our praise we pay,\nTo little ones revealed today,\nWith Father and Blest Spirit One\nUntil the ages\' course is done.\nAmen.'}
+    },
+    literal: {
+      stanzas: [
+        'Before the end of daylight, O Creator of the world, we beseech Thee, that in accordance with Thy mercy, Thou wouldst be our Protector and our Guard.',
+        'Far off let dreams and phantoms of the night depart; restrain Thou our adversary lest our bodies become defiled.'
+      ],
+      doxologies: {Advent: 'Grant this, O most loving Father, and Thou, only-begotten Son, equal to the Father, who reignest eternally with the Holy Ghost, the Comforter.\nAmen.', Ascension: 'Glory be to Thee, O Jesus, who returnest victorious to heaven, together with the Father and the gracious Spirit, for everlasting ages.\nAmen.', 'Christ-the-King': 'Glory be to Thee, O Jesus, who rulest the scepters of the world, together with the Father and the gracious Spirit, for everlasting ages.\nAmen.', Christmas: 'Glory be to Thee, O Jesus, who wast born of the Virgin, together with the Father and the gracious Spirit, for everlasting ages.\nAmen.', Easter: 'Glory be to God the Father, and to the Son, who rose from the dead, and to the Paraclete, for everlasting ages.\nAmen.', Epiphany: 'Glory be to Thee, O Jesus, who didst appear to the Gentiles, together with the Father and the gracious Spirit, for everlasting ages.\nAmen.', Ferial: 'Grant this, O most loving Father, and Thou, only-begotten Son, equal to the Father, who reignest eternally with the Holy Ghost, the Comforter.\nAmen.', 'Holy-Family': 'O Jesus, who wast made obedient to Thy parents, to Thee, with the Father most high and the Spirit, be glory for ever.\nAmen.', Lent: 'Grant this, O most loving Father, and Thou, only-begotten Son, equal to the Father, who reignest eternally with the Holy Ghost, the Comforter.\nAmen.', Ordinary: 'Grant this, O most loving Father, and Thou, only-begotten Son, equal to the Father, who reignest eternally with the Holy Ghost, the Comforter.\nAmen.', 'Our-Lady': 'Glory be to Thee, O Jesus, who wast born of the Virgin, together with the Father and the gracious Spirit, for everlasting ages.\nAmen.', Passiontide: 'Grant this, O most loving Father, and Thou, only-begotten Son, equal to the Father, who reignest eternally with the Holy Ghost, the Comforter.\nAmen.', Pentecost: 'Glory be to God the Father, and to the Son, who rose from the dead, and to the Paraclete, unto ages of ages.\nAmen.', 'Sacred-Heart': 'Glory be to Thee, O Jesus, who pourest forth grace from Thy Heart, together with the Father and the gracious Spirit, for everlasting ages.\nAmen.', 'Seven-Dolors': 'Glory be to Thee, O Jesus, who wast born of the Virgin, together with the Father and the gracious Spirit, for everlasting ages.\nAmen.', Solemn: 'Grant this, O most loving Father, and Thou, only-begotten Son, equal to the Father, who reignest eternally with the Holy Ghost, the Comforter.\nAmen.', Transfiguration: 'Together with the Father and the Holy Spirit, O Jesus, eternal glory be to Thee, who dost reveal Thyself to the little ones.\nAmen.'}
+    },
+    sung: {
+      stanzas: [
+        'Be-fore the end-ing of the day,\nCre-a-tor of the world, we pray\nThat with thy wont-ed fa-vor thou\nWouldst be our guard and keep-er now.',
+        'From all ill dreams de-fend our eyes,\nFrom night-ly fears and fan-ta-sies;\nTread un-der foot our ghost-ly foe,\nThat no pol-lu-tion we may know.'
+      ],
+      doxologies: {Advent: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', Ascension: 'All glo-ry, Lord, to Thee we pay,\nAs-cend-ing o’er the stars to-day;\nAll glo-ry, as is ev-er meet,\nTo Fa-ther and to Par-a-clete.\nA-men.', 'Christ-the-King': 'All glo-ry be, Je-su, to thee,\nThy scep-ter o-ver all that be;\nAll glo-ry, as is ev-er meet,\nTo Fa-ther and to Par-a-clete.\nA-men.', Christmas: 'All hon-or, laud, and glo-ry be,\nO Je-su, Vir-gin-Born, to thee;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', Easter: 'All glo-ry to the Fa-ther be,\nAnd to the Son, who from the grave\nA-rose; and to the Par-a-clete\nBe glo-ry through e-ter-ni-ty.\nA-men.', Epiphany: 'All glo-ry, Je-su, be to thee\nFor this thy glad E-piph-a-ny;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', Ferial: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', Lent: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', Ordinary: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', 'Our-Lady': 'All hon-or, laud, and glo-ry be,\nO Je-su, Vir-gin-Born, to thee;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', Passiontide: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', Pentecost: 'All praise be thine, O ris-en Lord,\nFrom death to end-less life re-stored;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', 'Sacred-Heart': 'We give thee praise, who dost im-part\nSuch grace, O Je-su, from thy Heart;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', 'Seven-Dolors': 'All hon-or, laud, and glo-ry be,\nO Je-su, Vir-gin-Born, to thee;\nWhom with the Fa-ther we a-dore,\nAnd Ho-ly Ghost, for ev-er-more.\nA-men.', Solemn: 'O Fa-ther, that we ask be done,\nThrough Je-sus Christ, thine on-ly Son;\nWho, with the Ho-ly Ghost and thee,\nDoth live and reign e-ter-nal-ly.\nA-men.', Transfiguration: 'Je-su, to thee our praise we pay,\nTo lit-tle ones re-vealed to-day,\nWith Fa-ther and Blest Spir-it One\nUn-til the a-ges\' course is done.\nA-men.'}
+    }
   }
 });

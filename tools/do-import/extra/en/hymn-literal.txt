@@ -1,0 +1,58 @@
+# Te lucis in a literal English translation (TRANSLATIONS_PLAN.md §4b and §7i), shown beside the
+# Latin where hymnMode is "literal".  The format is hymn-sung.txt's, without the hyphens: [hymn] is
+# the first two stanzas, and each other section the doxology, with its Amen, for the tones it names.
+#
+# Where Britt gives one, it is his: Matthew Britt, O.S.B., The Hymns of the Breviary and Missal
+# (New York: Benziger, 1922), public domain in the US; Britt died in 1955.  His rendering of each
+# stanza is the quotation that opens its note.  The doxologies Britt's 1922 edition has no rendering
+# of are written for the app, in his manner, and reviewed by the user (§7i).
+
+# Britt, 1922, p. 39, notes 1 and 2 to Te lucis.
+[hymn]
+Before the end of daylight, O Creator of the world, we beseech Thee, that in accordance with Thy mercy, Thou wouldst be our Protector and our Guard.
+
+Far off let dreams and phantoms of the night depart; restrain Thou our adversary lest our bodies become defiled.
+
+# Britt, 1922, p. 36, note 3 to Nunc Sancte nobis Spiritus, the Terce hymn, which ends with the same
+# doxology.
+[Ferial Ordinary Solemn Advent Lent Passiontide]
+Grant this, O most loving Father, and Thou, only-begotten Son, equal to the Father, who reignest eternally with the Holy Ghost, the Comforter.
+Amen.
+
+# Britt, 1922, p. 284, note 5 to Quicumque Christum quaeritis (he has no full stop).
+[Transfiguration]
+Together with the Father and the Holy Spirit, O Jesus, eternal glory be to Thee, who dost reveal Thyself to the little ones.
+Amen.
+
+# Written for the app.
+[Christmas Our-Lady Seven-Dolors]
+Glory be to Thee, O Jesus, who wast born of the Virgin, together with the Father and the gracious Spirit, for everlasting ages.
+Amen.
+
+[Epiphany]
+Glory be to Thee, O Jesus, who didst appear to the Gentiles, together with the Father and the gracious Spirit, for everlasting ages.
+Amen.
+
+[Easter]
+Glory be to God the Father, and to the Son, who rose from the dead, and to the Paraclete, for everlasting ages.
+Amen.
+
+[Pentecost]
+Glory be to God the Father, and to the Son, who rose from the dead, and to the Paraclete, unto ages of ages.
+Amen.
+
+[Ascension]
+Glory be to Thee, O Jesus, who returnest victorious to heaven, together with the Father and the gracious Spirit, for everlasting ages.
+Amen.
+
+[Sacred-Heart]
+Glory be to Thee, O Jesus, who pourest forth grace from Thy Heart, together with the Father and the gracious Spirit, for everlasting ages.
+Amen.
+
+[Holy-Family]
+O Jesus, who wast made obedient to Thy parents, to Thee, with the Father most high and the Spirit, be glory for ever.
+Amen.
+
+[Christ-the-King]
+Glory be to Thee, O Jesus, who rulest the scepters of the world, together with the Father and the gracious Spirit, for everlasting ages.
+Amen.

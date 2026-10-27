@@ -5,7 +5,8 @@
 // manifest.json, extra/ or DO, not this file.  Each psalter section's verses are in the app's
 // order, with the Gloria Patri and Sicut erat last; '' is a verse whose translation is part of
 // the verse before.  Each text's units are the paragraphs of its chant, or its index.html block
-// (§7c).
+// (§7c).  The hymn, Te lucis, is the first two stanzas and each tone's doxology, in each kind of
+// translation the language has (§4b; tools/do-import/hymn.js).
 define({
   meta: {name: 'Polski', dir: 'ltr', doCommit: 'ad87836'},
   psalter: {
@@ -461,91 +462,6 @@ define({
     'psalms/ant-PT.gabc': [
       'Alleluja, alleluja, alleluja.'
     ],
-    'te-lucis/Ferial.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.'
-    ],
-    'te-lucis/Ordinary.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.'
-    ],
-    'te-lucis/Solemn.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.'
-    ],
-    'te-lucis/Advent.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.'
-    ],
-    'te-lucis/Lent.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.'
-    ],
-    'te-lucis/Passiontide.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.'
-    ],
-    'te-lucis/Christmas.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.'
-    ],
-    'te-lucis/Our-Lady.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.'
-    ],
-    'te-lucis/Seven-Dolors.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.'
-    ],
-    'te-lucis/Epiphany.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Jezusie bądź pochwalony,\nKtóryś Poganom zjawiony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.'
-    ],
-    'te-lucis/Holy-Family.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Tobie, Jezu, któryś\nStał się posłuszny swym rodzicom,\nNiech będzie wieczna chwała,\nWraz z Ojcem i Najświętszym Duchem.\nAmen.'
-    ],
-    'te-lucis/Easter.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Bądź Ojcze Boże chwalony,\nZ Synem, który pogrzebiony\nWstał z martwych, i Duch światłości\nNiech ma chwałę na wieczności.\nAmen.'
-    ],
-    'te-lucis/Ascension.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Jezu miej cześć z dostojeństwem,\nŻe w niebo wchodzisz zwycięstwem:\nI Ojcze, i Duchu Święty,\nNa wiek wieków niepojęty.\nAmen.'
-    ],
-    'te-lucis/Pentecost.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Niech Ojciec słynie Pan chwały,\nI z Synem, który umarły\nPowstał, i z Pocieszycielem,\nWiek wiekuistym weselem.\nAmen.'
-    ],
-    'te-lucis/Sacred-Heart.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Jezu, niech Tobie będzie chwała,\nKtóry nam z serca łaski zlewasz,\nZ Ojcem — z Ożywicielem, Duchem,\nI Przez nieskończone wieki.\nAmen.'
-    ],
-    'te-lucis/Transfiguration.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'O Jezu, co się objawiasz Maluczkim,\nNiech Ci cześć będzie\nZ Ożywicielem i Ojcem\nW nieskończone wieki.\nAmen.'
-    ],
-    'te-lucis/Christ-the-King.gabc': [
-      'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
-      'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.',
-      'Jezu, niech Tobie będzie chwała,\nKtóry berłami świata władasz,\nZ Ojcem i Duchem Świętym, Boże,\nPrzez wszystkie wieki wieków.\nAmen.'
-    ],
     'chapter.gabc': [
       'Tyś jest między nami, Panie, a imienia twego wzywano nad nami: nie opuszczajże nas, Panie, nasz Boże.\nR. Bogu niech będą dzięki.'
     ],
@@ -697,5 +613,14 @@ define({
     'index:asd-requiem': [
       'V. Wieczny odpoczynek racz im dać, Panie.\nR. A światłość wiekuista niechaj im świeci.\nV. Niech odpoczywają w pokoju.\nR. Amen'
     ]
+  },
+  hymn: {
+    literal: {
+      stanzas: [
+        'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
+        'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.'
+      ],
+      doxologies: {Advent: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Ascension: 'Jezu miej cześć z dostojeństwem,\nŻe w niebo wchodzisz zwycięstwem:\nI Ojcze, i Duchu Święty,\nNa wiek wieków niepojęty.\nAmen.', 'Christ-the-King': 'Jezu, niech Tobie będzie chwała,\nKtóry berłami świata władasz,\nZ Ojcem i Duchem Świętym, Boże,\nPrzez wszystkie wieki wieków.\nAmen.', Christmas: 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Easter: 'Bądź Ojcze Boże chwalony,\nZ Synem, który pogrzebiony\nWstał z martwych, i Duch światłości\nNiech ma chwałę na wieczności.\nAmen.', Epiphany: 'Jezusie bądź pochwalony,\nKtóryś Poganom zjawiony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Ferial: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', 'Holy-Family': 'Tobie, Jezu, któryś\nStał się posłuszny swym rodzicom,\nNiech będzie wieczna chwała,\nWraz z Ojcem i Najświętszym Duchem.\nAmen.', Lent: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Ordinary: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', 'Our-Lady': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Passiontide: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Pentecost: 'Niech Ojciec słynie Pan chwały,\nI z Synem, który umarły\nPowstał, i z Pocieszycielem,\nWiek wiekuistym weselem.\nAmen.', 'Sacred-Heart': 'Jezu, niech Tobie będzie chwała,\nKtóry nam z serca łaski zlewasz,\nZ Ojcem — z Ożywicielem, Duchem,\nI Przez nieskończone wieki.\nAmen.', 'Seven-Dolors': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Solemn: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Transfiguration: 'O Jezu, co się objawiasz Maluczkim,\nNiech Ci cześć będzie\nZ Ożywicielem i Ojcem\nW nieskończone wieki.\nAmen.'}
+    }
   }
 });

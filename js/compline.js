@@ -79,6 +79,7 @@ require(['jquery','moment','calendar','text-mode'], function($,moment,calendar,t
     var section = $(this).attr('notation');
     localStorage[notationSections[section].key] = $(this).val();
     updateNotation(section);
+    if(section === 'hymn') showHymnMode();
     if(section === 'psalms') {
       setPsalms();
       setCanticle();
@@ -132,8 +133,34 @@ require(['jquery','moment','calendar','text-mode'], function($,moment,calendar,t
     $trLang.val(textMode.lang()).prop('disabled', textMode.mode() === 'la');
   };
   showTextMode();
+  // How to show the hymn in the translation (TRANSLATIONS_PLAN.md §4b and §5): literal, metrical or
+  // sung to the chant.  A choice the language hasn't is disabled, and so is singing while the hymn
+  // is plain text (the translation only ignores the notation menus, so there it can still be sung).
+  // text-mode.js falls back from a choice the language or the season hasn't.
+  var $hymnMode = $('#selectHymnMode');
+  var showHymnMode = function() {
+    var kinds = textMode.hymnKinds();
+    $hymnMode.closest('.hymn-mode-choice').prop('hidden', !kinds);
+    if(!kinds) return;
+    $hymnMode.children('[value=literal]').prop('disabled', !kinds.literal);
+    $hymnMode.children('[value=metrical]').prop('disabled', !kinds.metrical);
+    $hymnMode.children('[value=sung]').prop('disabled', !kinds.sung || (textMode.mode() !== 'tr' && storedNotation('hymn') === 'text'));
+    // a choice that's disabled here shows what is shown in its place, and is kept for a language
+    // that has it
+    var fallbacks = {literal: ['literal', 'metrical'], metrical: ['metrical', 'literal'], sung: ['sung', 'metrical', 'literal']};
+    $hymnMode.val(fallbacks[textMode.hymnMode()].filter(function(kind) {
+      return !$hymnMode.children('[value=' + kind + ']').prop('disabled');
+    })[0]);
+  };
+  $hymnMode.change(function(e){
+    textMode.setHymnMode($(this).val());
+    $('chant-gabc[notation=hymn]').each(function(){
+      if(this.updateText) this.updateText();
+    });
+  });
   // Adds the translation to the page, or takes it away, and redraws the chants that it changes.
   var translatePage = function() {
+    showHymnMode();
     textMode.translate(document.body);
     $('chant-gabc').each(function(){
       if(this.updateText) this.updateText();

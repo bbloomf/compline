@@ -1,0 +1,87 @@
+# Te lucis sung in Spanish to the chant (TRANSLATIONS_PLAN.md §4b and §7i): DO's metrical text,
+# hyphenated by hand, with three lines rewritten to fit the notes, and the doxologies drafted in
+# §4b, which take the place of DO's prose ones.
+# The format is extra/en/hymn-sung.txt's: a - divides a word's syllables, one to a note, and ‿
+# joins two words' vowels sung on one note (sinalefa).  In the metrical text the ‿ is a space.
+
+# DO's stanza 2, line 2, "y las nocturnas imágenes", has 9 sung syllables for 8 notes (it ends
+# stressed on the third syllable from the end), so it is "y visiones fantasmales", keeping the
+# hymn's á–e assonance (§7i).
+[hymn] new
+A Ti, Cre-a-dor, pe-di-mos,
+an-tes que la luz a-ca-be,
+se-as por tu gran cle-men-cia
+cen-ti-ne-la que nos guar-de.
+
+A-le-ja los ma-los sue-ños,
+y vi-sio-nes fan-tas-ma-les;
+re-pri-me‿a nues-tro‿ad-ver-sa-rio,
+que nues-tros cuer-pos no man-che.
+
+# DO's lines 1 and 3, "Hazlo así, Padre piísimo" and "que reinas con el Espíritu", have 9 sung
+# syllables for the same reason (§7i).
+[Ferial Ordinary Solemn Advent Lent Passiontide] new
+Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,
+Hi-jo‿al Pa-dre se-me-jan-te,
+con el Es-pí-ri-tu rei-nas,
+por si-glos in-ter-mi-na-bles.
+A-mén
+
+# Chosen in §4b, for Easter and Pentecost (the Latin differs only in the last line).
+[Easter Pentecost] new
+Glo-ria‿al Pa-dre, glo-ria‿al Hi-jo
+que de la muer-te‿hoy re-na-ce,
+y‿al Pa-rá-cli-to di-vi-no,
+por si-glos in-ter-mi-na-bles.
+A-mén.
+
+# The other doxologies, approved for now in §4b (2026-10-26): lines 1, 3 and 4 are shared.
+[Christmas Our-Lady Seven-Dolors] new
+Glo-ria‿a ti, Je-sús ben-di-to,
+na-ci-do de Vir-gen Ma-dre,
+con el Pa-dre‿y‿el Es-pí-ri-tu,
+por si-glos in-ter-mi-na-bles.
+A-mén.
+
+[Epiphany] new
+Glo-ria‿a ti, Je-sús ben-di-to,
+que‿a las gen-tes te mos-tras-te,
+con el Pa-dre‿y‿el Es-pí-ri-tu,
+por si-glos in-ter-mi-na-bles.
+A-mén.
+
+[Ascension] new
+Glo-ria‿a ti, Je-sús ben-di-to,
+que‿al cie-lo vuel-ves triun-fan-te,
+con el Pa-dre‿y‿el Es-pí-ri-tu,
+por si-glos in-ter-mi-na-bles.
+A-mén.
+
+[Sacred-Heart] new
+Glo-ria‿a ti, Je-sús ben-di-to:
+tu Co-ra-zón gra-cia‿es-par-ce.
+Con el Pa-dre‿y‿el Es-pí-ri-tu,
+por si-glos in-ter-mi-na-bles.
+A-mén.
+
+[Christ-the-King] new
+Glo-ria‿a ti, Je-sús ben-di-to,
+del mun-do Rey go-ber-nan-te,
+con el Pa-dre‿y‿el Es-pí-ri-tu,
+por si-glos in-ter-mi-na-bles.
+A-mén.
+
+[Transfiguration] new
+Glo-ria‿a ti, Je-sús ben-di-to,
+que‿a los pe-que-ñue-los te‿a-bres,
+con el Pa-dre‿y‿el Es-pí-ri-tu,
+por si-glos in-ter-mi-na-bles.
+A-mén.
+
+# The Holy Family's Latin has another shape, so it has its own text.
+[Holy-Family] new
+Je-sús, que‿hu-mil-de qui-sis-te
+a tus pa-dres su-je-tar-te,
+con el Pa-dre‿y‿el Es-pí-ri-tu
+siem-pre glo-ria se te can-te.
+A-mén.
