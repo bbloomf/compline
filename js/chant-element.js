@@ -402,11 +402,17 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
         score[i].performLayout(ctxt);
         score[i].layoutChantLines(ctxt, width);
         // render the score to svg
+        var firstSvg = this.children.length;
         if(sync) {
           this.insertAdjacentHTML('beforeend', score[i].createSvgForEachLine(ctxt));
         } else {
           // as nodes, which playback lights up note by note (chant-playback.js)
           this.appendChild(makeSvgScalable(score[i].createSvgNode(ctxt), width));
+        }
+        // the language of its words, for screen readers: Latin, or the translation's where the hymn
+        // is sung in it (§4b)
+        for(var j = firstSvg; j < this.children.length; ++j) {
+          this.children[j].setAttribute('lang', score[i].lyricsLang);
         }
         if(score[i].translationHtml) {
           this.insertAdjacentHTML('beforeend', score[i].translationHtml);
@@ -415,14 +421,13 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       this.markLang();
     }
 
-    // The language of the chant's own words, for screen readers: Latin, or the translation's where
-    // the hymn is sung in it (§4b).  Its red labels have none, and a block that holds a translation
-    // (a .tr-pair, .chant-tr or .verses) has it on each of its parts already.
+    // The language of the chant's own words outside its scores, for screen readers: Latin.  doLayout
+    // marks each score's SVG, its red labels have none, and a block that holds a translation (a
+    // .tr-pair, .chant-tr or .verses) has it on each of its parts already.
     markLang() {
-      var lyrics = this._sungLang || 'la';
       Array.prototype.forEach.call(this.children, function(child) {
         if(child.hasAttribute('lang') || child.classList.contains('red') || child.querySelector('[lang]')) return;
-        child.setAttribute('lang', child.tagName.toLowerCase() === 'svg' ? lyrics : 'la');
+        child.setAttribute('lang', 'la');
       });
     }
 
@@ -477,7 +482,6 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
         useDropCapAttr = true;
       }
 
-      this._sungLang = translation && translation.sung ? textMode.langAttr() : null;
       this._plainText = this.isPlainText();
       this.classList.toggle('plain-text', this._plainText);
       if(this._plainText) {
@@ -511,10 +515,13 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
           .replace(/(\s)_([^\s*]+)_(\(\))?(\s)/g,"$1^_$2_^$3$4")
           .replace(/(\([cf][1-4]\)|\s)(\d+\.)(\s\S)/g,"$1^$2^$3");
         // the hymn sung in the translation: its words go in after the rewrites above, which are for Latin
+        var lyricsLang = 'la';
         if(scores[i].sung) {
           var swapped = swapLyrics(gabc, scores[i].sung);
-          if(swapped) gabc = swapped;
-          else console.warn('The sung translation doesn\'t fit the notes', this.getAttribute('src'), scores[i].sung);
+          if(swapped) {
+            gabc = swapped;
+            lyricsLang = textMode.langAttr();
+          } else console.warn('The sung translation doesn\'t fit the notes', this.getAttribute('src'), scores[i].sung);
         }
         mappings[i] = exsurge.Gabc.createMappingsFromSource(ctxt, gabc);
         if('initial-style' in gabcHeader) {
@@ -540,6 +547,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
           score[i].commentary = gabcHeader.commentary;
         }
         score[i].translationHtml = scores[i].translationHtml;
+        score[i].lyricsLang = lyricsLang;
       }
       this.doLayout(_width);
     }

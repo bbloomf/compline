@@ -176,7 +176,9 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
       $.get('js/i18n/LICENSE-divinum-officium.txt', function(text) {
         // its paragraphs, each wrapped to the page rather than at 80 characters
         $license.text(text.trim().replace(/([^\n])\n(?!\n)/g, '$1 '));
-      }, 'text');
+      }, 'text').fail(function() {
+        $license.html("The license couldn&rsquo;t be loaded. It is at <a href='https://github.com/DivinumOfficium/divinum-officium/blob/master/LICENSE'>github.com/DivinumOfficium/divinum-officium</a>.");
+      });
     }
   });
   // Adds the translation to the page, or takes it away, and redraws the chants that it changes.

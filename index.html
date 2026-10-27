@@ -17,7 +17,7 @@
   <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" enable-background="new 0 0 100 100" xml:space="preserve"><path d="M89.846,56.221V43.779l-9.536-1.423c-0.734-2.916-1.882-5.667-3.368-8.193l6.575-8.883l-8.798-8.797l-8.882,6.575  c-2.468-1.453-5.145-2.582-7.985-3.317l-1.63-10.921H43.777l-1.629,10.921c-2.911,0.753-5.656,1.917-8.172,3.424l-7.75-5.737  l-8.8,8.797l5.739,7.752c-1.541,2.576-2.723,5.393-3.476,8.38l-9.536,1.423v12.441l9.536,1.424c0.734,2.916,1.882,5.667,3.366,8.193  l-6.573,8.882l8.798,8.798l8.88-6.576c2.468,1.453,5.148,2.582,7.987,3.317l1.629,10.92h12.444l1.63-10.92  c2.911-0.753,5.654-1.916,8.172-3.424l7.753,5.739l8.797-8.796l-5.739-7.754c1.542-2.576,2.724-5.392,3.476-8.379L89.846,56.221z   M50,68.603c-10.273,0-18.602-8.329-18.602-18.603c0-10.273,8.329-18.601,18.602-18.601c10.275,0,18.603,8.329,18.603,18.601  C68.603,60.273,60.275,68.603,50,68.603z"/></svg>
   <ul>
     <li><label><input type="checkbox" toggle="autoSelectRegion">&nbsp;Auto Select Region</label></li>
-    <li>Region&nbsp;<select id='selectRegion' aria-label='Region'></select></li>
+    <li><label>Region&nbsp;<select id='selectRegion'></select></label></li>
     <li><label>Text&nbsp;<select id='selectTextMode'><option value='la'>Latin</option><option value='both'>Latin &amp; translation</option><option value='tr'>Translation</option></select></label></li>
     <li><label>Translation&nbsp;<select id='selectTrLang'></select></label></li>
     <li class='notation-menu'><label>Psalms&nbsp;<select notation='psalms'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option></select></label></li>
@@ -30,7 +30,7 @@
         <li><label>Everything else&nbsp;<select notation='chants'><option value='text'>Plain text</option><option value='full'>Fully notated</option></select></label></li>
       </ul>
     </li>
-    <li>Theme&nbsp;<select id='selectTheme' aria-label='Theme'><option value="auto">Auto (follow device)</option><option value="light">Light</option><option value="dark">Dark</option></select></li>
+    <li><label>Theme&nbsp;<select id='selectTheme'><option value="auto">Auto (follow device)</option><option value="light">Light</option><option value="dark">Dark</option></select></label></li>
   </ul>
 </div>
 <div class='hidden-print'><input type='date' id='date' class='hidden-print' aria-label='Date'></div>
@@ -126,9 +126,9 @@ In private recitation, compline is said as follows:
 <span include='easter-2' class='tr-pair' data-tr='index:mortem-autem-crucis'><span lang='la'>Mortem autem crucis.</span></span>
 </div>
 <div include='easter-3:easter-1'><br/>
-Pater noster <i class='red'>is said, silently throughout.
+<span lang='la'>Pater noster</span> <i class='red'>is said, silently throughout.
 <br/>
-Afterwards there is added aloud, without</i> Orémus<i class='red'>, the collect:</i>
+Afterwards there is added aloud, without</i> <span lang='la'>Orémus</span><i class='red'>, the collect:</i>
 </div>
 <div exclude='easter-3:easter+5 allSouls'>
 <div class='notation-section'>
@@ -246,17 +246,17 @@ Per Dóminum nostrum Jesum Christum Fílium tuum:&nbsp;<span class='red'>†</sp
 <span class='notation-section-title'>MARIAN ANTIPHON</span>
 <div id='marian-antiphon-choices'>
 <select name='marian-antiphon' class='hidden-print' aria-label='Marian antiphon'>
-  <option select-date='advent1-1:12/31 01/01:02/01' value='alma-redemptoris-mater' id='marian-antiphon-alma'>Alma Redemptoris Mater</option>
-  <option select-date='02/02:easter-4' value='ave-regina-caelorum' id='marian-antiphon-ave'>Ave Regina Cælorum</option>
-  <option select-date='easter:pentecost+5' value='regina-caeli' id='marian-antiphon-regina'>Regina Cæli</option>
-  <option select-date='pentecost+6:advent1-2' value='salve-regina' id='marian-antiphon-salve'>Salve Regina</option>
+  <option lang='la' select-date='advent1-1:12/31 01/01:02/01' value='alma-redemptoris-mater' id='marian-antiphon-alma'>Alma Redemptoris Mater</option>
+  <option lang='la' select-date='02/02:easter-4' value='ave-regina-caelorum' id='marian-antiphon-ave'>Ave Regina Cælorum</option>
+  <option lang='la' select-date='easter:pentecost+5' value='regina-caeli' id='marian-antiphon-regina'>Regina Cæli</option>
+  <option lang='la' select-date='pentecost+6:advent1-2' value='salve-regina' id='marian-antiphon-salve'>Salve Regina</option>
 </select>
 <div class='notation-choice hidden-print'><label id='marian-antiphon-solemn-choice'><input type='checkbox' id='marian-antiphon-solemn'>&nbsp;Solemn Tone</label>
 <label class='notation-level'>Marian antiphon&nbsp;<select notation='marian'><option value='text'>Plain text</option><option value='full'>Fully notated</option></select></label></div>
-<div class='marian-antiphon alma-redemptoris-mater alma-redemptoris-mater-solemn'><span class='marian-antiphon-name'>Alma Redemptoris Mater </span><i class='red'>(from Saturday before the First Sunday of Advent until Feb. 1 inclusive)</i></div>
-<div class='marian-antiphon ave-regina-caelorum ave-regina-caelorum-solemn'><span class='marian-antiphon-name'>Ave Regina Cælorum </span><i class='red'>(From February 2 until Wednesday of Holy Week inclusive)</i></div>
-<div class='marian-antiphon regina-caeli regina-caeli-solemn'><span class='marian-antiphon-name'>Regina Cæli </span><i class='red'>(from Easter Sunday until Friday in the Octave of Pentecost inclusive)</i></div>
-<div class='marian-antiphon salve-regina salve-regina-solemn'><span class='marian-antiphon-name'>Salve Regina </span><i class='red'>(from Saturday before Trinity Sunday until Friday before the First Sunday of Advent inclusive)</i></div>
+<div class='marian-antiphon alma-redemptoris-mater alma-redemptoris-mater-solemn'><span class='marian-antiphon-name' lang='la'>Alma Redemptoris Mater </span><i class='red'>(from Saturday before the First Sunday of Advent until Feb. 1 inclusive)</i></div>
+<div class='marian-antiphon ave-regina-caelorum ave-regina-caelorum-solemn'><span class='marian-antiphon-name' lang='la'>Ave Regina Cælorum </span><i class='red'>(From February 2 until Wednesday of Holy Week inclusive)</i></div>
+<div class='marian-antiphon regina-caeli regina-caeli-solemn'><span class='marian-antiphon-name' lang='la'>Regina Cæli </span><i class='red'>(from Easter Sunday until Friday in the Octave of Pentecost inclusive)</i></div>
+<div class='marian-antiphon salve-regina salve-regina-solemn'><span class='marian-antiphon-name' lang='la'>Salve Regina </span><i class='red'>(from Saturday before Trinity Sunday until Friday before the First Sunday of Advent inclusive)</i></div>
 </div>
 <div><chant-gabc id='marian-antiphon' notation='marian' src='marian-antiphon/salve-regina.gabc'></chant-gabc></div>
 </div>
@@ -319,7 +319,7 @@ Deus, qui per resurrectiónem Fílii tui Dómini nostri Jesu Christi mundum læt
 <div include='allSouls'>
 <i class='red'>All kneel for the following prayers:</i>
 <br/>
-Pater noster <i class='red'>is said in silence until</i>
+<span lang='la'>Pater noster</span> <i class='red'>is said in silence until</i>
 <span class='tr-pair' data-tr='index:asd-preces'><span lang='la'><span class='versiculum'>v</span>&nbsp;Et ne nos indúcas in tentatiónem.<br/>
 <span class='versiculum'>r</span>&nbsp;Sed líbera nos a malo.<br/>
 <span class='versiculum'>v</span>&nbsp;A porta ínferi.<br/>
