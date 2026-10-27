@@ -26,11 +26,15 @@
 // A hymn is {hymn, doxology}: the doxology takes the place of the hymn's stanza from its * on, and
 // the units are the stanzas.  A text DO doesn't have is {extra: why}: it comes only from
 // extra/<lang>/texts.txt, and a language without it there has the text missing.  Its Latin, in
-// extra/la/texts.txt, is checked against the app's in place of DO's.
+// extra/la/texts.txt, is checked against the app's in place of DO's.  For any other text,
+// extra/la/texts.txt's Latin is checked as well as DO's.
 //
 // extra/<lang>/texts.txt is texts written by hand, which take the place of DO's (§7, "Texts that
 // don't come from DO"): each [key] is followed by its units, separated by blank lines, and a line
-// that starts with # is a comment.
+// that starts with # is a comment.  A [@file:section] is one of DO's sections instead, in DO's own
+// syntax ($Per Dominum and the like are resolved), which the language uses wherever DO would read
+// that section: a fix to one part of a text, which leaves the rest to DO.
+// extra/<lang>/spelling.txt respells words in the psalter and the texts (spelling() below).
 'use strict';
 var fs = require('fs');
 var path = require('path');
@@ -43,16 +47,66 @@ var THRESHOLD = 0.9;
 
 var manifest = JSON.parse(fs.readFileSync(path.join(__dirname, 'manifest.json'), 'utf8'));
 
-// A language's extra/<lang>/texts.txt, as {key: units}; {} if it has none.
+// A file of extra/<code>/, without a BOM or \r; null if there is none.
+var readExtra = function(code, name) {
+  var file = path.join(__dirname, 'extra', code, name);
+  if(!fs.existsSync(file)) return null;
+  return fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
+};
+var isComment = function(line) {
+  return /^\s*#/.test(line);
+};
+var escapeRegExp = function(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
+// A language's extra/<lang>/texts.txt, as {texts: {key: units}, sections: {'file:section': lines}};
+// both empty if it has none.
 var extraTexts = function(code) {
-  var file = path.join(__dirname, 'extra', code, 'texts.txt');
-  if(!fs.existsSync(file)) return {};
-  var sections = text.sections(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n'));
+  var result = {texts: {}, sections: {}};
+  var sections = text.sections(readExtra(code, 'texts.txt') || '');
   Object.keys(sections).forEach(function(key) {
-    sections[key] = sections[key].filter(function(line) { return !/^\s*#/.test(line); })
-      .map(function(line) { return line.trim(); }).join('\n').split(/\n{2,}/).filter(Boolean);
+    var lines = sections[key].filter(function(line) { return !isComment(line); })
+      .map(function(line) { return line.trim(); });
+    if(/^@/.test(key)) {
+      var ref = refParts(key);
+      result.sections[ref[0] + ':' + ref[1]] = lines.join('\n').trim().split('\n');
+      return;
+    }
+    result.texts[key] = lines.join('\n').split(/\n{2,}/)
+      // a blank line before a comment would leave a \n at the end of the unit
+      .map(function(unit) { return unit.trim(); }).filter(Boolean);
   });
-  return sections;
+  return result;
+};
+
+// A language's extra/<lang>/spelling.txt: words DO spells otherwise than the app does, one
+// "honour honor" a line.  {words: [{from, to, count}], fix: function(text)}, or null if it has
+// none.  fix replaces each as a whole word, keeping its case, and counts it.
+exports.spelling = function(code) {
+  var source = readExtra(code, 'spelling.txt');
+  if(source === null) return null;
+  var words = [];
+  source.split('\n').forEach(function(line, i) {
+    if(!/\S/.test(line) || isComment(line)) return;
+    var pair = line.trim().split(/\s+/);
+    if(pair.length !== 2) throw new Error('extra/' + code + '/spelling.txt:' + (i + 1) + ' isn\'t "from to": ' + line.trim());
+    // a whole word, with no letter, mark or digit either side (\b knows only ASCII letters)
+    var pattern = new RegExp('(?<![\\p{L}\\p{M}\\p{N}])' + escapeRegExp(pair[0]) + '(?![\\p{L}\\p{M}\\p{N}])', 'giu');
+    words.push({from: pair[0], to: pair[1], count: 0, pattern: pattern});
+  });
+  var fix = function(s) {
+    // null is a missing verse
+    if(typeof s !== 'string') return s;
+    return words.reduce(function(s, w) {
+      return s.replace(w.pattern, function(found) {
+        w.count++;
+        if(found.length > 1 && found === found.toUpperCase()) return w.to.toUpperCase();
+        return found[0] === found[0].toUpperCase() ? w.to[0].toUpperCase() + w.to.slice(1) : w.to;
+      });
+    }, s);
+  };
+  return {words: words, fix: fix};
 };
 
 // Characters GABC can't take (§7a), apart from * and †, as in the psalter.
@@ -225,7 +279,7 @@ var piece = function(p, ctx) {
     var amen = ctx.w.amen;
     if(!amen) return lines.concat('⟨no Amen⟩');
     var stem = amen.replace(/\p{P}+$/u, '');
-    var at = last.search(new RegExp('\\s' + stem.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\p{P}*$', 'iu'));
+    var at = last.search(new RegExp('\\s' + escapeRegExp(stem) + '\\p{P}*$', 'iu'));
     if(at >= 0) lines[lines.length - 1] = last.slice(0, at);
     lines.push('R. ' + amen);
   }
@@ -337,26 +391,32 @@ exports.build = function(doDir, root, languages) {
   // DO's Latin against the app's, unit by unit.
   var latin = {code: 'la', folder: 'Latin'};
   var latinWords = words(resolve.resolver(doDir, latin));
-  var latinExtra = extraTexts('la');
+  // extra/la/texts.txt's Latin is checked in place of DO's for a text only it has, and as well as
+  // DO's for any other: the other languages still take that text from DO.
+  var latinExtra = extraTexts('la').texts;
   keys.forEach(function(key) {
     var spec = manifest.texts[key];
-    var built = build(key, spec, latin, doDir, latinWords, latinExtra);
+    var sources = [{name: 'DO', units: build(key, spec, latin, doDir, latinWords, spec.extra ? latinExtra : null).units}];
+    if(!spec.extra && latinExtra[key]) sources.push({name: 'extra/la', units: latinExtra[key]});
     var appUnits = app[key] || [];
-    if(built.units.length !== appUnits.length) {
-      report.latin.push('!! ' + key + ': DO has ' + built.units.length + ' units, the app ' + appUnits.length);
-    }
-    built.units.forEach(function(u, i) {
-      if(i >= appUnits.length) return;
-      if(/⟨/.test(u)) {
-        report.latin.push('!! ' + key + ':' + (i + 1) + ' ' + u.match(/⟨[^⟩]*⟩/)[0]);
-        return;
+    sources.forEach(function(source) {
+      var label = key + (source.name === 'DO' ? '' : ' (' + source.name + ')');
+      if(source.units.length !== appUnits.length) {
+        report.latin.push('!! ' + label + ': ' + source.name + ' has ' + source.units.length + ' units, the app ' + appUnits.length);
       }
-      var a = comparable(appUnits[i]), b = comparable(abbreviated(u, appUnits[i]));
-      var score = text.similarity(a, b);
-      if(score < 1) {
-        report.latin.push((score < THRESHOLD ? '!! ' : '   ') + key + ':' + (i + 1) + ' ' + score.toFixed(3) + '  ' +
-          text.wordDiff(a, b));
-      }
+      source.units.forEach(function(u, i) {
+        if(i >= appUnits.length) return;
+        if(/⟨/.test(u)) {
+          report.latin.push('!! ' + label + ':' + (i + 1) + ' ' + u.match(/⟨[^⟩]*⟩/)[0]);
+          return;
+        }
+        var a = comparable(appUnits[i]), b = comparable(abbreviated(u, appUnits[i]));
+        var score = text.similarity(a, b);
+        if(score < 1) {
+          report.latin.push((score < THRESHOLD ? '!! ' : '   ') + label + ':' + (i + 1) + ' ' + score.toFixed(3) + '  ' +
+            text.wordDiff(a, b));
+        }
+      });
     });
   });
 
@@ -365,8 +425,11 @@ exports.build = function(doDir, root, languages) {
       unsafe: [], notes: [], texts: null};
     if(lang.texts === false) return;
     r.texts = {};
+    var extraAll = extraTexts(lang.code);
+    var extra = extraAll.texts;
+    // the language's own versions of DO's sections, which its resolver reads in DO's place
+    lang = Object.assign({}, lang, {sections: extraAll.sections});
     var w = words(resolve.resolver(doDir, lang));
-    var extra = extraTexts(lang.code);
     Object.keys(extra).forEach(function(key) {
       if(!manifest.texts[key]) r.notes.push('extra/' + lang.code + '/texts.txt has ' + key + ', which manifest.json doesn\'t map');
     });
