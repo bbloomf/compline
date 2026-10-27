@@ -126,7 +126,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
           return start + caps.toLowerCase();
         });
       }
-      var section = textMode.psalmSection(header['user-notes']);
+      var section = textMode.psalmSection(header);
       (section? body.trim().split(/\r?\n\s*\r?\n/) : unitParagraphs(body)).forEach(function(paragraph, i) {
         if(i === 0 && prefix) paragraph = prefix + ' ' + paragraph;
         var lines = paragraph.split(/\r?\n/).map(gabcLineToHtml).filter(function(line) {
@@ -178,7 +178,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
     var result = [];
     var unitCount = 0;
     scores.forEach(function(score) {
-      var section = textMode.psalmSection(score.header['user-notes']);
+      var section = textMode.psalmSection(score.header);
       if(!(section? textMode.hasPsalm(section) : units) || translation.intonation) {
         var verse = section && translation.intonation && textMode.verseTranslationHtml(section, 1);
         if(verse) score.translationHtml = '<div class="verses chant-tr">' + verse + '</div>';
