@@ -38,7 +38,8 @@ define(['jquery'], function($) {
   // The languages offered in the menu, each with a module in js/i18n/ (TRANSLATIONS_PLAN.md §2),
   // added once it has been checked end to end (English in Phase 4, the others in Phase 5, Latin
   // with the Pius XII psalter, for comparison, in Phase 6).
-  // compline.js hides the Text and Translation menus while there are none.
+  // compline.js hides the Text and Translation menus while there are none.  rubrics: the language
+  // its rubrics are in, where it hasn't its own.
   var languages = [
     {code: 'en', name: 'English'},
     {code: 'fr', name: 'Français'},
@@ -46,7 +47,7 @@ define(['jquery'], function($) {
     {code: 'it', name: 'Italiano'},
     {code: 'pt', name: 'Português'},
     {code: 'pl', name: 'Polski'},
-    {code: 'la-bea', name: 'Latin (Pius XII psalter)'}
+    {code: 'la-bea', name: 'Latin (Pius XII psalter)', rubrics: 'en'}
   ];
   var isLanguage = function(code) {
     return languages.some(function(l) { return l.code === code; });
@@ -118,6 +119,16 @@ define(['jquery'], function($) {
   var translated = function() {
     return mode() !== 'la' || Object.keys(trSections).length > 0;
   };
+  // The language of the rubrics: the translation's, which with the Latin only the menu calls the
+  // Rubrics' (compline.js).  English is the page's own.
+  var rubricsLang = function(l) {
+    var language = languages.filter(function(each) { return each.code === l; })[0];
+    return (language && language.rubrics) || l;
+  };
+  // Whether the language's module is wanted: for its translation, or for its rubrics.
+  var wanted = function() {
+    return translated() || rubricsLang(lang()) !== 'en';
+  };
   // The class of a block that shows as m.
   var markMode = function(el, m) {
     $(el).removeClass('text-la text-both text-tr').addClass('text-' + m);
@@ -142,7 +153,7 @@ define(['jquery'], function($) {
   // Calls back once the current language is loaded.  A language that fails to load has no texts.
   var load = function(callback) {
     var l = lang();
-    if(!translated() || modules[l]) {
+    if(!wanted() || modules[l]) {
       callback();
       return;
     }
@@ -165,13 +176,13 @@ define(['jquery'], function($) {
       (notes && rubrics() ? ':rubrics-' + lang() : '');
   };
 
-  // The rubrics (§4d), in the translation's language while a translation is shown, where its module
-  // has them: English's are the page's own, and Latin-Bea has none.  Each rubric of index.html has
+  // The rubrics (§4d), in the translation's language, or with the Latin only the Rubrics menu's,
+  // where its module has them: English's are the page's own, and Latin-Bea has none.  Each rubric of index.html has
   // a data-rubric key, and rubrics[key] is its text: {…} is Latin (lang=la), and \n a line break.
   // rubrics['note:<English>'] translates the start of a heading: a chant's user-notes or commentary
   // ("Psalm 7. I." → "Salmo 7. I."), and the pointed psalms' own.
   var rubrics = function() {
-    var d = data();
+    var d = wanted() ? modules[lang()] : null;
     return (d && d.rubrics) || null;
   };
   var rubric = function(key) {
@@ -417,6 +428,7 @@ define(['jquery'], function($) {
     modeOf: modeOf,
     markMode: markMode,
     translated: translated,
+    rubricsLang: rubricsLang,
     lang: lang,
     setMode: setMode,
     setLang: setLang,

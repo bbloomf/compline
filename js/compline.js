@@ -159,10 +159,18 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   }).join(''));
   // no menus until a translation is offered (?text= still works, for testing)
   $textMode.add($trLang).closest('li').toggle(textMode.languages.length > 0);
+  // With the Latin only, the Translation menu is the Rubrics', which offers only the languages with
+  // rubrics of their own.
   var showTextMode = function() {
     textMode.updateBodyClasses();
     $textMode.val(textMode.mode());
-    $trLang.val(textMode.lang()).prop('disabled', !textMode.translated());
+    var rubricsOnly = !textMode.translated();
+    $('#trLangLabel').text(rubricsOnly ? 'Rubrics' : 'Translation');
+    $trLang.children().each(function() {
+      var other = rubricsOnly && textMode.rubricsLang(this.value) !== this.value;
+      $(this).prop({disabled: other, hidden: other});
+    });
+    $trLang.val(rubricsOnly ? textMode.rubricsLang(textMode.lang()) : textMode.lang());
   };
   showTextMode();
   // How to show the hymn in the translation (TRANSLATIONS_PLAN.md §4b and §5): literal, metrical or
