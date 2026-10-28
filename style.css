@@ -146,6 +146,11 @@ chant-gabc[src^="marian-antiphon/"]:not([src*="-prayer"])>.chant-tr>p {
   color: #d00!important;
   line-height: 1;
 }
+/* a Latin text a rubric names ("the Hymn Te lucis"): black and upright (theme.css for dark mode) */
+.red .cited {
+  color: #000!important;
+  font-style: normal;
+}
 p.red {
   margin-bottom: 0;
 }

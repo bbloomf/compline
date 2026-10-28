@@ -195,11 +195,12 @@ define(['jquery'], function($) {
     return '<i class="red"' + (note === null ? '' : ' lang="' + langAttr() + '"') + (style ? ' style="' + style + '"' : '') + '>' +
       (note === null ? text : note) + '</i>';
   };
-  // A rubric's text as HTML.  wrap is the tags its words go in, where its English has its words in
-  // <i> around Latin that isn't ("the Hymn </i>Te lucis<i> which…").
+  // A rubric's text as HTML.  {…} is a Latin text the rubric names, shown black and upright (style.css
+  // .cited).  wrap is the tags its words go in, where its English has its words in <i> around Latin
+  // that isn't ("the Hymn </i>Te lucis<i> which…").
   var rubricHtml = function(text, wrap) {
     return text.split(/(\{[^}]*\})/).map(function(part, i) {
-      if(i % 2) return "<span lang='la'>" + escapeHtml(part.slice(1, -1)) + '</span>';
+      if(i % 2) return "<span class='cited' lang='la'>" + escapeHtml(part.slice(1, -1)) + '</span>';
       if(!part) return '';
       var html = escapeHtml(part).replace(/\n/g, '<br/>');
       return wrap ? wrap[0] + html + wrap[1] : html;

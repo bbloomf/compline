@@ -3,8 +3,9 @@
 // (Psalterium/Common/Rubricae.txt), and none of the app's directions to the Officiant, Lector and
 // Cantor or its seasons' dates.
 //
-// Each [key] is a data-rubric of index.html, and its lines are the text: {…} is Latin, kept as
-// it is (lang=la), and each line after the first starts a new line, as <br/> does in the English.
+// Each [key] is a data-rubric of index.html, and its lines are the text: {…} is a Latin text the
+// rubric names, kept as it is and shown black and upright (lang=la), and each line after the first
+// starts a new line, as <br/> does in the English.
 // [note:<English>] translates the start of a chant's heading, its user-notes or commentary
 // ("Psalm" in "Psalm 7. I."), and [hymn-unsung] is chant-element.js's note on a hymn that can't be
 // sung in the language in that season.
