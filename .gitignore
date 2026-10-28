@@ -5,5 +5,6 @@ dist
 cordova
 build.json
 appid-secret.key
+open-new-release.sh
 # OS X
 .DS_Store

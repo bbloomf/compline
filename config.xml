@@ -7,6 +7,7 @@
     <author email="bhb123@gmail.com" href="http://compline.us.to">
         Benjamin Bloomfield
     </author>
+    <hook type="before_prepare" src="hooks/sync-config-version.js" />
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
