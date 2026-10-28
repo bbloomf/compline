@@ -38,7 +38,8 @@ define(['jquery'], function($) {
   // The languages offered in the menu, each with a module in js/i18n/ (TRANSLATIONS_PLAN.md §2),
   // added once it has been checked end to end (English in Phase 4, the others in Phase 5, Latin
   // with the Pius XII psalter, for comparison, in Phase 6).
-  // compline.js hides the Text and Translation menus while there are none.
+  // compline.js hides the Text and Translation menus while there are none.  rubrics: the language
+  // its rubrics are in, where it hasn't its own.
   var languages = [
     {code: 'en', name: 'English'},
     {code: 'fr', name: 'Français'},
@@ -46,7 +47,7 @@ define(['jquery'], function($) {
     {code: 'it', name: 'Italiano'},
     {code: 'pt', name: 'Português'},
     {code: 'pl', name: 'Polski'},
-    {code: 'la-bea', name: 'Latin (Pius XII psalter)'}
+    {code: 'la-bea', name: 'Latin (Pius XII psalter)', rubrics: 'en'}
   ];
   var isLanguage = function(code) {
     return languages.some(function(l) { return l.code === code; });
@@ -87,6 +88,51 @@ define(['jquery'], function($) {
     if(isLanguage(query.lang)) return query.lang;
     return isLanguage(localStorage.trLang) ? localStorage.trLang : browserLang();
   };
+  // The sections whose notation menu says 'Translation only' (compline.js), which show the
+  // translation only whatever the Text menu says.  Each block of text shows as its section's mode
+  // says (modeOf), and has the class text-<mode>, which style.css reads.
+  var trSections = {};
+  var setTrSections = function(sections) {
+    trSections = {};
+    sections.forEach(function(section) { trSections[section] = true; });
+  };
+  var sectionMode = function(section) {
+    var m = mode();
+    return section && trSections[section] ? 'tr' : m;
+  };
+  // A block's section: a <chant-gabc>'s notation, the psalms' verses, the pointed chapter and
+  // prayers, or the data-section of the part of index.html it's in (the psalms' antiphons, in
+  // #placeholder and #canticle, and the versicles of the collect).  Any other chant is 'chants', and
+  // anything else follows the Text menu.
+  var sectionOf = function(el) {
+    var $el = $(el);
+    if($el.is('chant-gabc[notation]')) return $el.attr('notation');
+    if($el.is('.verses[data-psalm]')) return 'psalms';
+    if($el.closest('.pointed-chapter').length) return 'chapter';
+    if($el.closest('.pointed-prayer').length) return 'prayers';
+    return $el.closest('[data-section]').attr('data-section') || ($el.is('chant-gabc') ? 'chants' : null);
+  };
+  var modeOf = function(el) {
+    return sectionMode(sectionOf(el));
+  };
+  // Whether any translation is shown.
+  var translated = function() {
+    return mode() !== 'la' || Object.keys(trSections).length > 0;
+  };
+  // The language of the rubrics: the translation's, which with the Latin only the menu calls the
+  // Rubrics' (compline.js).  English is the page's own.
+  var rubricsLang = function(l) {
+    var language = languages.filter(function(each) { return each.code === l; })[0];
+    return (language && language.rubrics) || l;
+  };
+  // Whether the language's module is wanted: for its translation, or for its rubrics.
+  var wanted = function() {
+    return translated() || rubricsLang(lang()) !== 'en';
+  };
+  // The class of a block that shows as m.
+  var markMode = function(el, m) {
+    $(el).removeClass('text-la text-both text-tr').addClass('text-' + m);
+  };
   var setMode = function(m) {
     dropQuery('text');
     localStorage.textMode = m;
@@ -107,7 +153,7 @@ define(['jquery'], function($) {
   // Calls back once the current language is loaded.  A language that fails to load has no texts.
   var load = function(callback) {
     var l = lang();
-    if(mode() === 'la' || modules[l]) {
+    if(!wanted() || modules[l]) {
       callback();
       return;
     }
@@ -121,12 +167,81 @@ define(['jquery'], function($) {
     });
   };
   var data = function() {
-    return mode() === 'la' ? null : modules[lang()] || null;
+    return translated() ? modules[lang()] || null : null;
   };
-  // What a chant (whose src is key) was drawn for, so it's drawn again only when this changes.
-  var renderKey = function(key) {
-    var m = mode();
-    return m === 'la' ? m : m + ':' + lang() + (modules[lang()] ? '' : ':loading') + (hymnTone(key) ? ':' + hymnMode() : '');
+  // What a chant (whose src is key, shown as m) was drawn for, so it's drawn again only when this
+  // changes.  notes: whether it has a heading (user-notes or commentary) for the rubrics to translate.
+  var renderKey = function(key, m, notes) {
+    return (m === 'la' ? m : m + ':' + lang() + (modules[lang()] ? '' : ':loading') + (hymnTone(key) ? ':' + hymnMode() : '')) +
+      (notes && rubrics() ? ':rubrics-' + lang() : '');
+  };
+
+  // The rubrics (§4d), in the translation's language, or with the Latin only the Rubrics menu's,
+  // where its module has them: English's are the page's own, and Latin-Bea has none.  Each rubric of index.html has
+  // a data-rubric key, and rubrics[key] is its text: {…} is Latin (lang=la), and \n a line break.
+  // rubrics['note:<English>'] translates the start of a heading: a chant's user-notes or commentary
+  // ("Psalm 7. I." → "Salmo 7. I."), and the pointed psalms' own.
+  var rubrics = function() {
+    var d = wanted() ? modules[lang()] : null;
+    return (d && d.rubrics) || null;
+  };
+  var rubric = function(key) {
+    var r = rubrics();
+    return r && typeof r[key] === 'string' ? r[key] : null;
+  };
+  // A heading (as HTML) translated, or null where the rubrics don't translate it (Polish's "Psalm"
+  // is translated, though it's the same word).
+  var rubricNote = function(html) {
+    var r = rubrics();
+    if(!r || !html) return null;
+    for(var key in r) {
+      var en = key.replace(/^note:/, '');
+      if(en !== key && html.indexOf(en) === 0 && /^[ .]?$/.test(html.charAt(en.length))) return rubricHtml(r[key]) + html.slice(en.length);
+    }
+    return null;
+  };
+  // A heading, as chant-element.js draws it: red italics, in the rubrics' language once translated.
+  var noteHtml = function(text, style) {
+    var note = rubricNote(text);
+    return '<i class="red"' + (note === null ? '' : ' lang="' + langAttr() + '"') + (style ? ' style="' + style + '"' : '') + '>' +
+      (note === null ? text : note) + '</i>';
+  };
+  // A rubric's text as HTML.  {…} is a Latin text the rubric names, shown black and upright (style.css
+  // .cited).  wrap is the tags its words go in, where its English has its words in <i> around Latin
+  // that isn't ("the Hymn </i>Te lucis<i> which…").
+  var rubricHtml = function(text, wrap) {
+    return text.split(/(\{[^}]*\})/).map(function(part, i) {
+      if(i % 2) return "<span class='cited' lang='la'>" + escapeHtml(part.slice(1, -1)) + '</span>';
+      if(!part) return '';
+      var html = escapeHtml(part).replace(/\n/g, '<br/>');
+      return wrap ? wrap[0] + html + wrap[1] : html;
+    }).join('');
+  };
+  var translateRubrics = function($root) {
+    $root.find('[data-rubric]').addBack('[data-rubric]').each(function() {
+      var $el = $(this);
+      // what was last shown, as hyphenate.js changes the HTML
+      if(!('_rubricHtml' in this)) {
+        this._rubricHtml = this._rubricShown = this.innerHTML;
+        this._rubricWrap = $el.is('i') || !$el.children('i').length ? null :
+          $el.hasClass('red') ? ['<i>', '</i>'] : ["<i class='red'>", '</i>'];
+      }
+      var text = rubric($el.attr('data-rubric'));
+      var html = text === null ? this._rubricHtml : rubricHtml(text, this._rubricWrap);
+      if(this._rubricShown !== html) this.innerHTML = this._rubricShown = html;
+      if(text === null) $el.removeAttr('lang');
+      else $el.attr('lang', langAttr());
+    });
+    // the pointed psalms' headings ("Psalm 90"), in the psalms' and the canticle's HTML; a chant's
+    // are drawn by chant-element.js
+    $root.find('#placeholder, #canticle').addBack('#placeholder, #canticle').find('i.red').not('chant-gabc i').each(function() {
+      if(!('_rubricText' in this)) this._rubricText = this._rubricShown = this.innerHTML;
+      var note = rubricNote(this._rubricText);
+      var shown = note === null ? this._rubricText : note;
+      if(this._rubricShown !== shown) this.innerHTML = this._rubricShown = shown;
+      if(note === null) $(this).removeAttr('lang');
+      else $(this).attr('lang', langAttr());
+    });
   };
 
   // The hymn (§4b).  The tone of a te-lucis/<tone>.gabc key, or null for any other.
@@ -222,44 +337,50 @@ define(['jquery'], function($) {
   var langName = function() {
     return ((data() || {}).meta || {}).name || lang();
   };
+  // The translation's lang attribute.
+  var langAttr = function() {
+    return ((data() || {}).meta || {}).lang || lang();
+  };
   // The attributes of the translation that follows a Latin element.
   var trAttributes = function() {
     var meta = (data() || {}).meta || {};
-    return " class='tr' lang='" + (meta.lang || lang()) + "'" + (meta.dir === 'rtl' ? " dir='rtl'" : '');
+    return " class='tr' lang='" + langAttr() + "'" + (meta.dir === 'rtl' ? " dir='rtl'" : '');
   };
   // Classes for a Latin element: in 'tr' mode it hides when it has a translation, and is shown
   // in a subtle style when it doesn't (style.css).  A Latin translation (meta.latin, Latin-Bea)
   // has nothing where it's the same as the Latin, so there the Latin is its text: tr-same, shown
   // as it is.
-  var latinClass = function(hasTranslation) {
-    if(mode() === 'la') return '';
+  var latinClass = function(hasTranslation, m) {
+    if((m || mode()) === 'la') return '';
     if(hasTranslation) return 'has-tr';
     return ((data() || {}).meta || {}).latin ? 'tr-same' : 'tr-missing';
   };
   // The translation of a psalm verse as a <p>, laid out like the Latin; '' if the verse before's
-  // covers it, and null if there isn't one.
-  var verseTranslationHtml = function(section, n) {
-    var verse = mode() === 'la' ? null : psalmVerse(section, n);
+  // covers it, and null if there isn't one.  m is the mode it's shown in.
+  var verseTranslationHtml = function(section, n, m) {
+    var verse = (m || mode()) === 'la' ? null : psalmVerse(section, n);
     return verse ? '<p' + trAttributes() + "><span class='verse-number'>" + n + '.&nbsp;</span>' + unitHtml(verse) + '</p>' : verse;
   };
   // A psalm verse: its Latin <p> (whose inner HTML is latinHtml), then the translation's.
-  var verseHtml = function(section, n, latinHtml) {
-    var translation = verseTranslationHtml(section, n);
-    return "<p lang='la' class='" + latinClass(translation !== null) + "'><span class='verse-number'>" + n + '.&nbsp;</span>' +
+  var verseHtml = function(section, n, latinHtml, m) {
+    var translation = verseTranslationHtml(section, n, m);
+    return "<p lang='la' class='" + latinClass(translation !== null, m) + "'><span class='verse-number'>" + n + '.&nbsp;</span>' +
       latinHtml + '</p>' + (translation || '');
   };
   // A Latin block and its translation (units), side by side or one under the other (style.css).
   // tag is the element for each, 'p' or 'div'.
-  var pairHtml = function(latinHtml, units, tag) {
+  var pairHtml = function(latinHtml, units, tag, m) {
     tag = tag || 'p';
-    return "<div class='tr-pair'><" + tag + " lang='la' class='" + latinClass(!!units) + "'>" + latinHtml + '</' + tag + '>' +
+    return "<div class='tr-pair'><" + tag + " lang='la' class='" + latinClass(!!units, m) + "'>" + latinHtml + '</' + tag + '>' +
       (units ? '<' + tag + trAttributes() + '>' + unitsHtml(units) + '</' + tag + '>' : '') + '</div>';
   };
 
   // Adds the translations to the page, or takes them away in 'la' mode: each .tr-pair[data-tr]
-  // block of index.html, and each verse of the pointed psalms (.verses[data-psalm]).
+  // block of index.html, and each verse of the pointed psalms (.verses[data-psalm]), each in its
+  // section's mode.
   var translate = function(root) {
     var $root = $(root);
+    translateRubrics($root);
     $root.find('.tr-pair[data-tr]').each(function() {
       var $pair = $(this);
       $pair.children('.tr').remove();
@@ -268,8 +389,10 @@ define(['jquery'], function($) {
         console.warn('A .tr-pair needs one Latin child (lang=la)', this);
         return;
       }
-      var units = mode() === 'la' ? null : texts($pair.attr('data-tr'));
-      $latin.removeClass('has-tr tr-missing tr-same').addClass(latinClass(!!units));
+      var m = modeOf(this);
+      markMode(this, m);
+      var units = m === 'la' ? null : texts($pair.attr('data-tr'));
+      $latin.removeClass('has-tr tr-missing tr-same').addClass(latinClass(!!units, m));
       if(units) {
         var tag = $latin.prop('tagName').toLowerCase();
         $latin.after('<' + tag + trAttributes() + '>' + unitsHtml(units) + '</' + tag + '>');
@@ -277,11 +400,13 @@ define(['jquery'], function($) {
     });
     $root.find('.verses[data-psalm]').each(function() {
       var section = $(this).attr('data-psalm');
+      var m = modeOf(this);
+      markMode(this, m);
       $(this).children('p.tr').remove();
       $(this).children('p').each(function() {
         var $p = $(this);
-        var translation = verseTranslationHtml(section, parseInt($p.children('.verse-number').text()));
-        $p.attr('lang', 'la').removeClass('has-tr tr-missing tr-same').addClass(latinClass(translation !== null));
+        var translation = verseTranslationHtml(section, parseInt($p.children('.verse-number').text()), m);
+        $p.attr('lang', 'la').removeClass('has-tr tr-missing tr-same').addClass(latinClass(translation !== null, m));
         if(translation) $p.after(translation);
       });
     });
@@ -289,7 +414,7 @@ define(['jquery'], function($) {
   var updateBodyClasses = function() {
     var m = mode();
     $.each(modes, function(i, each) {
-      $(document.body).toggleClass('text-' + each, each === m);
+      $(document.body).toggleClass('page-text-' + each, each === m);
     });
   };
 
@@ -298,6 +423,12 @@ define(['jquery'], function($) {
     query: query,
     languages: languages,
     mode: mode,
+    setTrSections: setTrSections,
+    sectionMode: sectionMode,
+    modeOf: modeOf,
+    markMode: markMode,
+    translated: translated,
+    rubricsLang: rubricsLang,
     lang: lang,
     setMode: setMode,
     setLang: setLang,
@@ -308,11 +439,15 @@ define(['jquery'], function($) {
     load: load,
     renderKey: renderKey,
     texts: texts,
+    rubric: rubric,
+    rubricHtml: rubricHtml,
+    noteHtml: noteHtml,
     psalmSection: psalmSection,
     hasPsalm: hasPsalm,
     psalmVerse: psalmVerse,
     unitsHtml: unitsHtml,
     langName: langName,
+    langAttr: langAttr,
     trAttributes: trAttributes,
     verseTranslationHtml: verseTranslationHtml,
     verseHtml: verseHtml,

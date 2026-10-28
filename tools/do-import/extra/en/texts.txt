@@ -29,3 +29,109 @@ V. Pray, Father, a blessing.
 $Oremus
 v. We beseech thee, O Lord, be merciful to the souls of all thy servants and handmaids for whom we humbly entreat thy majesty, that by these offices of pious supplication they may be found worthy to enter into everlasting rest.
 $Per Dominum
+
+# Typos in DO's English, fixed for the release (TRANSLATIONS_PLAN.md §7j) and reported upstream.
+# Each section is DO's, with only the slips put right.
+
+# Psalm 69: "’T is well, ’t is well" has a space inside the contraction.  69:4 is repeated, so the
+# first is here unchanged, to put the second in its place.
+[@Psalterium/Psalmorum/Psalm69]
+69:4 Let them be turned backward, and blush for shame * that desire evils to me:
+69:4 Let them be presently turned away blushing for shame * that say to me: ’Tis well, ’tis well.
+
+# The Easter-octave antiphon: "Alleluia" capitalized after each comma.
+[@Tempora/Pasc0-0:Ant 43]
+Alleluia, alleluia, alleluia, alleluia.
+This is the day * which the Lord hath made: let us be glad and rejoice therein.
+
+# All Souls' preces: "Deliver their souls, O Lord!" ends with a full stop in DO's own Commune/C9,
+# as the Latin does.
+[@Prayers:Aportainferi]
+V. From the gates of hell.
+R. Deliver their souls, O Lord.
+
+# The Marian antiphons: the Alma Redemptoris Mater's punctuation (a comma after "cry", and "made,"
+# where the sentence goes on) and "by that joy" for "by what joy which"; "our Lord" mid-sentence;
+# the Regina cæli's vocative comma and "he" as in "as he said" two lines on; the Salve Regina's
+# vocative comma and "in this valley of tears", which goes on the sentence before; "holy Mother of
+# God"; "who, by the cooperation…," and "thy Son", as in every other prayer.
+[@Psalterium/Mariaant:Advent]
+v. Mother of Christ, hear thou thy people’s cry,
+Star of the deep and Portal of the sky!
+Mother of Him who thee from nothing made,
+Sinking we strive and call to thee for aid:
+O, by that joy which Gabriel brought to thee,
+Thou Virgin first and last, let us thy mercy see.
+_
+V. The Angel of the Lord announced unto Mary.
+R. And she conceived of the Holy Spirit.
+_
+$Oremus
+v. Pour forth, we beseech thee, O Lord, thy grace into our hearts: that as we have known the incarnation of thy Son Jesus Christ by the message of an Angel, so too by his Cross and passion may we be brought to the glory of his resurrection. Through the same Christ our Lord. Amen.
+
+[@Psalterium/Mariaant:Nativiti]
+v. Mother of Christ, hear thou thy people’s cry,
+Star of the deep and Portal of the sky!
+Mother of Him who thee from nothing made,
+Sinking we strive and call to thee for aid:
+O, by that joy which Gabriel brought to thee,
+Thou Virgin first and last, let us thy mercy see.
+_
+V. After childbirth thou didst remain a virgin.
+R. Intercede for us, O Mother of God.
+_
+$Oremus
+v. O God, who, by the fruitful virginity of blessed Mary, hast bestowed upon mankind the reward of eternal salvation: grant, we beseech thee, that we may experience her intercession, through whom we have been made worthy to receive the author of life, our Lord Jesus Christ thy Son. Amen.
+
+[@Psalterium/Mariaant:Paschalis]
+v. O Queen of heaven, rejoice! alleluia:
+For he whom thou didst merit to bear, alleluia,
+Hath arisen as he said, alleluia.
+Pray for us to God, alleluia.
+_
+V. Rejoice and be glad, O Virgin Mary, alleluia.
+R. Because the Lord is truly risen, alleluia.
+_
+$Oremus
+v. O God, who gave joy to the world through the resurrection of thy Son, our Lord Jesus Christ; grant, we beseech thee, that through his Mother, the Virgin Mary, we may obtain the joys of everlasting life. Through the same Christ our Lord. Amen.
+
+[@Psalterium/Mariaant:Postpentecost]
+v. Hail, holy Queen, Mother of Mercy,
+our life, our sweetness, and our hope.
+To thee do we cry, poor banished children of Eve.
+To thee do we send up our sighs, mourning and weeping
+in this valley of tears.
+Turn then, most gracious Advocate,
+thine eyes of mercy toward us.
+And after this our exile show unto us
+the blessed fruit of thy womb, Jesus.
+O clement, O loving, O sweet Virgin Mary.
+_
+V. Pray for us, O holy Mother of God.
+R. That we may be made worthy of the promises of Christ.
+_
+$Oremus
+v. O almighty, everlasting God, who, by the cooperation of the Holy Spirit, didst prepare the body and soul of Mary, glorious Virgin and Mother, to become a worthy dwelling for thy Son; grant that we who rejoice in her commemoration may, by her gracious intercession, be delivered from present evils and from everlasting death. Through the same Christ our Lord. Amen.
+
+# The doxologies of Te lucis: "thee" in lower case, as in every other doxology; "today", as the
+# Transfiguration has it; the Holy Family's lines capitalized, as every other stanza's are; and
+# the Transfiguration's "blest", as in the same stanza of its own hymn.
+[@Psalterium/Doxologies:Asc]
+All glory, Lord, to thee we pay,
+Ascending o’er the stars today;
+All glory, as is ever meet,
+To Father and to Paraclete.
+Amen.
+
+[@Tempora/Epi1-0:Doxology]
+All praise to thee, O Jesus,
+Who parents dost obey;
+Praise to the sovereign Father
+And Paraclete for aye.
+
+[@Sancti/08-06:Doxology]
+Jesu, to thee our praise we pay,
+To little ones revealed today,
+With Father and blest Spirit One
+Until the ages’ course is done.
+Amen.

@@ -54,6 +54,9 @@ chant-gabc use {
   html.dark .versiculum {
     color: #f66 !important;
   }
+  html.dark .red .cited {
+    color: #fff !important;
+  }
 
   /* options menu */
   html.dark div#options-menu>svg {

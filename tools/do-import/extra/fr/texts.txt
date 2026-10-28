@@ -5,7 +5,7 @@
 # Père" and "vous", as the French missals address the priest (French has no thee).
 
 [index:confiteor-priest]
-Je confesse à Dieu tout puissant, à la bienheureuse Marie toujours Vierge, à Saint Michel Archange, à Saint Jean-Baptiste, aux saints Apôtres Pierre et Paul, à tous les Saints, et à vous, mon Père, que j’ai beaucoup péché, par pensées, par paroles et par actions : c’est ma faute, c’est ma faute, c’est ma très grande faute. C’est pourquoi je supplie la bienheureuse Marie toujours Vierge, Saint Michel Archange, Saint Jean-Baptiste, les saints Apôtres Pierre et Paul, tous les Saints, et vous, mon Père, de prier pour moi le Seigneur notre Dieu.
+Je confesse à Dieu tout-puissant, à la bienheureuse Marie toujours Vierge, à Saint Michel Archange, à Saint Jean-Baptiste, aux saints Apôtres Pierre et Paul, à tous les Saints, et à vous, mon Père, que j’ai beaucoup péché, par pensées, par paroles et par actions : c’est ma faute, c’est ma faute, c’est ma très grande faute. C’est pourquoi je supplie la bienheureuse Marie toujours Vierge, Saint Michel Archange, Saint Jean-Baptiste, les saints Apôtres Pierre et Paul, tous les Saints, et vous, mon Père, de prier pour moi le Seigneur notre Dieu.
 
 [index:misereatur-tui]
 Que le Dieu tout-puissant ait pitié de vous, et que, après vous avoir pardonné vos péchés, il vous conduise à la vie éternelle.
@@ -20,20 +20,135 @@ R. Ainsi soit-il.
 V. Gloire au Père, au Fils, * et au Saint-Esprit.
 R. Comme il était au commencement, maintenant et toujours, * et dans les siècles des siècles. Ainsi soit-il.
 
-# The same in Deus in adjutorium, whose Gloria is DO's own lines, not [Gloria].
+# The same in Deus in adjutorium, whose Gloria is DO's own lines, not [Gloria]; and the comma after
+# "Dieu", which DO hasn't ("Dieu + venez").
 [@Prayers:Deus in adjutorium]
-V. Dieu + venez à mon aide.
+V. Dieu, + venez à mon aide.
 R. Seigneur, hâtez-vous de me secourir.
 v. Gloire au Père, au Fils, * et au Saint-Esprit.
 Comme il était au commencement, maintenant et toujours, * et dans les siècles des siècles. Ainsi soit-il.
 
 # Nunc dimittis verse 4, with the * where the Latin has it ("géntium, * et glóriam"); DO has none.
+# Verses 1 and 3 with "Vous" for God, as the rest of the canticle, where DO has "vous"; and verse 3
+# with a small "que", as it goes on from verse 2.
 [@Psalterium/Psalmorum/Psalm233]
+2:29 Maintenant, Seigneur, + Vous laisserez Votre serviteur s’en aller * en paix, selon Votre parole,
+2:31 que Vous avez préparé * à la face de tous les peuples :
 2:32 lumière pour éclairer les nations, * et gloire d’Israël Votre peuple.
 
 # All Souls' collect: DO's [Oratio mortuorum1] ends its prayer "Par Notre-Seigneur." and then has
-# the whole $Per Dominum as well.
+# the whole $Per Dominum as well; and "afin que, par ces offices…," has only its second comma.
 [@Sancti/11-02:Oratio mortuorum1]
 $Oremus
-v. Faites miséricorde, nous vous le demandons, Seigneur, aux âmes de tous vos serviteurs et de toutes vos servantes, pour lesquelles nous prions et supplions votre majesté, afin que par ces offices de pieuse supplication, elles méritent d’arriver au repos éternel.
+v. Faites miséricorde, nous vous le demandons, Seigneur, aux âmes de tous vos serviteurs et de toutes vos servantes, pour lesquelles nous prions et supplions votre majesté, afin que, par ces offices de pieuse supplication, elles méritent d’arriver au repos éternel.
 $Per Dominum
+
+# Typos in DO, fixed with no new wording (TRANSLATIONS_PLAN.md Phase 8).
+#
+# Jube, domne (the priest's form; the form without a priest keeps DO's "Veuillez, Seigneur,
+# bénir."): "Père", as "mon Père" in the priest's Confiteor; DO has "père".
+[jube-domne.gabc]
+V. Veuillez, Père, bénir.
+
+# The Confiteor: "tout-puissant", as in the Misereatur, and the comma after "à tous les Saints", as
+# after "tous les Saints" in its second sentence.
+[@Prayers:Confiteor_]
+v. Je confesse à Dieu tout-puissant, à la bienheureuse Marie toujours Vierge, à Saint Michel Archange, à Saint Jean-Baptiste, aux saints Apôtres Pierre et Paul, à tous les Saints, que j’ai beaucoup péché, par pensées, par paroles et par actions : /:(on se frappe la poitrine):/ c’est ma faute, c’est ma faute, c’est ma très grande faute. C’est pourquoi je supplie la bienheureuse Marie toujours Vierge, Saint Michel Archange, Saint Jean-Baptiste, les saints Apôtres Pierre et Paul, tous les Saints, de prier pour moi le Seigneur notre Dieu.
+
+# The lesson's Tu autem: the comma before the vocative "Seigneur".
+[@Prayers:Tu autem_]
+V. Et vous, Seigneur, ayez pitié de nous.
+R. Rendons grâces à Dieu.
+
+# Laus tibi: the comma before the vocative "Seigneur".
+[@Prayers:Alleluia]
+v. Alléluia.
+v. Louange à Vous, Seigneur, Roi d’éternelle gloire.
+
+# The Holy Family's doxology: the full stop that ends its last line.
+[@Tempora/Epi1-0:Doxology]
+À Vous, Jésus, qui Vous êtes fait
+Obéissant à Vos parents,
+Ainsi qu’au Père suprême et à l’Esprit,
+Gloire soit éternellement.
+Ainsi soit-il.
+
+# The Sacred Heart's doxology: "À Vous", as "Votre Cœur" in the same stanza (and the Epiphany's).
+[@Doxologies:Heart]
+À Vous soit la gloire, Jésus,
+Qui par Votre Cœur répandez la grâce,
+Ainsi qu’au Père et à l’auguste Esprit,
+Dans les siècles sempiternels.
+Ainsi soit-il.
+
+# The Transfiguration's doxology: "à Vous", as "Vous révélez" in the same stanza.
+[@Sancti/08-06:Doxology]
+Ô Jésus, à Vous soit la gloire,
+Qui Vous révélez aux petits,
+Avec le Père et l’Esprit vivifiant,
+Dans les siècles éternels.
+Ainsi soit-il.
+
+# Alma Redemptoris's Christmas collect: "qui, par la virginité…," has only its second comma.
+[@Mariaant:Nativiti]
+{:S-AlmaRedemptoris:}v. Féconde Mère du Rédempteur, vous qui êtes la porte du ciel sans cesse ouverte, et l’Étoile de la mer, secourez ce peuple qui tombe, mais qui désire se relever. Ô vous qui avez, au grand étonnement de la nature, donné naissance à votre très saint Créateur, Vierge avant et après l’enfantement, accueillez cet Ave qui sortit de la bouche de Gabriel, et daignez prendre pitié des pécheurs.
+_
+V. {::}Vous êtes demeurée sans tache après l’enfantement, ô Vierge.
+R. Mère de Dieu, intercédez pour nous.
+_
+$Oremus
+v. Ô Dieu, qui, par la virginité féconde de la bienheureuse Marie, avez procuré au genre humain les avantages du salut éternel ; accordez-nous, s’il vous plaît, de ressentir les effets de l’intercession de celle par qui nous avons eu la grâce de recevoir l’auteur de la vie, notre Seigneur Jésus-Christ, votre Fils. Amen.
+
+# Ave Regina cælorum: the colon that ends its first part, where the Latin has "orta:"; DO has none.
+[@Mariaant:Quadragesimae]
+{:S-AveRegina:}v. Salut, Reine des Cieux !
+Salut, Souveraine des Anges !
+Salut, tige féconde ! Salut, porte
+Par laquelle la lumière s’est levée sur le monde :
+_
+Réjouissez-vous, Vierge glorieuse,
+Qui l’emportez sur toutes en beauté !
+Triomphez, ô toute belle,
+Et implorez le Christ en notre faveur.
+_
+V. {::} Rendez-moi digne de vous louer, ô Vierge sainte.
+R. Donnez-moi de la force contre vos ennemis.
+_
+$Oremus
+v. Accordez, ô Dieu de miséricorde, votre secours à notre fragilité ; afin que nous, qui célébrons la mémoire de la sainte Mère de Dieu, nous puissions, à l’aide de son intercession, nous relever de nos iniquités. Par le même Christ, notre Seigneur. Amen.
+
+# Salve Regina: "Ève" with its accent, as the text's other capitals (Éloignez, l’Étoile, À).
+[@Mariaant:Postpentecost]
+{:S-SalveRegina:}v. Salut, ô Reine, Mère de Miséricorde !
+Notre vie, notre douceur, notre espoir, salut !
+Vers vous, nous crions dans notre exil, fils d’Ève ;
+Vers vous nous soupirons, gémissant et pleurant,
+dans cette vallée de larmes.
+Ô vous donc, notre Avocate,
+tournez vers nous vos yeux compatissants.
+Et Jésus, le fruit béni de vos entrailles,
+après notre exil, montrez-le-nous.
+Ô Clémente, ô Bonne, ô Douce Vierge Marie.
+_
+V. {::}Priez pour nous, sainte Mère de Dieu.
+R. Afin que nous soyons rendus dignes des promesses du Christ.
+_
+$Oremus
+v. Dieu tout-puissant et éternel, vous avez préparé le corps et l’âme de la glorieuse Vierge Marie, par la coopération du Saint-Esprit, en vue de la rendre une demeure digne de votre Fils. Accordez-nous, tandis que nous célébrons son souvenir dans l’allégresse de nos cœurs, d’être, par sa miséricordieuse intercession, délivrés de tous les maux qui nous menacent et de la mort éternelle. Par le même J.-C. N.-S. Amen.
+
+# Psalm 7: "Levez-Vous" for God, as in the next line and the rest of the psalter; DO has "Levez-vous".
+[@Psalterium/Psalmorum/Psalm7]
+7:7a Levez-Vous, Seigneur, dans Votre colère, * et soyez exalté au milieu de mes ennemis.
+
+# Psalm 33: "Ses saints" (God's), as "Ses serviteurs" and the rest of the psalter, and the
+# impersonal "il n’y a"; DO has the two the other way round ("ses saints", "Il n’y a").
+[@Psalterium/Psalmorum/Psalm33]
+33:10 Craignez le Seigneur, vous tous Ses saints, * car il n’y a pas d’indigence pour ceux qui Le craignent.
+
+# Psalm 70: "Et, Vous retournant," with both commas, as "et, Vous retournant," in the next verse.
+[@Psalterium/Psalmorum/Psalm70]
+70:20 Que de tribulations nombreuses et cruelles Vous m’avez fait éprouver ! Et, Vous retournant, Vous m’avez rendu la vie, * et Vous m’avez retiré des abîmes de la terre.
+
+# Psalm 133: a small "qui", as the verse goes on from the one before (as the psalter's others do).
+[@Psalterium/Psalmorum/Psalm133]
+133:1b qui demeurez dans la maison du Seigneur, * dans les parvis de la maison de notre Dieu.

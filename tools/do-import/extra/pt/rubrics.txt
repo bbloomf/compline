@@ -1,0 +1,200 @@
+# The rubrics in Portuguese (TRANSLATIONS_PLAN.md §4d; tools/do-import/rubrics.js), written for this
+# app: Divinum Officium has only a few rubrics, in other words, and none of these.  Each [key]
+# is a data-rubric of index.html; the comment above it is the English.  {…} is Latin, kept as
+# it is, and each line after the first starts a new line.  [note:…] translates the start of a
+# chant's heading ("Psalm 7. I.").  Drafted by Claude for the native readers to check
+# (native-review.md).
+
+# On Holy Thursday, Compline is said after the stripping of the altars, with candles extinguished and without singing.
+[holy-thursday]
+Na Quinta-feira Santa, as Completas dizem-se depois do desnudamento dos altares, com as velas apagadas e sem canto.
+
+# On Good Friday, Compline is said after the solemn liturgical action, with candles extinguished and without singing.
+[good-friday]
+Na Sexta-feira Santa, as Completas dizem-se depois da solene ação litúrgica, com as velas apagadas e sem canto.
+
+# Compline is not said tonight. / In private recitation, compline is said as follows:
+[holy-saturday]
+Esta noite não se dizem as Completas.
+Na recitação privada, dizem-se assim:
+
+# In the absence of a priest or deacon, the Lector says “Dómine” below so as to invoke Our Lord directly for the blessing.
+[lector-domine]
+Na ausência de sacerdote ou diácono, o Leitor diz abaixo «{Dómine}», para pedir a bênção diretamente a Nosso Senhor.
+
+# Lector:
+[lector]
+Leitor:
+
+# The Officiant gives the blessing:
+[blessing]
+O Oficiante dá a bênção:
+
+# The Lector/Cantor continues (at the words “Tu autem...nobis,” he alone genuflects):
+[lesson]
+O Leitor ou Cantor continua (às palavras «{Tu autem... nobis}», só ele genuflecte):
+
+# All make the Sign of the Cross as the Officiant says:
+[adjutorium-nostrum]
+Todos fazem o sinal da cruz enquanto o Oficiante diz:
+
+# Here all pause in silence wherein one may make a short examination of conscience or quietly say a Pater Noster.
+[examen]
+Aqui todos fazem uma pausa em silêncio, na qual se pode fazer um breve exame de consciência ou rezar em voz baixa um Pai-nosso.
+
+# The Officiant now bows profoundly and says the {Confiteor} alone in a low voice, recto tono.  After this, all bow profoundly toward the Officiant and say in the same low recto tono voice:
+[confiteor-officiant]
+O Oficiante faz agora uma inclinação profunda e diz sozinho o {Confiteor} em voz baixa, recto tono. Depois, todos se inclinam profundamente para o Oficiante e dizem com a mesma voz baixa, recto tono:
+
+# Then, the Officiant stands upright, while everyone else, still standing, bows profoundly toward the Blessed Sacrament (or straight down) and says in a low voice, recto tono (Strike breast thrice at the threefold “Mea culpa”):
+[confiteor-priest]
+Depois, o Oficiante endireita-se, enquanto todos os outros, ainda de pé, se inclinam profundamente para o Santíssimo Sacramento (ou para o chão) e dizem em voz baixa, recto tono (batendo no peito três vezes ao triplo «{Mea culpa}»):
+
+# The Officiant next says:
+[misereatur-vestri]
+Em seguida o Oficiante diz:
+
+# All, still standing, bow profoundly, and say together the Confiteor once through in a low voice, recto tono, as follows:
+[confiteor]
+Todos, ainda de pé, inclinam-se profundamente e dizem juntos uma só vez o {Confiteor} em voz baixa, recto tono, assim:
+
+# All still bowing profoundly, they continue:
+[misereatur-nostri]
+Todos, ainda profundamente inclinados, continuam:
+
+# All stand upright and make the Sign of the Cross as they say:
+[indulgentiam]
+Todos se endireitam e fazem o sinal da cruz, dizendo:
+
+# Then all make the Sign of the Cross with their thumbs over their hearts, as the Officiant says:
+[converte-nos]
+Depois todos fazem o sinal da cruz com o polegar sobre o coração, enquanto o Oficiante diz:
+
+# Then all make the Sign of the Cross as the Officiant says: (All continue together with the entire “Gloria Patri” after the response.)
+[deus-in-adjutorium]
+Depois todos fazem o sinal da cruz enquanto o Oficiante diz: (Depois da resposta, todos continuam juntos com o «{Gloria Patri}» inteiro.)
+
+# Then all kneel and say:
+[christus-factus-est]
+Depois todos se ajoelham e dizem:
+
+# {Pater noster} is said, silently throughout. / Afterwards there is added aloud, without {Orémus}, the collect:
+[triduum-pater]
+Diz-se o {Pater noster} todo em silêncio.
+Depois acrescenta-se em voz alta, sem {Orémus}, a oração:
+
+# The Officiant then intones the Hymn {Te lucis} which is sung in one of the tones given below.  All bow slightly for the first three lines of the third stanza.
+[hymn]
+O Oficiante entoa então o hino {Te lucis}, que se canta num dos tons dados abaixo. Todos fazem uma leve inclinação durante os três primeiros versos da terceira estrofe.
+
+# The Officiant then says the Chapter:
+[chapter]
+O Oficiante diz então o Capítulo:
+
+# The Cantor then says the verses of the Short Responsory to which all reply after each invocation:
+[responsory]
+O Cantor diz então os versos do Responsório breve, aos quais todos respondem depois de cada invocação:
+
+# (In Passiontide, except on a First or Second Class Feast, the Gloria Patri is omitted, and all repeat again immediately “In manus tuas...” in its place)
+[responsory-passiontide]
+(No tempo da Paixão, exceto nas festas de 1.ª ou 2.ª classe, omite-se o {Gloria Patri}, e em seu lugar todos repetem logo «{In manus tuas...}»)
+
+# The Officiant introduces the Collect:
+[dominus-vobiscum]
+O Oficiante introduz a oração:
+
+# The Officiant says:
+[domine-exaudi]
+O Oficiante diz:
+
+# The conclusion is said silently:
+[conclusion-silent]
+A conclusão diz-se em silêncio:
+
+# The Officiant says again:
+[dominus-vobiscum-again]
+O Oficiante diz de novo:
+
+# The Cantor then says:
+[benedicamus]
+O Cantor diz então:
+
+# The Officiant then says the blessing in a low recto tono, slowly and gravely, at the end of which all make the Sign of the Cross:
+[benedicat]
+O Oficiante diz então a bênção em voz baixa, recto tono, devagar e com gravidade; no fim, todos fazem o sinal da cruz:
+
+# MARIAN ANTIPHON
+[marian-antiphon]
+ANTÍFONA MARIANA
+
+# (from Saturday before the First Sunday of Advent until Feb. 1 inclusive)
+[marian-alma]
+(desde o sábado antes do primeiro domingo do Advento até 1 de fevereiro inclusive)
+
+# (From February 2 until Wednesday of Holy Week inclusive)
+[marian-ave]
+(desde 2 de fevereiro até Quarta-feira Santa inclusive)
+
+# (from Easter Sunday until Friday in the Octave of Pentecost inclusive)
+[marian-regina]
+(desde o Domingo de Páscoa até à sexta-feira da oitava de Pentecostes inclusive)
+
+# (from Saturday before Trinity Sunday until Friday before the First Sunday of Advent inclusive)
+[marian-salve]
+(desde o sábado antes do domingo da Santíssima Trindade até à sexta-feira antes do primeiro domingo do Advento inclusive)
+
+# During Advent:
+[marian-alma-advent]
+No Advento:
+
+# From 1st Vespers of Christmas to 2nd Vesper of the Purification:
+[marian-alma-christmas]
+Desde as I Vésperas do Natal até às II Vésperas da Purificação:
+
+# All making the Sign of the Cross, Compline ends as the Officiant says:
+[divinum-auxilium]
+Todos fazem o sinal da cruz, e as Completas terminam enquanto o Oficiante diz:
+
+# Then all rise and depart in silence.
+[depart]
+Depois todos se levantam e retiram-se em silêncio.
+
+# All kneel for the following prayers:
+[all-souls-kneel]
+Todos se ajoelham para as orações seguintes:
+
+# {Pater noster} is said in silence until
+[all-souls-pater]
+Diz-se o {Pater noster} em silêncio até
+
+# Collect
+[all-souls-collect]
+Oração
+
+# Compline ends thus, without the addition of any further prayers.
+[all-souls-end]
+As Completas terminam assim, sem se acrescentar nenhuma outra oração.
+
+# Psalm
+[note:Psalm]
+Salmo
+
+# Canticle of Simeon
+[note:Canticle of Simeon]
+Cântico de Simeão
+
+# Short Lesson
+[note:Short Lesson]
+Leitura breve
+
+# Luke
+[note:Luke]
+Lucas
+
+# 1. Peter
+[note:1. Peter]
+1 Pedro
+
+# Not available to sing in <language> for this season.
+[hymn-unsung]
+Neste tempo, o hino não se pode cantar em português.

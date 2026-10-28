@@ -146,6 +146,11 @@ chant-gabc[src^="marian-antiphon/"]:not([src*="-prayer"])>.chant-tr>p {
   color: #d00!important;
   line-height: 1;
 }
+/* a Latin text a rubric names ("the Hymn Te lucis"): black and upright (theme.css for dark mode) */
+.red .cited {
+  color: #000!important;
+  font-style: normal;
+}
 p.red {
   margin-bottom: 0;
 }
@@ -431,31 +436,32 @@ chant-gabc.plain-text > p {
   }
 }
 /* Translations (TRANSLATIONS_PLAN.md §4).  js/text-mode.js puts text-la, text-both or text-tr on
-   <body>, and follows each Latin block (lang=la) with its translation (.tr), inside a .tr-pair or
-   a psalm's .verses.  A Latin block has the class has-tr when it has a translation, and
+   each .tr-pair, psalm's .verses and <chant-gabc>, as its section shows (the Text menu, or a
+   section's 'Translation only'), and page-text-<mode>, the Text menu's, on <body>.  It follows each
+   Latin block (lang=la) with its translation (.tr), inside a .tr-pair or a psalm's .verses.  A Latin block has the class has-tr when it has a translation, and
    tr-missing when it doesn't, or tr-same where the translation is Latin (Latin-Bea) and the
    same, so the Latin is its text and shows as it is.  In a chant, each unit's translation
    follows it in a .chant-tr. */
 /* A <span class='tr-pair'> continues the line before it in Latin only; with a translation it's a
    block like the others (and a grid when they're side by side, below).  With the translation
    only, its Latin still hides when it has a translation (.has-tr, below). */
-.text-both span.tr-pair,
-.text-tr span.tr-pair,
-.text-both span.tr-pair > span,
-.text-tr span.tr-pair > span:not(.has-tr) {
+span.tr-pair.text-both,
+span.tr-pair.text-tr,
+span.tr-pair.text-both > span,
+span.tr-pair.text-tr > span:not(.has-tr) {
   display: block;
 }
-body.text-la .tr,
-body.text-la .chant-tr,
-body.text-tr .has-tr,
-body.text-tr #options-menu .notation-menu,
-body.text-tr .notation-choice {
+.text-la .tr,
+.text-la .chant-tr,
+.text-tr .has-tr,
+body.page-text-tr #options-menu .notation-menu,
+body.page-text-tr .notation-choice {
   display: none;
 }
 /* Beside the Latin, the translation is quieter.  With the translation only, a text that has no
    translation shows its Latin, quietly. */
-body.text-both .tr,
-body.text-tr .tr-missing {
+.text-both .tr,
+.text-tr .tr-missing {
   color: var(--tr-color);
 }
 /* How the hymn is translated (TRANSLATIONS_PLAN.md §4b), and the note where it can't be sung. */
@@ -479,40 +485,50 @@ chant-gabc > svg + .chant-tr {
 /* On a narrow screen a psalm verse's translation is under it, nearer to it than to the next verse,
    so that each pair reads as one.  (Not under the notes, where the next verse's notes are below.) */
 @media screen and (max-width: 767px) {
-  body.text-both .verses>p.has-tr {
+  .text-both .verses>p.has-tr,
+  .verses.text-both>p.has-tr {
     margin-bottom: 0.2em;
   }
-  body.text-both .verses:not(.chant-tr)>p.tr {
+  .verses.text-both:not(.chant-tr)>p.tr,
+  .text-both .verses:not(.chant-tr)>p.tr {
     margin: 0.2em 0 0.75em;
   }
   /* Verse 2, after the translation of verse 1 under the pointed psalm's intonation, as far from it as
      from the translation of any other verse (the verses' -0.4615em top margin takes back the rest) */
-  body.text-both chant-gabc:not(.plain-text)+.verses>p.has-tr:first-child {
+  chant-gabc.text-both:not(.plain-text)+.verses.text-both>p.has-tr:first-child {
     margin-top: calc(0.75em + 0.4615em);
   }
 }
 /* On a narrow screen the translation is under the Latin; on a wide one, and in print, beside it. */
 @media print, screen and (min-width: 768px) {
-  body.text-both .tr-pair,
-  body.text-both .verses:not(.chant-tr) {
+  .tr-pair.text-both,
+  .text-both .tr-pair,
+  .verses.text-both:not(.chant-tr),
+  .text-both .verses:not(.chant-tr) {
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 1.5em;
   }
-  body.text-both .tr-pair > [lang=la],
-  body.text-both .verses > [lang=la] {
+  .tr-pair.text-both > [lang=la],
+  .text-both .tr-pair > [lang=la],
+  .text-both .verses > [lang=la],
+  .verses.text-both > [lang=la] {
     grid-column: 1;
   }
-  body.text-both .tr-pair > .tr,
-  body.text-both .verses > .tr {
+  .tr-pair.text-both > .tr,
+  .text-both .tr-pair > .tr,
+  .text-both .verses > .tr,
+  .verses.text-both > .tr {
     grid-column: 2;
   }
   /* grid items' margins don't collapse */
-  body.text-both .verses:not(.chant-tr) {
+  .verses.text-both:not(.chant-tr),
+  .text-both .verses:not(.chant-tr) {
     row-gap: 0.4615em;
     margin: 0 0 0.4615em;
   }
-  body.text-both .verses:not(.chant-tr) > p {
+  .verses.text-both:not(.chant-tr) > p,
+  .text-both .verses:not(.chant-tr) > p {
     margin: 0;
   }
 }
@@ -664,4 +680,29 @@ div.chant-context {
 #mediaControls .tempo-plus {
   border-left: none;
   padding-left: 10px;
+}
+/* Where the translations come from (index.html, js/compline.js), at the foot of the page while one
+   is shown. */
+#credits {
+  margin: 2em 0 1em;
+  padding-top: 0.5em;
+  border-top: 1px solid var(--tr-color);
+  color: var(--tr-color);
+  font-size: 0.7em;
+}
+#credits p {
+  margin: 0.4em 0 0;
+}
+#credits summary {
+  cursor: pointer;
+}
+#credits pre {
+  margin: 0.4em 0 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  white-space: pre-wrap;
+  word-break: normal;
 }

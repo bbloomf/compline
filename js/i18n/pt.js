@@ -6,7 +6,8 @@
 // order, with the Gloria Patri and Sicut erat last; '' is a verse whose translation is part of
 // the verse before.  Each text's units are the paragraphs of its chant, or its index.html block
 // (§7c).  The hymn, Te lucis, is the first two stanzas and each tone's doxology, in each kind of
-// translation the language has (§4b; tools/do-import/hymn.js).
+// translation the language has (§4b; tools/do-import/hymn.js).  The rubrics are the page's, in
+// the language, written for the app (§4d; tools/do-import/extra/pt/rubrics.txt).
 define({
   meta: {name: 'Português', dir: 'ltr', doCommit: 'ad87836'},
   psalter: {
@@ -167,7 +168,7 @@ define({
       'Eis que, assim como os olhos dos servos * estão nas mãos dos seus senhores,',
       'Como os olhos da serva nas mãos de sua senhora: * assim os nossos olhos estão no Senhor nosso Deus, até que tenha misericórdia de nós.',
       'Tende misericórdia de nós, ó Senhor, tende misericórdia de nós: * pois estamos cheios de desprezo.',
-      'Pois a nossa alma está cheiíssima: * de ser o objecto de escárnio para os ricos e de desprezo para os soberbos.',
+      'Pois a nossa alma está cheíssima: * de ser o objecto de escárnio para os ricos e de desprezo para os soberbos.',
       'Dai-lhes, Senhor, * o eterno descanso.',
       'E a luz perpétua * lhes brilhe.'
     ],
@@ -206,7 +207,7 @@ define({
       'Fazei-me conhecer o caminho em que hei-de andar: * pois elevei a minha alma a Vós.',
       'Livrai-me dos meus inimigos, ó Senhor, junto de Vós me refugio: * ensinai-me a fazer a vossa vontade, pois Vós sois o meu Deus.',
       'Vosso bom espírito conduzir-me-á à terra da rectidão: * por causa de vosso nome, ó Senhor, dar-me-eis a vida na vossa equidade.',
-      'Tirareis a minha alma da tribulação: * e pela vossa misericórdia, dissipareis os meus inimigos.',
+      'Tirareis a minha alma da tribulação: * e, pela vossa misericórdia, dissipareis os meus inimigos.',
       'Destruireis todos os que atribulam a minha alma: * porque eu sou vosso servo.',
       'Dai-lhes, Senhor, * o eterno descanso.',
       'E a luz perpétua * lhes brilhe.'
@@ -247,7 +248,7 @@ define({
       'O anjo do Senhor andará à volta dos que O temem: * e resgatá-los-á.',
       'Provai e vede quão suave é o Senhor: * feliz o varão que n’Ele espera.',
       'Temei o Senhor, todos seus santos: * porque não há indigência aos que O temem.',
-      'Os ricos tiveram necessidade e fome: * mas os que buscam o Senhor, não terão falta de bem algum.',
+      'Os ricos tiveram necessidade e fome: * mas os que buscam o Senhor não terão falta de bem algum.',
       'Glória ao Pai, e ao Filho, * e ao Espírito Santo.',
       'Como era no princípio, agora e sempre, * e por todos os séculos dos séculos. Amém.'
     ],
@@ -348,7 +349,7 @@ define({
     '102.II': [
       'Como um pai se compadece dos seus filhos, assim se compadeceu o Senhor dos que O temem: * porque conhece a nossa forma.',
       'Lembrou-se que somos pó: * os dias do homem passam como o feno, como a flor do campo, assim floresce.',
-      'Porque um sopro de vento passará sobre ele e não subsistirá: * e seu lugar não o mais conhecerá.',
+      'Porque um sopro de vento passará sobre ele e não subsistirá: * e o seu lugar não mais o conhecerá.',
       'Porém, da eternidade vem a misericórdia do Senhor, * e até à eternidade sobre os que O temem.',
       'Sua justiça nos filhos dos filhos, * para aqueles que guardam a sua aliança:',
       'E lembram-se dos seus mandamentos, * para os observar.',
@@ -395,7 +396,7 @@ define({
       'R. Que fez o céu e a terra.'
     ],
     'index:confiteor': [
-      'Eu me confesso a Deus, todo-poderoso, à bem-aventurada sempre Virgem Maria, ao bem-aventurado S. Miguel Arcanjo, ao bem-aventurado S. João Baptista, aos Santos Apóstolos S. Pedro e S. Paulo, e a todos os santos: que pequei muitas vezes por pensamentos, palavras e obras: por minha culpa, por minha culpa, por minha tão grande culpa. Portanto rogo à bem-aventurada sempre Virgem Maria, ao bem-aventurado S. Miguel Arcanjo, ao bem-aventurado S. João Baptista, aos Santos Apóstolos S. Pedro e S. Paulo, e a todos os Santos, que rogueis a Deus, Nosso Senhor, por mim.'
+      'Eu me confesso a Deus, todo-poderoso, à bem-aventurada sempre Virgem Maria, ao bem-aventurado S. Miguel Arcanjo, ao bem-aventurado S. João Baptista, aos Santos Apóstolos S. Pedro e S. Paulo, e a todos os Santos, que pequei muitas vezes por pensamentos, palavras e obras: por minha culpa, por minha culpa, por minha tão grande culpa. Portanto rogo à bem-aventurada sempre Virgem Maria, ao bem-aventurado S. Miguel Arcanjo, ao bem-aventurado S. João Baptista, aos Santos Apóstolos S. Pedro e S. Paulo, e a todos os Santos, que rogueis a Deus, Nosso Senhor, por mim.'
     ],
     'index:misereatur-nostri': [
       'Compadeça-se de nós Deus omnipotente, e, perdoados os nossos pecados, conduza-nos à vida eterna.\nR. Amém.'
@@ -590,10 +591,10 @@ define({
       'Oremos.\nÓ Deus, que Vos dignastes alegrar o mundo pela ressurreição do vosso Filho, Nosso Senhor Jesus Cristo, concedei-nos, Vos pedimos, que, por sua Mãe, a Virgem Maria, alcancemos as alegrias da vida eterna. Pelo mesmo Cristo Nosso Senhor.\nR. Amém.'
     ],
     'marian-antiphon/salve-regina.gabc': [
-      'Salve Rainha, Mãe de misericórdia,\nvida, doçura, esperança nossa, salve!\nA vós bradamos, os degredados filhos de Eva;\na vós suspiramos, gemendo e chorando\nneste vale de lágrimas.\nEia, pois, advogada nossa,\nesses vossos olhos misericordiosos a nós volvei;\ne depois deste desterro nos mostrai Jesus,\nbendito fruto do vosso ventre;\nó clemente, ó piedosa, ó doce sempre Virgem Maria.'
+      'Salve, Rainha, Mãe de misericórdia,\nvida, doçura, esperança nossa, salve!\nA vós bradamos, os degredados filhos de Eva;\na vós suspiramos, gemendo e chorando\nneste vale de lágrimas.\nEia, pois, advogada nossa,\nesses vossos olhos misericordiosos a nós volvei;\ne depois deste desterro nos mostrai Jesus,\nbendito fruto do vosso ventre;\nó clemente, ó piedosa, ó doce sempre Virgem Maria.'
     ],
     'marian-antiphon/salve-regina-solemn.gabc': [
-      'Salve Rainha, Mãe de misericórdia,\nvida, doçura, esperança nossa, salve!\nA vós bradamos, os degredados filhos de Eva;\na vós suspiramos, gemendo e chorando\nneste vale de lágrimas.\nEia, pois, advogada nossa,\nesses vossos olhos misericordiosos a nós volvei;\ne depois deste desterro nos mostrai Jesus,\nbendito fruto do vosso ventre;\nó clemente, ó piedosa, ó doce sempre Virgem Maria.'
+      'Salve, Rainha, Mãe de misericórdia,\nvida, doçura, esperança nossa, salve!\nA vós bradamos, os degredados filhos de Eva;\na vós suspiramos, gemendo e chorando\nneste vale de lágrimas.\nEia, pois, advogada nossa,\nesses vossos olhos misericordiosos a nós volvei;\ne depois deste desterro nos mostrai Jesus,\nbendito fruto do vosso ventre;\nó clemente, ó piedosa, ó doce sempre Virgem Maria.'
     ],
     'index:marian-salve-versicle': [
       'V. Rogai por nós, santa Mãe de Deus.\nR. Para que sejamos dignos das promessas de Cristo.'
@@ -622,5 +623,6 @@ define({
       ],
       doxologies: {Advent: 'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.', Ascension: 'Ó Jesus, a Vós seja a glória,\nQue, vencedor, voltais ao céu,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.', 'Christ-the-King': 'Ó Jesus, a Vós seja a glória,\nQue governais os ceptros do mundo,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.', Christmas: 'Ó Jesus, a Vós seja a glória,\nQue nascestes da Virgem,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.', Easter: 'A Deus Pai seja a glória,\nE ao Filho, que dos mortos\nRessuscitou, e ao Paráclito,\nPelos séculos eternos.\nAmém.', Epiphany: 'Ó Jesus, a Vós seja a glória,\nQue aparecestes aos gentios,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.', Ferial: 'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.', 'Holy-Family': 'Ó Jesus, que Vos fizestes\nObediente a vossos pais,\nCom o Pai supremo e o Espírito,\nGlória a Vós para sempre.\nAmém.', Lent: 'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.', Ordinary: 'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.', 'Our-Lady': 'Ó Jesus, a Vós seja a glória,\nQue nascestes da Virgem,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.', Passiontide: 'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.', Pentecost: 'A Deus Pai seja a glória,\nE ao Filho, que dos mortos\nRessuscitou, e ao Paráclito,\nPelos séculos dos séculos.\nAmém.', 'Sacred-Heart': 'Ó Jesus, a Vós seja a glória,\nQue do Coração derramais a graça,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.', 'Seven-Dolors': 'Ó Jesus, a Vós seja a glória,\nQue nascestes da Virgem,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.', Solemn: 'Concedei-o, ó Pai piíssimo,\nE Vós, Unigénito igual ao Pai,\nQue com o Espírito Paráclito\nReinais por todos os séculos.\nAmém.', Transfiguration: 'Ó Jesus, a Vós seja a glória,\nQue Vos revelais aos pequeninos,\nCom o Pai e o almo Espírito,\nPelos séculos eternos.\nAmém.'}
     }
-  }
+  },
+  rubrics: {'holy-thursday': 'Na Quinta-feira Santa, as Completas dizem-se depois do desnudamento dos altares, com as velas apagadas e sem canto.', 'good-friday': 'Na Sexta-feira Santa, as Completas dizem-se depois da solene ação litúrgica, com as velas apagadas e sem canto.', 'holy-saturday': 'Esta noite não se dizem as Completas.\nNa recitação privada, dizem-se assim:', 'lector-domine': 'Na ausência de sacerdote ou diácono, o Leitor diz abaixo «{Dómine}», para pedir a bênção diretamente a Nosso Senhor.', lector: 'Leitor:', blessing: 'O Oficiante dá a bênção:', lesson: 'O Leitor ou Cantor continua (às palavras «{Tu autem... nobis}», só ele genuflecte):', 'adjutorium-nostrum': 'Todos fazem o sinal da cruz enquanto o Oficiante diz:', examen: 'Aqui todos fazem uma pausa em silêncio, na qual se pode fazer um breve exame de consciência ou rezar em voz baixa um Pai-nosso.', 'confiteor-officiant': 'O Oficiante faz agora uma inclinação profunda e diz sozinho o {Confiteor} em voz baixa, recto tono. Depois, todos se inclinam profundamente para o Oficiante e dizem com a mesma voz baixa, recto tono:', 'confiteor-priest': 'Depois, o Oficiante endireita-se, enquanto todos os outros, ainda de pé, se inclinam profundamente para o Santíssimo Sacramento (ou para o chão) e dizem em voz baixa, recto tono (batendo no peito três vezes ao triplo «{Mea culpa}»):', 'misereatur-vestri': 'Em seguida o Oficiante diz:', confiteor: 'Todos, ainda de pé, inclinam-se profundamente e dizem juntos uma só vez o {Confiteor} em voz baixa, recto tono, assim:', 'misereatur-nostri': 'Todos, ainda profundamente inclinados, continuam:', indulgentiam: 'Todos se endireitam e fazem o sinal da cruz, dizendo:', 'converte-nos': 'Depois todos fazem o sinal da cruz com o polegar sobre o coração, enquanto o Oficiante diz:', 'deus-in-adjutorium': 'Depois todos fazem o sinal da cruz enquanto o Oficiante diz: (Depois da resposta, todos continuam juntos com o «{Gloria Patri}» inteiro.)', 'christus-factus-est': 'Depois todos se ajoelham e dizem:', 'triduum-pater': 'Diz-se o {Pater noster} todo em silêncio.\nDepois acrescenta-se em voz alta, sem {Orémus}, a oração:', hymn: 'O Oficiante entoa então o hino {Te lucis}, que se canta num dos tons dados abaixo. Todos fazem uma leve inclinação durante os três primeiros versos da terceira estrofe.', chapter: 'O Oficiante diz então o Capítulo:', responsory: 'O Cantor diz então os versos do Responsório breve, aos quais todos respondem depois de cada invocação:', 'responsory-passiontide': '(No tempo da Paixão, exceto nas festas de 1.ª ou 2.ª classe, omite-se o {Gloria Patri}, e em seu lugar todos repetem logo «{In manus tuas...}»)', 'dominus-vobiscum': 'O Oficiante introduz a oração:', 'domine-exaudi': 'O Oficiante diz:', 'conclusion-silent': 'A conclusão diz-se em silêncio:', 'dominus-vobiscum-again': 'O Oficiante diz de novo:', benedicamus: 'O Cantor diz então:', benedicat: 'O Oficiante diz então a bênção em voz baixa, recto tono, devagar e com gravidade; no fim, todos fazem o sinal da cruz:', 'marian-antiphon': 'ANTÍFONA MARIANA', 'marian-alma': '(desde o sábado antes do primeiro domingo do Advento até 1 de fevereiro inclusive)', 'marian-ave': '(desde 2 de fevereiro até Quarta-feira Santa inclusive)', 'marian-regina': '(desde o Domingo de Páscoa até à sexta-feira da oitava de Pentecostes inclusive)', 'marian-salve': '(desde o sábado antes do domingo da Santíssima Trindade até à sexta-feira antes do primeiro domingo do Advento inclusive)', 'marian-alma-advent': 'No Advento:', 'marian-alma-christmas': 'Desde as I Vésperas do Natal até às II Vésperas da Purificação:', 'divinum-auxilium': 'Todos fazem o sinal da cruz, e as Completas terminam enquanto o Oficiante diz:', depart: 'Depois todos se levantam e retiram-se em silêncio.', 'all-souls-kneel': 'Todos se ajoelham para as orações seguintes:', 'all-souls-pater': 'Diz-se o {Pater noster} em silêncio até', 'all-souls-collect': 'Oração', 'all-souls-end': 'As Completas terminam assim, sem se acrescentar nenhuma outra oração.', 'note:Psalm': 'Salmo', 'note:Canticle of Simeon': 'Cântico de Simeão', 'note:Short Lesson': 'Leitura breve', 'note:Luke': 'Lucas', 'note:1. Peter': '1 Pedro', 'hymn-unsung': 'Neste tempo, o hino não se pode cantar em português.'}
 });

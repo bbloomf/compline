@@ -99,6 +99,25 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       return start + caps.toLowerCase();
     });
   };
+  // The capitals after the drop cap of a translation sung to the chant, as the Latin has them: none
+  // where the first syllable is a single letter ("A-ve"), the whole word where it's a syllable of
+  // three letters ("HÆC"), and otherwise the first two letters ("TE", "AL-ma", "SAl-ve").
+  var raiseDropCapCaps = function(gabc) {
+    return gabc.replace(/^((?:\s|\([^)]*\))*)([^\s(]+)(\([^)]*\))(\S?)/, function(match, start, syllable, neume, next) {
+      // the letters of its words, not of its tags (<i>, <sp>)
+      var letters = syllable.replace(/<[^>]*>/g, '').match(/\p{L}/gu) || [];
+      if(letters.length < 2) return match;
+      var count = !next && letters.length === 3 ? 3 : 2;
+      var n = 0;
+      return start + syllable.replace(/<[^>]*>|\p{L}/gu, function(letter) {
+        return letter.charAt(0) !== '<' && n++ < count ? letter.toUpperCase() : letter;
+      }) + neume + next;
+    });
+  };
+  // Whether a GABC file has a heading, user-notes or commentary, which the rubrics translate.
+  var hasNotes = function(gabc) {
+    return /^\uFEFF?\s*(user-notes|commentary)\s*:/m.test(gabc || '');
+  };
   // The whole of a GABC file as HTML.  Blank lines separate paragraphs, and in a psalm, a
   // paragraph whose lines all start with a number is laid out like the pointed verses.  Only the
   // first textLines lines are kept, if it's given: the rest of a psalm's intonation file
@@ -116,10 +135,10 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       var useDropCap = ('initial-style' in header)? header['initial-style'] === '1' : useDropCapAttr;
       var html = '';
       if(header['user-notes']) {
-        html += '<i class="red">'+header['user-notes'] + '</i>';
+        html += textMode.noteHtml(header['user-notes']);
       }
       if(header.commentary) {
-        html += '<i class="red" style="float:right">'+header.commentary + '</i>';
+        html += textMode.noteHtml(header.commentary, 'float:right');
       }
       var annotation = (header.annotation && useDropCap)? header.annotation : annotationAttr;
       var prefix = [].concat(annotation || []).map(function(annotation) {
@@ -154,20 +173,20 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
         p.html = '<div class="verses">' + p.lines.map(function(line) {
           var n = parseInt(line.match(verse)[1]);
           var latin = line.replace(verse, '');
-          if(translation) return textMode.verseHtml(p.section, n, latin);
+          if(translation) return textMode.verseHtml(p.section, n, latin, translation.mode);
           return '<p><span class="verse-number">' + n + '.&nbsp;</span>' + latin + '</p>';
         }).join('') + '</div>';
       } else {
         var latin = p.lines.join('<br>').replace(verse, "<span class='red'>$1.</span> ");
         p.html = (translation && !p.section && (paired || !units))?
-          textMode.pairHtml(latin, paired? [units[unit++]] : null) : '<p>' + latin + '</p>';
+          textMode.pairHtml(latin, paired? [units[unit++]] : null, 'p', translation.mode) : '<p>' + latin + '</p>';
       }
     });
     if(units && !paired) {
       console.warn('The translation has ' + units.length + ' units, the chant ' + unitCount, translation.key);
       // the labels stay out of the Latin, which the translation only hides
       return paragraphs.map(function(p) { return p.labels; }).join('') +
-        textMode.pairHtml(paragraphs.map(function(p) { return p.html; }).join(''), units, 'div');
+        textMode.pairHtml(paragraphs.map(function(p) { return p.html; }).join(''), units, 'div', translation.mode);
     }
     return paragraphs.map(function(p) { return p.labels + p.html; }).join('');
   };
@@ -177,9 +196,9 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
   // letters; ‿ joins two words sung on one note; a word with no letters goes with the syllable before
   // it, as in tools/do-import/hymn.js's syllables(), which has to split the same way) go one to each
   // syllable of the chant that has notes.  An elided syllable, whose neume is empty, goes; the bars, the clef and a stanza's number
-  // stay.  The first syllable stays as it's written, not in capitals as the Latin's ("TE lucis"), so
-  // the drop cap reads "B efore", as hymnals print it.  Returns null if the syllables don't match the
-  // notes, which tools/do-import/hymn.js checks.
+  // stay.  The first syllable is as it's written: setGabc puts the capitals after the drop cap
+  // (raiseDropCapCaps).  Returns null if the syllables don't match the notes, which
+  // tools/do-import/hymn.js checks.
   var swapLyrics = function(gabc, unit) {
     var words = unit.split('\n');
     var lines = gabc.split(/\r?\n/);
@@ -238,7 +257,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
     scores.forEach(function(score) {
       var section = textMode.psalmSection(score.header);
       if(!(section? textMode.hasPsalm(section) : units || sung) || translation.intonation) {
-        var verse = section && translation.intonation && textMode.verseTranslationHtml(section, 1);
+        var verse = section && translation.intonation && textMode.verseTranslationHtml(section, 1, translation.mode);
         if(verse) score.translationHtml = '<div class="verses chant-tr">' + verse + '</div>';
         result.push(score);
         return;
@@ -253,7 +272,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
           laterUnit: i > 0
         };
         if(section) {
-          var html = textMode.verseTranslationHtml(section, parseInt(chunk.replace(regexClef, '')));
+          var html = textMode.verseTranslationHtml(section, parseInt(chunk.replace(regexClef, '')), translation.mode);
           if(html) unit.translationHtml = '<div class="verses chant-tr">' + html + '</div>';
         } else {
           unit.index = unitCount++;
@@ -270,7 +289,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       result.forEach(function(unit) {
         if(!('index' in unit)) return;
         unit.sung = sung[unit.index];
-        if(textMode.mode() !== 'both') return;
+        if(translation.mode !== 'both') return;
         var latin = (unit.laterUnit? unit.body : lowerDropCapCaps(unit.body)).split(/\r?\n/).map(gabcLineToHtml).filter(Boolean).map(function(line) {
           return line.replace(/^(\d+)\. /, "<span class='red'>$1.</span> ");
         });
@@ -296,7 +315,8 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
   };
   // The undertie ‿ of a sung hymn comes from a font of its own, which the browser loads only once
   // it's used (style.css); exsurge measures the lyrics before then, so a chant that has one is drawn
-  // again once it has loaded.  done: it has loaded, or failed to.
+  // again once it has loaded, without the widths exsurge cached (it drops them only on the fonts'
+  // loadingdone event, which comes after this).  done: it has loaded, or failed to.
   var undertieFont = null;
   var whenUndertieLoaded = function(redraw) {
     if(!window.document.fonts || !window.document.fonts.load) return;
@@ -394,45 +414,65 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       this.innerHTML = this._noteHtml || '';
       for(var i = 0; i < score.length; ++i) {
         if(score[i].userNotes) {
-          this.insertAdjacentHTML('beforeend', '<i class="red">'+score[i].userNotes + '</i>');
+          this.insertAdjacentHTML('beforeend', textMode.noteHtml(score[i].userNotes));
         }
         if(score[i].commentary) {
-          this.insertAdjacentHTML('beforeend', '<i class="red" style="float:right">'+score[i].commentary + '</i>');
+          this.insertAdjacentHTML('beforeend', textMode.noteHtml(score[i].commentary, 'float:right'));
         }
         score[i].performLayout(ctxt);
         score[i].layoutChantLines(ctxt, width);
         // render the score to svg
+        var firstSvg = this.children.length;
         if(sync) {
           this.insertAdjacentHTML('beforeend', score[i].createSvgForEachLine(ctxt));
         } else {
           // as nodes, which playback lights up note by note (chant-playback.js)
           this.appendChild(makeSvgScalable(score[i].createSvgNode(ctxt), width));
         }
+        // the language of its words, for screen readers: Latin, or the translation's where the hymn
+        // is sung in it (§4b)
+        for(var j = firstSvg; j < this.children.length; ++j) {
+          this.children[j].setAttribute('lang', score[i].lyricsLang);
+        }
         if(score[i].translationHtml) {
           this.insertAdjacentHTML('beforeend', score[i].translationHtml);
         }
       }
+      this.markLang();
+    }
+
+    // The language of the chant's own words outside its scores, for screen readers: Latin.  doLayout
+    // marks each score's SVG, its red labels have none, and a block that holds a translation (a
+    // .tr-pair, .chant-tr or .verses) has it on each of its parts already.
+    markLang() {
+      Array.prototype.forEach.call(this.children, function(child) {
+        if(child.hasAttribute('lang') || child.classList.contains('red') || child.querySelector('[lang]')) return;
+        child.setAttribute('lang', 'la');
+      });
     }
 
     isPlainText() {
       if(!this.hasAttribute('plain-text')) return false;
       // with the translation only, a hymn sung in the translation is still drawn as notes (§4b)
-      var hymn = textMode.mode() === 'tr' && textMode.hymn(this.getAttribute('src'), true);
+      var hymn = textMode.modeOf(this) === 'tr' && textMode.hymn(this.getAttribute('src'), true);
       return !(hymn && hymn.kind === 'sung');
     }
 
-    // The translation of this chant (TRANSLATIONS_PLAN.md §4), or null in 'la' mode.  A psalm's
+    // The translation of this chant (TRANSLATIONS_PLAN.md §4), or null in 'la' mode, with the mode
+    // its section shows in (text-mode.js modeOf).  A psalm's
     // comes verse by verse from the psalter, and anything else's is a unit per paragraph, keyed
     // by its src.  A psalm's intonation (text-lines) has only verse 1.  The hymn's is as hymnMode
     // chooses (§4b): sung is the translation's words for the notes, and unsung says that this
     // tone's doxology can't be sung in the language, so it's shown as text.
     translation() {
-      if(textMode.mode() === 'la') return null;
+      var mode = textMode.modeOf(this);
+      if(mode === 'la') return null;
       var key = this.getAttribute('src');
       var psalm = this.getAttribute('notation') === 'psalms';
-      var hymn = textMode.hymn(key, !this.hasAttribute('plain-text') || textMode.mode() === 'tr');
+      var hymn = textMode.hymn(key, !this.hasAttribute('plain-text') || mode === 'tr');
       var sung = hymn && hymn.kind === 'sung';
       return {
+        mode: mode,
         key: key,
         units: psalm || sung? null : hymn? hymn.units : textMode.texts(key),
         sung: sung? hymn.units : null,
@@ -443,7 +483,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
 
     // Draws the chant again if the text mode or translation has changed since it was drawn.
     updateText() {
-      if(this._gabc && this._textKey !== textMode.renderKey(this.getAttribute('src'))) {
+      if(this._gabc && this._textKey !== textMode.renderKey(this.getAttribute('src'), textMode.modeOf(this), hasNotes(this._gabc))) {
         this.setGabc(this._gabc, this._annotationAttr, this._useDropCapAttr);
       }
     }
@@ -454,10 +494,14 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       this._annotationAttr = annotationAttr;
       this._useDropCapAttr = useDropCapAttr;
       this._width = 0;
-      this._textKey = textMode.renderKey(this.getAttribute('src'));
+      var mode = textMode.modeOf(this);
+      textMode.markMode(this, mode);
+      this._textKey = textMode.renderKey(this.getAttribute('src'), mode, hasNotes(gabc));
       var translation = this.translation();
+      var unsung = textMode.rubric('hymn-unsung');
       this._noteHtml = translation && translation.unsung?
-        "<p class='red hymn-note'><i>Not available to sing in " + textMode.langName() + ' for this season.</i></p>' : '';
+        "<p class='red hymn-note'" + (unsung ? " lang='" + textMode.langAttr() + "'" : '') + '><i>' +
+        (unsung ? textMode.rubricHtml(unsung) : 'Not available to sing in ' + textMode.langName() + ' for this season.') + '</i></p>' : '';
       var useDropCap = [];
       if (useDropCapAttr === 'false') {
         useDropCapAttr = false;
@@ -471,6 +515,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
         // no exsurge layout at all
         this._score = null;
         this.innerHTML = this._noteHtml + gabcToHtml(gabc, annotationAttr, useDropCapAttr, parseInt(this.getAttribute('text-lines')), translation);
+        this.markLang();
         return;
       }
       var mappings = this._mappings = [];
@@ -484,7 +529,9 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
         var elem = this;
         var drawn = this._gabc;
         whenUndertieLoaded(function() {
-          if(elem._gabc === drawn) elem.setGabc(elem._gabc, elem._annotationAttr, elem._useDropCapAttr);
+          if(elem._gabc !== drawn) return;
+          elem._ctxt.clearTextCache();
+          elem.setGabc(elem._gabc, elem._annotationAttr, elem._useDropCapAttr);
         });
       }
       for(var i=0; i<scores.length; ++i) {
@@ -497,17 +544,25 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
           .replace(/(\s)_([^\s*]+)_(\(\))?(\s)/g,"$1^_$2_^$3$4")
           .replace(/(\([cf][1-4]\)|\s)(\d+\.)(\s\S)/g,"$1^$2^$3");
         // the hymn sung in the translation: its words go in after the rewrites above, which are for Latin
-        if(scores[i].sung) {
-          var swapped = swapLyrics(gabc, scores[i].sung);
-          if(swapped) gabc = swapped;
-          else console.warn('The sung translation doesn\'t fit the notes', this.getAttribute('src'), scores[i].sung);
-        }
-        mappings[i] = exsurge.Gabc.createMappingsFromSource(ctxt, gabc);
         if('initial-style' in gabcHeader) {
           useDropCap[i] = gabcHeader['initial-style'] === '1';
         }
         if(!(i in useDropCap)) useDropCap[i] = useDropCapAttr;
+        var lyricsLang = 'la';
+        if(scores[i].sung) {
+          var swapped = swapLyrics(gabc, scores[i].sung);
+          if(swapped) {
+            gabc = useDropCap[i] ? raiseDropCapCaps(swapped) : swapped;
+            lyricsLang = textMode.langAttr();
+          } else console.warn('The sung translation doesn\'t fit the notes', this.getAttribute('src'), scores[i].sung);
+        }
+        mappings[i] = exsurge.Gabc.createMappingsFromSource(ctxt, gabc);
         score[i] = new exsurge.ChantScore(ctxt, mappings[i], useDropCap[i]);
+        // the translation's rules for centering the notes over its syllables, where exsurge has them
+        // (English and Spanish, the languages with a sung hymn); the others keep the Latin's
+        if(lyricsLang !== 'la') {
+          exsurge.Gabc.applyHeader(score[i], ctxt, {language: lyricsLang.split('-')[0]}, {annotation: false, mode: false});
+        }
         if(gabcHeader && gabcHeader.annotation && useDropCap[i]) {
           if(gabcHeader.annotation instanceof Array) {
             score[i].annotation = new exsurge.Annotations(ctxt, gabcHeader.annotation[0], gabcHeader.annotation[1]);
@@ -526,6 +581,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
           score[i].commentary = gabcHeader.commentary;
         }
         score[i].translationHtml = scores[i].translationHtml;
+        score[i].lyricsLang = lyricsLang;
       }
       this.doLayout(_width);
     }

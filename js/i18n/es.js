@@ -6,7 +6,8 @@
 // order, with the Gloria Patri and Sicut erat last; '' is a verse whose translation is part of
 // the verse before.  Each text's units are the paragraphs of its chant, or its index.html block
 // (§7c).  The hymn, Te lucis, is the first two stanzas and each tone's doxology, in each kind of
-// translation the language has (§4b; tools/do-import/hymn.js).
+// translation the language has (§4b; tools/do-import/hymn.js).  The rubrics are the page's, in
+// the language, written for the app (§4d; tools/do-import/extra/es/rubrics.txt).
 define({
   meta: {name: 'Español', dir: 'ltr', doCommit: 'ad87836'},
   psalter: {
@@ -17,7 +18,7 @@ define({
       'Sabedlo: el Señor hizo milagros en mi favor, * y el Señor me escuchará cuando lo invoque.',
       'Temblad y no pequéis, † lo que decís en vuestros corazones, * reflexionadlo en el silencio de vuestro lecho;',
       'Ofreced sacrificios legítimos † y confiad en el Señor. * Hay muchos que dicen: «¿Quién nos hará ver la dicha,',
-      'Si la luz de tu rostro ha huido de nosotros?» * Pero Tú, Señor, has puesto en mi corazón más alegría.',
+      'Si la luz de tu rostro ha huido de nosotros?» * Pero Tú, Señor, has puesto en mi corazón más alegría',
       'Que si abundara * en trigo y en vino.',
       'En paz me acuesto * y en seguida me duermo,',
       'Porque Tú sólo, Señor, * me haces vivir tranquilo.',
@@ -42,8 +43,8 @@ define({
       'Sálvanos, Señor, que se acaban los buenos, * que desaparece la lealtad entre los hombres:',
       'No hacen más que mentir a su prójimo, * hablan con labios embusteros y con doblez de corazón.',
       'Extirpe el Señor los labios embusteros * y la lengua fanfarrona.',
-      'De los que dicen: «la lengua es nuestra fuerza, † nuestros labios nos defienden, * ¿quién será nuestro amo?»',
-      'El Señor responde: «por la opresión del humilde, por el gemido del pobre, * Yo me levantaré,',
+      'De los que dicen: «La lengua es nuestra fuerza, † nuestros labios nos defienden, * ¿quién será nuestro amo?»',
+      'El Señor responde: «Por la opresión del humilde, por el gemido del pobre, * Yo me levantaré,',
       'Y pondré a salvo * al que lo ansía».',
       'Las palabras del Señor son palabras auténticas, * como plata limpia de ganga, refinada siete veces.',
       'Tú nos guardarás, Señor, nos librarás * para siempre de esa gente:',
@@ -55,7 +56,7 @@ define({
       '¿Hasta cuándo, Señor, seguirás olvidándome? * ¿Hasta cuándo me esconderás tu rostro?',
       '¿Hasta cuándo he de estar preocupado, * con el corazón apenado todo el día?',
       '¿Hasta cuándo va a triunfar mi enemigo? * Atiende y respóndeme, Señor, Dios mío;',
-      'Da luz a mis ojos para que no me duerma en la muerte, * para que no diga mi enemigo: «le he podido»,',
+      'Da luz a mis ojos para que no me duerma en la muerte, * para que no diga mi enemigo: «Le he podido»,',
       'Ni se alegre mi adversario de mi fracaso. * Porque yo confío en tu misericordia:',
       'Alegra mi corazón con tu auxilio, † y cantaré al Señor por el bien que me ha hecho, * cantaré el nombre del Señor altísimo.',
       'Gloria al Padre, al Hijo, * y al Espíritu Santo.',
@@ -126,7 +127,7 @@ define({
       'Ya me cuentan con los que bajan a la fosa, * soy como un inválido. Tengo mi cama entre los muertos,',
       'Como los caídos que yacen en el sepulcro, de los cuales ya no guardas memoria, * porque fueron arrancados de tu mano.',
       'Me has colocado en lo hondo de la fosa, * en las tinieblas del fondo;',
-      'Tú cólera pesa sobre mí, * me echas encima todas tus olas.',
+      'Tu cólera pesa sobre mí, * me echas encima todas tus olas.',
       'Has alejado de mí a mis conocidos, * me has hecho repugnante para ellos:',
       'Encerrado, no puedo salir, * y los ojos se me nublan de pesar.',
       'Todo el día te estoy invocando, * tendiendo las manos hacia ti.',
@@ -143,7 +144,7 @@ define({
       'Como era en el principio, ahora y siempre, * por los siglos de los siglos. Amén.'
     ],
     '90': [
-      'Tú que habitas al Amparo del Altísimo, * que vives a la sombra del Omnipotente,',
+      'Tú que habitas al amparo del Altísimo, * que vives a la sombra del Omnipotente,',
       'Di al Señor: «Refugio mío, alcázar mío, * Dios mío, confío en Ti».',
       'Él te librará de la red del cazador, * de la peste funesta.',
       'Te cubrirá con sus plumas, * bajo sus alas te refugiarás:',
@@ -253,7 +254,7 @@ define({
     ],
     '33.II': [
       'Venid, hijos, escuchadme: * os instruiré en el temor del Señor;',
-      '¿Hay alguien que ame la vida y * desee días de prosperidad?',
+      '¿Hay alguien que ame la vida * y desee días de prosperidad?',
       'Guarda tu lengua del mal, * tus labios de la falsedad;',
       'Apártate del mal, obra el bien, * busca la paz y corre tras ella.',
       'Los ojos del Señor miran a los justos, * sus oídos escuchan sus gritos;',
@@ -349,7 +350,7 @@ define({
       'Como un padre siente ternura por sus hijos, siente el Señor ternura por sus fieles; * porque Él conoce nuestra masa,',
       'Se acuerda de que somos barro. * Los días del hombre duran lo que la hierba, florecen como flor del campo,',
       'Que el viento la roza, y ya no existe, * su terreno no volverá a verla.',
-      'Pero la misericordia del Señor dura siempre, * su justicia pasa de hijos a nietos.\nPara los que guardan la alianza * y recitan y cumplen sus mandatos.',
+      'Pero la misericordia del Señor dura siempre, * su justicia pasa de hijos a nietos:\nPara los que guardan la alianza * y recitan y cumplen sus mandatos.',
       '',
       '',
       'El Señor puso en el cielo su trono, * su soberanía gobierna el universo.',
@@ -448,7 +449,7 @@ define({
       'Tú nos guardarás, Señor, nos librarás para siempre.'
     ],
     'psalms/3/ant.gabc': [
-      'El Ángel del Señor acampa en torno a los que le temen y los protege.'
+      'El ángel del Señor acampa en torno a los que le temen y los protege.'
     ],
     'psalms/4/ant.gabc': [
       'Señor, Tú eres mi amparo y mi libertador.'
@@ -457,7 +458,7 @@ define({
       'Alzo mi voz al Señor, clamando; Dios no se olvidará de compadecerme.'
     ],
     'psalms/6/ant.gabc': [
-      'Llegue hasta ti mi suplica, Señor.'
+      'Llegue hasta ti mi súplica, Señor.'
     ],
     'psalms/ant-PT.gabc': [
       'Aleluya, aleluya, aleluya.'
@@ -557,7 +558,7 @@ define({
       'V. El ángel del Señor anunció a María.\nR. Y concibió del Espíritu Santo.'
     ],
     'marian-antiphon/alma-prayer_advent.gabc': [
-      'Oremos.\nDerrama, Señor, tu gracia sobre nuestros corazones; y al reconocer, por el anuncio del ángel, la Encarnación de tu Hijo Jesucristo, conducidos por su Pasión y Cruz, lleguemos a la gloria de su Resurrección. Por Jesucristo Nuestro Señor.\nR. Amén.'
+      'Oremos.\nDerrama, Señor, tu gracia sobre nuestros corazones; y al reconocer, por el anuncio del ángel, la Encarnación de tu Hijo Jesucristo, conducidos por su Pasión y Cruz, lleguemos a la gloria de su Resurrección. Por Jesucristo nuestro Señor.\nR. Amén.'
     ],
     'index:marian-alma-christmas-versicle': [
       'V. Después del parto, oh Virgen, has permanecido inviolada.\nR. Madre de Dios, intercede por nosotros.'
@@ -566,10 +567,10 @@ define({
       'Oremos.\nOh Dios, que por la fecunda virginidad de la bienaventurada María, diste al género humano los tesoros de la salvación eterna; concédenos, te rogamos, que experimentemos en favor nuestro la intercesión de Aquella por quien merecimos recibir al Autor de la vida, nuestro Señor Jesucristo, tu Hijo.\nR. Amén.'
     ],
     'marian-antiphon/ave-regina-caelorum.gabc': [
-      'Salve, Reina de los cielos\ny Señora de los ángeles;\nsalve raíz, salve puerta\nque dio paso a nuestra luz.\nAlégrate, Virgen gloriosa,\nentre todas la más bella;\nsalve, oh hermosa doncella,\nruega a Cristo por nosotros.'
+      'Salve, Reina de los cielos\ny Señora de los ángeles;\nsalve, raíz; salve, puerta\nque dio paso a nuestra luz.\nAlégrate, Virgen gloriosa,\nentre todas la más bella;\nsalve, oh hermosa doncella,\nruega a Cristo por nosotros.'
     ],
     'marian-antiphon/ave-regina-caelorum-solemn.gabc': [
-      'Salve, Reina de los cielos\ny Señora de los ángeles;\nsalve raíz, salve puerta\nque dio paso a nuestra luz.\nAlégrate, Virgen gloriosa,\nentre todas la más bella;\nsalve, oh hermosa doncella,\nruega a Cristo por nosotros.'
+      'Salve, Reina de los cielos\ny Señora de los ángeles;\nsalve, raíz; salve, puerta\nque dio paso a nuestra luz.\nAlégrate, Virgen gloriosa,\nentre todas la más bella;\nsalve, oh hermosa doncella,\nruega a Cristo por nosotros.'
     ],
     'index:marian-ave-versicle': [
       'V. Permíteme cantar tus alabanzas, Virgen santa.\nR. Hazme fuerte contra tus enemigos.'
@@ -590,10 +591,10 @@ define({
       'Oremos.\n¡Oh Dios, que has alegrado al mundo por la resurrección de tu Hijo, nuestro Señor Jesucristo!, concédenos, por la intercesión de la Virgen María, su Madre, llegar a las alegrías de la eternidad. Por el mismo Jesucristo nuestro Señor.\nR. Amén.'
     ],
     'marian-antiphon/salve-regina.gabc': [
-      'Salve, Reina y Madre de misericordia,\nvida, dulzura y esperanza nuestra; Salve.\nA ti llamamos los desterrados hijos de Eva;\na ti suspiramos, gimiendo y llorando,\nen este valle de lágrimas.\nEa, pues, Señora, abogada nuestra,\nvuelve a nosotros esos tus ojos misericordiosos,\ny después de este destierro, muéstranos a Jesús,\nfruto bendito de tu vientre.\n¡Oh clementísima, oh piadosa, oh dulce Virgen María!'
+      'Salve, Reina y Madre de misericordia,\nvida, dulzura y esperanza nuestra; salve.\nA ti llamamos los desterrados hijos de Eva;\na ti suspiramos, gimiendo y llorando,\nen este valle de lágrimas.\nEa, pues, Señora, abogada nuestra,\nvuelve a nosotros esos tus ojos misericordiosos,\ny después de este destierro, muéstranos a Jesús,\nfruto bendito de tu vientre.\n¡Oh clementísima, oh piadosa, oh dulce Virgen María!'
     ],
     'marian-antiphon/salve-regina-solemn.gabc': [
-      'Salve, Reina y Madre de misericordia,\nvida, dulzura y esperanza nuestra; Salve.\nA ti llamamos los desterrados hijos de Eva;\na ti suspiramos, gimiendo y llorando,\nen este valle de lágrimas.\nEa, pues, Señora, abogada nuestra,\nvuelve a nosotros esos tus ojos misericordiosos,\ny después de este destierro, muéstranos a Jesús,\nfruto bendito de tu vientre.\n¡Oh clementísima, oh piadosa, oh dulce Virgen María!'
+      'Salve, Reina y Madre de misericordia,\nvida, dulzura y esperanza nuestra; salve.\nA ti llamamos los desterrados hijos de Eva;\na ti suspiramos, gimiendo y llorando,\nen este valle de lágrimas.\nEa, pues, Señora, abogada nuestra,\nvuelve a nosotros esos tus ojos misericordiosos,\ny después de este destierro, muéstranos a Jesús,\nfruto bendito de tu vientre.\n¡Oh clementísima, oh piadosa, oh dulce Virgen María!'
     ],
     'index:marian-salve-versicle': [
       'V. Ruega por nosotros, santa Madre de Dios.\nR. Para que seamos dignos de alcanzar las promesas de Jesucristo.'
@@ -605,13 +606,13 @@ define({
       'V. Que el auxilio divino permanezca siempre con nosotros.\nR. Amén.'
     ],
     'index:asd-preces': [
-      'V. No nos dejes caer en tentación:\nR. Mas líbranos del mal.\nV. De las puertas del infierno.\nR. Libra, Señor, sus almas.\nV. Descansed en paz.\nR. Amén\nV. Señor, escucha nuestra oración.\nR. Y llegue a ti nuestro clamor.\nV. (Que el Señor esté con vosotros.\nR. Y con tu espíritu.)'
+      'V. No nos dejes caer en tentación.\nR. Mas líbranos del mal.\nV. De las puertas del infierno.\nR. Libra, Señor, sus almas.\nV. Descansen en paz.\nR. Amén.\nV. Señor, escucha nuestra oración.\nR. Y llegue a ti nuestro clamor.\nV. (Que el Señor esté con vosotros.\nR. Y con tu espíritu.)'
     ],
     'index:asd-collect': [
       'Oremos.\nSé propicio, Señor, te rogamos, a las almas de todos tus siervos y siervas, por las cuales imploramos humildemente tu majestad: para que, por estos oficios de piadosa súplica, merezcan llegar al descanso eterno.\nPor nuestro Señor Jesucristo, tu Hijo, que vive y reina contigo en la unidad del Espíritu Santo, Dios, por todos los siglos de los siglos.\nR. Amén.'
     ],
     'index:asd-requiem': [
-      'V. Dales, Señor, el descanso eterno.\nR. Y brille para ellos una luz perpetua.\nV. Descansed en paz.\nR. Amén'
+      'V. Dales, Señor, el descanso eterno.\nR. Y brille para ellos una luz perpetua.\nV. Descansen en paz.\nR. Amén.'
     ]
   },
   hymn: {
@@ -620,14 +621,15 @@ define({
         'A Ti, Creador, pedimos,\nantes que la luz acabe,\nseas por tu gran clemencia\ncentinela que nos guarde.',
         'Aleja los malos sueños,\ny visiones fantasmales;\nreprime a nuestro adversario,\nque nuestros cuerpos no manche.'
       ],
-      doxologies: {Advent: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén', Ascension: 'Gloria a ti, Jesús bendito,\nque al cielo vuelves triunfante,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', 'Christ-the-King': 'Gloria a ti, Jesús bendito,\ndel mundo Rey gobernante,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', Christmas: 'Gloria a ti, Jesús bendito,\nnacido de Virgen Madre,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', Easter: 'Gloria al Padre, gloria al Hijo\nque de la muerte hoy renace,\ny al Paráclito divino,\npor siglos interminables.\nAmén.', Epiphany: 'Gloria a ti, Jesús bendito,\nque a las gentes te mostraste,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', Ferial: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén', 'Holy-Family': 'Jesús, que humilde quisiste\na tus padres sujetarte,\ncon el Padre y el Espíritu\nsiempre gloria se te cante.\nAmén.', Lent: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén', Ordinary: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén', 'Our-Lady': 'Gloria a ti, Jesús bendito,\nnacido de Virgen Madre,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', Passiontide: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén', Pentecost: 'Gloria al Padre, gloria al Hijo\nque de la muerte hoy renace,\ny al Paráclito divino,\npor siglos interminables.\nAmén.', 'Sacred-Heart': 'Gloria a ti, Jesús bendito:\ntu Corazón gracia esparce.\nCon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', 'Seven-Dolors': 'Gloria a ti, Jesús bendito,\nnacido de Virgen Madre,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', Solemn: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén', Transfiguration: 'Gloria a ti, Jesús bendito,\nque a los pequeñuelos te abres,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.'}
+      doxologies: {Advent: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén.', Ascension: 'Gloria a ti, Jesús bendito,\nque al cielo vuelves triunfante,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', 'Christ-the-King': 'Gloria a ti, Jesús bendito,\ndel mundo Rey gobernante,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', Christmas: 'Gloria a ti, Jesús bendito,\nnacido de Virgen Madre,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', Easter: 'Gloria al Padre, gloria al Hijo,\nque de la muerte hoy renace,\ny al Paráclito divino,\npor siglos interminables.\nAmén.', Epiphany: 'Gloria a ti, Jesús bendito,\nque a las gentes te mostraste,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', Ferial: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén.', 'Holy-Family': 'Jesús, que humilde quisiste\na tus padres sujetarte,\ncon el Padre y el Espíritu\nsiempre gloria se te cante.\nAmén.', Lent: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén.', Ordinary: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén.', 'Our-Lady': 'Gloria a ti, Jesús bendito,\nnacido de Virgen Madre,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', Passiontide: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén.', Pentecost: 'Gloria al Padre, gloria al Hijo,\nque de la muerte hoy renace,\ny al Paráclito divino,\npor siglos interminables.\nAmén.', 'Sacred-Heart': 'Gloria a ti, Jesús bendito:\ntu Corazón gracia esparce.\nCon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', 'Seven-Dolors': 'Gloria a ti, Jesús bendito,\nnacido de Virgen Madre,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.', Solemn: 'Hazlo así, Padre amoroso,\nHijo al Padre semejante,\ncon el Espíritu reinas,\npor siglos interminables.\nAmén.', Transfiguration: 'Gloria a ti, Jesús bendito,\nque a los pequeñuelos te abres,\ncon el Padre y el Espíritu,\npor siglos interminables.\nAmén.'}
     },
     sung: {
       stanzas: [
         'A Ti, Cre-a-dor, pe-di-mos,\nan-tes que la luz a-ca-be,\nse-as por tu gran cle-men-cia\ncen-ti-ne-la que nos guar-de.',
         'A-le-ja los ma-los sue-ños,\ny vi-sio-nes fan-tas-ma-les;\nre-pri-me‿a nues-tro‿ad-ver-sa-rio,\nque nues-tros cuer-pos no man-che.'
       ],
-      doxologies: {Advent: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén', Ascension: 'Glo-ria‿a ti, Je-sús ben-di-to,\nque‿al cie-lo vuel-ves triun-fan-te,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', 'Christ-the-King': 'Glo-ria‿a ti, Je-sús ben-di-to,\ndel mun-do Rey go-ber-nan-te,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Christmas: 'Glo-ria‿a ti, Je-sús ben-di-to,\nna-ci-do de Vir-gen Ma-dre,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Easter: 'Glo-ria‿al Pa-dre, glo-ria‿al Hi-jo\nque de la muer-te‿hoy re-na-ce,\ny‿al Pa-rá-cli-to di-vi-no,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Epiphany: 'Glo-ria‿a ti, Je-sús ben-di-to,\nque‿a las gen-tes te mos-tras-te,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Ferial: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén', 'Holy-Family': 'Je-sús, que‿hu-mil-de qui-sis-te\na tus pa-dres su-je-tar-te,\ncon el Pa-dre‿y‿el Es-pí-ri-tu\nsiem-pre glo-ria se te can-te.\nA-mén.', Lent: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén', Ordinary: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén', 'Our-Lady': 'Glo-ria‿a ti, Je-sús ben-di-to,\nna-ci-do de Vir-gen Ma-dre,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Passiontide: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén', Pentecost: 'Glo-ria‿al Pa-dre, glo-ria‿al Hi-jo\nque de la muer-te‿hoy re-na-ce,\ny‿al Pa-rá-cli-to di-vi-no,\npor si-glos in-ter-mi-na-bles.\nA-mén.', 'Sacred-Heart': 'Glo-ria‿a ti, Je-sús ben-di-to:\ntu Co-ra-zón gra-cia‿es-par-ce.\nCon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', 'Seven-Dolors': 'Glo-ria‿a ti, Je-sús ben-di-to,\nna-ci-do de Vir-gen Ma-dre,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Solemn: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén', Transfiguration: 'Glo-ria‿a ti, Je-sús ben-di-to,\nque‿a los pe-que-ñue-los te‿a-bres,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.'}
+      doxologies: {Advent: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Ascension: 'Glo-ria‿a ti, Je-sús ben-di-to,\nque‿al cie-lo vuel-ves triun-fan-te,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', 'Christ-the-King': 'Glo-ria‿a ti, Je-sús ben-di-to,\ndel mun-do Rey go-ber-nan-te,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Christmas: 'Glo-ria‿a ti, Je-sús ben-di-to,\nna-ci-do de Vir-gen Ma-dre,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Easter: 'Glo-ria‿al Pa-dre, glo-ria‿al Hi-jo,\nque de la muer-te‿hoy re-na-ce,\ny‿al Pa-rá-cli-to di-vi-no,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Epiphany: 'Glo-ria‿a ti, Je-sús ben-di-to,\nque‿a las gen-tes te mos-tras-te,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Ferial: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén.', 'Holy-Family': 'Je-sús, que‿hu-mil-de qui-sis-te\na tus pa-dres su-je-tar-te,\ncon el Pa-dre‿y‿el Es-pí-ri-tu\nsiem-pre glo-ria se te can-te.\nA-mén.', Lent: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Ordinary: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén.', 'Our-Lady': 'Glo-ria‿a ti, Je-sús ben-di-to,\nna-ci-do de Vir-gen Ma-dre,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Passiontide: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Pentecost: 'Glo-ria‿al Pa-dre, glo-ria‿al Hi-jo,\nque de la muer-te‿hoy re-na-ce,\ny‿al Pa-rá-cli-to di-vi-no,\npor si-glos in-ter-mi-na-bles.\nA-mén.', 'Sacred-Heart': 'Glo-ria‿a ti, Je-sús ben-di-to:\ntu Co-ra-zón gra-cia‿es-par-ce.\nCon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', 'Seven-Dolors': 'Glo-ria‿a ti, Je-sús ben-di-to,\nna-ci-do de Vir-gen Ma-dre,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Solemn: 'Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,\nHi-jo‿al Pa-dre se-me-jan-te,\ncon el Es-pí-ri-tu rei-nas,\npor si-glos in-ter-mi-na-bles.\nA-mén.', Transfiguration: 'Glo-ria‿a ti, Je-sús ben-di-to,\nque‿a los pe-que-ñue-los te‿a-bres,\ncon el Pa-dre‿y‿el Es-pí-ri-tu,\npor si-glos in-ter-mi-na-bles.\nA-mén.'}
     }
-  }
+  },
+  rubrics: {'holy-thursday': 'El Jueves Santo, las Completas se dicen después de la denudación de los altares, con las velas apagadas y sin canto.', 'good-friday': 'El Viernes Santo, las Completas se dicen después de la solemne acción litúrgica, con las velas apagadas y sin canto.', 'holy-saturday': 'Esta noche no se dicen las Completas.\nEn el rezo privado, se dicen así:', 'lector-domine': 'En ausencia de sacerdote o diácono, el Lector dice abajo «{Dómine}», para pedir la bendición directamente a Nuestro Señor.', lector: 'Lector:', blessing: 'El Oficiante da la bendición:', lesson: 'El Lector o Cantor continúa (a las palabras «{Tu autem... nobis}», solo él hace la genuflexión):', 'adjutorium-nostrum': 'Todos se santiguan mientras el Oficiante dice:', examen: 'Aquí todos guardan un momento de silencio, en el que se puede hacer un breve examen de conciencia o rezar en voz baja un Padre nuestro.', 'confiteor-officiant': 'Entonces el Oficiante hace una inclinación profunda y dice él solo el {Confiteor} en voz baja, recto tono. Después, todos se inclinan profundamente hacia el Oficiante y dicen con la misma voz baja, recto tono:', 'confiteor-priest': 'Después, el Oficiante se endereza, mientras todos los demás, de pie, se inclinan profundamente hacia el Santísimo Sacramento (o hacia el suelo) y dicen en voz baja, recto tono (golpeándose el pecho tres veces en el triple «{Mea culpa}»):', 'misereatur-vestri': 'Después el Oficiante dice:', confiteor: 'Todos, de pie, se inclinan profundamente y dicen juntos una sola vez el {Confiteor} en voz baja, recto tono, así:', 'misereatur-nostri': 'Todos, todavía profundamente inclinados, continúan:', indulgentiam: 'Todos se enderezan y se santiguan mientras dicen:', 'converte-nos': 'Luego todos hacen la señal de la cruz con el pulgar sobre el corazón, mientras el Oficiante dice:', 'deus-in-adjutorium': 'Luego todos se santiguan mientras el Oficiante dice: (Después de la respuesta, todos continúan juntos con el «{Gloria Patri}» entero.)', 'christus-factus-est': 'Luego todos se arrodillan y dicen:', 'triduum-pater': 'Se dice el {Pater noster} entero en silencio.\nDespués se añade en voz alta, sin {Orémus}, la oración:', hymn: 'Luego el Oficiante entona el himno {Te lucis}, que se canta en uno de los tonos que siguen. Todos hacen una leve inclinación en los tres primeros versos de la tercera estrofa.', chapter: 'Luego el Oficiante dice el Capítulo:', responsory: 'Luego el Cantor dice los versos del Responsorio breve, a los que todos responden después de cada invocación:', 'responsory-passiontide': '(En el tiempo de Pasión, salvo en las fiestas de I o II clase, se omite el {Gloria Patri}, y en su lugar todos repiten enseguida «{In manus tuas...}»)', 'dominus-vobiscum': 'El Oficiante introduce la oración:', 'domine-exaudi': 'El Oficiante dice:', 'conclusion-silent': 'La conclusión se dice en silencio:', 'dominus-vobiscum-again': 'El Oficiante dice de nuevo:', benedicamus: 'Luego el Cantor dice:', benedicat: 'Luego el Oficiante dice la bendición en voz baja, recto tono, despacio y con gravedad; al final, todos se santiguan:', 'marian-antiphon': 'ANTÍFONA MARIANA', 'marian-alma': '(desde el sábado anterior al primer domingo de Adviento hasta el 1 de febrero inclusive)', 'marian-ave': '(desde el 2 de febrero hasta el Miércoles Santo inclusive)', 'marian-regina': '(desde el Domingo de Pascua hasta el viernes de la octava de Pentecostés inclusive)', 'marian-salve': '(desde el sábado anterior al domingo de la Santísima Trinidad hasta el viernes anterior al primer domingo de Adviento inclusive)', 'marian-alma-advent': 'En Adviento:', 'marian-alma-christmas': 'Desde las I Vísperas de Navidad hasta las II Vísperas de la Purificación:', 'divinum-auxilium': 'Todos se santiguan, y las Completas terminan cuando el Oficiante dice:', depart: 'Luego todos se levantan y se retiran en silencio.', 'all-souls-kneel': 'Todos se arrodillan para las oraciones siguientes:', 'all-souls-pater': 'Se dice el {Pater noster} en silencio hasta', 'all-souls-collect': 'Oración', 'all-souls-end': 'Las Completas terminan así, sin añadir ninguna otra oración.', 'note:Psalm': 'Salmo', 'note:Canticle of Simeon': 'Cántico de Simeón', 'note:Short Lesson': 'Lectura breve', 'note:Luke': 'Lucas', 'note:1. Peter': '1 Pedro', 'hymn-unsung': 'En este tiempo, el himno no se puede cantar en español.'}
 });

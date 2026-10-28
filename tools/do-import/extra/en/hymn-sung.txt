@@ -40,10 +40,10 @@ A-men.
 
 # DO's is 7.6.7.6, so it can't be sung to this melody (§7f): the importer leaves it out.
 [Holy-Family]
-All praise to Thee, O Je-sus,
-who par-ents dost o-bey;
+All praise to thee, O Je-sus,
+Who par-ents dost o-bey;
 Praise to the sov-er-eign Fa-ther
-and Par-a-clete for aye.
+And Par-a-clete for aye.
 A-men.
 
 # Chosen in §4b, in place of DO's 7.7.7.7 "Hymns of glory, songs of praise"; it follows the Latin
@@ -56,7 +56,7 @@ Be glo-ry through e-ter-ni-ty.
 A-men.
 
 [Ascension]
-All glo-ry, Lord, to Thee we pay,
+All glo-ry, Lord, to thee we pay,
 As-cend-ing o’er the stars to-day;
 All glo-ry, as is ev-er meet,
 To Fa-ther and to Par-a-clete.
@@ -79,8 +79,8 @@ A-men.
 [Transfiguration]
 Je-su, to thee our praise we pay,
 To lit-tle ones re-vealed to-day,
-With Fa-ther and Blest Spir-it One
-Un-til the a-ges' course is done.
+With Fa-ther and blest Spir-it One
+Un-til the a-ges’ course is done.
 A-men.
 
 [Christ-the-King]

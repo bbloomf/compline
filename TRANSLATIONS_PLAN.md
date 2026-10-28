@@ -1,6 +1,6 @@
 # Translations for Compline: plan (rev. 2, multi-language from Divinum Officium)
 
-Status: Phase 0 done (2026-10-26, results in §7a). Phase 1a, the notation levels, done (2026-10-26, notes in §7b). Phase 1, the display, done against a hand-written English stub (2026-10-26, notes and the module format in §7c). Phase 2, the psalter importer, done (2026-10-27, notes and every language's coverage in §7d): Phase 3, the importer for everything else, done (2026-10-27, notes and every language's coverage in §7e): `js/i18n/en.js` is now wholly generated from DO, psalter and texts. Phase 4, English end to end, done (2026-10-27, notes in §7f): English is offered in the menu. Phase 5, more languages, done (2026-10-27, notes in §7g): Français, Español, Italiano, Português and Polski are offered too, with font subsets for their letters; the hand-written texts in each are kept as drafted until a reader of the language checks them in Phase 8 (§7g). Phase 6, Latin-Bea, done (2026-10-27, notes in §7h): the Pius XII psalter is offered last in the menu, as a comparison text, its psalms paired with the Vulgate's by content. Phase 7, the hymn, done (2026-10-27, notes in §7i): *Te lucis* can be shown as a literal or a metrical translation, or sung in English or Spanish to any of the 17 tones. Next: Phase 8, the release. Rev. 3 (2026-10-24) records the answers to the open questions, the full coverage check, the notation levels with six menus (§4c) and the Spanish doxologies. Written against `master` @ 28f86f6, with Divinum Officium (DO) `master` @ b9064d7 (2026-10-23) checked out sparsely for the research below. DO is now pinned at `ad87836` (2026-10-26); §7a lists what that changed.
+Status: Phase 0 done (2026-10-26, results in §7a). Phase 1a, the notation levels, done (2026-10-26, notes in §7b). Phase 1, the display, done against a hand-written English stub (2026-10-26, notes and the module format in §7c). Phase 2, the psalter importer, done (2026-10-27, notes and every language's coverage in §7d): Phase 3, the importer for everything else, done (2026-10-27, notes and every language's coverage in §7e): `js/i18n/en.js` is now wholly generated from DO, psalter and texts. Phase 4, English end to end, done (2026-10-27, notes in §7f): English is offered in the menu. Phase 5, more languages, done (2026-10-27, notes in §7g): Français, Español, Italiano, Português and Polski are offered too, with font subsets for their letters; the hand-written texts in each are kept as drafted until a reader of the language checks them in Phase 8 (§7g). Phase 6, Latin-Bea, done (2026-10-27, notes in §7h): the Pius XII psalter is offered last in the menu, as a comparison text, its psalms paired with the Vulgate's by content. Phase 7, the hymn, done (2026-10-27, notes in §7i): *Te lucis* can be shown as a literal or a metrical translation, or sung in English or Spanish to any of the 17 tones. Phase 8, the release, is ready to publish (2026-10-27, notes in §7j). The typo pass, credits, accessibility and build are done. Publishing to gh-pages, the reports to DO and the Cordova release wait for the user's go-ahead, and the native readers' checklist (`tools/do-import/native-review.md`) is still to be done. Rev. 3 (2026-10-24) records the answers to the open questions, the full coverage check, the notation levels with six menus (§4c) and the Spanish doxologies. Written against `master` @ 28f86f6, with Divinum Officium (DO) `master` @ b9064d7 (2026-10-23) checked out sparsely for the research below. DO is now pinned at `ad87836` (2026-10-26); §7a lists what that changed.
 
 **What changed from rev. 1:** every translation now comes from the [Divinum Officium](https://github.com/DivinumOfficium/divinum-officium) data files (MIT licence), not hand-collected sources. That means the app can offer **every language DO has**, and Latin-Bea, instead of English only.
 
@@ -159,7 +159,7 @@ js/i18n/
 
 ## 4. How each mode displays
 
-Modes are set as body classes: `text-la` | `text-both` | `text-tr`. Every text node gets a correct `lang` attribute. All the included languages are left-to-right.
+Modes are set as classes, `text-la` | `text-both` | `text-tr`, on each block of text (a `.tr-pair`, a psalm's `.verses` and each `<chant-gabc>`), as its section shows: the Text menu's mode, or `tr` where the section's notation menu says "Translation only" (§4c). The Text menu's mode is also on `<body>`, as `page-text-<mode>`, for the menus. Every text node gets a correct `lang` attribute. All the included languages are left-to-right.
 
 ### Latin + translation (`both`)
 
@@ -185,7 +185,7 @@ What the app does today. Translation nodes are hidden, and `chant-element` skips
 - Rejected: keeping the Latin chant (the same as `both`). Singing in the vernacular is out of scope (it needs adapted pointing and melodies per language), **except for the hymn** (§4b).
 
 ### Rubrics and app labels
-Rubrics, menu labels and feast titles (`calendar.js`, 344 entries) **stay in English** (decided). The translation setting only affects liturgical text. Localising the interface is a separate, optional phase. DO has feast titles per language in its `Sancti/` files, but mapping them to `calendar.js` is real work. In translation-only mode, rubrics that quote Latin cue words ("Tu autem…nobis", "Dómine", "Orémus") can get a gloss.
+Menu labels and feast titles (`calendar.js`, 344 entries) **stay in English** (decided). The rubrics did too, until Phase 8: they are now in the translation's language, except in English and Latin-Bea (§4d). Localising the interface is a separate, optional phase. DO has feast titles per language in its `Sancti/` files, but mapping them to `calendar.js` is real work. In translation-only mode, rubrics that quote Latin cue words ("Tu autem…nobis", "Dómine", "Orémus") can get a gloss.
 
 ### Fonts
 `fonts/generator_config.txt` shows the Crimson Text webfonts are **subset** to basic Latin plus the Latin liturgical accents: á é í ó ú ý, ä ë ï ö ü ÿ, æ ǽ œ. French (à è ç ê), Spanish (ñ ¿ ¡), German (ß), Polish, Hungarian (ő ű) and Vietnamese would all fall back to another font partway through words. Fix: add **separate `@font-face` subsets with `unicode-range`** (latin-ext, vietnamese) so browsers only download them when those characters appear, generated from the full Crimson Text. The undertie `‿` (U+203F) isn't in the current subset either. Add it if Crimson Text has the glyph; if not, draw it in CSS or SVG under the joined syllables so it doesn't come from a fallback font.
@@ -328,6 +328,20 @@ Today there are three checkboxes, "Fully Notated Psalms / Chapter / Prayers", an
 - Marian antiphon set to plain text: hide the "Solemn Tone" checkbox. The Te lucis tone selector stays, because it also picks the doxology.
 - This doesn't depend on translations at all, so it can ship first (Phase 1a, §7).
 
+**Translation only, per section (added in Phase 8, at the user's request).** Each of the menus also has "Translation only". That section shows the translation as plain text, as if the Text menu said "Translation only", whatever the Text menu says. With the Text menu on Latin, the translation is then loaded for that section alone, and the Translation menu is enabled so that a language can be chosen. For example, the chant can be sung in Latin with the psalms read in English. A hymn in "Translation only" can still be sung in the translation, as with the Text menu on "Translation only". The psalms' antiphons (an "Other chants" menu sets their notation) and the versicles of the collect show as their sections do (`data-section` in `index.html`). The non-chant texts of `index.html` that aren't in a section (the Confiteor, the Misereatur and so on) follow the Text menu.
+
+### 4d. Rubrics in the translation's language (added in Phase 8, at the user's request)
+
+While a translation is shown, the rubrics are in its language: in "Latin & translation", in "Translation only", and in "Latin" while a section is on "Translation only". With the Latin only, the Translation menu becomes "Rubrics" and sets the rubrics' language: it's the same setting (`trLang`), and the menu offers only the languages with rubrics of their own, so Latin-Bea shows as English. In English and Latin-Bea they stay as `index.html` has them. A Latin text a rubric names ("the Hymn Te lucis") is black and upright, in every language. The menus, their labels (the hymn tones' seasons, In manus tuas) and the feast titles stay in English.
+
+- **What is translated:**
+  - each red rubric of `index.html`, which has a `data-rubric` key;
+  - the headings of the chants (their `user-notes` and `commentary`: "Psalm 7. I.", "Luke 2.") and of the pointed psalms ("Psalm 90");
+  - `chant-element.js`'s note on a hymn that can't be sung in that season.
+- **Where they come from:** `extra/<lang>/rubrics.txt`, written by hand. DO has only a few rubrics (`Psalterium/Common/Rubricae.txt`), worded otherwise, and none of the app's directions to the Officiant, Lector and Cantor or its seasons' dates. The importer's `rubrics.js` checks each file against `index.html`'s keys and puts them in the module as `rubrics`.
+- **Latin cue words** ("{Te lucis}", "{Pater noster}", "«{Dómine}»") are marked `{…}` and shown as `lang=la`; where the English has them outside its italics, so does the translation. Each rubric has its language's `lang`, so it is hyphenated in that language.
+- English's rubrics aren't in its module: the page's are English's.
+
 ---
 
 ## 5. Settings
@@ -337,9 +351,9 @@ Follow the existing pattern (localStorage strings plus controls in `#options-men
 | Key | Values | Default | Control |
 |---|---|---|---|
 | `textMode` | `'la'` \| `'both'` \| `'tr'` | `'la'` | "Text: Latin / Latin & translation / Translation" |
-| `trLang` | `'en'`, `'fr'`, `'es'`, `'it'`, `'pt'`, `'pl'`, `'la-bea'` at launch (the languages at 100%, §2) | **not stored** until the user picks one. Until then it is worked out each time from the browser: the first entry in `navigator.languages` whose main part (`de-AT` → `de`) is an offered language, else `'en'`. Latin-Bea is never picked automatically. | "Translation: …", disabled while `textMode == 'la'`. When the user switches Text away from Latin, it already shows the browser-language choice. Bea is listed as "Latin (Pius XII psalter)". |
-| `hymnMode` | `'literal'` \| `'metrical'` \| `'sung'` | `'literal'` | `<select>` "Hymn: Literal / Metrical / Sung with chant", next to the Te lucis tone selector. Hidden while `textMode == 'la'`. Choices the language can't provide are disabled; fallbacks are in §4b. |
-| `notationPsalms` | `'text'` \| `'pointed'` \| `'full'` | `'pointed'` | "Psalms: Plain text / Pointed / Fully notated" (§4c). Replaces the `fullNotation` checkbox. |
+| `trLang` | `'en'`, `'fr'`, `'es'`, `'it'`, `'pt'`, `'pl'`, `'la-bea'` at launch (the languages at 100%, §2) | **not stored** until the user picks one. Until then it is worked out each time from the browser: the first entry in `navigator.languages` whose main part (`de-AT` → `de`) is an offered language, else `'en'`. Latin-Bea is never picked automatically. | "Translation: …", which becomes "Rubrics: …" while `textMode == 'la'` and no section is in "Translation only" (§4c, §4d). When the user switches Text away from Latin, it already shows the browser-language choice. Bea is listed as "Latin (Pius XII psalter)". |
+| `hymnMode` | `'literal'` \| `'metrical'` \| `'sung'` | `'literal'` | `<select>` "Hymn: Literal / Metrical / Sung with chant", next to the Te lucis tone selector. Hidden while the hymn is shown in Latin only. Choices the language can't provide are disabled; fallbacks are in §4b. |
+| `notationPsalms` | `'text'` \| `'pointed'` \| `'full'` \| `'tr'` | `'pointed'` | "Psalms: Plain text / Pointed / Fully notated / Translation only" (§4c). Replaces the `fullNotation` checkbox. Each `notation*` key below can also be `'tr'`. |
 | `notationChapter` | `'text'` \| `'pointed'` \| `'full'` | `'full'` | "Chapter: …". Replaces `fullNotationChapter`. |
 | `notationPrayers` | `'text'` \| `'pointed'` \| `'full'` | `'pointed'` | "Prayers: …". Replaces `fullNotationPrayers`. |
 | `notationHymn` | `'text'` \| `'full'` | `'full'` | "Hymn: Plain text / Fully notated". New. Placed next to `hymnMode` and the Te lucis tone selector. |
@@ -391,8 +405,8 @@ Follow the existing pattern (localStorage strings plus controls in `#options-men
 | **5. More languages** ✅ | Run the importer for fr, es, it, pt, pl and la-bea, confirm 100% in the coverage report, add font subsets, spot-check each language (ideally with a reader of that language). **Done 2026-10-27 for fr, es, it, pt and pl; notes in §7g. Latin-Bea moved to Phase 6.** | S–M, mostly QA |
 | **6. Latin-Bea as a comparison text** ✅ | Verse-group pairing with a block fallback. Suppress the "translation" where Bea is identical to Latin. **Done 2026-10-27; notes in §7h.** | S |
 | **7. Hymn: literal and sung** ✅ | Literal: the extra-text merge in the importer, plus the English literal hymn and doxologies (content). Sung: hyphenation drafts, the hand-reviewed `hymn-sung.txt` per metrical language, the validator (note count, stanzas, each doxology against each of the 17 tones), lyric swapping in `chant-element`, the `hymnMode` select with its fallbacks and disabled choices, merging the `extra/` overrides (Britt's literal English, the new English and Spanish Easter doxologies). Check every tone in en and es. **Done 2026-10-27; notes in §7i.** | M code (about 150 lines) + S per language to review hyphenation. Entering Britt's English and checking his doxology coverage: S. Entering the Spanish doxologies: S. |
-| **8. Release** | **Typo pass** over every generated language file and the `extra/` texts (spell-check per language, plus reading the new hymn texts aloud, and a native speaker's check of the Spanish doxologies); fix in `extra/` overrides and report upstream to DO. Wide-screen layout polish, print, accessibility, credits/licence in the app ("Translations: Divinum Officium, MIT", plus the source of the literal hymn), gh-pages publish, Cordova merge, rebuild and store submission. | M |
-| *9. Optional* | Localise the interface (rubrics, menu, feast titles), exsurge interlinear lines. Out of scope: singing anything in the vernacular other than the hymn, and singing the Bea psalter. | M–XL each |
+| **8. Release** ⏳ | **Typo pass** over every generated language file and the `extra/` texts (spell-check per language, plus reading the new hymn texts aloud, and a native speaker's check of the Spanish doxologies); fix in `extra/` overrides and report upstream to DO. Wide-screen layout polish, print, accessibility, credits/licence in the app ("Translations: Divinum Officium, MIT", plus the source of the literal hymn), gh-pages publish, Cordova merge, rebuild and store submission. **Everything but the publishing done 2026-10-27; notes in §7j. Publishing, DO reports and Cordova wait for the user; native readers' checklist open.** | M |
+| *9. Optional* | Localise the interface (menu, feast titles; the rubrics are done, §4d), exsurge interlinear lines. Out of scope: singing anything in the vernacular other than the hymn, and singing the Bea psalter. | M–XL each |
 
 Phases 2–3 can run in parallel with Phase 1 once the module format (`psalter`/`texts`/`meta`) is agreed.
 
@@ -456,7 +470,7 @@ define({
 - **If a text's units don't match the chant's paragraphs**, the display doesn't fail: all the units follow the whole chant (after its red labels), and the console says so. The importer's report should catch these first.
 
 **Display, as built:**
-- **Options menu:** "Text" (Latin / Latin & translation / Translation) and "Translation" (disabled while the text is Latin). `?text=` and `?lang=` override them without saving; choosing in a menu removes its override from the address too. Both are hidden while no language is offered (above). `js/text-mode.js` also owns the storage test and the query parsing, which `compline.js` uses. `textMode` defaults to `'la'`; `trLang` is stored only when chosen.
+- **Options menu:** "Text" (Latin / Latin & translation / Translation) and "Translation" ("Rubrics" while the text is Latin, §4d). `?text=` and `?lang=` override them without saving; choosing in a menu removes its override from the address too. Both are hidden while no language is offered (above). `js/text-mode.js` also owns the storage test and the query parsing, which `compline.js` uses. `textMode` defaults to `'la'`; `trLang` is stored only when chosen.
 - **Loading:** `chant-element` doesn't wait for `i18n/<lang>`: chants drawn before it arrives are drawn again when it does (`updateText`), so a slow or failed load never leaves the page without chant. r.js leaves the language modules out of the bundle (checked); gulp `copy` copies `js/i18n/`. A language that fails to load has no texts, so it shows as Latin.
 - **Translation only** makes every section plain text without changing the stored notation choices, and hides the notation menus, the hymn and Marian antiphon menus and "Solemn Tone".
 - **Chants in "Latin & translation":** a notated chant with a translation is split into one score per unit inside its `<chant-gabc>` (§7a), each followed by its translation. A chant with no translation isn't split. A psalm's intonation (`text-lines`) stays whole, followed by verse 1. A fully notated psalm is split per verse. Print uses the same units. Only the first unit has a large initial; the playback session reports that a score's first syllable also opens the play menu, so each unit can still be played.
@@ -705,7 +719,7 @@ The files:
   - The hymn's render key includes `hymnMode`, so changing it redraws only the hymn.
 - **Sung** (`swapLyrics` in `chant-element.js`): after `setGabc`'s rewrites, each syllable with notes gets the next translated syllable, a line for a line.
   - Elided syllables go. The clef, the bars and the stanza numbers stay.
-  - The drop cap is the translation's first letter. The rest of the syllable isn't put in capitals as the Latin's "TE" is, so it reads "B efore".
+  - The drop cap is the translation's first letter. At first the rest of the syllable wasn't put in capitals as the Latin's "TE" is, so it read "B efore". Phase 8 gives it the Latin's capitals (§7j).
   - In "Latin & translation" the Latin follows each stanza, with red slashes, in the translation's grey. In "translation only" the sung score is the only notation on the page, with nothing under it.
   - Where the season can't be sung, a red note under the tone menu says "Not available to sing in English for this season.", and the metrical text is shown.
 - **The undertie:** Crimson has no ‿, so `fonts/undertie.py` draws one: a thin arc under the gap, reaching under the letters either side. It is a one-glyph font, `fonts/crimson-undertie.woff2` (340 bytes) and `.woff`, with the roman subset's metrics. `style.css` gives it `unicode-range: U+203F`, so only a page with a sung Spanish hymn downloads it. The copy globs already include it.
@@ -728,6 +742,218 @@ The files:
   - the Spanish and English hymn texts read aloud as sung.
 - **English Holy Family:** an 8.8.8.8 text would let it be sung. DO's text stays as the metrical one.
 - **Britt's 1952 renderings** could replace the drafts if their copyright is found to have lapsed.
+
+### 7j. Phase 8 notes (2026-10-27)
+
+What's done:
+- the typo pass;
+- the credits and license in the app;
+- accessibility, layout and print;
+- the build.
+
+What waits for the user: publishing to gh-pages, the reports to DO, the Cordova release and the
+store. These steps are drafted outside the repository, in the Phase 8 hand-over notes, with the
+commands to run and the DO report.
+
+**The typo pass.**
+- **The spell check.** Every word of each module and each `extra/` text went through a spell
+  checker in its own language:
+  - macOS's dictionaries for en, fr, es, it and pt;
+  - Hunspell's (nspell with dictionary-pl) for Polish, which macOS lacks.
+
+  It flagged:
+  - English's archaic forms (*-eth*, *shewn*);
+  - Polish's Wujek spellings (*-éj*, *jeźli*);
+  - a few real slips (*perchè*, *cheiíssima*, *Descansed*).
+
+  A script then looked for double spaces, stray spaces before punctuation, doubled words, straight
+  quotes and unbalanced brackets.
+- **The reading.** A full reading of each language, against DO's files and the Latin, found what a
+  spell checker can't:
+  - real words in the wrong place (*Tú cólera*, *suplica*, *Cosi*, *nelle fede*);
+  - missing or wrong punctuation;
+  - capitals that contradict the text's own use.
+- **The fixes.** Clear slips are fixed in `extra/<lang>/`, never in the modules:
+  - as `[@file:section]` copies of DO's sections;
+  - as psalm-line overrides;
+  - as respellings in `spelling.txt`.
+
+  Each has a comment saying what it fixes. Counts, as rows of the reviews; one override can fix a
+  text in several places:
+
+  | Language | Fixed | Skipped |
+  |---|---|---|
+  | English | 24 | 4: the In manus rows (below), and the Per Dominum, a question of wording |
+  | Français | 20 | 4 |
+  | Español | 18 | 4 |
+  | Italiano | 25 | 15 |
+  | Português | 7 | 0 |
+  | Polski | 35 | 16 |
+
+  Every one was checked in the module diff.
+- **What changed in English.**
+  - Ps 69 "’T is well" became "’Tis well". The Psalm 69 override gives both of the repeated `69:4`
+    lines, because the *n*-th line replaces the *n*-th (§7g).
+  - `spelling.txt` gained *gray* and *sepulcher(s)*, and *mercy’s* and *world’s* with a curly
+    apostrophe like the rest of DO's English.
+  - The Easter-octave antiphon's capitals.
+  - All Souls' "Deliver their souls, O Lord." (DO's own `Commune/C9`).
+  - The Alma Redemptoris Mater's punctuation, and "by that joy".
+  - "our Lord" in the Christmas collect.
+  - In the Regina cæli, "O Queen of heaven, rejoice!" and "For he whom".
+  - In the Salve, "Hail, holy Queen", "in this valley of tears", "O holy Mother of God", and in
+    its collect "who, by…" and "thy Son".
+  - "thee" and "today" in the Ascension doxology.
+  - The Holy Family doxology's capitals.
+  - The Transfiguration doxology's "blest" and "ages’".
+- **What was left alone in every language.**
+  - **The capital after the In manus `*`** stays, also where the fully notated form drops the `*`
+    (§7g). The app's own Latin chant does the same ("Dómine, * Commendo", and "Dómine, Commendo"
+    in `_full`), so the translations mirror the chant.
+  - **Questions of wording** went to the native readers' checklist, not into the modules. Among
+    them:
+    - English's "Holy Spirit" beside "Holy Ghost", the Wednesday antiphon (a mistranslation),
+      and the Per Dominum's word order;
+    - Italian's two mistranslations, "del suo popolo" and "Hanno allontanato", and "fa"/"fa'";
+    - French's *Vous*/*vous* for God;
+    - Spanish's *Ti*/*ti*.
+- **Re-import.** `node tools/do-import/import.js en fr es it pt pl la-bea` gives the same files twice
+  over. The coverage is unchanged: 26/26 sections and 87/87 texts in each language, every Latin unit
+  matching, and Spanish sung on 17 of 17 tones and English on 16. Latin-Bea doesn't change.
+
+**The native readers' checklist** is `tools/do-import/native-review.md`, one section per language.
+It has each text written for the app, with its reason:
+- the Spanish doxologies and the three rewritten lines;
+- every language's priest's forms (§7g);
+- the Polish and Spanish All Souls collects;
+- the Jube forms;
+- Spanish Ps 4:5;
+- the Italian psalm verses without DO's brackets;
+- the English and Spanish hymns, to be sung aloud.
+
+It also has the questions of wording, and the possible slips only a native reader can settle
+(Polish *powienie*, *szędziwości*). The full reviews, with a reason for each row, are in the Phase 8
+hand-over notes.
+
+**The report to DO** is drafted per language: file, section, line, the text, the fix. It has 111
+items and two notes on verse keys:
+- Italiano's and Polski's `11:6` for `11:6b` (§2);
+- Latin-Bea's shifted keys (§7h).
+
+It isn't filed. Once DO fixes a slip, the override can go at the next re-pin, and the importer
+shows an override that no longer changes anything.
+
+**Credits and license.** `index.html` has a `<footer id='credits'>` at the end of the page. It is
+shown in "Latin & translation" and "translation only", hidden in Latin only, and printed.
+- "Translations: Divinum Officium (divinumofficium.com), MIT license." is a `<details>`. Opening
+  it loads `js/i18n/LICENSE-divinum-officium.txt` with `$.get`, which works in Cordova as the
+  psalm fragments do. The license's paragraphs are rewrapped to the page.
+- There are no links, so nothing navigates the Cordova app's web view away.
+- Below it, a line for each language that has text written for the app, picked by
+  `data-credit-lang` (`showCredits` in `js/compline.js`):
+  - every language but Latin-Bea: the texts DO doesn't have, such as the priest's forms;
+  - English: the literal hymn is Britt's (1922), and the doxologies he doesn't translate, with
+    the metrical Easter doxology, were written for the app;
+  - Español: the doxologies in eight-syllable verse were written for the app, and three of DO's
+    lines rewritten.
+
+**Accessibility.**
+- **The page's language.** `<html lang='en'>` is new: the page's own text (rubrics, menus) is
+  English, and it had no `lang`.
+  - `hyphenate.js` treats that root `lang` as "don't hyphenate", so no English text gained soft
+    hyphens. Checked: none in the rubrics, labels or credits.
+  - A chant's own words had no `lang` either, so they now inherited English. `markLang` in
+    `chant-element.js` gives them one:
+    - each SVG and plain-text block is `la`;
+    - an SVG is the translation's `lang` (`textMode.langAttr()`) where the hymn is sung in it;
+    - red labels get none;
+    - a block that already holds `lang`ed parts (`.tr-pair`, `.chant-tr`, `.verses`) is skipped.
+
+  Every translation block already had its `lang` (`la-x-bea` for Bea).
+- **Labels.** Five controls had no accessible name: Region, Theme, the date, the feast menu and
+  the Marian antiphon menu. They have an `aria-label` now, which changes nothing on screen.
+  Every other control is inside its `<label>`.
+- **Contrast** (WCAG), light and dark:
+  - text 21:1;
+  - translation and credits (`--tr-color`) 7.5:1 light, 10.9:1 dark;
+  - rubrics 5.2:1 light, 7.3:1 dark;
+  - links 4.6:1 light, 9.4:1 dark;
+  - the dark menu 17.4:1.
+
+  All pass AA.
+
+**Layout and print.**
+- At 1400 px in "Latin & translation", nothing is wider than the page.
+- Print with real print media (`print.mjs`), on Sunday 2026-11-08:
+  - Latin only: 7 pages, no credits;
+  - English in "Latin & translation": 11 pages; in "translation only": 6 pages;
+  - Polski: 10 pages;
+  - Latin-Bea: 8 pages, with the DO line only;
+  - Español with the hymn sung and the psalms fully notated: 13 pages.
+
+  The translations are beside the Latin, the credits at the end, and the license closed to its
+  summary.
+
+**Checked in the browser** with Phase 4's `check.js`, after the fixes:
+- **Dates:** an ordinary Sunday and Wednesday, All Souls, Holy Thursday, Good Friday, Easter
+  Monday, Christmas and a Paschaltide Wednesday.
+- **Languages and modes:** all six languages in "Latin & translation" and "translation only",
+  and English and Español with the hymn sung.
+- **Results:** every run passes, and the credits show the right lines for each language.
+  - The sung hymn's SVGs have the translation's `lang`.
+  - In Latin only, the credits are hidden.
+  - Latin-Bea gives what §7h describes: `check.js` isn't Bea-aware, so it flags the
+    `tr-same` texts, as expected.
+
+**The build.** `gulp` (Node 22) copies everything §6 lists into `dist/`:
+- the seven language modules and `LICENSE-divinum-officium.txt`, the same as `js/i18n/`;
+- `js/hyphenation/` and its license;
+- all 26 font files: the `-ext` and `-vi` subsets and `crimson-undertie`.
+
+`dist/index.html` has the footer and `lang`, and `dist/js/compline.js` has the new code.
+
+The built `dist/`, served on its own, was checked with `check.js`:
+- Latin only, then each of the seven languages in both modes, on a Sunday and a Paschaltide
+  Wednesday. Every run passes, with the right credits in each.
+- Three runs in the first pass did fail: English and French in "Latin & translation", while each
+  language loaded for the first time in a hidden browser pane. They pass on a re-run with 3 s for
+  each date.
+- The license opens.
+- A French page loads `crimson-roman-ext.woff2`. There were no console errors.
+
+**After the code review, at the user's request.**
+- **The capitals after the sung hymn's drop cap** follow the rule the Latin GABC files already
+  keep (`raiseDropCapCaps` in `chant-element.js`):
+  - none where the first syllable is a single letter ("A-ve", Spanish "A Ti");
+  - the whole word where it is one syllable of three letters ("HÆC");
+  - otherwise the first two letters ("TE", "AL-ma", "SAl-ve", "FRa-tres", English "BE-fore").
+  
+  They are put in when the hymn is drawn, so `hymn-sung.txt` keeps the text as written.
+- **"Translation only" for each section** (§4c). Each block of text now has its own mode class in
+  place of the one on `<body>`. `text-mode.js` gives each block its section's mode (`modeOf`), and
+  `style.css` reads the class on the block. The Text menu's mode stays on `<body>` as
+  `page-text-<mode>`, for the menus. Checked:
+  - Psalms in English with the rest in Latin;
+  - in "Latin & translation", the chapter and the sung hymn in English only, the chapter one column
+    wide;
+  - "Other chants" to "Translation only" and back, which once left "Everything else" behind;
+  - `check.js` in both modes, in each of the six languages, on eight dates.
+
+**Rubrics in the translation's language** (§4d), at the user's request. Claude drafted the 48 rubrics of each of es, fr, it, pt and pl, which DO doesn't have (`extra/<lang>/rubrics.txt`), and they are on the native readers' checklist. Checked:
+- each language and English and Latin-Bea, switched in the menu and back;
+- "Latin" with the psalms on "Translation only";
+- the headings, pointed and fully notated;
+- the Triduum's and All Souls' rubrics around the Latin "Pater noster" and "Orémus";
+- `check.js` in both modes, in each of the six languages, on eight dates, with a new check that no visible rubric is left in English.
+
+The English hymn rubric said "All bow slightly for the first three stanzas of the third verse". It now says "the first three lines of the third stanza", where the doxology names the Trinity, as the drafts do.
+
+**Left for later:**
+- the native readers' checklist, and any fixes it brings;
+- the publishing steps, each on the user's yes;
+- the rubric glosses in "translation only" (§7f);
+- a phone's 60% lyric size (§7f);
+- the timings on a real phone (§7a).
 
 ---
 

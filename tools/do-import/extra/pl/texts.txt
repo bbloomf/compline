@@ -26,3 +26,147 @@ V. Pobłogosław, Panie.
 $Oremus
 v. Bądź miłościw, prosimy, Panie, duszom wszystkich sług i służebnic Twoich, za które pokornie błagamy majestat Twój: aby przez te pobożne błagania i modły zasłużyły dostąpić wiecznego odpoczynku.
 $Per Dominum
+
+# Typos in DO's text, with no new wording (Phase 8).  Each section is DO's, with only the fix.
+
+# Psalm 85:17 with a comma before "Panie", where DO has a full stop ("iżeś ty. Panie").
+[@Psalterium/Psalmorum/Psalm85]
+85:17 Uczyń zemną znak ku dobremu, aby ujrzeli ci, którzy mię nienawidzą, a byli zawstydzeni: * iżeś ty, Panie, ratował mię, i pocieszyłeś mię.
+
+# Psalm 142:1 with the colon before the * that the Latin has ("in veritáte tua: * exáudi").
+[@Psalterium/Psalmorum/Psalm142]
+142:1 Panie, wysłuchaj modlitwę moję: przyjmij w uszy prośbę moję w prawdzie twéj: * wysłuchaj mię w sprawiedliwości twojéj.
+
+# The Per Dominum with the comma before "Bóg" (Deus), which DO lacks.
+[@Prayers:Per Dominum]
+r. Przez naszego Pana Jezusa Chrystusa, Twojego Syna: który z Tobą żyje i króluje w jedności Ducha Świętego, Bóg, przez wszystkie wieki wieków.
+R. Amen.
+
+# The Confiteor with "Świętych" capitalized, as "wszystkim Świętym" is earlier in it; DO has one of each.
+[@Prayers:Confiteor_]
+v. Spowiadam się Bogu wszechmogącemu, Najświętszej Maryi zawsze Dziewicy, świętemu Michałowi Archaniołowi, świętemu Janowi Chrzcicielowi, świętym Apostołom Piotrowi i Pawłowi, i wszystkim Świętym, że bardzo zgrzeszyłem, myślą, mową i uczynkiem: /:bijąc się w piersi:/ moja wina, moja wina, moja bardzo wielka wina. Przeto błagam Najświętszą Maryję zawsze Dziewicę, świętego Michała Archanioła, świętego Jana Chrzciciela, świętych Apostołów Piotra i Pawła, i wszystkich Świętych, o modlitwę za mnie do Pana Boga naszego.
+
+# Converte nos with the comma before the vocative "Boże", which DO lacks.
+[@Prayers:Converte nos]
+V. Nawróć nas, +++ Boże, nasz zbawco.
+R. I odwróć swój gniew od nas.
+
+# Laus tibi with the comma before the vocative "Panie", which DO lacks.
+[@Prayers:Alleluia]
+v. Alleluja.
+v. Chwała Tobie, Panie, Królu wiecznej chwały.
+
+# A porta inferi's response as DO's own Commune/C9 [Nocturn 1 Versum] has it; DO has "Wybaw, duszę ich o Panie."
+[@Prayers:Aportainferi]
+V. Od wrót piekielnych.
+R. Wybaw dusze ich, Panie.
+
+# Requiescant in pace with the full stop after "Amen", which DO lacks.
+[@Prayers:Requiescant]
+V. Niech odpoczywają w pokoju.
+R. Amen.
+
+# Custodi nos with the comma before the vocative "Panie", as DO's [Ant 4] has it ("Strzeż nas, * Panie").
+[@Minor:Versum 4]
+V. Strzeż nas, Panie, jak źrenicy oka.
+R. Pod cieniem Twych skrzydeł obroń nas.
+
+# Alma Redemptoris Mater: a comma before the vocative "Gwiazdo morza!" and "pozdrowiona" in lower case in mid-line;
+# in the prayer, "prosimy Cię, Panie," set off (as the Visita's) and "Syna Twojego," closing its apposition.
+[@Mariaant:Advent]
+{:S-AlmaRedemptoris:}v. Święta Odkupiciela Matko, któraś otwartą nieba bramą pozostała,
+Gwiazdo morza! Wspomóż upadły lud,
+Gdy powstać usiłuje. Tyś zrodziła
+Ku zdumieniu całej natury, Twojego Świętego Stworzyciela,
+Panną będąc przedtem i potem, pozdrowiona usty Gabriela,
+Okaż miłosierdzie grzesznikom.
+_
+V. {::}Anioł Pański zwiastował Pannie Maryi.
+R. I poczęła z Ducha Świętego.
+_
+$Oremus
+v. Łaskę Twoją, prosimy Cię, Panie, racz wlać w serca nasze, abyśmy, którzy za zwiastowaniem anielskim Wcielenie Chrystusa, Syna Twojego, poznali, przez mękę Jego i krzyż do chwały zmartwychwstania byli doprowadzeni. Przez tegoż Chrystusa Pana naszego. Amen.
+
+# The same in Christmastide's Alma; the versicle's vocative "Panno" set off; in the prayer, the opening comma of
+# "prosimy Cię," and "Chrystusa, Syna Twego".
+[@Mariaant:Nativiti]
+{:S-AlmaRedemptoris:}v. Święta Odkupiciela Matko, któraś otwartą nieba bramą pozostała,
+Gwiazdo morza! Wspomóż upadły lud,
+Gdy powstać usiłuje. Tyś zrodziła
+Ku zdumieniu całej natury, Twojego Świętego Stworzyciela,
+Panną będąc przedtem i potem, pozdrowiona usty Gabriela,
+Okaż miłosierdzie grzesznikom.
+_
+V. {::}Po porodzeniu, Panno, niepokalaną pozostałaś.
+R. Boża Rodzicielko, wstaw się za nami.
+_
+$Oremus
+v. Boże, któryś przez płodne Dziewictwo błogosławionej Maryi Panny zgotował rodzajowi ludzkiemu nagrodę żywota wiecznego, daj, prosimy Cię, doznać skutków pośrednictwa Tej, przez którą otrzymaliśmy Dawcę żywota, Pana naszego Jezusa Chrystusa, Syna Twego. Amen.
+
+# Ave Regina caelorum: "witaj, Bramo," as "Witaj, Różdżko," on the same line.
+[@Mariaant:Quadragesimae]
+{:S-AveRegina:}v. Witaj, niebios Królowo,
+Witaj, Pani aniołów,
+Witaj, Różdżko, witaj, Bramo,
+Jasność zrodziłaś światu.
+_
+Ciesz się, Panno chwalebna,
+Ponad wszystkie piękniejsza,
+Witaj, o Najśliczniejsza,
+Proś Chrystusa za nami.
+_
+V. {::}Dozwól mi chwalić Cię, o Pani święta.
+R. Daj mi moc przeciw nieprzyjaciołom Twoim.
+_
+$Oremus
+v. Udziel nam, prosimy Cię, miłosierny Boże, pomocy w słabościach naszych, abyśmy, którzy świętej Bożej Rodzicielce cześć oddajemy, za jej przyczyną i wstawiennictwem, powstali z nieprawości naszych. Przez tegoż Chrystusa, Pana naszego. Amen.
+
+# Regina caeli: the comma before "jak powiedział"; in the prayer, "Jezusa Chrystusa," closing the apposition opened
+# after "Syna swojego".
+[@Mariaant:Paschalis]
+{:S-ReginaCaeli:}v. Królowo nieba, wesel się, alleluja,
+Bo Ten, któregoś nosiła, alleluja,
+Zmartwychwstał, jak powiedział, alleluja,
+Módl się za nami do Boga, alleluja.
+_
+V. {::}Raduj się i wesel, Panno Maryjo, alleluja.
+R. Bo zmartwychwstał Pan prawdziwie, alleluja.
+_
+$Oremus
+v. Boże, któryś przez zmartwychwstanie Syna swojego, Pana naszego Jezusa Chrystusa, świat uweselić raczył, daj nam, prosimy, abyśmy przez Jego Rodzicielkę Pannę Maryję dostąpili radości życia wiecznego. Przez tegoż Chrystusa Pana naszego. Amen.
+
+# Salve Regina: "Witaj, Królowo," (as the Ave Regina's "Witaj, niebios Królowo"); the versicle with the comma and
+# the full stop that DO's [Ant ad S_Dominicum] has.
+[@Mariaant:Postpentecost]
+{:S-SalveRegina:}v. Witaj, Królowo, Matko Miłosierdzia,
+życie, słodyczy i nadziejo nasza, witaj!
+Do Ciebie wołamy wygnańcy, synowie Ewy;
+do Ciebie wzdychamy jęcząc i płacząc
+na tym łez padole.
+Przeto, Orędowniczko nasza,
+one miłosierne oczy Twoje na nas zwróć,
+a Jezusa, błogosławiony owoc żywota Twojego,
+po tym wygnaniu nam okaż.
+O łaskawa, o litościwa, o słodka Panno Maryjo!
+_
+V. {::}Módl się za nami, święta Boża Rodzicielko.
+R. Abyśmy się stali godnymi obietnic Chrystusowych.
+_
+$Oremus
+v. Wszechmogący, wieczny Boże, który ciało i duszę chwalebnej Dziewicy Matki Maryi, przez działanie Ducha Świętego, przygotowałeś, aby było godnym zamieszkania przez Twego Syna: daj, abyśmy przez łaskawe wstawiennictwo tej, której wspomnieniem się cieszymy, byli uwolnieni od zła doczesnego i śmierci wiecznej. Przez tegoż Chrystusa, Pana naszego. Amen.
+
+# The Sacred Heart's doxology without the capital in "I Przez".
+[@Doxologies:Heart]
+Jezu, niech Tobie będzie chwała,
+Który nam z serca łaski zlewasz,
+Z Ojcem — z Ożywicielem, Duchem,
+I przez nieskończone wieki.
+Amen.
+
+# The Transfiguration's doxology without the capital in "Maluczkim" (parvulis).
+[@Sancti/08-06:Doxology]
+O Jezu, co się objawiasz maluczkim,
+Niech Ci cześć będzie
+Z Ożywicielem i Ojcem
+W nieskończone wieki.
+Amen.

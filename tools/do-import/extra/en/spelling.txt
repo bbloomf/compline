@@ -7,3 +7,9 @@ laboured labored
 labours labors
 neighbour neighbor
 saviour savior
+grey gray
+sepulchre sepulcher
+sepulchres sepulchers
+# DO's few straight apostrophes, where the rest of its English has ’ (§7j)
+mercy's mercy’s
+world's world’s
