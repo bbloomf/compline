@@ -555,6 +555,11 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
         }
         mappings[i] = exsurge.Gabc.createMappingsFromSource(ctxt, gabc);
         score[i] = new exsurge.ChantScore(ctxt, mappings[i], useDropCap[i]);
+        // the translation's rules for centering the notes over its syllables, where exsurge has them
+        // (English and Spanish, the languages with a sung hymn); the others keep the Latin's
+        if(lyricsLang !== 'la') {
+          exsurge.Gabc.applyHeader(score[i], ctxt, {language: lyricsLang.split('-')[0]}, {annotation: false, mode: false});
+        }
         if(gabcHeader && gabcHeader.annotation && useDropCap[i]) {
           if(gabcHeader.annotation instanceof Array) {
             score[i].annotation = new exsurge.Annotations(ctxt, gabcHeader.annotation[0], gabcHeader.annotation[1]);
