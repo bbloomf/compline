@@ -20,16 +20,18 @@
     <li><label>Region&nbsp;<select id='selectRegion'></select></label></li>
     <li><label>Text&nbsp;<select id='selectTextMode'><option value='la'>Latin</option><option value='both'>Latin &amp; translation</option><option value='tr'>Translation</option></select></label></li>
     <li><label><span id='trLangLabel'>Translation</span>&nbsp;<select id='selectTrLang'></select></label></li>
-    <li class='notation-menu'><label>Psalms&nbsp;<select notation='psalms'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-    <li class='notation-menu'><label>Chapter&nbsp;<select notation='chapter'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-    <li class='notation-menu'><label>Prayers&nbsp;<select notation='prayers'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-    <li class='notation-menu'><label>Other chants&nbsp;<select id='notation-other-chants'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option><option value='mixed' disabled hidden>Mixed</option></select></label><button type='button' class='expander' aria-expanded='false' aria-controls='notation-other-chants-list' aria-label='Each chant'>&#9656;</button>
+    <li class='notation-menu'><button type='button' class='jump' data-jump='#placeholder' aria-label='Go to the psalms'></button><label>Psalms&nbsp;<select notation='psalms'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
+    <li class='notation-menu'><button type='button' class='jump' data-jump='#canticle' aria-label='Go to the canticle'></button><label>Canticle&nbsp;<select notation='canticle'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
+    <li class='notation-menu'><button type='button' class='jump' data-jump='[data-rubric=chapter]' aria-label='Go to the chapter'></button><label>Chapter&nbsp;<select notation='chapter'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
+    <li class='notation-menu'><button type='button' class='jump' data-jump='[data-section=prayers]' aria-label='Go to the prayers'></button><label>Prayers&nbsp;<select notation='prayers'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
+    <li class='notation-menu'><span class='jump'></span><label>Other chants&nbsp;<select id='notation-other-chants'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option><option value='mixed' disabled hidden>Mixed</option></select></label><button type='button' class='expander' aria-expanded='false' aria-controls='notation-other-chants-list' aria-label='Each chant'>&#9656;</button>
       <ul id='notation-other-chants-list' hidden>
-        <li><label>Hymn&nbsp;<select notation='hymn'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-        <li><label>Marian antiphon&nbsp;<select notation='marian'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-        <li><label>Everything else&nbsp;<select notation='chants'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
+        <li><button type='button' class='jump' data-jump='#hymn' aria-label='Go to the hymn'></button><label>Hymn&nbsp;<select notation='hymn'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='sung'>Fully notated translation</option><option value='tr'>Translation only</option></select></label></li>
+        <li><button type='button' class='jump' data-jump='#marian' aria-label='Go to the Marian antiphon'></button><label>Marian antiphon&nbsp;<select notation='marian'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
+        <li><span class='jump'></span><label>Everything else&nbsp;<select notation='chants'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
       </ul>
     </li>
+    <li class='hymn-notation-menu'><button type='button' class='jump' data-jump='#hymn' aria-label='Go to the hymn'></button><label>Hymn&nbsp;<select notation='hymn'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='sung'>Fully notated translation</option><option value='tr'>Translation only</option></select></label></li>
     <li><label>Theme&nbsp;<select id='selectTheme'><option value="auto">Auto (follow device)</option><option value="light">Light</option><option value="dark">Dark</option></select></label></li>
   </ul>
 </div>
@@ -131,8 +133,8 @@ In private recitation, compline is said as follows:
 Afterwards there is added aloud, without</i> <span lang='la'>Orémus</span><i class='red'>, the collect:</i></span>
 </div>
 <div exclude='easter-3:easter+5 allSouls'>
-<div class='notation-section'>
-<p class='red notation-section-title' data-rubric='hymn'><i>The Officiant then intones the Hymn </i><span class='cited' lang='la'>Te lucis</span><i> which is sung in one of the tones given below.  All bow slightly for the first three lines of the third stanza.</i></p>
+<div id='hymn'>
+<p class='red' data-rubric='hymn'><i>The Officiant then intones the Hymn </i><span class='cited' lang='la'>Te lucis</span><i> which is sung in one of the tones given below.  All bow slightly for the first three lines of the third stanza.</i></p>
 <div id='te-lucis-choices' class="btn-group hidden-print" name="te-lucis">
   <button type="button" class="btn btn-lg btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <span class='lbl'>Throughout the year</span> <span class="caret"></span>
@@ -157,8 +159,7 @@ Afterwards there is added aloud, without</i> <span lang='la'>Orémus</span><i cl
     <li><a class='btn-lg' href='#' value='Sacred-Heart' select-date='sacredHeart-1:sacredHeart' id='te-lucis-Sacred-Heart'>Sacred Heart <i class='h5 red'>(On the Feast of the Sacred Heart of Jesus)</i></a></li>
   </ul></div>
 </div>
-<div class='notation-choice hidden-print'><label class='notation-level'>Hymn&nbsp;<select notation='hymn'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></div>
-<div class='hymn-mode-choice hidden-print' hidden><label>Hymn translation&nbsp;<select id='selectHymnMode'><option value='literal'>Literal</option><option value='metrical'>Metrical</option><option value='sung'>Sung with chant</option></select></label></div>
+<div class='hymn-mode-choice hidden-print' hidden><label>Hymn translation&nbsp;<select id='selectHymnMode'><option value='literal'>Literal</option><option value='metrical'>Metrical</option></select></label></div>
 <chant-gabc id='te-lucis' notation='hymn' src='te-lucis/Ferial.gabc'></chant-gabc>
 </div>
 <i class='red' data-rubric='chapter'>The Officiant then says the Chapter:</i>
@@ -191,9 +192,9 @@ Tu autem in nobis es, Dómine,&nbsp;<span class='red'>†</span> et nomen sanctu
 <div class='in-manus-tuas pt_full'><chant-gabc src='custodi-nos-pt.gabc'></chant-gabc></div>
 <br/>
 </div>
-<div id="canticle" data-section='psalms' exclude='easter-3:easter-1'>
+<div id="canticle" data-section='canticle' exclude='easter-3:easter-1'>
 <chant-gabc src='canticle-ant.gabc'></chant-gabc>
-<chant-gabc notation='psalms' text-lines='1' src='canticle-psalm.gabc'></chant-gabc>
+<chant-gabc notation='canticle' text-lines='1' src='canticle-psalm.gabc'></chant-gabc>
 <div class="verses" data-psalm='nunc-dimittis'><p><span class="verse-number">2.&nbsp;</span><i>Quia</i> vidérunt <b>ó</b>culi <b>me</b>i&nbsp;<span class='red'>*</span> salutá<i>re</i> <b>tu</b>um:<br></p><p><span class="verse-number">3.&nbsp;</span><b>Quod</b> pa<b>rá</b>sti&nbsp;<span class='red'>*</span> ante fáciem ómnium po<i>pu</i><b>ló</b>rum:<br></p><p><span class="verse-number">4.&nbsp;</span><i>Lumen</i> ad revelati<b>ó</b>nem <b>gén</b><b>ti</b>um,&nbsp;<span class='red'>*</span> et glóriam plebis tu<i>æ</i> <b>Is</b>raël.<br></p><p><span class="verse-number">5.&nbsp;</span><i>Glóri</i>a <b>Pá</b>tri, et <b>Fí</b><b>li</b>o,&nbsp;<span class='red'>*</span> et Spirítu<i>i</i> <b>Sán</b>cto.<br></p><p><span class="verse-number">6.&nbsp;</span><i>Sicut</i> érat in princípio, et <b>núnc</b>, et <b>sém</b>per,&nbsp;<span class='red'>*</span> et in sǽcula sæculó<i>rum</i>. <b>A</b>men.<br></p></div>
 <chant-gabc src='canticle-ant.gabc'></chant-gabc>
 </div>
@@ -242,8 +243,8 @@ Per Dóminum nostrum Jesum Christum Fílium tuum:&nbsp;<span class='red'>†</sp
 <div class='tr-pair' data-tr='index:benedicat'><div lang='la'>Benedícat et custódiat nos omnípotens et miséricors Dóminus, Pater, et Fílius, et Spíritus Sanctus.
 <span class='versiculum'>r</span>&nbsp;Amen.</div></div>
 <br>
-<div class='notation-section'>
-<span class='notation-section-title' data-rubric='marian-antiphon'>MARIAN ANTIPHON</span>
+<div id='marian'>
+<span data-rubric='marian-antiphon'>MARIAN ANTIPHON</span>
 <div id='marian-antiphon-choices'>
 <select name='marian-antiphon' class='hidden-print' aria-label='Marian antiphon'>
   <option lang='la' select-date='advent1-1:12/31 01/01:02/01' value='alma-redemptoris-mater' id='marian-antiphon-alma'>Alma Redemptoris Mater</option>
@@ -251,8 +252,7 @@ Per Dóminum nostrum Jesum Christum Fílium tuum:&nbsp;<span class='red'>†</sp
   <option lang='la' select-date='easter:pentecost+5' value='regina-caeli' id='marian-antiphon-regina'>Regina Cæli</option>
   <option lang='la' select-date='pentecost+6:advent1-2' value='salve-regina' id='marian-antiphon-salve'>Salve Regina</option>
 </select>
-<div class='notation-choice hidden-print'><label id='marian-antiphon-solemn-choice'><input type='checkbox' id='marian-antiphon-solemn'>&nbsp;Solemn Tone</label>
-<label class='notation-level'>Marian antiphon&nbsp;<select notation='marian'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></div>
+<div class='notation-choice hidden-print'><label id='marian-antiphon-solemn-choice'><input type='checkbox' id='marian-antiphon-solemn'>&nbsp;Solemn Tone</label></div>
 <div class='marian-antiphon alma-redemptoris-mater alma-redemptoris-mater-solemn'><span class='marian-antiphon-name' lang='la'>Alma Redemptoris Mater </span><i class='red' data-rubric='marian-alma'>(from Saturday before the First Sunday of Advent until Feb. 1 inclusive)</i></div>
 <div class='marian-antiphon ave-regina-caelorum ave-regina-caelorum-solemn'><span class='marian-antiphon-name' lang='la'>Ave Regina Cælorum </span><i class='red' data-rubric='marian-ave'>(From February 2 until Wednesday of Holy Week inclusive)</i></div>
 <div class='marian-antiphon regina-caeli regina-caeli-solemn'><span class='marian-antiphon-name' lang='la'>Regina Cæli </span><i class='red' data-rubric='marian-regina'>(from Easter Sunday until Friday in the Octave of Pentecost inclusive)</i></div>

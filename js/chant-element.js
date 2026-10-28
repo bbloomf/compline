@@ -468,7 +468,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       var mode = textMode.modeOf(this);
       if(mode === 'la') return null;
       var key = this.getAttribute('src');
-      var psalm = this.getAttribute('notation') === 'psalms';
+      var psalm = /^(psalms|canticle)$/.test(this.getAttribute('notation'));
       var hymn = textMode.hymn(key, !this.hasAttribute('plain-text') || mode === 'tr');
       var sung = hymn && hymn.kind === 'sung';
       return {

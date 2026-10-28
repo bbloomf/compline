@@ -20,8 +20,9 @@
 //     hymn: {literal: {stanzas: […], doxologies: {Ferial: '…', …}}, metrical: {…}, sung: {…}}
 //   });
 // A unit is plain text.  Its lines are split by \n, and a line that starts "V. " or "R. " starts
-// with ℣ or ℟.  * and † are shown in red, as in the Latin.  How to show the hymn is
-// localStorage.hymnMode: 'literal' (the default), 'metrical' or 'sung' (§4b, §5).
+// with ℣ or ℟.  * and † are shown in red, as in the Latin.  How to show the hymn as text is
+// localStorage.hymnMode: 'literal' (the default) or 'metrical'; the hymn's notation menu sings it
+// ('Fully notated translation', compline.js setHymnSung) (§4b, §5).
 define(['jquery'], function($) {
   'use strict';
   // The app's settings, which compline.js uses too: an object in their place where storage throws.
@@ -39,11 +40,12 @@ define(['jquery'], function($) {
   // added once it has been checked end to end (English in Phase 4, the others in Phase 5, Latin
   // with the Pius XII psalter, for comparison, in Phase 6).
   // compline.js hides the Text and Translation menus while there are none.  rubrics: the language
-  // its rubrics are in, where it hasn't its own.
+  // its rubrics are in, where it hasn't its own.  sung: its module has the hymn to sing (hymn.sung),
+  // which the hymn's notation menu offers before the module is loaded.
   var languages = [
-    {code: 'en', name: 'English'},
+    {code: 'en', name: 'English', sung: true},
     {code: 'fr', name: 'Français'},
-    {code: 'es', name: 'Español'},
+    {code: 'es', name: 'Español', sung: true},
     {code: 'it', name: 'Italiano'},
     {code: 'pt', name: 'Português'},
     {code: 'pl', name: 'Polski'},
@@ -100,14 +102,13 @@ define(['jquery'], function($) {
     var m = mode();
     return section && trSections[section] ? 'tr' : m;
   };
-  // A block's section: a <chant-gabc>'s notation, the psalms' verses, the pointed chapter and
-  // prayers, or the data-section of the part of index.html it's in (the psalms' antiphons, in
-  // #placeholder and #canticle, and the versicles of the collect).  Any other chant is 'chants', and
-  // anything else follows the Text menu.
+  // A block's section: a <chant-gabc>'s notation, the pointed chapter and prayers, or the
+  // data-section of the part of index.html it's in (the psalms' and the canticle's verses and
+  // antiphons, in #placeholder and #canticle, and the versicles of the collect).  Any other chant is
+  // 'chants', and anything else follows the Text menu.
   var sectionOf = function(el) {
     var $el = $(el);
     if($el.is('chant-gabc[notation]')) return $el.attr('notation');
-    if($el.is('.verses[data-psalm]')) return 'psalms';
     if($el.closest('.pointed-chapter').length) return 'chapter';
     if($el.closest('.pointed-prayer').length) return 'prayers';
     return $el.closest('[data-section]').attr('data-section') || ($el.is('chant-gabc') ? 'chants' : null);
@@ -141,12 +142,21 @@ define(['jquery'], function($) {
     dropQuery('lang');
     localStorage.trLang = l;
   };
-  var hymnModes = ['literal', 'metrical', 'sung'];
+  var hymnModes = ['literal', 'metrical'];
   var hymnMode = function() {
     return hymnModes.indexOf(localStorage.hymnMode) >= 0 ? localStorage.hymnMode : 'literal';
   };
   var setHymnMode = function(m) {
     localStorage.hymnMode = m;
+  };
+  // Whether the hymn is sung in the translation: its notation menu says 'Fully notated translation'
+  // (compline.js), which it offers where the language can sing it.
+  var hymnSung = false;
+  var setHymnSung = function(sung) {
+    hymnSung = sung;
+  };
+  var canSing = function() {
+    return languages.some(function(l) { return l.code === lang() && l.sung; });
   };
 
   var modules = {};
@@ -159,6 +169,7 @@ define(['jquery'], function($) {
     }
     require(['i18n/' + l], function(module) {
       modules[l] = module;
+      if(!(module.hymn && module.hymn.sung) !== !canSing()) console.warn('languages[].sung is wrong for ' + l);
       callback();
     }, function(err) {
       console.warn('No translation for ' + l, err);
@@ -172,7 +183,7 @@ define(['jquery'], function($) {
   // What a chant (whose src is key, shown as m) was drawn for, so it's drawn again only when this
   // changes.  notes: whether it has a heading (user-notes or commentary) for the rubrics to translate.
   var renderKey = function(key, m, notes) {
-    return (m === 'la' ? m : m + ':' + lang() + (modules[lang()] ? '' : ':loading') + (hymnTone(key) ? ':' + hymnMode() : '')) +
+    return (m === 'la' ? m : m + ':' + lang() + (modules[lang()] ? '' : ':loading') + (hymnTone(key) ? ':' + (hymnSung ? 'sung' : hymnMode()) : '')) +
       (notes && rubrics() ? ':rubrics-' + lang() : '');
   };
 
@@ -267,7 +278,7 @@ define(['jquery'], function($) {
       var k = h[kind];
       return k && typeof k.doxologies[tone] === 'string' ? k.stanzas.concat(k.doxologies[tone]) : null;
     };
-    var wanted = hymnMode();
+    var wanted = hymnSung ? 'sung' : hymnMode();
     var unsung = false;
     if(wanted === 'sung') {
       if(notated && units('sung')) return {kind: 'sung', units: units('sung'), unsung: false};
@@ -434,6 +445,8 @@ define(['jquery'], function($) {
     setLang: setLang,
     hymnMode: hymnMode,
     setHymnMode: setHymnMode,
+    setHymnSung: setHymnSung,
+    canSing: canSing,
     hymnKinds: hymnKinds,
     hymn: hymn,
     load: load,
