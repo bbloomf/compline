@@ -13,6 +13,15 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   if(!('notationHymn' in localStorage)) localStorage.notationHymn = 'full';
   if(!('notationMarian' in localStorage)) localStorage.notationMarian = 'full';
   if(!('notationChants' in localStorage)) localStorage.notationChants = 'full';
+  // The canticle had the psalms' menu until it got its own.
+  if(!('notationCanticle' in localStorage)) localStorage.notationCanticle = localStorage.notationPsalms;
+  // The hymn translation's "Sung with chant" is now the hymn's 'Fully notated translation', where it
+  // was sung: with the translation only, or beside the notated Latin.
+  if(localStorage.hymnMode === 'sung') {
+    if(localStorage.notationHymn === 'tr' || localStorage.textMode === 'tr' ||
+        (localStorage.textMode === 'both' && localStorage.notationHymn === 'full')) localStorage.notationHymn = 'sung';
+    localStorage.hymnMode = 'metrical';
+  }
   delete localStorage.fullNotation;
   delete localStorage.fullNotationChapter;
   delete localStorage.fullNotationPrayers;
@@ -28,7 +37,8 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   $(document.body).click(function(e){
     var $target = $(e.target);
     if($target.parents().is($optionsMenu)) {
-      if(!$target.is('a,input,select,label,button')) $optionsMenu.toggleClass('showing');
+      if(!$target.closest('a,input,select,label,button').length) $optionsMenu.toggleClass('showing');
+      if($optionsMenu.hasClass('showing')) showJumps();
     } else {
       $optionsMenu.removeClass('showing');  
     }
@@ -37,32 +47,44 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   // <select notation='section'>, and the body class notation-<section>-<level>, which
   // style.css reads.  Its <chant-gabc notation='section'> elements (no attribute means
   // 'chants') get the attribute plain-text when they should show their words.  'tr' is the
-  // translation only, as plain text, whatever the Text menu says (text-mode.js sectionMode).
+  // translation only, as plain text, whatever the Text menu says (text-mode.js sectionMode).  The
+  // hymn's 'sung' is the translation sung to the chant (§4b): beside the Latin as the Text menu
+  // says, or alone with the Latin only.
   var notationSections = {
-    psalms:  {key: 'notationPsalms',  levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'pointed'},
-    chapter: {key: 'notationChapter', levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'full'},
-    prayers: {key: 'notationPrayers', levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'pointed'},
-    hymn:    {key: 'notationHymn',    levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
-    marian:  {key: 'notationMarian',  levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
-    chants:  {key: 'notationChants',  levels: ['text', 'full', 'tr'], defaultLevel: 'full'}
+    psalms:   {key: 'notationPsalms',   levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'pointed'},
+    canticle: {key: 'notationCanticle', levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'pointed'},
+    chapter:  {key: 'notationChapter',  levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'full'},
+    prayers:  {key: 'notationPrayers',  levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'pointed'},
+    hymn:     {key: 'notationHymn',     levels: ['text', 'full', 'sung', 'tr'], defaultLevel: 'full'},
+    marian:   {key: 'notationMarian',   levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
+    chants:   {key: 'notationChants',   levels: ['text', 'full', 'tr'], defaultLevel: 'full'}
   };
+  // A sung hymn, where the language can't sing it, is the translation only, as the menu shows; it's
+  // kept for a language that can.
   var storedNotation = function(section) {
     var s = notationSections[section];
     var level = localStorage[s.key];
-    return s.levels.indexOf(level) >= 0 ? level : s.defaultLevel;
+    level = s.levels.indexOf(level) >= 0 ? level : s.defaultLevel;
+    return level === 'sung' && !textMode.canSing() ? 'tr' : level;
   };
   var trSections = function() {
     return Object.keys(notationSections).filter(function(section) {
-      return storedNotation(section) === 'tr';
+      var level = storedNotation(section);
+      return level === 'tr' || (level === 'sung' && textMode.mode() === 'la');
     });
   };
-  textMode.setTrSections(trSections());
+  // Tells text-mode.js which sections show the translation only, and whether the hymn is sung in it.
+  var syncSections = function() {
+    textMode.setTrSections(trSections());
+    textMode.setHymnSung(storedNotation('hymn') === 'sung');
+  };
+  syncSections();
   // With the translation only, everything is plain text (TRANSLATIONS_PLAN.md §4).
   var notation = function(section) {
     return textMode.sectionMode(section) === 'tr'? 'text' : storedNotation(section);
   };
-  var fullyNotatedPsalms = function() {
-    return notation('psalms') === 'full';
+  var fullyNotated = function(section) {
+    return notation(section) === 'full';
   };
   // The notated chapter and prayers are hidden below 'full', so they skip exsurge layout too.
   // A chant shows in its own section's mode (text-mode.js modeOf): the psalms' antiphons are
@@ -71,8 +93,8 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   var markPlainText = function(section) {
     var stored = storedNotation(section);
     $(section === 'chants'? 'chant-gabc:not([notation])' : 'chant-gabc[notation=' + section + ']').each(function(){
-      var level = textMode.modeOf(this) === 'tr'? 'text' : stored === 'tr'? notationSections[section].defaultLevel : stored;
-      var plainText = section === 'psalms'? level === 'text' : level !== 'full';
+      var level = textMode.modeOf(this) === 'tr'? 'text' : stored === 'tr'? notationSections[section].defaultLevel : stored === 'sung'? 'full' : stored;
+      var plainText = section === 'psalms' || section === 'canticle'? level === 'text' : level !== 'full';
       $(this).attr('plain-text', plainText? '' : null);
     });
   };
@@ -86,29 +108,38 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
       $(document.body).toggleClass('notation-' + section + '-' + l, l === level);
     });
     $('select[notation=' + section + ']').val(storedNotation(section));
+    if(section === 'hymn') showHymnNotation();
     markPlainText(section);
+  };
+  // The hymn's menus offer singing it where the language can, and with the Text menu's translation
+  // only (which hides the other notation menus), nothing else: there the options menu has a menu of
+  // its own for the hymn, while the language can sing it.
+  var showHymnNotation = function() {
+    var trOnly = textMode.mode() === 'tr';
+    var $selects = $('select[notation=hymn]');
+    $selects.children('[value=sung]').prop({disabled: !textMode.canSing(), hidden: !textMode.canSing()});
+    $selects.children('[value=text],[value=full]').prop({disabled: trOnly, hidden: trOnly});
+    if(trOnly) $selects.val(storedNotation('hymn') === 'sung'? 'sung' : 'tr');
+    $('.hymn-notation-menu').prop('hidden', !trOnly || !textMode.canSing());
   };
   $.each(notationSections, updateNotation);
   // Sets the sections' notation to level.
   var setNotation = function(sections, level) {
-    var wasTr = trSections().join();
+    var was = trSections().join() + (storedNotation('hymn') === 'sung');
     sections.forEach(function(section) {
       localStorage[notationSections[section].key] = level;
     });
-    // to or from the translation only: the translation may need loading, and the sections' text
-    // is translated again
-    if(wasTr !== trSections().join()) {
-      textMode.setTrSections(trSections());
+    // to or from the translation only, or singing the hymn in it: the translation may need loading,
+    // and the sections' text is translated again
+    if(was !== trSections().join() + (storedNotation('hymn') === 'sung')) {
       updateTextMode();
       return;
     }
     sections.forEach(function(section) {
       updateNotation(section);
       if(section === 'hymn') showHymnMode();
-      if(section === 'psalms') {
-        setPsalms();
-        setCanticle();
-      }
+      if(section === 'psalms') setPsalms();
+      if(section === 'canticle') setCanticle();
     });
   };
   $('select[notation]').change(function(e){
@@ -144,10 +175,22 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   });
   // Start open when they differ, so "Mixed" is explained
   showOtherChants(updateOtherChants());
-  // The hymn's and the Marian antiphon's own notation menus show while their section is
-  // hovered, or on a touch screen once its title is tapped (style.css).
-  $('.notation-section-title').click(function(e){
-    $(this).closest('.notation-section').toggleClass('show-notation');
+  // The button before a section's menu goes to that section on the page, where it's shown today.
+  var $jumps = $optionsMenu.find('button.jump');
+  $jumps.html('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>');
+  var jumpTarget = function(button) {
+    return $($(button).attr('data-jump')).filter(':visible')[0];
+  };
+  var showJumps = function() {
+    $jumps.each(function(){
+      $(this).css('visibility', jumpTarget(this)? '' : 'hidden');
+    });
+  };
+  $jumps.click(function(e){
+    var target = jumpTarget(this);
+    if(!target) return;
+    $optionsMenu.removeClass('showing');
+    target.scrollIntoView(true);
   });
   // What text to show: Latin, Latin and a translation, or the translation only; and which
   // translation (TRANSLATIONS_PLAN.md §5).  js/text-mode.js keeps both, and the body class
@@ -173,22 +216,20 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     $trLang.val(rubricsOnly ? textMode.rubricsLang(textMode.lang()) : textMode.lang());
   };
   showTextMode();
-  // How to show the hymn in the translation (TRANSLATIONS_PLAN.md §4b and §5): literal, metrical or
-  // sung to the chant.  A choice the language hasn't is disabled, and so is singing while the hymn
-  // is plain text (the translation only is plain text otherwise, but there it can still be sung).
-  // text-mode.js falls back from a choice the language or the season hasn't.
+  // How to show the hymn in the translation as text (TRANSLATIONS_PLAN.md §4b and §5): literal or
+  // metrical, while it isn't sung (the hymn's 'Fully notated translation').  A choice the language
+  // hasn't is disabled.  text-mode.js falls back from a choice the language or the season hasn't.
   var $hymnMode = $('#selectHymnMode');
   var showHymnMode = function() {
     var hymnMode = textMode.sectionMode('hymn');
-    var kinds = hymnMode !== 'la' && textMode.hymnKinds();
+    var kinds = hymnMode !== 'la' && storedNotation('hymn') !== 'sung' && textMode.hymnKinds();
     $hymnMode.closest('.hymn-mode-choice').prop('hidden', !kinds);
     if(!kinds) return;
     $hymnMode.children('[value=literal]').prop('disabled', !kinds.literal);
     $hymnMode.children('[value=metrical]').prop('disabled', !kinds.metrical);
-    $hymnMode.children('[value=sung]').prop('disabled', !kinds.sung || (hymnMode !== 'tr' && storedNotation('hymn') === 'text'));
     // a choice that's disabled here shows what is shown in its place, and is kept for a language
     // that has it
-    var fallbacks = {literal: ['literal', 'metrical'], metrical: ['metrical', 'literal'], sung: ['sung', 'metrical', 'literal']};
+    var fallbacks = {literal: ['literal', 'metrical'], metrical: ['metrical', 'literal']};
     $hymnMode.val(fallbacks[textMode.hymnMode()].filter(function(kind) {
       return !$hymnMode.children('[value=' + kind + ']').prop('disabled');
     })[0]);
@@ -230,6 +271,8 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     });
   };
   var updateTextMode = function() {
+    // the Text menu and the language decide where the hymn is sung
+    syncSections();
     showTextMode();
     textMode.load(function() {
       // the translation only makes its sections plain text
@@ -394,15 +437,15 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   }
   // In plain text, a psalm's intonation file shows only verse 1; its other lines show how to sing
   // the flex and later verses.  The rest of the psalm comes from the pointed HTML.
-  var textLines = function() {
-    return fullyNotatedPsalms()? '' : " text-lines='1'";
+  var textLines = function(section) {
+    return fullyNotated(section)? '' : " text-lines='1'";
   };
   // type should be '-po' for paschal octave, '-pt' for paschal time, or '-asd' for all souls' day, or '' for regular
   var currentCanticle = '';
   var setCanticle = function(type) {
     type = (typeof type == 'undefined')? currentCanticle.replace(/_full$/,'') : type;
     var antType = type;
-    if(fullyNotatedPsalms()) type += '_full';
+    if(fullyNotated('canticle')) type += '_full';
     if(type === currentCanticle) return;
     currentCanticle = type;
     var canticle = type;
@@ -412,7 +455,7 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
       antType = '';
       type = type.slice(3);
     }
-    var psalm = "<chant-gabc notation='psalms'"+textLines()+" src='canticle-psalm"+type+".gabc'></chant-gabc>";
+    var psalm = "<chant-gabc notation='canticle'"+textLines('canticle')+" src='canticle-psalm"+type+".gabc'></chant-gabc>";
     var gotData = function(data){
       // a later call has changed the canticle since this one asked for its verses
       if(currentCanticle !== canticle) return;
@@ -427,7 +470,7 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
       textMode.translate('#canticle');
     };
     $('#canticle').empty();
-    if(fullyNotatedPsalms()) {
+    if(fullyNotated('canticle')) {
       gotData('');
     } else {
       $.get('canticle-psalm'+type+'.html',gotData);
@@ -445,27 +488,27 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     }
     if(typeof day == 'undefined' && typeof paschalTime == 'undefined') return;
     // Only process if things have changed since the last time this function was called.
-    if(renderedPsalms.day === day && renderedPsalms.paschalTime === paschalTime && renderedPsalms.full === fullyNotatedPsalms()) return;
-    renderedPsalms = {day: day, paschalTime: paschalTime, full: fullyNotatedPsalms()};
+    if(renderedPsalms.day === day && renderedPsalms.paschalTime === paschalTime && renderedPsalms.full === fullyNotated('psalms')) return;
+    renderedPsalms = {day: day, paschalTime: paschalTime, full: fullyNotated('psalms')};
     var rendered = renderedPsalms;
     var ant = '',
         psalm = '',
         pt = '',
-        full = fullyNotatedPsalms()? '_full' : '';
+        full = fullyNotated('psalms')? '_full' : '';
     if(day === 'triduum') {
       day = 0;
       pt = '-triduum';
       full = '';
     } else if(day === 'asd') {
       pt = '';
-      psalm = "<chant-gabc notation='psalms'"+textLines()+" src='psalms/"+day+"/psalm"+pt+full+".gabc'></chant-gabc>";
+      psalm = "<chant-gabc notation='psalms'"+textLines('psalms')+" src='psalms/"+day+"/psalm"+pt+full+".gabc'></chant-gabc>";
     } else {
       pt = paschalTime?'-PT':'';
       ant = paschalTime?
         "<chant-gabc src='psalms/ant-PT.gabc'></chant-gabc>" :
         "<chant-gabc src='psalms/"+day+"/ant.gabc'></chant-gabc>";
       if(paschalTime === 'no-antiphon') ant = '';
-      psalm = "<chant-gabc notation='psalms'"+textLines()+" src='psalms/"+day+"/psalm"+pt+full+".gabc'></chant-gabc>";
+      psalm = "<chant-gabc notation='psalms'"+textLines('psalms')+" src='psalms/"+day+"/psalm"+pt+full+".gabc'></chant-gabc>";
       dayName = days[day];
     }
     var gotData = function(data){

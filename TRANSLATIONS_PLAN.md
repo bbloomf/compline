@@ -285,24 +285,25 @@ Texts that don't come from DO (Britt's literal English, the new doxologies) live
 3. **Render (`chant-element`, at runtime).** Swap the lyrics: walk the Latin GABC's note-bearing syllables in order and give syllable *i* the *i*-th vernacular syllable, keeping all the neumes, bars and the clef. Put the vernacular punctuation in place, and leave elided `()` syllables out of the result. The drop cap becomes the first vernacular letter. This happens **after** the `setGabc` text rewrites, so `u{…}`, `_` and `*` don't damage vernacular text. A `‿` syllable is placed as one lyric and printed with its undertie. It works with any of the 17 tones, because they all set the same 8.8.8.8 structure.
 4. **Stress:** the melodies are mostly syllabic, and iambic vernacular verse fits them acceptably. Accents won't always line up, as is normal for hymns sung in translation.
 
-**Display** (`hymnMode`, see §5):
+**Display** (`hymnMode` and `notationHymn`, see §5). Singing became the hymn's notation level "Fully notated translation" (`'sung'`) after Phase 8, at the user's request; `hymnMode` "Sung with chant" carries over to it where it was sung.
 
-| Text mode | `hymnMode` | Score words | Shown next to it, per stanza |
+| Text mode | Hymn | Score words | Shown next to it, per stanza |
 |---|---|---|---|
-| `la` | (hidden) | Latin | none |
-| `both` | `literal` (default) | Latin | literal translation |
-| `both` | `metrical` | Latin | metrical translation |
-| `both` | `sung` | **metrical translation** | Latin text |
-| `tr` | `literal` (default) | no score | literal translation |
-| `tr` | `metrical` | no score | metrical translation |
-| `tr` | `sung` | **metrical translation**. This is the only notation shown in translation-only mode. | none |
+| `la` | fully notated | Latin | none |
+| `la` | fully notated translation | **metrical translation** | none |
+| `both` | fully notated, `hymnMode` `literal` (default) | Latin | literal translation |
+| `both` | fully notated, `hymnMode` `metrical` | Latin | metrical translation |
+| `both` | fully notated translation | **metrical translation** | Latin text |
+| `tr` | translation only, `hymnMode` `literal` (default) | no score | literal translation |
+| `tr` | translation only, `hymnMode` `metrical` | no score | metrical translation |
+| `tr` | fully notated translation | **metrical translation**. This is the only notation shown in translation-only mode, so the options menu has a hymn menu of its own there, with only these two choices. | none |
 
 **Fallbacks**, checked per language and per season, so the hymn is never empty:
 - `literal` missing → metrical.
 - `metrical` missing (fr/it/pt/pl) → literal.
 - `sung` not validated for this season's doxology → behave like `metrical`, with a small note: "Not available to sing in this language for this season".
 
-The menu shows all three choices for every language. A choice the current language can't provide at all is shown disabled, for example "Sung" for French.
+The `hymnMode` menu shows both its choices for every language, and a choice the current language can't provide at all is shown disabled. "Fully notated translation" is offered only for a language that can sing the hymn (`sung` in `text-mode.js`'s `languages`, English and Español); elsewhere a stored `'sung'` shows as "Translation only", and is kept for a language that can.
 
 ### 4c. Notation level per section (decided: plain text / pointed / fully notated)
 
@@ -310,25 +311,25 @@ Today there are three checkboxes, "Fully Notated Psalms / Chapter / Prayers", an
 
 | Section | Choices | Default | Plain text comes from |
 |---|---|---|---|
-| Psalms and Nunc dimittis | plain text / pointed / fully notated | pointed | The pointed HTML, with the pointing switched off by CSS (the bold and italic accent marks shown as ordinary text). Verse 1, which is chanted today, comes from the GABC as text. The red `*` and `†` stay, because they mark the pauses when the psalm is recited. |
+| Psalms | plain text / pointed / fully notated | pointed | The pointed HTML, with the pointing switched off by CSS (the bold and italic accent marks shown as ordinary text). Verse 1, which is chanted today, comes from the GABC as text. The red `*` and `†` stay, because they mark the pauses when the psalm is recited. |
+| Canticle (*Nunc dimittis*; a menu of its own after Phase 8, at the user's request) | plain text / pointed / fully notated | as the psalms were | The same as the psalms. |
 | Chapter | plain text / pointed / fully notated | fully notated | The pointed HTML, with the pointing switched off. |
 | Prayers (collects) | plain text / pointed / fully notated | pointed | The same. |
-| Hymn (*Te lucis*) | plain text / fully notated | fully notated | The GABC lyrics (below). No pointed form. |
+| Hymn (*Te lucis*) | plain text / fully notated / fully notated translation (§4b) | fully notated | The GABC lyrics (below). No pointed form. |
 | Marian antiphon | plain text / fully notated | fully notated | The same. Its collect is under Prayers. |
 | Other chants: *Jube domne* and the blessings, the lesson, *Adjutorium*, *Converte nos*, *Deus in adjutorium*, the psalm antiphon, *In manus tuas*, *Custodi nos*, *Salva nos*, *Benedicamus* | plain text / fully notated | fully notated | The same. These have no pointed form. |
 
-**Why the hymn and Marian antiphon have their own menus (decided):** a common way to pray Compline is to recite it and sing only the hymn and the Marian antiphon, the melodies people already know. Separate menus allow that. The hymn menu also sits naturally with `hymnMode` ("Sung" needs the music), and "Solemn Tone" sits with the Marian antiphon menu. That makes six menus instead of four.
+**Why the hymn and Marian antiphon have their own menus (decided):** a common way to pray Compline is to recite it and sing only the hymn and the Marian antiphon, the melodies people already know. Separate menus allow that. That makes six menus instead of four, seven with the canticle's. They are all in the options menu; the copies of the hymn's and the Marian antiphon's that showed on the page while the section was hovered were taken out after Phase 8, at the user's request. Each section's menu has a button before it that goes to the section on the page.
 
 **Plain text from GABC.** A new text renderer in `chant-element`: strip the header and the neume groups `(…)`, join the syllables into words, turn `<sp>V/</sp>` and `<sp>R/</sp>` into ℣ and ℟, keep `<i>` rubrics and the `*`, make blank-line paragraphs into paragraphs, and print the first letter normally instead of as a drop cap. The lines of a `_full.gabc` psalm become numbered verses. Exsurge layout isn't run for those elements, so pages with a lot of plain text also load faster.
 
 **How it fits with the other settings:**
-- `textMode == 'tr'` shows everything as plain text, so the six notation selects are hidden.
+- `textMode == 'tr'` shows everything as plain text, so the notation selects are hidden, except the hymn's, which can still sing it (§4b).
 - In `both` mode, a plain-text section puts the Latin and the translation side by side (or stacked), with no score.
-- Hymn set to plain text: `hymnMode` "Sung" is disabled and falls back to metrical.
 - Marian antiphon set to plain text: hide the "Solemn Tone" checkbox. The Te lucis tone selector stays, because it also picks the doxology.
 - This doesn't depend on translations at all, so it can ship first (Phase 1a, §7).
 
-**Translation only, per section (added in Phase 8, at the user's request).** Each of the menus also has "Translation only". That section shows the translation as plain text, as if the Text menu said "Translation only", whatever the Text menu says. With the Text menu on Latin, the translation is then loaded for that section alone, and the Translation menu is enabled so that a language can be chosen. For example, the chant can be sung in Latin with the psalms read in English. A hymn in "Translation only" can still be sung in the translation, as with the Text menu on "Translation only". The psalms' antiphons (an "Other chants" menu sets their notation) and the versicles of the collect show as their sections do (`data-section` in `index.html`). The non-chant texts of `index.html` that aren't in a section (the Confiteor, the Misereatur and so on) follow the Text menu.
+**Translation only, per section (added in Phase 8, at the user's request).** Each of the menus also has "Translation only". That section shows the translation as plain text, as if the Text menu said "Translation only", whatever the Text menu says. With the Text menu on Latin, the translation is then loaded for that section alone, and the Translation menu is enabled so that a language can be chosen. For example, the chant can be sung in Latin with the psalms read in English. A hymn in "Translation only" is text; "Fully notated translation" sings it (§4b). The psalms' antiphons (an "Other chants" menu sets their notation) and the versicles of the collect show as their sections do (`data-section` in `index.html`). The non-chant texts of `index.html` that aren't in a section (the Confiteor, the Misereatur and so on) follow the Text menu.
 
 ### 4d. Rubrics in the translation's language (added in Phase 8, at the user's request)
 
@@ -352,11 +353,12 @@ Follow the existing pattern (localStorage strings plus controls in `#options-men
 |---|---|---|---|
 | `textMode` | `'la'` \| `'both'` \| `'tr'` | `'la'` | "Text: Latin / Latin & translation / Translation" |
 | `trLang` | `'en'`, `'fr'`, `'es'`, `'it'`, `'pt'`, `'pl'`, `'la-bea'` at launch (the languages at 100%, §2) | **not stored** until the user picks one. Until then it is worked out each time from the browser: the first entry in `navigator.languages` whose main part (`de-AT` → `de`) is an offered language, else `'en'`. Latin-Bea is never picked automatically. | "Translation: …", which becomes "Rubrics: …" while `textMode == 'la'` and no section is in "Translation only" (§4c, §4d). When the user switches Text away from Latin, it already shows the browser-language choice. Bea is listed as "Latin (Pius XII psalter)". |
-| `hymnMode` | `'literal'` \| `'metrical'` \| `'sung'` | `'literal'` | `<select>` "Hymn: Literal / Metrical / Sung with chant", next to the Te lucis tone selector. Hidden while the hymn is shown in Latin only. Choices the language can't provide are disabled; fallbacks are in §4b. |
+| `hymnMode` | `'literal'` \| `'metrical'` | `'literal'` | `<select>` "Hymn translation: Literal / Metrical", next to the Te lucis tone selector. Hidden while the hymn is shown in Latin only or sung. Choices the language can't provide are disabled; fallbacks are in §4b. Its old `'sung'` is now `notationHymn` `'sung'`. |
 | `notationPsalms` | `'text'` \| `'pointed'` \| `'full'` \| `'tr'` | `'pointed'` | "Psalms: Plain text / Pointed / Fully notated / Translation only" (§4c). Replaces the `fullNotation` checkbox. Each `notation*` key below can also be `'tr'`. |
+| `notationCanticle` | as `notationPsalms` | `notationPsalms`'s | "Canticle: …". |
 | `notationChapter` | `'text'` \| `'pointed'` \| `'full'` | `'full'` | "Chapter: …". Replaces `fullNotationChapter`. |
 | `notationPrayers` | `'text'` \| `'pointed'` \| `'full'` | `'pointed'` | "Prayers: …". Replaces `fullNotationPrayers`. |
-| `notationHymn` | `'text'` \| `'full'` | `'full'` | "Hymn: Plain text / Fully notated". New. Placed next to `hymnMode` and the Te lucis tone selector. |
+| `notationHymn` | `'text'` \| `'full'` \| `'sung'` | `'full'` | "Hymn: Plain text / Fully notated / Fully notated translation". New. |
 | `notationMarian` | `'text'` \| `'full'` | `'full'` | "Marian antiphon: …". New. "Solemn Tone" moves next to it. |
 | `notationChants` | `'text'` \| `'full'` | `'full'` | "Other chants: Plain text / Fully notated". New. |
 
