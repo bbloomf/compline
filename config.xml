@@ -25,11 +25,20 @@
         <icon density="xxhdpi" src="res/mipmap-xxhdpi/ic_launcher.png" />
         <icon density="xxxhdpi" src="res/mipmap-xxxhdpi/ic_launcher.png" />
         <preference name="android-targetSdkVersion" value="36" />
+        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/screen/android/splashscreen.xml" />
+        <preference name="AndroidWindowSplashScreenAnimationDuration" value="0" />
+        <!-- Pure white / pure black splash and window background, matching www/js/theme.js -->
+        <resource-file src="res/android/values-notnight/cdv_colors.xml" target="app/src/main/res/values-notnight/cdv_colors.xml" />
+        <resource-file src="res/android/values-night/cdv_colors.xml" target="app/src/main/res/values-night/cdv_colors.xml" />
+        <resource-file src="res/android/values-night-v34/cdv_colors.xml" target="app/src/main/res/values-night-v34/cdv_colors.xml" />
+        <resource-file src="res/screen/android/splashscreen-night.xml" target="app/src/main/res/drawable-night/ic_cdv_splashscreen.xml" />
     </platform>
     <platform name="ios">
         <preference name="deployment-target" value="15.0" />
         <preference name="scheme" value="app" />
         <preference name="hostname" value="localhost" />
+        <splash src="res/screen/ios/Default@2x~universal~anyany.png" />
+        <splash src="res/screen/ios/Default@2x~universal~anyany~dark.png" />
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
         <icon height="20" src="res/ios/Icon-App-20x20@1x.png" width="20" />

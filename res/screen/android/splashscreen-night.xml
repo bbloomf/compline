@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Dark-mode splash screen icon (copied over drawable-night/ic_cdv_splashscreen.xml by config.xml):
+  splashscreen.xml with the cross in a brighter, still saturated red so it stands out on black.
+  The cross pattée from icon.svg (600x600), scaled to 0.55 and centered so it fits inside the
+  2/3-diameter circle Android 12+ keeps visible.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="512dp"
+    android:height="512dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+    <group
+        android:translateX="91"
+        android:translateY="91"
+        android:scaleX="0.55"
+        android:scaleY="0.55">
+        <path
+            android:fillColor="#CC2222"
+            android:pathData="M202.3,338A225,225 0 0,0 29.94,418.373V181.627A225,225 0 0,0 202.3,262H262V202.3A225,225 0 0,0 181.627,29.94H418.373A225,225 0 0,0 338,202.3V262H397.6A225,225 0 0,0 569.96,181.627V418.373A225,225 0 0,0 397.6,338H338V397.6A225,225 0 0,0 418.373,569.96H181.627A225,225 0 0,0 262,397.6V338Z"/>
+    </group>
+</vector>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Light-mode counterpart of values-night/cdv_colors.xml.  The web app renders pure white, so the
+  splash screen and window background use white instead of Cordova's default #FAF8FF /
+  system_background_light.  values-notnight outranks both values/ and values-v34/ in day mode.
+-->
+<resources>
+    <color name="cdv_background_color">#FFFFFF</color>
+    <color name="cdv_splashscreen_background">@color/cdv_background_color</color>
+</resources>
