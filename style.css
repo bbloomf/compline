@@ -215,6 +215,11 @@ tspan[style="font-family:'Exsurge Characters';fill:#f00;"] {
 select {
   max-width: 100%;
 }
+/* Under the date and the rubrics menu while the Divino Afflatu calendar is still to come */
+p.rubrics-note {
+  font-size: 0.55em;
+  margin: 0.2em 0 0.4em;
+}
 /* The options menu stays in the top right corner as the page scrolls.  Its text
    scales with the page like the rest, but stops growing at 28px. */
 div#options-menu {

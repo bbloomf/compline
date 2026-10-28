@@ -42,6 +42,10 @@ Wszyscy żegnają się znakiem krzyża, gdy przewodniczący mówi:
 [examen]
 Tu wszyscy zatrzymują się w milczeniu; można wtedy zrobić krótki rachunek sumienia lub odmówić po cichu Ojcze nasz.
 
+# Here all say the Pater noster silently throughout.
+[pater-silent]
+Tu wszyscy odmawiają {Pater noster} w całości po cichu.
+
 # The Officiant now bows profoundly and says the {Confiteor} alone in a low voice, recto tono.  After this, all bow profoundly toward the Officiant and say in the same low recto tono voice:
 [confiteor-officiant]
 Przewodniczący wykonuje teraz głęboki skłon i sam odmawia {Confiteor} półgłosem, recto tono. Potem wszyscy kłaniają się głęboko w stronę przewodniczącego i mówią tym samym półgłosem, recto tono:
@@ -154,6 +158,14 @@ Od I Nieszporów Bożego Narodzenia do II Nieszporów Oczyszczenia Najświętsze
 # All making the Sign of the Cross, Compline ends as the Officiant says:
 [divinum-auxilium]
 Wszyscy żegnają się znakiem krzyża, a kompleta kończy się, gdy przewodniczący mówi:
+
+# Then all say silently:
+[pater-ave-credo]
+Następnie wszyscy odmawiają po cichu:
+
+# If Matins follows immediately, the Pater noster, Ave Maria and Credo are said twice: once for the end of the day's Office, and once for the beginning of the next day's.
+[pater-ave-credo-matins]
+Jeśli zaraz potem następuje Jutrznia, {Pater noster}, {Ave Maria} i {Credo} odmawia się dwa razy: raz na zakończenie Oficjum danego dnia i raz na rozpoczęcie Oficjum dnia następnego.
 
 # Then all rise and depart in silence.
 [depart]

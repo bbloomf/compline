@@ -42,6 +42,10 @@ Tutti fanno il segno della croce mentre l’Officiante dice:
 [examen]
 Qui tutti si fermano in silenzio, e si può fare un breve esame di coscienza o dire sottovoce un Padre nostro.
 
+# Here all say the Pater noster silently throughout.
+[pater-silent]
+Qui tutti dicono il {Pater noster}, tutto in silenzio.
+
 # The Officiant now bows profoundly and says the {Confiteor} alone in a low voice, recto tono.  After this, all bow profoundly toward the Officiant and say in the same low recto tono voice:
 [confiteor-officiant]
 L’Officiante fa ora un inchino profondo e dice da solo il {Confiteor} a voce bassa, recto tono. Poi tutti si inchinano profondamente verso l’Officiante e dicono con la stessa voce bassa, recto tono:
@@ -154,6 +158,14 @@ Dai primi Vespri di Natale ai secondi Vespri della Purificazione:
 # All making the Sign of the Cross, Compline ends as the Officiant says:
 [divinum-auxilium]
 Tutti fanno il segno della croce, e Compieta termina mentre l’Officiante dice:
+
+# Then all say silently:
+[pater-ave-credo]
+Poi tutti dicono in silenzio:
+
+# If Matins follows immediately, the Pater noster, Ave Maria and Credo are said twice: once for the end of the day's Office, and once for the beginning of the next day's.
+[pater-ave-credo-matins]
+Se segue subito il Mattutino, il {Pater noster}, l’{Ave Maria} e il {Credo} si dicono due volte: una per la fine dell’Ufficio del giorno, e una per l’inizio di quello del giorno seguente.
 
 # Then all rise and depart in silence.
 [depart]
