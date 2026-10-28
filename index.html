@@ -35,7 +35,8 @@
     <li><label>Theme&nbsp;<select id='selectTheme'><option value="auto">Auto (follow device)</option><option value="light">Light</option><option value="dark">Dark</option></select></label></li>
   </ul>
 </div>
-<div class='hidden-print'><input type='date' id='date' class='hidden-print' aria-label='Date'></div>
+<div class='hidden-print date-and-rubrics'><input type='date' id='date' class='hidden-print' aria-label='Date'> <select id='selectRubrics' aria-label='Rubrics'><option value='1960'>1960 rubrics</option><option value='DA'>Divino Afflatu (pre-1955)</option></select></div>
+<p include='divinoAfflatu' class='hidden-print sans rubrics-note'>The Divino Afflatu calendar isn&rsquo;t in the app yet, so the feast and its rank, and what follows from them (the psalms, the hymn&rsquo;s tone, the antiphon, the preces), are still those of 1960.</p>
 <span id='feastDay' class='hidden-print'></span>
 <div class='hidden-print'><select id='selectFeastDay' aria-label='Feast' style='display:none' class='hidden-print'></select></div>
 <div class="btn-group open-on-hover hidden-print" name="weekday" role="group">
@@ -91,7 +92,8 @@ In private recitation, compline is said as follows:
 <chant-gabc src='lesson.gabc'></chant-gabc>
 <i class='red' data-rubric='adjutorium-nostrum'>All make the Sign of the Cross as the Officiant says:</i>
 <chant-gabc src='adjutorium-nostrum.gabc'></chant-gabc>
-<i class='red' data-rubric='examen'>Here all pause in silence wherein one may make a short examination of conscience or quietly say a Pater Noster.</i>
+<i class='red' data-rubric='examen' exclude='divinoAfflatu'>Here all pause in silence wherein one may make a short examination of conscience or quietly say a Pater Noster.</i>
+<i class='red' data-rubric='pater-silent' include='divinoAfflatu'>Here all say the <span class='cited' lang='la'>Pater noster</span> silently throughout.</i>
 </div>
 <p></p>
 <div class='officiant priest' style='display:none;'>
@@ -311,6 +313,14 @@ Deus, qui per resurrectiónem Fílii tui Dómini nostri Jesu Christi mundum læt
 <br/>
 <div class='tr-pair' data-tr='index:divinum-auxilium'><div lang='la'><span class='versiculum'>v</span>&nbsp;Divínum auxílium máneat semper nobíscum.
 <span class='versiculum'>r</span>&nbsp;Amen.</div></div>
+<div include='divinoAfflatu'>
+<br/>
+<i class='red' data-rubric='pater-ave-credo'>Then all say silently:</i>
+<div class='tr-pair' data-tr='index:pater-noster'><p lang='la'>Pater noster, qui es in cælis, sanctificétur nomen tuum: advéniat regnum tuum: fiat volúntas tua, sicut in cælo et in terra. Panem nostrum cotidiánum da nobis hódie: et dimítte nobis débita nostra, sicut et nos dimíttimus debitóribus nostris: et ne nos indúcas in tentatiónem: sed líbera nos a malo. Amen.</p></div>
+<div class='tr-pair' data-tr='index:ave-maria'><p lang='la'>Ave María, grátia plena; Dóminus tecum: benedícta tu in muliéribus, et benedíctus fructus ventris tui Jesus. Sancta María, Mater Dei, ora pro nobis peccatóribus, nunc et in hora mortis nostræ. Amen.</p></div>
+<div class='tr-pair' data-tr='index:credo'><p lang='la'>Credo in Deum, Patrem omnipoténtem, Creatórem cæli et terræ. Et in Jesum Christum, Fílium ejus únicum, Dóminum nostrum: qui concéptus est de Spíritu Sancto, natus ex María Vírgine, passus sub Póntio Piláto, crucifíxus, mórtuus, et sepúltus: descéndit ad ínferos; tértia die resurréxit a mórtuis; ascéndit ad cælos; sedet ad déxteram Dei Patris omnipoténtis: inde ventúrus est judicáre vivos et mórtuos. Credo in Spíritum Sanctum, sanctam Ecclésiam cathólicam, Sanctórum communiónem, remissiónem peccatórum, carnis resurrectiónem, vitam ætérnam. Amen.</p></div>
+<i class='red' data-rubric='pater-ave-credo-matins'>If Matins follows immediately, the <span class='cited' lang='la'>Pater noster</span>, <span class='cited' lang='la'>Ave Maria</span> and <span class='cited' lang='la'>Credo</span> are said twice: once for the end of the day&rsquo;s Office, and once for the beginning of the next day&rsquo;s.</i>
+</div>
 </span>
 <div include='easter-3:easter-1'>
 <br/>

@@ -164,6 +164,9 @@
     "index:marian-salve-versicle": [{"ref": "@Mariaant:Postpentecost", "part": "versicle"}],
     "marian-antiphon/salve-prayer.gabc": [{"ref": "@Mariaant:Postpentecost", "part": "prayer", "amen": true}],
     "index:divinum-auxilium": [{"ref": "$Divinum auxilium", "lines": "1", "prefix": "V. ", "amen": true}],
+    "index:pater-noster": ["$Pater noster"],
+    "index:ave-maria": ["$Ave Maria"],
+    "index:credo": ["$Credo"],
 
     "index:asd-preces": [[
       "@Prayers:Pater noster Et:2-3",

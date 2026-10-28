@@ -684,6 +684,13 @@ define(['moment','moment.easter'], function(moment){
     if(date.day() === 0) return false;
     return !d || d.rank >= 3;
   };
+  // The rubrics the office follows (compline.js): '1960', or 'DA' for those of Divino Afflatu (1911), as
+  // they stood until the simplification of 1955.  index.html's include='divinoAfflatu' shows a part only
+  // under them.  The calendar itself is still 1960's.
+  var rubrics = '1960';
+  Dates.prototype.divinoAfflatu = function(date) {
+    return rubrics === 'DA';
+  };
   moment.weekdays().forEach(function(day, index) {
     Dates.prototype[day.toLowerCase()] = function(date) {
       return date.day() === index;
@@ -779,6 +786,7 @@ return {
   regional: regionalCalendars,
   dateMatches: dateMatches,
   datesForMoment: datesForMoment,
-  getFeastForDate: getFeastForDate
+  getFeastForDate: getFeastForDate,
+  setRubrics: function(r) { rubrics = r; }
 };
 });

@@ -712,6 +712,15 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     loadChant(chant, val, id);
   });
   var $date = $('#date');
+  // The rubrics the office follows: 1960's, or Divino Afflatu's, as before 1955 (calendar.js).
+  var $rubrics = $('#selectRubrics');
+  if(!$rubrics.children('[value="' + localStorage.rubrics + '"]').length) localStorage.rubrics = '1960';
+  calendar.setRubrics(localStorage.rubrics);
+  $rubrics.val(localStorage.rubrics).change(function(){
+    localStorage.rubrics = $(this).val();
+    calendar.setRubrics(localStorage.rubrics);
+    $date.change();
+  });
   $date.change(function(){
     // localStorage.region is a code ('US'); the calendar's regions are names ('United States')
     if(this.value) setDate(moment(this.value), calendar.roman.regionCodeMap[localStorage.region] || '');
