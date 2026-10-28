@@ -175,7 +175,8 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   });
   // Start open when they differ, so "Mixed" is explained
   showOtherChants(updateOtherChants());
-  // The button before a section's menu goes to that section on the page, where it's shown today.
+  // The button before a section's menu goes to that section on the page, where it's shown today,
+  // and leaves the menu open.
   var $jumps = $optionsMenu.find('button.jump');
   $jumps.html('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>');
   var jumpTarget = function(button) {
@@ -189,7 +190,6 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   $jumps.click(function(e){
     var target = jumpTarget(this);
     if(!target) return;
-    $optionsMenu.removeClass('showing');
     target.scrollIntoView(true);
   });
   // What text to show: Latin, Latin and a translation, or the translation only; and which
