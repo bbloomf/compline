@@ -315,7 +315,8 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
   };
   // The undertie ‿ of a sung hymn comes from a font of its own, which the browser loads only once
   // it's used (style.css); exsurge measures the lyrics before then, so a chant that has one is drawn
-  // again once it has loaded.  done: it has loaded, or failed to.
+  // again once it has loaded, without the widths exsurge cached (it drops them only on the fonts'
+  // loadingdone event, which comes after this).  done: it has loaded, or failed to.
   var undertieFont = null;
   var whenUndertieLoaded = function(redraw) {
     if(!window.document.fonts || !window.document.fonts.load) return;
@@ -528,7 +529,9 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
         var elem = this;
         var drawn = this._gabc;
         whenUndertieLoaded(function() {
-          if(elem._gabc === drawn) elem.setGabc(elem._gabc, elem._annotationAttr, elem._useDropCapAttr);
+          if(elem._gabc !== drawn) return;
+          elem._ctxt.clearTextCache();
+          elem.setGabc(elem._gabc, elem._annotationAttr, elem._useDropCapAttr);
         });
       }
       for(var i=0; i<scores.length; ++i) {
