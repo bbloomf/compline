@@ -1,8 +1,13 @@
 gh-pages
 *.sublime-project
 *.sublime-workspace
+platforms
+plugins
 node_modules
 dist
 cordova
-platforms
 build.json
+appid-secret.key
+open-new-release.sh
+# OS X
+.DS_Store
