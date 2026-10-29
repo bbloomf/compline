@@ -331,18 +331,32 @@ define(['jquery'], function($) {
   var escapeHtml = function(text) {
     return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   };
+  // Whether a Latin block (as HTML) runs its last ℟ on from the words before it, as "… ad vitam
+  // ætérnam. ℟ Amen." does, rather than starting a line with it.
+  var runsOnResponse = function(latinHtml) {
+    var marks = latinHtml.split(/<span class=["']versiculum["']>r<\/span>/);
+    // the words between the last line break (or block) before it and it
+    var before = marks.length > 1 && marks[marks.length - 2].replace(/^[^]*(<br\s*\/?>|<\/?(p|div)\b[^>]*>)/, '');
+    return !!before && /\S/.test(before.replace(/<[^>]*>|&nbsp;/g, ''));
+  };
   // A unit as HTML, marked up like the Latin.  With slashes, its lines are run together with a red
-  // slash between them, as under a notated hymn's verse.
-  var unitHtml = function(text, slashes) {
-    return text.split('\n').map(function(line) {
+  // slash between them, as under a notated hymn's verse.  With runOn, a last line that is a ℟ (an
+  // Amen) runs on from the line before, where the Latin's does (runsOnResponse).
+  var unitHtml = function(text, slashes, runOn) {
+    var lines = text.split('\n').map(function(line) {
       return escapeHtml(line.trim())
         .replace(/^V\. /, "<span class='versiculum'>v</span>&nbsp;")
         .replace(/^R\. /, "<span class='versiculum'>r</span>&nbsp;")
         .replace(/ (\*|†)(?= |$)/g, "&nbsp;<span class='red'>$1</span>");
-    }).join(slashes ? "&nbsp;<span class='red'>/</span> " : '<br>');
+    });
+    if(runOn && lines.length > 1 && /^<span class='versiculum'>r<\/span>/.test(lines[lines.length - 1])) {
+      lines.splice(-2, 2, lines[lines.length - 2] + ' ' + lines[lines.length - 1]);
+    }
+    return lines.join(slashes ? "&nbsp;<span class='red'>/</span> " : '<br>');
   };
-  var unitsHtml = function(units, slashes) {
-    return units.map(function(unit) { return unitHtml(unit, slashes); }).join('<br>');
+  // The Latin's last ℟ is in the last unit.
+  var unitsHtml = function(units, slashes, runOn) {
+    return units.map(function(unit, i) { return unitHtml(unit, slashes, runOn && i === units.length - 1); }).join('<br>');
   };
   // The name of the translation's language, from its module.
   var langName = function() {
@@ -383,7 +397,7 @@ define(['jquery'], function($) {
   var pairHtml = function(latinHtml, units, tag, m) {
     tag = tag || 'p';
     return "<div class='tr-pair'><" + tag + " lang='la' class='" + latinClass(!!units, m) + "'>" + latinHtml + '</' + tag + '>' +
-      (units ? '<' + tag + trAttributes() + '>' + unitsHtml(units) + '</' + tag + '>' : '') + '</div>';
+      (units ? '<' + tag + trAttributes() + '>' + unitsHtml(units, false, runsOnResponse(latinHtml)) + '</' + tag + '>' : '') + '</div>';
   };
 
   // Adds the translations to the page, or takes them away in 'la' mode: each .tr-pair[data-tr]
@@ -406,7 +420,7 @@ define(['jquery'], function($) {
       $latin.removeClass('has-tr tr-missing tr-same').addClass(latinClass(!!units, m));
       if(units) {
         var tag = $latin.prop('tagName').toLowerCase();
-        $latin.after('<' + tag + trAttributes() + '>' + unitsHtml(units) + '</' + tag + '>');
+        $latin.after('<' + tag + trAttributes() + '>' + unitsHtml(units, false, runsOnResponse($latin.html())) + '</' + tag + '>');
       }
     });
     $root.find('.verses[data-psalm]').each(function() {
@@ -458,6 +472,7 @@ define(['jquery'], function($) {
     psalmSection: psalmSection,
     hasPsalm: hasPsalm,
     psalmVerse: psalmVerse,
+    runsOnResponse: runsOnResponse,
     unitsHtml: unitsHtml,
     langName: langName,
     langAttr: langAttr,
