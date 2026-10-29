@@ -77,6 +77,28 @@ define({
       'Chwała Ojcu i Synowi, * i Duchowi Świętemu.',
       'Jak była na początku, teraz i zawsze, * i na wieki wieków. Amen.'
     ],
+    '50': [
+      'Zmiłuj się nademną, Boże, * według wielkiego miłosierdzia twego.',
+      'A według mnóstwa litości twoich, * zgładź nieprawość moję.',
+      'Jeszcze więcéj omyj mię od nieprawości mojéj: * i od grzechu mojego oczyść mię.',
+      'Albowiem ja znam nieprawość moję: * i grzech mój jest zawżdy przeciwko mnie.',
+      'Tobiem samemu zgrzeszył i uczyniłem złość przed tobą: * abyś się usprawiedliwił w mowach twoich, a zwyciężył, gdy cię posądzają.',
+      'Oto bowiem w nieprawościach jestem poczęty: * a w grzechach poczęła mię matka moja.',
+      'Oto bowiem, umiłowałeś prawdę: * niewiadome i skryte rzeczy mądrości twojéj objawiłeś mi.',
+      'Pokropisz mię Hyzopem, a będę oczyszczony: * omyjesz mię, a będę nad śnieg wybielony.',
+      'Słuchowi memu dasz radość i wesele: * i rozradują się kości poniżone.',
+      'Odwróć oblicze twoje od grzechów moich: * a zgładź wszystkie nieprawości moje.',
+      'Serce czyste stwórz we mnie, Boże: * i ducha prawego odnów we wnętrznościach moich.',
+      'Nie odrzucaj mię od oblicza twego: * i Ducha Świętego twego nie bierz odemnie.',
+      'Przywróć mi radość zbawienia twojego: * i duchem przedniejszym potwierdź mię.',
+      'Będę nauczał nieprawe dróg twoich: * a niezbożni do ciebie się nawrócą.',
+      'Wybaw mię ze krwi, Boże, Boże zbawienia mego: * a język mój z radością będzie wysławiał sprawiedliwość twoję.',
+      'Panie, otworzysz wargi moje: * a usta moje opowiadać będą chwałę twoję.',
+      'Albowiem gdybyś był chciał ofiary, wżdybych był dał: * w całopalonych nie będziesz się kochał.',
+      'Ofiara Bogu, duch strapiony: * serca skruszonego i uniżonego, Boże, nie wzgardzisz.',
+      'Uczyń dobrze, Panie, Syonowi w dobréj woli twojéj: * aby się zbudowały mury Jeruzalem.',
+      'Tedy przyjmiesz ofiarę sprawiedliwości, obiaty i całopalenia: * tedy nakładą na ołtarz twój cielców.'
+    ],
     '60': [
       'Wysłuchaj, Boże, prośbę moję: * słuchaj modlitwy mojéj.',
       'Od kończyn ziemie wołałem do ciebie: * gdy się frasowało serce moje, na skale wywyższyłeś mię.',
@@ -463,6 +485,30 @@ define({
     'psalms/ant-PT.gabc': [
       'Alleluja, alleluja, alleluja.'
     ],
+    'psalms/0/ant-intonation.gabc': [
+      'Zmiłuj się'
+    ],
+    'psalms/1/ant-intonation.gabc': [
+      'Zbaw mię.'
+    ],
+    'psalms/2/ant-intonation.gabc': [
+      'Ty, Panie.'
+    ],
+    'psalms/3/ant-intonation.gabc': [
+      'Wpuści Aniół Pański'
+    ],
+    'psalms/4/ant-intonation.gabc': [
+      'Bądź pomocnikiem moim'
+    ],
+    'psalms/5/ant-intonation.gabc': [
+      'Głosem moim'
+    ],
+    'psalms/6/ant-intonation.gabc': [
+      'Niechaj modlitwa moja przyjdzie'
+    ],
+    'psalms/ant-PT-intonation.gabc': [
+      'Alleluja.'
+    ],
     'chapter.gabc': [
       'Tyś jest między nami, Panie, a imienia twego wzywano nad nami: nie opuszczajże nas, Panie, nasz Boże.\nR. Bogu niech będą dzięki.'
     ],
@@ -521,11 +567,32 @@ define({
     'canticle-ant-pt.gabc': [
       'Strzeż nas, Panie, gdy czuwamy, podczas snu nas osłaniaj; abyśmy czuwali z Chrystusem i odpoczywali w pokoju, alleluja.'
     ],
+    'canticle-ant-intonation.gabc': [
+      'Strzeż nas.'
+    ],
+    'canticle-ant-hs.gabc': [
+      'A w wieczór sobotni, który zaświta na dzień pierwszy szabbatu, przyszła Marya Magdalena i druga Marya oglądać grób, alleluja.'
+    ],
+    'canticle-ant-hs-intonation.gabc': [
+      'A w wieczór sobotni.'
+    ],
     'canticle-ant-po.gabc': [
       'Alleluja, alleluja, alleluja, alleluja.'
     ],
     'haec-dies.gabc': [
       'Tenci jest dzień, * który uczynił Pan, radujmy się i weselmy się weń.'
+    ],
+    'index:kyrie': [
+      'Kyrie, elejson. Chryste, elejson. Kyrie, elejson.'
+    ],
+    'index:preces-pater': [
+      'V. I nie wódź nas na pokuszenie:\nR. Ale nas zbaw ode złego.'
+    ],
+    'index:preces-credo': [
+      'V. Ciała zmartwychwstanie.\nR. żywot wieczny. Amen.'
+    ],
+    'index:preces-dominicales': [
+      'V. Błogosławiony jesteś, Panie, Boże ojców naszych.\nR. I chwalebny i sławny na wieki.\nV. Błogosławmy Ojca i Syna z Duchem Świętym.\nR. Chwalmy, i wywyższajmy Go na wieki.\nV. Błogosławiany jesteś, Panie, na sklepieniu nieba.\nR. I chwalebny, i sławny, i przenajwyższy na wieki.\nV. Niech nas błogosławi i strzeże wszechmogący i miłosierny Pan.\nR. Amen.\nV. Racz Panie, tej nocy.\nR. Od grzechu nas zachować.\nV. Zmiłuj się nad nami, Panie.\nR. Zmiłuj się nad nami.\nV. Niech miłosierdzie twoje trwa nad nami, Panie.\nR. Bo w Tobie pokładamy nadzieję.\nV. Panie, wysłuchaj modlitwy mojej.\nR. A wołanie moje niech do Ciebie przyjdzie.'
     ],
     'index:dominus-vobiscum': [
       'V. Pan z wami.\nR. I z duchem twoim.'
@@ -541,6 +608,12 @@ define({
     ],
     'index:per-dominum-silent': [
       'Przez naszego Pana Jezusa Chrystusa, Twojego Syna: który z Tobą żyje i króluje w jedności Ducha Świętego, Bóg, przez wszystkie wieki wieków.'
+    ],
+    'index:respice-silent': [
+      'Wejrzyj, prosimy Cię, Panie, na tę czeladkę Twoją, za którą Pan nasz Jezus Chrystus nie zawahał się ponieść męki krzyżowej i oddać się w ręce grzeszników.'
+    ],
+    'index:qui-tecum-silent': [
+      'Który z Tobą żyje i króluje w jedności Ducha Świętego Bóg przez wszystkie wieki wieków.'
     ],
     'benedicamus-domino.gabc': [
       'V. Błogosławmy Panu.\nR. Bogu niech będą dzięki.'
@@ -605,6 +678,15 @@ define({
     'index:divinum-auxilium': [
       'V. Pomoc Boża niech będzie zawsze z nami.\nR. Amen.'
     ],
+    'index:pater-noster': [
+      'Ojcze nasz, któryś jest w niebie, święć się imię Twoje: przyjdź królestwo Twoje: bądź wola Twoja, jako w niebie tak i na ziemi. Chleba naszego powszedniego daj nam dzisiaj: i odpuść nam nasze winy, jako i my odpuszczamy naszym winowajcom: i nie wódź nas na pokuszenie: ale nas zbaw ode złego. Amen.'
+    ],
+    'index:ave-maria': [
+      'Zdrowaś Maryjo, łaskiś pełna; Pan z Tobą: błogosławionaś ty między niewiastami, i błogosławiony owoc żywota twojego, Jezus. Święta Maryjo, Matko Boża, módl się za nami grzesznymi, teraz i w godzinę śmierci naszej. Amen.'
+    ],
+    'index:credo': [
+      'Wierzę w Boga, Ojca wszechmogącego, Stworzyciela nieba i ziemi. I w Jezusa Chrystusa, Syna Jego jedynego, Pana naszego: który się począł z Ducha Świętego, narodził się z Maryi Panny, umęczon pod Ponckim Piłatem, ukrzyżowan, umarł, i pogrzebion: zstąpił do piekieł: trzeciego dnia zmartwychwstał; wstąpił na niebiosa; siedzi po prawicy Boga Ojca wszechmogącego: stamtąd przyjdzie sądzić żywych i umarłych. Wierzę w Ducha Świętego, święty Kościół powszechny, świętych obcowanie, grzechów odpuszczenie, ciała zmartwychwstanie, żywot wieczny. Amen.'
+    ],
     'index:asd-preces': [
       'V. I nie wódź nas na pokuszenie:\nR. Ale nas zbaw ode złego.\nV. Od wrót piekielnych.\nR. Wybaw dusze ich, Panie.\nV. Niech odpoczywają w pokoju.\nR. Amen.\nV. Panie, wysłuchaj modlitwy mojej.\nR. A wołanie moje niech do Ciebie przyjdzie.\nV. (Pan z wami.\nR. I z duchem twoim.)'
     ],
@@ -621,8 +703,8 @@ define({
         'Ciebie przed zanikiem światła,\nStwórco wszechrzeczy, prosimy,\nAbyś według twej miłościwości\nBył nam obrońcą i strażą.',
         'Niechaj daleko od nas odstąpią,\nWidziadła senne i zjawy nocne;\nPowstrzymaj nieprzyjaciela naszego,\nBy ciała nie uległy zmazaniu.'
       ],
-      doxologies: {Advent: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Ascension: 'Jezu miej cześć z dostojeństwem,\nŻe w niebo wchodzisz zwycięstwem:\nI Ojcze, i Duchu Święty,\nNa wiek wieków niepojęty.\nAmen.', 'Christ-the-King': 'Jezu, niech Tobie będzie chwała,\nKtóry berłami świata władasz,\nZ Ojcem i Duchem Świętym, Boże,\nPrzez wszystkie wieki wieków.\nAmen.', Christmas: 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Easter: 'Bądź Ojcze Boże chwalony,\nZ Synem, który pogrzebiony\nWstał z martwych, i Duch światłości\nNiech ma chwałę na wieczności.\nAmen.', Epiphany: 'Jezusie bądź pochwalony,\nKtóryś Poganom zjawiony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Ferial: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', 'Holy-Family': 'Tobie, Jezu, któryś\nStał się posłuszny swym rodzicom,\nNiech będzie wieczna chwała,\nWraz z Ojcem i Najświętszym Duchem.\nAmen.', Lent: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Ordinary: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', 'Our-Lady': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Passiontide: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Pentecost: 'Niech Ojciec słynie Pan chwały,\nI z Synem, który umarły\nPowstał, i z Pocieszycielem,\nWiek wiekuistym weselem.\nAmen.', 'Sacred-Heart': 'Jezu, niech Tobie będzie chwała,\nKtóry nam z serca łaski zlewasz,\nZ Ojcem — z Ożywicielem, Duchem,\nI przez nieskończone wieki.\nAmen.', 'Seven-Dolors': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Solemn: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Transfiguration: 'O Jezu, co się objawiasz maluczkim,\nNiech Ci cześć będzie\nZ Ożywicielem i Ojcem\nW nieskończone wieki.\nAmen.'}
+      doxologies: {'Advent-Christmas': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Advent: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Ascension: 'Jezu miej cześć z dostojeństwem,\nŻe w niebo wchodzisz zwycięstwem:\nI Ojcze, i Duchu Święty,\nNa wiek wieków niepojęty.\nAmen.', 'Christ-the-King': 'Jezu, niech Tobie będzie chwała,\nKtóry berłami świata władasz,\nZ Ojcem i Duchem Świętym, Boże,\nPrzez wszystkie wieki wieków.\nAmen.', 'Christmas-Ferial': 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', 'Christmas-Sacred-Heart': 'Jezu, niech Tobie będzie chwała,\nKtóry nam z serca łaski zlewasz,\nZ Ojcem — z Ożywicielem, Duchem,\nI przez nieskończone wieki.\nAmen.', Christmas: 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', 'Easter-Christmas': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Easter: 'Bądź Ojcze Boże chwalony,\nZ Synem, który pogrzebiony\nWstał z martwych, i Duch światłości\nNiech ma chwałę na wieczności.\nAmen.', Epiphany: 'Jezusie bądź pochwalony,\nKtóryś Poganom zjawiony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Ferial: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', 'Holy-Family': 'Tobie, Jezu, któryś\nStał się posłuszny swym rodzicom,\nNiech będzie wieczna chwała,\nWraz z Ojcem i Najświętszym Duchem.\nAmen.', 'Lent-Christmas': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Lent: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', 'Ordinary-Christmas': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Ordinary: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', 'Our-Lady-Ferial': 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', 'Our-Lady-Seven-Sorrows': 'Jezu, niech Ci będzie chwała,\nKtóry cierpiałeś za sługi,\nZ Ojcem i dobroczynnym Duchem\nPo nieskończone wieki.\nAmen.', 'Our-Lady': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Passiontide: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Pentecost: 'Niech Ojciec słynie Pan chwały,\nI z Synem, który umarły\nPowstał, i z Pocieszycielem,\nWiek wiekuistym weselem.\nAmen.', 'Sacred-Heart-Christmas': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', 'Sacred-Heart-Ferial': 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', 'Sacred-Heart': 'Jezu, niech Tobie będzie chwała,\nKtóry nam z serca łaski zlewasz,\nZ Ojcem — z Ożywicielem, Duchem,\nI przez nieskończone wieki.\nAmen.', 'Seven-Dolors': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', 'Solemn-Christmas': 'Jezusie bądź pochwalony,\nZ Przeczystej Panny zrodzony:\nZ Ojcem, i Duchem światłości,\nNa nieskończone wieczności.\nAmen.', Solemn: 'Udziel nam tego, Ojcze najmiłościwszy,\nI Ty Jedyny, równy Ojcu,\nZ Duchem Pocieszycielem\nKrólujący po wszystek wiek.\nAmen.', Transfiguration: 'O Jezu, co się objawiasz maluczkim,\nNiech Ci cześć będzie\nZ Ożywicielem i Ojcem\nW nieskończone wieki.\nAmen.'}
     }
   },
-  rubrics: {'holy-thursday': 'W Wielki Czwartek kompletę odmawia się po obnażeniu ołtarzy, przy zgaszonych świecach i bez śpiewu.', 'good-friday': 'W Wielki Piątek kompletę odmawia się po uroczystej czynności liturgicznej, przy zgaszonych świecach i bez śpiewu.', 'holy-saturday': 'Tego wieczoru nie odmawia się komplety.\nW odmawianiu prywatnym odmawia się ją tak:', 'lector-domine': 'Pod nieobecność kapłana lub diakona lektor mówi poniżej „{Dómine}”, aby o błogosławieństwo prosić bezpośrednio naszego Pana.', lector: 'Lektor:', blessing: 'Przewodniczący udziela błogosławieństwa:', lesson: 'Lektor lub kantor kontynuuje (przy słowach „{Tu autem... nobis}” tylko on przyklęka):', 'adjutorium-nostrum': 'Wszyscy żegnają się znakiem krzyża, gdy przewodniczący mówi:', examen: 'Tu wszyscy zatrzymują się w milczeniu; można wtedy zrobić krótki rachunek sumienia lub odmówić po cichu Ojcze nasz.', 'confiteor-officiant': 'Przewodniczący wykonuje teraz głęboki skłon i sam odmawia {Confiteor} półgłosem, recto tono. Potem wszyscy kłaniają się głęboko w stronę przewodniczącego i mówią tym samym półgłosem, recto tono:', 'confiteor-priest': 'Następnie przewodniczący prostuje się, a wszyscy pozostali, nadal stojąc, kłaniają się głęboko w stronę Najświętszego Sakramentu (lub ku ziemi) i mówią półgłosem, recto tono (przy potrójnym „{Mea culpa}” uderzając się trzykrotnie w piersi):', 'misereatur-vestri': 'Następnie przewodniczący mówi:', confiteor: 'Wszyscy, nadal stojąc, kłaniają się głęboko i razem odmawiają jeden raz {Confiteor} półgłosem, recto tono, w ten sposób:', 'misereatur-nostri': 'Wszyscy, nadal w głębokim skłonie, mówią dalej:', indulgentiam: 'Wszyscy prostują się i żegnają znakiem krzyża, mówiąc:', 'converte-nos': 'Potem wszyscy kreślą kciukiem znak krzyża na sercu, gdy przewodniczący mówi:', 'deus-in-adjutorium': 'Potem wszyscy żegnają się znakiem krzyża, gdy przewodniczący mówi: (Po odpowiedzi wszyscy razem odmawiają całe „{Gloria Patri}”.)', 'christus-factus-est': 'Potem wszyscy klękają i mówią:', 'triduum-pater': '{Pater noster} odmawia się w całości po cichu.\nNastępnie dodaje się na głos, bez {Orémus}, kolektę:', hymn: 'Następnie przewodniczący intonuje hymn {Te lucis}, śpiewany jednym z podanych niżej tonów. Wszyscy lekko się kłaniają przy pierwszych trzech wersach trzeciej zwrotki.', chapter: 'Następnie przewodniczący odmawia kapitulum:', responsory: 'Następnie kantor mówi wersety responsorium krótkiego, a wszyscy odpowiadają po każdym wezwaniu:', 'responsory-passiontide': '(W okresie Męki Pańskiej, z wyjątkiem świąt I i II klasy, opuszcza się {Gloria Patri}, a w jego miejsce wszyscy od razu powtarzają „{In manus tuas...}”)', 'dominus-vobiscum': 'Przewodniczący zapowiada kolektę:', 'domine-exaudi': 'Przewodniczący mówi:', 'conclusion-silent': 'Zakończenie odmawia się po cichu:', 'dominus-vobiscum-again': 'Przewodniczący mówi ponownie:', benedicamus: 'Następnie kantor mówi:', benedicat: 'Następnie przewodniczący odmawia błogosławieństwo półgłosem, recto tono, powoli i z powagą; na końcu wszyscy żegnają się znakiem krzyża:', 'marian-antiphon': 'ANTYFONA MARYJNA', 'marian-alma': '(od soboty przed pierwszą niedzielą Adwentu do 1 lutego włącznie)', 'marian-ave': '(od 2 lutego do Wielkiej Środy włącznie)', 'marian-regina': '(od Niedzieli Wielkanocnej do piątku w oktawie Zesłania Ducha Świętego włącznie)', 'marian-salve': '(od soboty przed niedzielą Trójcy Przenajświętszej do piątku przed pierwszą niedzielą Adwentu włącznie)', 'marian-alma-advent': 'W Adwencie:', 'marian-alma-christmas': 'Od I Nieszporów Bożego Narodzenia do II Nieszporów Oczyszczenia Najświętszej Maryi Panny:', 'divinum-auxilium': 'Wszyscy żegnają się znakiem krzyża, a kompleta kończy się, gdy przewodniczący mówi:', depart: 'Potem wszyscy wstają i odchodzą w milczeniu.', 'all-souls-kneel': 'Wszyscy klękają do następujących modlitw:', 'all-souls-pater': '{Pater noster} odmawia się po cichu aż do', 'all-souls-collect': 'Kolekta', 'all-souls-end': 'Kompleta kończy się tak, bez dodawania żadnych innych modlitw.', 'note:Psalm': 'Psalm', 'note:Canticle of Simeon': 'Pieśń Symeona', 'note:Short Lesson': 'Czytanie krótkie', 'note:Luke': 'Łk', 'note:1. Peter': '1 P', 'hymn-unsung': 'W tym okresie hymnu nie można śpiewać po polsku.'}
+  rubrics: {'holy-thursday': 'W Wielki Czwartek kompletę odmawia się po obnażeniu ołtarzy, przy zgaszonych świecach i bez śpiewu.', 'good-friday': 'W Wielki Piątek kompletę odmawia się po uroczystej czynności liturgicznej, przy zgaszonych świecach i bez śpiewu.', 'holy-saturday': 'Tego wieczoru nie odmawia się komplety.\nW odmawianiu prywatnym odmawia się ją tak:', 'lector-domine': 'Pod nieobecność kapłana lub diakona lektor mówi poniżej „{Dómine}”, aby o błogosławieństwo prosić bezpośrednio naszego Pana.', lector: 'Lektor:', blessing: 'Przewodniczący udziela błogosławieństwa:', lesson: 'Lektor lub kantor kontynuuje (przy słowach „{Tu autem... nobis}” tylko on przyklęka):', 'adjutorium-nostrum': 'Wszyscy żegnają się znakiem krzyża, gdy przewodniczący mówi:', examen: 'Tu wszyscy zatrzymują się w milczeniu; można wtedy zrobić krótki rachunek sumienia lub odmówić po cichu Ojcze nasz.', 'pater-silent': 'Tu wszyscy odmawiają {Pater noster} w całości po cichu.', 'confiteor-officiant': 'Przewodniczący wykonuje teraz głęboki skłon i sam odmawia {Confiteor} półgłosem, recto tono. Potem wszyscy kłaniają się głęboko w stronę przewodniczącego i mówią tym samym półgłosem, recto tono:', 'confiteor-priest': 'Następnie przewodniczący prostuje się, a wszyscy pozostali, nadal stojąc, kłaniają się głęboko w stronę Najświętszego Sakramentu (lub ku ziemi) i mówią półgłosem, recto tono (przy potrójnym „{Mea culpa}” uderzając się trzykrotnie w piersi):', 'misereatur-vestri': 'Następnie przewodniczący mówi:', confiteor: 'Wszyscy, nadal stojąc, kłaniają się głęboko i razem odmawiają jeden raz {Confiteor} półgłosem, recto tono, w ten sposób:', 'misereatur-nostri': 'Wszyscy, nadal w głębokim skłonie, mówią dalej:', indulgentiam: 'Wszyscy prostują się i żegnają znakiem krzyża, mówiąc:', 'converte-nos': 'Potem wszyscy kreślą kciukiem znak krzyża na sercu, gdy przewodniczący mówi:', 'deus-in-adjutorium': 'Potem wszyscy żegnają się znakiem krzyża, gdy przewodniczący mówi: (Po odpowiedzi wszyscy razem odmawiają całe „{Gloria Patri}”.)', 'christus-factus-est': 'Potem wszyscy klękają i mówią:', 'triduum-pater': '{Pater noster} odmawia się w całości po cichu.\nNastępnie dodaje się na głos, bez {Orémus}, kolektę:', 'triduum-pater-da': '{Pater noster} odmawia się w całości po cichu.\nNastępnie nieco głośniej:', 'triduum-collect-da': 'Potem dodaje się, bez {Orémus}, kolektę:', hymn: 'Następnie przewodniczący intonuje hymn {Te lucis}, śpiewany jednym z podanych niżej tonów. Wszyscy lekko się kłaniają przy pierwszych trzech wersach trzeciej zwrotki.', chapter: 'Następnie przewodniczący odmawia kapitulum:', responsory: 'Następnie kantor mówi wersety responsorium krótkiego, a wszyscy odpowiadają po każdym wezwaniu:', 'responsory-passiontide': '(W okresie Męki Pańskiej, z wyjątkiem świąt I i II klasy, opuszcza się {Gloria Patri}, a w jego miejsce wszyscy od razu powtarzają „{In manus tuas...}”)', 'responsory-passiontide-da': '(W okresie Męki Pańskiej, z wyjątkiem świąt Świętych i Siedmiu Boleści, opuszcza się {Gloria Patri}, a w jego miejsce wszyscy od razu powtarzają „{In manus tuas...}”)', preces: 'Następnie odmawia się prośby (Preces):', 'preces-kneeling': 'Następnie wszyscy klękają i odmawia się prośby (Preces):', 'all-souls-pater': '{Pater noster} odmawia się po cichu aż do', 'preces-credo': '{Credo} odmawia się po cichu aż do', 'dominus-vobiscum': 'Przewodniczący zapowiada kolektę:', 'domine-exaudi': 'Przewodniczący mówi:', 'conclusion-silent': 'Zakończenie odmawia się po cichu:', 'dominus-vobiscum-again': 'Przewodniczący mówi ponownie:', benedicamus: 'Następnie kantor mówi:', benedicat: 'Następnie przewodniczący odmawia błogosławieństwo półgłosem, recto tono, powoli i z powagą; na końcu wszyscy żegnają się znakiem krzyża:', 'marian-antiphon': 'ANTYFONA MARYJNA', 'marian-alma': '(od soboty przed pierwszą niedzielą Adwentu do 1 lutego włącznie)', 'marian-ave': '(od 2 lutego do Wielkiej Środy włącznie)', 'marian-regina': '(od Niedzieli Wielkanocnej do piątku w oktawie Zesłania Ducha Świętego włącznie)', 'marian-regina-da': '(od Wielkiej Soboty do piątku w oktawie Zesłania Ducha Świętego włącznie)', 'marian-salve': '(od soboty przed niedzielą Trójcy Przenajświętszej do piątku przed pierwszą niedzielą Adwentu włącznie)', 'marian-alma-advent': 'W Adwencie:', 'marian-alma-christmas': 'Od I Nieszporów Bożego Narodzenia do II Nieszporów Oczyszczenia Najświętszej Maryi Panny:', 'divinum-auxilium': 'Wszyscy żegnają się znakiem krzyża, a kompleta kończy się, gdy przewodniczący mówi:', 'pater-ave-credo': 'Następnie wszyscy odmawiają po cichu:', 'pater-ave-credo-matins': 'Jeśli zaraz potem następuje Jutrznia, {Pater noster}, {Ave Maria} i {Credo} odmawia się dwa razy: raz na zakończenie Oficjum danego dnia i raz na rozpoczęcie Oficjum dnia następnego.', depart: 'Potem wszyscy wstają i odchodzą w milczeniu.', 'all-souls-kneel': 'Wszyscy klękają do następujących modlitw:', 'all-souls-collect': 'Kolekta', 'all-souls-end': 'Kompleta kończy się tak, bez dodawania żadnych innych modlitw.', 'note:Psalm': 'Psalm', 'note:Canticle of Simeon': 'Pieśń Symeona', 'note:Short Lesson': 'Czytanie krótkie', 'note:Luke': 'Łk', 'note:1. Peter': '1 P', 'hymn-unsung': 'W tym okresie hymnu nie można śpiewać po polsku.'}
 });
