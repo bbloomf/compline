@@ -244,7 +244,7 @@ define(['jquery'], function($) {
       else $el.attr('lang', langAttr());
     });
     // the pointed psalms' headings ("Psalm 90"), in the psalms' and the canticle's HTML, and the
-    // Miserere's (index.html); a chant's are drawn by chant-element.js
+    // Miserere's (#miserere); a chant's are drawn by chant-element.js
     var headed = '#placeholder, #canticle, #miserere';
     $root.find(headed).addBack(headed).find('i.red').not('chant-gabc i').each(function() {
       if(!('_rubricText' in this)) this._rubricText = this._rubricShown = this.innerHTML;

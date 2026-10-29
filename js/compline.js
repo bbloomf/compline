@@ -544,6 +544,16 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
       });
     }
   };
+  // The Miserere of the Triduum under Divino Afflatu (index.html #miserere), loaded the first time it's needed
+  var miserereLoaded = false;
+  var setMiserere = function() {
+    if(miserereLoaded) return;
+    miserereLoaded = true;
+    $.get('psalms/0/psalm-verses-miserere.html', function(data) {
+      $('#miserere').append(data);
+      textMode.translate('#miserere');
+    });
+  };
   var formattedRank = function(rank) {
     switch(rank) {
       case 1:
@@ -629,6 +639,7 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
       showChooseDay = false;
       var day = date.day();
       setPsalms('triduum');
+      setMiserere();
       var name;
       switch(day) {
         case 4:

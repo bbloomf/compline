@@ -302,7 +302,7 @@ exports.build = function(doDir, root, languages) {
     var latin = sectionLines(psalmLines(doDir, 'Latin', section.psalm).lines, section);
     var doVerses = latin.map(function(l) { return l.text; }).concat(latinEnding(section));
     if(doVerses.length !== count) {
-      report.latin.push(section.key + ': DO has ' + latin.length + ' verses + ' + (section.ending || 'Gloria') + ', the app ' + count);
+      report.latin.push(section.key + ': DO has ' + latin.length + ' verses' + (section.ending === null ? '' : ' + ' + (section.ending || 'Gloria')) + ', the app ' + count);
     }
     var scores = [];
     for(n = 1; n <= Math.min(count, doVerses.length); n++) {
