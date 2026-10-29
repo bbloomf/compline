@@ -4,7 +4,7 @@
 #   npm run update-cordova
 #
 # Run it on master once the release is in gh-pages: `npm version patch` (whose postversion builds
-# dist/), then commit and push dist/.  It checks out cordova, merges origin/gh-pages into www/,
+# dist/ and pushes master with its tag), then commit and push dist/.  It checks out cordova, merges origin/gh-pages into www/,
 # and commits the version from www/version.json into config.xml and package.json, leaving you on
 # cordova to run ./build.sh.
 set -euo pipefail
