@@ -103,6 +103,18 @@ Następnie kantor mówi wersety responsorium krótkiego, a wszyscy odpowiadają 
 [responsory-passiontide]
 (W okresie Męki Pańskiej, z wyjątkiem świąt I i II klasy, opuszcza się {Gloria Patri}, a w jego miejsce wszyscy od razu powtarzają „{In manus tuas...}”)
 
+# Then the Preces are said:
+[preces]
+Następnie odmawia się prośby (Preces):
+
+# Then all kneel, and the Preces are said:
+[preces-kneeling]
+Następnie wszyscy klękają i odmawia się prośby (Preces):
+
+# {Credo} is said in silence until
+[preces-credo]
+{Credo} odmawia się po cichu aż do
+
 # The Officiant introduces the Collect:
 [dominus-vobiscum]
 Przewodniczący zapowiada kolektę:

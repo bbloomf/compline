@@ -135,3 +135,8 @@ To little ones revealed today,
 With Father and blest Spirit One
 Until the ages’ course is done.
 Amen.
+
+# Holy Saturday's antiphon at the Nunc dimittis under Divino Afflatu: DO's [Ant 41], with the * its Latin
+# has, so that its opening words can be said before the canticle (canticle-ant-hs-intonation.gabc).
+[@Tempora/Pasc0-0:Ant 41]
+And in the end of the sabbath, * when it began to dawn towards the first day of the week, came Mary Magdalen and the other Mary, to see the sepulchre, alleluia.

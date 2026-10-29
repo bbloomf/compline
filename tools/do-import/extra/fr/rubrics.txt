@@ -103,6 +103,18 @@ Le Chantre dit ensuite les versets du Répons bref, auxquels tous répondent apr
 [responsory-passiontide]
 (Au temps de la Passion, sauf aux fêtes de Ire ou de IIe classe, on omet le {Gloria Patri}, et tous reprennent aussitôt à sa place « {In manus tuas...} »)
 
+# Then the Preces are said:
+[preces]
+On dit ensuite les Preces :
+
+# Then all kneel, and the Preces are said:
+[preces-kneeling]
+Puis tous s’agenouillent, et l’on dit les Preces :
+
+# {Credo} is said in silence until
+[preces-credo]
+On dit le {Credo} en silence jusqu’à
+
 # The Officiant introduces the Collect:
 [dominus-vobiscum]
 L’Officiant introduit l’oraison :
