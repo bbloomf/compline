@@ -103,6 +103,22 @@ Luego el Cantor dice los versos del Responsorio breve, a los que todos responden
 [responsory-passiontide]
 (En el tiempo de Pasión, salvo en las fiestas de I o II clase, se omite el {Gloria Patri}, y en su lugar todos repiten enseguida «{In manus tuas...}»)
 
+# (In Passiontide, except on the feasts of the Saints and of the Seven Sorrows, the Gloria Patri is omitted, and all repeat again immediately “In manus tuas...” in its place)
+[responsory-passiontide-da]
+(En el tiempo de Pasión, salvo en las fiestas de los Santos y de los Siete Dolores, se omite el {Gloria Patri}, y en su lugar todos repiten enseguida «{In manus tuas...}»)
+
+# Then the Preces are said:
+[preces]
+Luego se dicen las Preces:
+
+# Then all kneel, and the Preces are said:
+[preces-kneeling]
+Luego todos se arrodillan y se dicen las Preces:
+
+# {Credo} is said in silence until
+[preces-credo]
+Se dice el {Credo} en silencio hasta
+
 # The Officiant introduces the Collect:
 [dominus-vobiscum]
 El Oficiante introduce la oración:
@@ -142,6 +158,10 @@ ANTÍFONA MARIANA
 # (from Easter Sunday until Friday in the Octave of Pentecost inclusive)
 [marian-regina]
 (desde el Domingo de Pascua hasta el viernes de la octava de Pentecostés inclusive)
+
+# (from Holy Saturday until Friday in the Octave of Pentecost inclusive)
+[marian-regina-da]
+(desde el Sábado Santo hasta el viernes de la octava de Pentecostés inclusive)
 
 # (from Saturday before Trinity Sunday until Friday before the First Sunday of Advent inclusive)
 [marian-salve]

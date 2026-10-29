@@ -15,7 +15,7 @@ Far off let dreams and phantoms of the night depart; restrain Thou our adversary
 
 # Britt, 1922, p. 36, note 3 to Nunc Sancte nobis Spiritus, the Terce hymn, which ends with the same
 # doxology.
-[Ferial Ordinary Solemn Advent Lent Passiontide]
+[Ferial Ordinary Solemn Advent Lent Passiontide Our-Lady-Ferial Sacred-Heart-Ferial Christmas-Ferial]
 Grant this, O most loving Father, and Thou, only-begotten Son, equal to the Father, who reignest eternally with the Holy Ghost, the Comforter.
 Amen.
 
@@ -25,7 +25,7 @@ Together with the Father and the Holy Spirit, O Jesus, eternal glory be to Thee,
 Amen.
 
 # Written for the app.
-[Christmas Our-Lady Seven-Dolors]
+[Christmas Our-Lady Seven-Dolors Ordinary-Christmas Advent-Christmas Solemn-Christmas Lent-Christmas Easter-Christmas Sacred-Heart-Christmas]
 Glory be to Thee, O Jesus, who wast born of the Virgin, together with the Father and the gracious Spirit, for everlasting ages.
 Amen.
 
@@ -33,7 +33,7 @@ Amen.
 Glory be to Thee, O Jesus, who didst appear to the Gentiles, together with the Father and the gracious Spirit, for everlasting ages.
 Amen.
 
-[Easter]
+[Easter Ascension-Easter]
 Glory be to God the Father, and to the Son, who rose from the dead, and to the Paraclete, for everlasting ages.
 Amen.
 
@@ -45,7 +45,7 @@ Amen.
 Glory be to Thee, O Jesus, who returnest victorious to heaven, together with the Father and the gracious Spirit, for everlasting ages.
 Amen.
 
-[Sacred-Heart]
+[Sacred-Heart Christmas-Sacred-Heart]
 Glory be to Thee, O Jesus, who pourest forth grace from Thy Heart, together with the Father and the gracious Spirit, for everlasting ages.
 Amen.
 
@@ -55,4 +55,9 @@ Amen.
 
 [Christ-the-King]
 Glory be to Thee, O Jesus, who rulest the scepters of the world, together with the Father and the gracious Spirit, for everlasting ages.
+Amen.
+
+# The Seven Sorrows' own doxology, sung under Divino Afflatu (DO's Tempora/Quad5-5).
+[Our-Lady-Seven-Sorrows]
+Glory be to Thee, O Jesus, who didst suffer for Thy servants, together with the Father and the gracious Spirit, for everlasting ages.
 Amen.

@@ -440,17 +440,32 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   var textLines = function(section) {
     return fullyNotated(section)? '' : " text-lines='1'";
   };
-  // type should be '-po' for paschal octave, '-pt' for paschal time, or '-asd' for all souls' day, or '' for regular
+  // Under Divino Afflatu, only the opening words of the antiphon are said before the psalms and the Nunc dimittis
+  // (<antiphon>-intonation.gabc), and the whole of it after them, as DO says it at Compline on every day, double or
+  // not (its antetpsalm doubles the antiphons only at Matins, Lauds and Vespers).
+  var intoned = function() {
+    return calendar.getRubrics() === 'DA';
+  };
+  // type should be '-po' for paschal octave, '-pt' for paschal time, or '-asd' for all souls' day, '-hs' for Holy
+  // Saturday under Divino Afflatu, or '' for regular
   var currentCanticle = '';
+  // index.html's own canticle, not intoned
+  var renderedCanticle = {intoned: false};
   var setCanticle = function(type) {
     type = (typeof type == 'undefined')? currentCanticle.replace(/_full$/,'') : type;
     var antType = type;
     if(fullyNotated('canticle')) type += '_full';
-    if(type === currentCanticle) return;
+    if(type === currentCanticle && renderedCanticle.intoned === intoned()) return;
     currentCanticle = type;
-    var canticle = type;
+    renderedCanticle = {intoned: intoned()};
+    var rendered = renderedCanticle;
     // There is no Nunc dimittis antiphon on All Souls' Day.
     var ant = antType === '-asd'? '' : "<chant-gabc src='canticle-ant"+antType+".gabc'></chant-gabc>";
+    // Salva nos is begun the same way in Paschal time; the Easter octave's alleluias are said in full.
+    var before = ant;
+    if(rendered.intoned && /^(|-pt|-hs)$/.test(antType)) {
+      before = "<chant-gabc src='canticle-ant"+(antType === '-hs'? '-hs' : '')+"-intonation.gabc'></chant-gabc>";
+    }
     if(antType==='-pt') {
       antType = '';
       type = type.slice(3);
@@ -458,8 +473,8 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     var psalm = "<chant-gabc notation='canticle'"+textLines('canticle')+" src='canticle-psalm"+type+".gabc'></chant-gabc>";
     var gotData = function(data){
       // a later call has changed the canticle since this one asked for its verses
-      if(currentCanticle !== canticle) return;
-      var html = ant + psalm + data;
+      if(renderedCanticle !== rendered) return;
+      var html = before + psalm + data;
       if(antType === '-po') {
         html += "<chant-gabc src='haec-dies.gabc'></chant-gabc>";
       } else {
@@ -488,10 +503,12 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     }
     if(typeof day == 'undefined' && typeof paschalTime == 'undefined') return;
     // Only process if things have changed since the last time this function was called.
-    if(renderedPsalms.day === day && renderedPsalms.paschalTime === paschalTime && renderedPsalms.full === fullyNotated('psalms')) return;
-    renderedPsalms = {day: day, paschalTime: paschalTime, full: fullyNotated('psalms')};
+    if(renderedPsalms.day === day && renderedPsalms.paschalTime === paschalTime && renderedPsalms.full === fullyNotated('psalms') &&
+        renderedPsalms.intoned === intoned()) return;
+    renderedPsalms = {day: day, paschalTime: paschalTime, full: fullyNotated('psalms'), intoned: intoned()};
     var rendered = renderedPsalms;
     var ant = '',
+        before = '',
         psalm = '',
         pt = '',
         full = fullyNotated('psalms')? '_full' : '';
@@ -504,17 +521,17 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
       psalm = "<chant-gabc notation='psalms'"+textLines('psalms')+" src='psalms/"+day+"/psalm"+pt+full+".gabc'></chant-gabc>";
     } else {
       pt = paschalTime?'-PT':'';
-      ant = paschalTime?
-        "<chant-gabc src='psalms/ant-PT.gabc'></chant-gabc>" :
-        "<chant-gabc src='psalms/"+day+"/ant.gabc'></chant-gabc>";
-      if(paschalTime === 'no-antiphon') ant = '';
+      var antFile = paschalTime? 'psalms/ant-PT' : 'psalms/'+day+'/ant';
+      ant = "<chant-gabc src='"+antFile+".gabc'></chant-gabc>";
+      before = rendered.intoned? "<chant-gabc src='"+antFile+"-intonation.gabc'></chant-gabc>" : ant;
+      if(paschalTime === 'no-antiphon') ant = before = '';
       psalm = "<chant-gabc notation='psalms'"+textLines('psalms')+" src='psalms/"+day+"/psalm"+pt+full+".gabc'></chant-gabc>";
       dayName = days[day];
     }
     var gotData = function(data){
       // a later call has changed the psalms since this one asked for their verses
       if(renderedPsalms !== rendered) return;
-      var html = ant + psalm + data + ant;
+      var html = before + psalm + data + ant;
       $('#placeholder').empty().append(html);
       markAllPlainText();
       textMode.translate('#placeholder');
@@ -563,9 +580,13 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
       var matches = calendar.dateMatches(date, $elem.attr('select-date'));
       return matches && selectDay;
     };
+    // under Divino Afflatu, the hymn's tone is DO's, where the menu has it (below)
+    var $hymn = d.hymn ? $('#te-lucis-' + d.hymn) : $();
+    if(d.hymn && !$hymn.length) console.warn('No te-lucis tone', d.hymn);
     //select inputs based on date
     $('.dropdown-menu a[select-date]').each(function(){
       var $this = $(this);
+      if($hymn.length && $this.closest('[name=te-lucis]').length) return;
       var matches = dateMatchesSelectDate($this);
       if(matches) {
         $this.trigger('click',true);
@@ -595,6 +616,7 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
         }
       }
     });
+    $hymn.trigger('click',true);
     var isPT = dates.isPaschalTime(date);
     var showChooseDay = (date.day() !== 0);
     var rbWeekday = $('#rbWeekday').attr('value',date.day());
@@ -620,6 +642,13 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
           break;
       }
       $('.weekday-lbl').text(name);
+    } else if(calendar.dateMatches(date,'easter-1')) {
+      // Under Divino Afflatu, Holy Saturday's Compline follows Easter's First Vespers (isTriduum): Sunday's psalms
+      // without an antiphon, as in the Easter octave, and the Nunc dimittis with Vespere autem sabbati.
+      showChooseDay = false;
+      setPsalms(0,'no-antiphon');
+      setCanticle('-hs');
+      $('.weekday-lbl').text('Holy Saturday');
     } else if(calendar.dateMatches(date,'allSouls')) {
       showChooseDay = false;
       $('.weekday-lbl').text('All Souls Day');

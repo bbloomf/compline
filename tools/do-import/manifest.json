@@ -4,7 +4,8 @@
     "Minor": "Psalterium/Special/Minor Special",
     "Mariaant": "Psalterium/Mariaant",
     "Doxologies": "Psalterium/Doxologies",
-    "Psalmi": "Psalterium/Psalmi/Psalmi minor"
+    "Psalmi": "Psalterium/Psalmi/Psalmi minor",
+    "Preces": "Psalterium/Special/Preces"
   },
   "texts": {
     "jube-domine.gabc": ["$Jube domne"],
@@ -51,6 +52,14 @@
     "psalms/5/ant.gabc": ["@Psalmi:Completorium:11 s/^.*?= //"],
     "psalms/6/ant.gabc": ["@Psalmi:Completorium:13 s/^.*?= //"],
     "psalms/ant-PT.gabc": [{"generate": "alleluia-antiphon"}],
+    "psalms/0/ant-intonation.gabc": [{"ref": "@Psalmi:Completorium:1 s/^.*?= //", "intonation": true}],
+    "psalms/1/ant-intonation.gabc": [{"ref": "@Psalmi:Completorium:3 s/^.*?= //", "intonation": true}],
+    "psalms/2/ant-intonation.gabc": [{"ref": "@Psalmi:Completorium:5 s/^.*?= //", "intonation": true}],
+    "psalms/3/ant-intonation.gabc": [{"ref": "@Psalmi:Completorium:7 s/^.*?= //", "intonation": true}],
+    "psalms/4/ant-intonation.gabc": [{"ref": "@Psalmi:Completorium:9 s/^.*?= //", "intonation": true}],
+    "psalms/5/ant-intonation.gabc": [{"ref": "@Psalmi:Completorium:11 s/^.*?= //", "intonation": true}],
+    "psalms/6/ant-intonation.gabc": [{"ref": "@Psalmi:Completorium:13 s/^.*?= //", "intonation": true}],
+    "psalms/ant-PT-intonation.gabc": [{"generate": "alleluia-antiphon", "intonation": true}],
 
     "te-lucis/Ferial.gabc": {"hymn": "@Minor:Hymnus Completorium"},
     "te-lucis/Ordinary.gabc": {"hymn": "@Minor:Hymnus Completorium"},
@@ -69,6 +78,18 @@
     "te-lucis/Sacred-Heart.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Heart"},
     "te-lucis/Transfiguration.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Sancti/08-06:Doxology"},
     "te-lucis/Christ-the-King.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Sancti/10-DU:Doxology"},
+    "te-lucis/Ordinary-Christmas.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Nat"},
+    "te-lucis/Advent-Christmas.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Nat"},
+    "te-lucis/Solemn-Christmas.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Nat"},
+    "te-lucis/Lent-Christmas.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Nat"},
+    "te-lucis/Easter-Christmas.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Nat"},
+    "te-lucis/Sacred-Heart-Christmas.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Nat"},
+    "te-lucis/Christmas-Sacred-Heart.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Heart"},
+    "te-lucis/Ascension-Easter.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Pasch"},
+    "te-lucis/Our-Lady-Ferial.gabc": {"hymn": "@Minor:Hymnus Completorium"},
+    "te-lucis/Sacred-Heart-Ferial.gabc": {"hymn": "@Minor:Hymnus Completorium"},
+    "te-lucis/Christmas-Ferial.gabc": {"hymn": "@Minor:Hymnus Completorium"},
+    "te-lucis/Our-Lady-Seven-Sorrows.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Tempora/Quad5-5:Doxology"},
 
     "chapter.gabc": ["@Minor:Completorium_"],
 
@@ -134,9 +155,16 @@
 
     "canticle-ant.gabc": ["@Minor:Ant 4"],
     "canticle-ant-pt.gabc": [{"ref": "@Minor:Ant 4", "paschal": "single"}],
+    "canticle-ant-intonation.gabc": [{"ref": "@Minor:Ant 4", "intonation": true}],
+    "canticle-ant-hs.gabc": ["@Tempora/Pasc0-0:Ant 41"],
+    "canticle-ant-hs-intonation.gabc": [{"ref": "@Tempora/Pasc0-0:Ant 41", "intonation": true}],
     "canticle-ant-po.gabc": ["@Tempora/Pasc0-0:Ant 43:1"],
     "haec-dies.gabc": ["@Tempora/Pasc0-0:Ant 43:2"],
 
+    "index:kyrie": ["$Kyrie"],
+    "index:preces-pater": [{"ref": "$Pater noster Et", "tail": 2}],
+    "index:preces-credo": [{"ref": "$Credo Carnis", "tail": 2}],
+    "index:preces-dominicales": [["@Preces:Preces dominicales Completorium", "@Prayers:Dominus:3-4"]],
     "index:dominus-vobiscum": ["@Prayers:Dominus:1-2"],
     "index:domine-exaudi": ["@Prayers:Dominus:3-4"],
     "prayer.gabc": [["$Oremus", "$Oratio Visita_", "$Per Dominum"]],
