@@ -152,3 +152,21 @@ v. Dieu tout-puissant et éternel, vous avez préparé le corps et l’âme de l
 # Psalm 133: a small "qui", as the verse goes on from the one before (as the psalter's others do).
 [@Psalterium/Psalmorum/Psalm133]
 133:1b qui demeurez dans la maison du Seigneur, * dans les parvis de la maison de notre Dieu.
+
+# Thursday's antiphon, with the * its Latin has (Adjútor meus * et liberátor meus esto, Dómine), so that its
+# opening words can be said before the psalms under Divino Afflatu (psalms/4/ant-intonation.gabc).
+[@Psalmi:Completorium]
+Dominica = Ayez pitié de moi, * Seigneur, et exaucez ma prière.
+4, 90, 133
+Feria II = Sauvez-moi, * Seigneur, dans votre miséricorde.
+6, 7(2-10), 7(11-18)
+Feria III = C’est vous, Seigneur, * qui nous sauverez et nous garderez pour l’éternité.
+11, 12, 15
+Feria IV = L’Ange du Seigneur * s’intéressera à ceux qui le révèrent et les sauvera.
+33(2-11), 33(12-23), 60
+Feria V = Soyez mon secours * et mon libérateur, Seigneur.
+69, 70(1-12), 70(13-24)
+Feria VI = Avec ma voix, * vers le Seigneur j’ai crié, et que Dieu n’oublie point de faire miséricorde.
+76(2-13), 76(14-21), 85
+Sabbato = Qu’elle vienne, * ma prière, devant vous, Seigneur.
+87, 102(1-12), 102(13-22)

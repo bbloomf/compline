@@ -89,7 +89,7 @@
     "te-lucis/Our-Lady-Ferial.gabc": {"hymn": "@Minor:Hymnus Completorium"},
     "te-lucis/Sacred-Heart-Ferial.gabc": {"hymn": "@Minor:Hymnus Completorium"},
     "te-lucis/Christmas-Ferial.gabc": {"hymn": "@Minor:Hymnus Completorium"},
-    "te-lucis/Seven-Sorrows.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Tempora/Quad5-5:Doxology"},
+    "te-lucis/Our-Lady-Seven-Sorrows.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Tempora/Quad5-5:Doxology"},
 
     "chapter.gabc": ["@Minor:Completorium_"],
 

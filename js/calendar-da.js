@@ -13,7 +13,7 @@
 // te-lucis/ file.
 define({
 "ALPHABET": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
-"hymns": ["Christmas","Epiphany","Holy-Family","Ordinary","Passiontide","Our-Lady","Ferial","Lent","Solemn","Seven-Sorrows","Easter","Ascension","Pentecost","Solemn-Christmas","Christmas-Sacred-Heart","Sacred-Heart","Ordinary-Christmas","Transfiguration","Christ-the-King","Advent","Advent-Christmas","Ascension-Easter","Sacred-Heart-Ferial","Lent-Christmas","Easter-Christmas","Our-Lady-Ferial","Seven-Dolors","Sacred-Heart-Christmas","Christmas-Ferial"],
+"hymns": ["Christmas","Epiphany","Holy-Family","Ordinary","Passiontide","Our-Lady","Ferial","Lent","Solemn","Our-Lady-Seven-Sorrows","Easter","Ascension","Pentecost","Solemn-Christmas","Christmas-Sacred-Heart","Sacred-Heart","Ordinary-Christmas","Transfiguration","Christ-the-King","Advent","Advent-Christmas","Ascension-Easter","Sacred-Heart-Ferial","Lent-Christmas","Easter-Christmas","Our-Lady-Ferial","Seven-Dolors","Sacred-Heart-Christmas","Christmas-Ferial"],
 "ranks": [
 {"rank":"Double of the II Class","duplex":3,"cls":2},
 {"rank":"Simple","duplex":1,"cls":4},
