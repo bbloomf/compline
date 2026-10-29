@@ -494,6 +494,13 @@ chant-gabc > .chant-tr {
 chant-gabc > svg + .chant-tr {
   margin-top: 0;
 }
+/* and set apart from the next unit's notes */
+chant-gabc > .chant-tr:has(+ svg) {
+  margin-bottom: 1em;
+}
+chant-gabc > .chant-tr > p {
+  line-height: 1.25;
+}
 /* On a narrow screen a psalm verse's translation is under it, nearer to it than to the next verse,
    so that each pair reads as one.  (Not under the notes, where the next verse's notes are below.) */
 @media screen and (max-width: 767px) {
