@@ -103,6 +103,10 @@ Następnie kantor mówi wersety responsorium krótkiego, a wszyscy odpowiadają 
 [responsory-passiontide]
 (W okresie Męki Pańskiej, z wyjątkiem świąt I i II klasy, opuszcza się {Gloria Patri}, a w jego miejsce wszyscy od razu powtarzają „{In manus tuas...}”)
 
+# (In Passiontide, except on the feasts of the Saints and of the Seven Sorrows, the Gloria Patri is omitted, and all repeat again immediately “In manus tuas...” in its place)
+[responsory-passiontide-da]
+(W okresie Męki Pańskiej, z wyjątkiem świąt Świętych i Siedmiu Boleści, opuszcza się {Gloria Patri}, a w jego miejsce wszyscy od razu powtarzają „{In manus tuas...}”)
+
 # Then the Preces are said:
 [preces]
 Następnie odmawia się prośby (Preces):
@@ -154,6 +158,10 @@ ANTYFONA MARYJNA
 # (from Easter Sunday until Friday in the Octave of Pentecost inclusive)
 [marian-regina]
 (od Niedzieli Wielkanocnej do piątku w oktawie Zesłania Ducha Świętego włącznie)
+
+# (from Holy Saturday until Friday in the Octave of Pentecost inclusive)
+[marian-regina-da]
+(od Wielkiej Soboty do piątku w oktawie Zesłania Ducha Świętego włącznie)
 
 # (from Saturday before Trinity Sunday until Friday before the First Sunday of Advent inclusive)
 [marian-salve]

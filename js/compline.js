@@ -444,12 +444,13 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   // (<antiphon>-intonation.gabc), and the whole of it after them, as DO says it at Compline on every day, double or
   // not (its antetpsalm doubles the antiphons only at Matins, Lauds and Vespers).
   var intoned = function() {
-    return localStorage.rubrics === 'DA';
+    return calendar.getRubrics() === 'DA';
   };
   // type should be '-po' for paschal octave, '-pt' for paschal time, or '-asd' for all souls' day, '-hs' for Holy
   // Saturday under Divino Afflatu, or '' for regular
   var currentCanticle = '';
-  var renderedCanticle = {};
+  // index.html's own canticle, not intoned
+  var renderedCanticle = {intoned: false};
   var setCanticle = function(type) {
     type = (typeof type == 'undefined')? currentCanticle.replace(/_full$/,'') : type;
     var antType = type;
@@ -579,11 +580,13 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
       var matches = calendar.dateMatches(date, $elem.attr('select-date'));
       return matches && selectDay;
     };
+    // under Divino Afflatu, the hymn's tone is DO's, where the menu has it (below)
+    var $hymn = d.hymn ? $('#te-lucis-' + d.hymn) : $();
+    if(d.hymn && !$hymn.length) console.warn('No te-lucis tone', d.hymn);
     //select inputs based on date
     $('.dropdown-menu a[select-date]').each(function(){
       var $this = $(this);
-      // under Divino Afflatu, the hymn's tone is DO's (below)
-      if(d.hymn && $this.closest('[name=te-lucis]').length) return;
+      if($hymn.length && $this.closest('[name=te-lucis]').length) return;
       var matches = dateMatchesSelectDate($this);
       if(matches) {
         $this.trigger('click',true);
@@ -613,7 +616,7 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
         }
       }
     });
-    if(d.hymn) $('#te-lucis-' + d.hymn).trigger('click',true);
+    $hymn.trigger('click',true);
     var isPT = dates.isPaschalTime(date);
     var showChooseDay = (date.day() !== 0);
     var rbWeekday = $('#rbWeekday').attr('value',date.day());

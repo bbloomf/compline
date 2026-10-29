@@ -274,7 +274,8 @@ var DOXOLOGIES = {
   'Special:Sancti/09-15.txt': 'Seven-Sorrows', 'Special:Tempora/Quad5-5.txt': 'Seven-Sorrows'
 };
 // Each te-lucis/ file's melody and doxology, as above.  <Melody>-<Doxology> is a melody with another's doxology,
-// which only Divino Afflatu has, and Seven-Sorrows is Our Lady's melody with the Seven Sorrows' own doxology.
+// which only Divino Afflatu has (Our-Lady-Seven-Sorrows is Our Lady's melody with the Seven Sorrows' own doxology;
+// Seven-Dolors is 1960's tone for the feast).
 var HYMNS = {
   Ferial: ['Ferial', 'Ferial'], Ordinary: ['Ordinary', 'Ferial'], Solemn: ['Solemn', 'Ferial'],
   Advent: ['Advent', 'Ferial'], Lent: ['Lent', 'Ferial'], Passiontide: ['Passiontide', 'Ferial'],
@@ -282,12 +283,14 @@ var HYMNS = {
   Easter: ['Easter', 'Easter'], Ascension: ['Ascension', 'Ascension'], Transfiguration: ['Ascension', 'Transfiguration'],
   Pentecost: ['Pentecost', 'Pentecost'], 'Christ-the-King': ['Pentecost', 'Christ-the-King'],
   'Sacred-Heart': ['Sacred-Heart', 'Sacred-Heart'], 'Our-Lady': ['Our-Lady', 'Christmas'],
-  'Seven-Dolors': ['Passiontide', 'Christmas'], 'Seven-Sorrows': ['Our-Lady', 'Seven-Sorrows']
+  'Seven-Dolors': ['Passiontide', 'Christmas'],
+  'Ordinary-Christmas': ['Ordinary', 'Christmas'], 'Advent-Christmas': ['Advent', 'Christmas'],
+  'Solemn-Christmas': ['Solemn', 'Christmas'], 'Lent-Christmas': ['Lent', 'Christmas'],
+  'Easter-Christmas': ['Easter', 'Christmas'], 'Sacred-Heart-Christmas': ['Sacred-Heart', 'Christmas'],
+  'Christmas-Sacred-Heart': ['Christmas', 'Sacred-Heart'], 'Ascension-Easter': ['Ascension', 'Easter'],
+  'Our-Lady-Ferial': ['Our-Lady', 'Ferial'], 'Sacred-Heart-Ferial': ['Sacred-Heart', 'Ferial'],
+  'Christmas-Ferial': ['Christmas', 'Ferial'], 'Our-Lady-Seven-Sorrows': ['Our-Lady', 'Seven-Sorrows']
 };
-fs.readdirSync(path.join(root, 'te-lucis')).forEach(function(file) {
-  var m = /^(.+?)-(Christmas|Ferial|Sacred-Heart|Easter)\.gabc$/.exec(file);
-  if(m && !(m[1] + '-' + m[2] in HYMNS)) HYMNS[m[1] + '-' + m[2]] = [m[1], m[2]];
-});
 var hymnFile = function(tone, doxology) {
   var melody = MELODIES[tone], dox = DOXOLOGIES[doxology];
   if(!melody) unknown['tone: ' + tone] = true;
@@ -315,6 +318,8 @@ function finish() {
     var codes = '';
     output[kind].split('\n').filter(Boolean).forEach(function(line) {
       var c = line.split('\t');
+      // a --raw file from before compline-office.pl printed the preces and the hymn
+      if(c.length < 13) throw new Error('Only ' + c.length + ' columns for ' + c[0] + ': run DO again');
       var mdy = c[0].split('-');
       var weekday = new Date(+mdy[2], mdy[0] - 1, +mdy[1]).getDay();
       var key = c[1].replace(/\.txt$/, ''), rank = c[4], duplex = +c[6], vespera = +c[7], psalms = PSALMS.indexOf(c[8]);
@@ -335,6 +340,15 @@ function finish() {
     throw new Error(offices.length + ' offices, ' + ranks.length + ' ranks and ' + hymns.length + ' hymns don\'t fit');
   }
   Object.keys(unknown).sort().forEach(function(u) { console.warn('Not translated: ' + u); });
+  // each day's hymn has to be one of te-lucis/ and of index.html's menu (compline.js's setDate)
+  var html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+  hymns.forEach(function(h) {
+    if(!fs.existsSync(path.join(root, 'te-lucis', h + '.gabc')) || html.indexOf("id='te-lucis-" + h + "'") < 0) {
+      unknown['te-lucis/ file: ' + h + ' (or its menu item)'] = true;
+    }
+  });
+  var hymnless = Object.keys(unknown).filter(function(u) { return /^(tone|doxology|te-lucis\/ file): /.test(u); });
+  if(hymnless.length) throw new Error('No te-lucis/ file for some days: ' + hymnless.join('; '));
   var file = path.join(root, 'js/calendar-da.js');
   var header = [
     '// The calendar under the rubrics of Divino Afflatu, from Divinum Officium',

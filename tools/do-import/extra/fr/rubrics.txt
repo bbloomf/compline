@@ -103,6 +103,10 @@ Le Chantre dit ensuite les versets du Répons bref, auxquels tous répondent apr
 [responsory-passiontide]
 (Au temps de la Passion, sauf aux fêtes de Ire ou de IIe classe, on omet le {Gloria Patri}, et tous reprennent aussitôt à sa place « {In manus tuas...} »)
 
+# (In Passiontide, except on the feasts of the Saints and of the Seven Sorrows, the Gloria Patri is omitted, and all repeat again immediately “In manus tuas...” in its place)
+[responsory-passiontide-da]
+(Au temps de la Passion, sauf aux fêtes des Saints et des Sept Douleurs, on omet le {Gloria Patri}, et tous reprennent aussitôt à sa place « {In manus tuas...} »)
+
 # Then the Preces are said:
 [preces]
 On dit ensuite les Preces :
@@ -154,6 +158,10 @@ ANTIENNE MARIALE
 # (from Easter Sunday until Friday in the Octave of Pentecost inclusive)
 [marian-regina]
 (du dimanche de Pâques au vendredi dans l’octave de la Pentecôte inclus)
+
+# (from Holy Saturday until Friday in the Octave of Pentecost inclusive)
+[marian-regina-da]
+(du Samedi saint au vendredi dans l’octave de la Pentecôte inclus)
 
 # (from Saturday before Trinity Sunday until Friday before the First Sunday of Advent inclusive)
 [marian-salve]

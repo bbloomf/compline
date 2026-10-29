@@ -248,6 +248,7 @@ var pickLines = function(lines, spec) {
 };
 
 var intonation = function(line) {
+  if(line.indexOf('*') < 0) return '⟨no * in the antiphon⟩';
   return line.replace(/\s*\*.*$/, '').replace(/,$/, '.');
 };
 

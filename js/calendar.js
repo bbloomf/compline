@@ -735,6 +735,14 @@ define(['moment','moment.easter'], function(moment){
     var d = getFeastForDate(date);
     return !!(d && d.preces === 2);
   };
+  // In Passiontide, the days the short responsory omits the Gloria Patri: under 1960's rubrics on Sundays and below
+  // the II class; under Divino Afflatu, as in DO's Gloria1, unless the office is a saint's or has DO's rule
+  // "Gloria responsory" (the Seven Sorrows on the Friday after Passion Sunday).
+  Dates.prototype.passiontideResponsory = function(date) {
+    var d = getFeastForDate(date);
+    if(d && 'rankName' in d) return !/^Sancti\/|^Tempora\/Quad5-5$/.test(d.key);
+    return date.day() === 0 || !this.firstOrSecondClassFeast(date);
+  };
   // Holy Saturday's Compline of the Triduum, which Divino Afflatu hasn't (isTriduum)
   Dates.prototype.triduumSaturday = function(date) {
     return this.isTriduum(date) && date.isSame(moment(this.easter).subtract(1,'day'), 'day');
@@ -860,6 +868,7 @@ return {
   dateMatches: dateMatches,
   datesForMoment: datesForMoment,
   getFeastForDate: getFeastForDate,
-  setRubrics: setRubrics
+  setRubrics: setRubrics,
+  getRubrics: function() { return rubrics; }
 };
 });
