@@ -158,7 +158,7 @@ p.red {
 body {
   font-family: 'Crimson Text', serif;
   font-size: 19.2px; /* the size of the chant lyrics (see chant-element.js) */
-  line-height: 1.25;
+  line-height: 1.15;
   margin: 8px;
 }
 .sans{font-family: sans-serif;}
