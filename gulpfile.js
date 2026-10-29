@@ -4,7 +4,6 @@
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var del = require('del');
-var pagespeed = require('psi');
 var htmlmin = require('gulp-htmlmin');
 var replace = require('gulp-replace');
 var pump = require('pump');
@@ -133,17 +132,6 @@ gulp.task('clean', del.bind(null, ['.tmp', 'dist/*', '!dist/.git'], {dot: true})
 
 // Build Production Files, the Default Task
 gulp.task('default', gulp.series(['html', 'styles', 'scripts', 'copy']));
-
-// Run PageSpeed Insights
-// Update `url` below to the public URL for your site
-gulp.task('pagespeed', pagespeed.bind(null, {
-  // By default, we use the PageSpeed Insights
-  // free (no API key) tier. You can use a Google
-  // Developer API key if you have one. See
-  // http://goo.gl/RkN0vE for info key: 'YOUR_API_KEY'
-  url: 'https://compline.us.to',
-  strategy: 'mobile'
-}));
 
 // Load custom tasks from the `tasks` directory
 // try { require('require-dir')('tasks'); } catch (err) { console.error(err); }
