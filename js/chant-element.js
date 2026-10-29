@@ -350,6 +350,17 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
     svg.removeAttribute('height');
     return svg;
   };
+  // How much the browser enlarges CSS text beyond its specified size: Android's font size setting
+  // (the WebView's text zoom, and Chrome's text scaling).  It leaves SVG text alone, so without
+  // this the chant's words come out smaller than the text around them.  A 100px probe reports it.
+  var textScale = function() {
+    var probe = document.createElement('div');
+    probe.style.cssText = 'position:absolute;visibility:hidden;font-size:100px';
+    document.body.appendChild(probe);
+    var scale = parseFloat(window.getComputedStyle(probe).fontSize) / 100;
+    document.body.removeChild(probe);
+    return scale > 0 ? scale : 1;
+  };
   if (window.matchMedia) {
     var mediaQueryList = window.matchMedia('print');
     mediaQueryList.addListener(function(mql) {
@@ -405,8 +416,9 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       newWidth = newWidth || (this.parentElement && this.parentElement.clientWidth) || window.document.body.clientWidth;
       if(newWidth === 0) return;
       sync = !!sync;
-      // printing uses the full width, without scaling
-      if(!sync) newWidth = Math.min(newWidth, maxLayoutWidth);
+      // printing uses the full width, without scaling.  On screen, laying out narrower by the text
+      // scale has the SVG scale up by it, notes and words together, to match the text around it.
+      if(!sync) newWidth = Math.min(newWidth, maxLayoutWidth) / textScale();
       if(this._width === newWidth && this._sync === sync) return;
       var width = this._width = newWidth;
       this._sync = sync;
