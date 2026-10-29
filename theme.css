@@ -19,6 +19,10 @@
   /* a translation beside the Latin (style.css) */
   --tr-color: #555;
 }
+/* the text as black as the chant's lyrics, not Bootstrap's #333 */
+body {
+  color: #000;
+}
 chant-gabc > svg {
   color: #000;
   /* read by the fill attribute on "negative" glyph paths, such as the hollow of
