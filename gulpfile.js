@@ -3,9 +3,11 @@
 // Include Gulp & Tools We'll Use
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
-var del = require('del');
+var deleteAsync = require('del').deleteAsync;
 var htmlmin = require('gulp-htmlmin');
 var replace = require('gulp-replace');
+// gulp-size is ESM-only, which gulp-load-plugins can't load
+var size = require('gulp-size').default;
 var pump = require('pump');
 
 // Lint JavaScript
@@ -25,8 +27,6 @@ gulp.task('copy', function() {
     'js/i18n/LICENSE-divinum-officium.txt',
     'js/hyphenation/*.js',
     'js/hyphenation/LICENSE.txt',
-    'fonts/*.woff',
-    'fonts/*.woff2',
     '!dist/**/*',
     '!node_modules/**/*',
     '!cordova/**/*',
@@ -36,7 +36,16 @@ gulp.task('copy', function() {
     dot: true,
     base: '.'
   }).pipe(gulp.dest('dist'))
-    .pipe($.size({title: 'copy'}));
+    .pipe(size({title: 'copy'}));
+});
+
+// Copy the fonts byte for byte, since gulp 5 otherwise reads files as UTF-8
+gulp.task('fonts', function() {
+  return gulp.src(['fonts/*.woff', 'fonts/*.woff2'], {
+    base: '.',
+    encoding: false
+  }).pipe(gulp.dest('dist'))
+    .pipe(size({title: 'fonts'}));
 });
 
 // Compile and Automatically Prefix Stylesheets
@@ -56,7 +65,7 @@ gulp.task('styles', function(cb) {
   //   // Concatenate And Minify Styles
   //   .pipe($.if('*.css', $.csso()))
   //   .pipe(gulp.dest('dist'))
-  //   .pipe($.size({title: 'styles'}));
+  //   .pipe(size({title: 'styles'}));
 });
 
 // Build one javascript file:
@@ -101,7 +110,7 @@ gulp.task('scripts_old', function(cb) {
         gulp.src(sources, {base: '.'}),
         $.uglify(),
         gulp.dest('dist'),
-        $.size({title: 'scripts'})
+        size({title: 'scripts'})
     ],
     cb
   );
@@ -121,7 +130,7 @@ gulp.task('html', function() {
     .pipe(htmlmin({collapseWhitespace: true, removeComments: true}))
     // Output Files
     .pipe(gulp.dest('dist'))
-    .pipe($.size({title: 'html'}));
+    .pipe(size({title: 'html'}));
 });
 
 // Record the version from package.json, which the Cordova app's config.xml takes from www/version.json
@@ -134,13 +143,13 @@ gulp.task('version', function(cb) {
 });
 
 // Clean Output Directory
-gulp.task('clean', del.bind(null, ['.tmp', 'dist/*', '!dist/.git'], {dot: true}));
+gulp.task('clean', deleteAsync.bind(null, ['.tmp', 'dist/*', '!dist/.git'], {dot: true}));
 
 // Build and serve the output from the dist build
 // gulp.task('serve:dist', ['default']);
 
 // Build Production Files, the Default Task
-gulp.task('default', gulp.series(['html', 'styles', 'scripts', 'copy', 'version']));
+gulp.task('default', gulp.series(['html', 'styles', 'scripts', 'copy', 'fonts', 'version']));
 
 // Load custom tasks from the `tasks` directory
 // try { require('require-dir')('tasks'); } catch (err) { console.error(err); }
