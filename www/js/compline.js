@@ -1224,18 +1224,32 @@ define('text-mode',['jquery'], function($) {
   var escapeHtml = function(text) {
     return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   };
+  // Whether a Latin block (as HTML) runs its last ℟ on from the words before it, as "… ad vitam
+  // ætérnam. ℟ Amen." does, rather than starting a line with it.
+  var runsOnResponse = function(latinHtml) {
+    var marks = latinHtml.split(/<span class=["']versiculum["']>r<\/span>/);
+    // the words between the last line break (or block) before it and it
+    var before = marks.length > 1 && marks[marks.length - 2].replace(/^[^]*(<br\s*\/?>|<\/?(p|div)\b[^>]*>)/, '');
+    return !!before && /\S/.test(before.replace(/<[^>]*>|&nbsp;/g, ''));
+  };
   // A unit as HTML, marked up like the Latin.  With slashes, its lines are run together with a red
-  // slash between them, as under a notated hymn's verse.
-  var unitHtml = function(text, slashes) {
-    return text.split('\n').map(function(line) {
+  // slash between them, as under a notated hymn's verse.  With runOn, a last line that is a ℟ (an
+  // Amen) runs on from the line before, where the Latin's does (runsOnResponse).
+  var unitHtml = function(text, slashes, runOn) {
+    var lines = text.split('\n').map(function(line) {
       return escapeHtml(line.trim())
         .replace(/^V\. /, "<span class='versiculum'>v</span>&nbsp;")
         .replace(/^R\. /, "<span class='versiculum'>r</span>&nbsp;")
         .replace(/ (\*|†)(?= |$)/g, "&nbsp;<span class='red'>$1</span>");
-    }).join(slashes ? "&nbsp;<span class='red'>/</span> " : '<br>');
+    });
+    if(runOn && lines.length > 1 && /^<span class='versiculum'>r<\/span>/.test(lines[lines.length - 1])) {
+      lines.splice(-2, 2, lines[lines.length - 2] + ' ' + lines[lines.length - 1]);
+    }
+    return lines.join(slashes ? "&nbsp;<span class='red'>/</span> " : '<br>');
   };
-  var unitsHtml = function(units, slashes) {
-    return units.map(function(unit) { return unitHtml(unit, slashes); }).join('<br>');
+  // The Latin's last ℟ is in the last unit.
+  var unitsHtml = function(units, slashes, runOn) {
+    return units.map(function(unit, i) { return unitHtml(unit, slashes, runOn && i === units.length - 1); }).join('<br>');
   };
   // The name of the translation's language, from its module.
   var langName = function() {
@@ -1276,7 +1290,7 @@ define('text-mode',['jquery'], function($) {
   var pairHtml = function(latinHtml, units, tag, m) {
     tag = tag || 'p';
     return "<div class='tr-pair'><" + tag + " lang='la' class='" + latinClass(!!units, m) + "'>" + latinHtml + '</' + tag + '>' +
-      (units ? '<' + tag + trAttributes() + '>' + unitsHtml(units) + '</' + tag + '>' : '') + '</div>';
+      (units ? '<' + tag + trAttributes() + '>' + unitsHtml(units, false, runsOnResponse(latinHtml)) + '</' + tag + '>' : '') + '</div>';
   };
 
   // Adds the translations to the page, or takes them away in 'la' mode: each .tr-pair[data-tr]
@@ -1299,7 +1313,7 @@ define('text-mode',['jquery'], function($) {
       $latin.removeClass('has-tr tr-missing tr-same').addClass(latinClass(!!units, m));
       if(units) {
         var tag = $latin.prop('tagName').toLowerCase();
-        $latin.after('<' + tag + trAttributes() + '>' + unitsHtml(units) + '</' + tag + '>');
+        $latin.after('<' + tag + trAttributes() + '>' + unitsHtml(units, false, runsOnResponse($latin.html())) + '</' + tag + '>');
       }
     });
     $root.find('.verses[data-psalm]').each(function() {
@@ -1351,6 +1365,7 @@ define('text-mode',['jquery'], function($) {
     psalmSection: psalmSection,
     hasPsalm: hasPsalm,
     psalmVerse: psalmVerse,
+    runsOnResponse: runsOnResponse,
     unitsHtml: unitsHtml,
     langName: langName,
     langAttr: langAttr,
@@ -2700,8 +2715,8 @@ define('chant-element',['jquery','exsurge','text-mode','document-register-elemen
     if(!units) return result;
     // Under the notes, a hymn's or a Marian antiphon's lines run together, with a red slash between them.
     var slashes = /^(te-lucis|marian-antiphon)\/(?!.*-prayer)/.test(translation.key);
-    var unitHtml = function(units) {
-      return '<div class="chant-tr"><p' + textMode.trAttributes() + '>' + textMode.unitsHtml(units, slashes) + '</p></div>';
+    var unitHtml = function(units, runOn) {
+      return '<div class="chant-tr"><p' + textMode.trAttributes() + '>' + textMode.unitsHtml(units, slashes, runOn) + '</p></div>';
     };
     if(units.length !== unitCount) {
       console.warn('The translation has ' + units.length + ' units, the chant ' + unitCount, translation.key);
@@ -2709,7 +2724,9 @@ define('chant-element',['jquery','exsurge','text-mode','document-register-elemen
       return scores;
     }
     result.forEach(function(unit) {
-      if('index' in unit) unit.translationHtml = unitHtml([units[unit.index]]);
+      // its ℟ Amen on its own line or not, as the Latin's is in the GABC (and so in plain text)
+      if('index' in unit) unit.translationHtml = unitHtml([units[unit.index]],
+        textMode.runsOnResponse(unit.body.split(/\r?\n/).map(gabcLineToHtml).join('<br>')));
     });
     return result;
   };
@@ -2749,6 +2766,17 @@ define('chant-element',['jquery','exsurge','text-mode','document-register-elemen
     svg.setAttribute('width', (100 * svg.getAttribute('width') / layoutWidth) + '%');
     svg.removeAttribute('height');
     return svg;
+  };
+  // How much the browser enlarges CSS text beyond its specified size: Android's font size setting
+  // (the WebView's text zoom, and Chrome's text scaling).  It leaves SVG text alone, so without
+  // this the chant's words come out smaller than the text around them.  A 100px probe reports it.
+  var textScale = function() {
+    var probe = document.createElement('div');
+    probe.style.cssText = 'position:absolute;visibility:hidden;font-size:100px';
+    document.body.appendChild(probe);
+    var scale = parseFloat(window.getComputedStyle(probe).fontSize) / 100;
+    document.body.removeChild(probe);
+    return scale > 0 ? scale : 1;
   };
   if (window.matchMedia) {
     var mediaQueryList = window.matchMedia('print');
@@ -2805,8 +2833,9 @@ define('chant-element',['jquery','exsurge','text-mode','document-register-elemen
       newWidth = newWidth || (this.parentElement && this.parentElement.clientWidth) || window.document.body.clientWidth;
       if(newWidth === 0) return;
       sync = !!sync;
-      // printing uses the full width, without scaling
-      if(!sync) newWidth = Math.min(newWidth, maxLayoutWidth);
+      // printing uses the full width, without scaling.  On screen, laying out narrower by the text
+      // scale has the SVG scale up by it, notes and words together, to match the text around it.
+      if(!sync) newWidth = Math.min(newWidth, maxLayoutWidth) / textScale();
       if(this._width === newWidth && this._sync === sync) return;
       var width = this._width = newWidth;
       this._sync = sync;
