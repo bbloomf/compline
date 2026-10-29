@@ -124,6 +124,15 @@ gulp.task('html', function() {
     .pipe($.size({title: 'html'}));
 });
 
+// Record the version from package.json, which the Cordova app's config.xml takes from www/version.json
+gulp.task('version', function(cb) {
+  var fs = require('fs');
+  var version = JSON.parse(fs.readFileSync('package.json', 'utf8')).version;
+  fs.mkdirSync('dist', {recursive: true});
+  fs.writeFileSync('dist/version.json', JSON.stringify({version: version}) + '\n');
+  cb();
+});
+
 // Clean Output Directory
 gulp.task('clean', del.bind(null, ['.tmp', 'dist/*', '!dist/.git'], {dot: true}));
 
@@ -131,7 +140,7 @@ gulp.task('clean', del.bind(null, ['.tmp', 'dist/*', '!dist/.git'], {dot: true})
 // gulp.task('serve:dist', ['default']);
 
 // Build Production Files, the Default Task
-gulp.task('default', gulp.series(['html', 'styles', 'scripts', 'copy']));
+gulp.task('default', gulp.series(['html', 'styles', 'scripts', 'copy', 'version']));
 
 // Load custom tasks from the `tasks` directory
 // try { require('require-dir')('tasks'); } catch (err) { console.error(err); }
