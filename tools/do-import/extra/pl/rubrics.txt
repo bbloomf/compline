@@ -42,6 +42,10 @@ Wszyscy żegnają się znakiem krzyża, gdy przewodniczący mówi:
 [examen]
 Tu wszyscy zatrzymują się w milczeniu; można wtedy zrobić krótki rachunek sumienia lub odmówić po cichu Ojcze nasz.
 
+# Here all say the Pater noster silently throughout.
+[pater-silent]
+Tu wszyscy odmawiają {Pater noster} w całości po cichu.
+
 # The Officiant now bows profoundly and says the {Confiteor} alone in a low voice, recto tono.  After this, all bow profoundly toward the Officiant and say in the same low recto tono voice:
 [confiteor-officiant]
 Przewodniczący wykonuje teraz głęboki skłon i sam odmawia {Confiteor} półgłosem, recto tono. Potem wszyscy kłaniają się głęboko w stronę przewodniczącego i mówią tym samym półgłosem, recto tono:
@@ -83,6 +87,15 @@ Potem wszyscy klękają i mówią:
 {Pater noster} odmawia się w całości po cichu.
 Następnie dodaje się na głos, bez {Orémus}, kolektę:
 
+# {Pater noster} is said, silently throughout. / Then, in a slightly louder voice:
+[triduum-pater-da]
+{Pater noster} odmawia się w całości po cichu.
+Następnie nieco głośniej:
+
+# Then there is added, without {Orémus}, the collect:
+[triduum-collect-da]
+Potem dodaje się, bez {Orémus}, kolektę:
+
 # The Officiant then intones the Hymn {Te lucis} which is sung in one of the tones given below.  All bow slightly for the first three lines of the third stanza.
 [hymn]
 Następnie przewodniczący intonuje hymn {Te lucis}, śpiewany jednym z podanych niżej tonów. Wszyscy lekko się kłaniają przy pierwszych trzech wersach trzeciej zwrotki.
@@ -98,6 +111,22 @@ Następnie kantor mówi wersety responsorium krótkiego, a wszyscy odpowiadają 
 # (In Passiontide, except on a First or Second Class Feast, the Gloria Patri is omitted, and all repeat again immediately “In manus tuas...” in its place)
 [responsory-passiontide]
 (W okresie Męki Pańskiej, z wyjątkiem świąt I i II klasy, opuszcza się {Gloria Patri}, a w jego miejsce wszyscy od razu powtarzają „{In manus tuas...}”)
+
+# (In Passiontide, except on the feasts of the Saints and of the Seven Sorrows, the Gloria Patri is omitted, and all repeat again immediately “In manus tuas...” in its place)
+[responsory-passiontide-da]
+(W okresie Męki Pańskiej, z wyjątkiem świąt Świętych i Siedmiu Boleści, opuszcza się {Gloria Patri}, a w jego miejsce wszyscy od razu powtarzają „{In manus tuas...}”)
+
+# Then the Preces are said:
+[preces]
+Następnie odmawia się prośby (Preces):
+
+# Then all kneel, and the Preces are said:
+[preces-kneeling]
+Następnie wszyscy klękają i odmawia się prośby (Preces):
+
+# {Credo} is said in silence until
+[preces-credo]
+{Credo} odmawia się po cichu aż do
 
 # The Officiant introduces the Collect:
 [dominus-vobiscum]
@@ -139,6 +168,10 @@ ANTYFONA MARYJNA
 [marian-regina]
 (od Niedzieli Wielkanocnej do piątku w oktawie Zesłania Ducha Świętego włącznie)
 
+# (from Holy Saturday until Friday in the Octave of Pentecost inclusive)
+[marian-regina-da]
+(od Wielkiej Soboty do piątku w oktawie Zesłania Ducha Świętego włącznie)
+
 # (from Saturday before Trinity Sunday until Friday before the First Sunday of Advent inclusive)
 [marian-salve]
 (od soboty przed niedzielą Trójcy Przenajświętszej do piątku przed pierwszą niedzielą Adwentu włącznie)
@@ -154,6 +187,14 @@ Od I Nieszporów Bożego Narodzenia do II Nieszporów Oczyszczenia Najświętsze
 # All making the Sign of the Cross, Compline ends as the Officiant says:
 [divinum-auxilium]
 Wszyscy żegnają się znakiem krzyża, a kompleta kończy się, gdy przewodniczący mówi:
+
+# Then all say silently:
+[pater-ave-credo]
+Następnie wszyscy odmawiają po cichu:
+
+# If Matins follows immediately, the Pater noster, Ave Maria and Credo are said twice: once for the end of the day's Office, and once for the beginning of the next day's.
+[pater-ave-credo-matins]
+Jeśli zaraz potem następuje Jutrznia, {Pater noster}, {Ave Maria} i {Credo} odmawia się dwa razy: raz na zakończenie Oficjum danego dnia i raz na rozpoczęcie Oficjum dnia następnego.
 
 # Then all rise and depart in silence.
 [depart]

@@ -76,6 +76,28 @@ define({
       null,
       null
     ],
+    '50': [
+      'Miserére mei, Deus, * secúndum misericórdiam tuam;',
+      'Secúndum multitúdinem miseratiónum tuárum * dele iniquitátem meam.',
+      'Pénitus lava me a culpa mea, * et a peccáto meo munda me.',
+      'Nam iniquitátem meam ego agnósco, * et peccátum meum coram me est semper.',
+      'Tibi soli peccávi et, quod malum est coram te, feci, * ut manifestéris justus in senténtia tua, rectus in judício tuo.',
+      'Ecce, in culpa natus sum, * et in peccáto concépit me mater mea.',
+      'Ecce, sinceritáte cordis delectáris, * et in præcórdiis sapiéntiam me doces.',
+      'Aspérge me hyssópo, et mundábor; * lava me, et super nivem dealbábor.',
+      'Fac me audíre gáudium et lætítiam, * exsúltent ossa quæ contrivísti.',
+      'Avérte fáciem tuam a peccátis meis, * et omnes culpas meas dele.',
+      'Cor mundum crea mihi, Deus, * et spíritum firmum rénova in me.',
+      'Ne projéceris me a fácie tua, * et spíritum sanctum tuum ne abstúleris a me.',
+      'Redde mihi lætítiam salútis tuæ, * et spíritu generóso confírma me.',
+      'Docébo iníquos vias tuas, * et peccatóres ad te converténtur.',
+      'Líbera me a pœna sánguinis, Deus, Deus salvátor meus: * exsúltet lingua mea de justítia tua.',
+      null,
+      'Neque enim sacrifício delectáris; * et holocáustum, si darem, non acceptáres.',
+      'Sacrifícium meum, Deus, spíritus contrítus, * cor contrítum et humiliátum, Deus, non despícies.',
+      'Benígne fac, Dómine, pro bonitáte tua, erga Sion, * ut reædífices muros Jerúsalem.',
+      'Tunc acceptábis sacrifícia legítima, oblatiónes et holocáusta, * tunc ófferent super altáre tuum vítulos.'
+    ],
     '60': [
       'Audi, Deus, clamórem meum, * inténde oratióni meæ.',
       'Ab extrémis terræ ad te clamo, * cum déficit cor meum.',

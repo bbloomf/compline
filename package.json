@@ -9,6 +9,7 @@
     "update-cordova": "bash tools/update-cordova.sh",
     "build-hyphenation": "node tools/hyphenation/build.js",
     "import-do": "node tools/do-import/import.js",
+    "build-da-calendar": "node tools/do-import/da-calendar/build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
