@@ -5,6 +5,8 @@
   "main": "index.html",
   "scripts": {
     "build": "gulp",
+    "postversion": "npm run build && git push --follow-tags",
+    "update-cordova": "bash tools/update-cordova.sh",
     "build-hyphenation": "node tools/hyphenation/build.js",
     "import-do": "node tools/do-import/import.js",
     "test": "echo \"Error: no test specified\" && exit 1"
