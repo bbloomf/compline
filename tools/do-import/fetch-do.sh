@@ -22,6 +22,7 @@ git -C "$dir" sparse-checkout set --no-cone \
   'web/www/horas/*/Commune/C9.txt' \
   'web/www/horas/*/Tempora/Epi1-0.txt' \
   'web/www/horas/*/Tempora/Pasc0-0.txt' \
+  'web/www/horas/*/Tempora/Quad5-5.txt' \
   'web/www/horas/*/Tempora/Quad6-4.txt' \
   'web/www/horas/*/Tempora/Quad6-5.txt' \
   'web/cgi-bin/' \

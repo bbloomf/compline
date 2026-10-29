@@ -20,7 +20,7 @@ que nues-tros cuer-pos no man-che.
 
 # DO's lines 1 and 3, "Hazlo así, Padre piísimo" and "que reinas con el Espíritu", have 9 sung
 # syllables for the same reason (§7i).
-[Ferial Ordinary Solemn Advent Lent Passiontide] new
+[Ferial Ordinary Solemn Advent Lent Passiontide Our-Lady-Ferial Sacred-Heart-Ferial Christmas-Ferial] new
 Haz-lo‿a-sí, Pa-dre‿a-mo-ro-so,
 Hi-jo‿al Pa-dre se-me-jan-te,
 con el Es-pí-ri-tu rei-nas,
@@ -36,7 +36,7 @@ por si-glos in-ter-mi-na-bles.
 A-mén.
 
 # The other doxologies, approved for now in §4b (2026-10-26): lines 1, 3 and 4 are shared.
-[Christmas Our-Lady Seven-Dolors] new
+[Christmas Our-Lady Seven-Dolors Ordinary-Christmas Advent-Christmas Solemn-Christmas Lent-Christmas Easter-Christmas Sacred-Heart-Christmas] new
 Glo-ria‿a ti, Je-sús ben-di-to,
 na-ci-do de Vir-gen Ma-dre,
 con el Pa-dre‿y‿el Es-pí-ri-tu,
@@ -57,7 +57,7 @@ con el Pa-dre‿y‿el Es-pí-ri-tu,
 por si-glos in-ter-mi-na-bles.
 A-mén.
 
-[Sacred-Heart] new
+[Sacred-Heart Christmas-Sacred-Heart] new
 Glo-ria‿a ti, Je-sús ben-di-to:
 tu Co-ra-zón gra-cia‿es-par-ce.
 Con el Pa-dre‿y‿el Es-pí-ri-tu,

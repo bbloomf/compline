@@ -585,16 +585,18 @@ define(['moment','moment.easter'], function(moment){
   // Under the rubrics of Divino Afflatu, the office that Compline follows, from daCalendar (calendar-da.js, DO's
   // own calendar for each kind of year): its title, its rank (rankName, and as rank the class of 1960 that the
   // date tokens take it for), duplex, ol for a feast of Our Lady, first if Compline follows its First Vespers, and
-  // psalms, the day whose psalms are said.  undefined in the one kind of year that never comes from 1583 to 4099.
+  // psalms, the day whose psalms are said; preces, 1 if the preces are said after the Nunc dimittis, 2 if kneeling;
+  // and hymn, the hymn's tone (te-lucis/<hymn>.gabc).  undefined in the one kind of year that never comes from
+  // 1583 to 4099.
   function getDAFeast(date) {
     var Y = date.year();
     var codes = daCalendar.years[moment.easter(Y).format('MMDD') + (moment([Y]).isLeapYear() ? 'L' : '')];
     if(!codes) return;
-    var A = daCalendar.ALPHABET, i = 3 * (date.dayOfYear() - 1);
-    var office = daCalendar.offices[A.indexOf(codes[i]) * 64 + A.indexOf(codes[i + 1])];
+    var A = daCalendar.ALPHABET, i = 4 * (date.dayOfYear() - 1);
+    var o = A.indexOf(codes[i]) * 64 + A.indexOf(codes[i + 1]), office = daCalendar.offices[Math.floor(o / 3)];
     var v = A.indexOf(codes[i + 2]), rank = daCalendar.ranks[v >> 1];
     var feast = {title: office.title, key: office.key, rank: rank.cls, rankName: rank.rank, duplex: rank.duplex,
-      psalms: office.psalms === 0 ? 0 : date.day()};
+      psalms: office.psalms === 0 ? 0 : date.day(), preces: o % 3, hymn: daCalendar.hymns[A.indexOf(codes[i + 3])]};
     if(office.ol) feast.ol = 1;
     if(rank.sunday) feast.sunday = 1;
     if(v & 1) feast.first = 1;
@@ -724,6 +726,27 @@ define(['moment','moment.easter'], function(moment){
   Dates.prototype.divinoAfflatu = function(date) {
     return rubrics === 'DA';
   };
+  // Under Divino Afflatu, the preces after the Nunc dimittis (getDAFeast), and whether they're said kneeling
+  Dates.prototype.preces = function(date) {
+    var d = getFeastForDate(date);
+    return !!(d && d.preces);
+  };
+  Dates.prototype.precesKneeling = function(date) {
+    var d = getFeastForDate(date);
+    return !!(d && d.preces === 2);
+  };
+  // In Passiontide, the days the short responsory omits the Gloria Patri: under 1960's rubrics on Sundays and below
+  // the II class; under Divino Afflatu, as in DO's Gloria1, unless the office is a saint's or has DO's rule
+  // "Gloria responsory" (the Seven Sorrows on the Friday after Passion Sunday).
+  Dates.prototype.passiontideResponsory = function(date) {
+    var d = getFeastForDate(date);
+    if(d && 'rankName' in d) return !/^Sancti\/|^Tempora\/Quad5-5$/.test(d.key);
+    return date.day() === 0 || !this.firstOrSecondClassFeast(date);
+  };
+  // Holy Saturday's Compline of the Triduum, which Divino Afflatu hasn't (isTriduum)
+  Dates.prototype.triduumSaturday = function(date) {
+    return this.isTriduum(date) && date.isSame(moment(this.easter).subtract(1,'day'), 'day');
+  };
   // Calls back once the calendar of the rubrics is loaded.  If Divino Afflatu's fails to load, the calendar is
   // still 1960's.
   function setRubrics(r, callback) {
@@ -752,9 +775,14 @@ define(['moment','moment.easter'], function(moment){
   function datesForMoment(moment) {
     return moment.Dates || (moment.Dates = new Dates(moment.year()));
   }
+  // The Triduum's own Compline, from Maundy Thursday to Holy Saturday; under Divino Afflatu only to Good Friday,
+  // as Holy Saturday's Compline follows Easter's First Vespers (DO's Sabbato Sancto).  The date token is triduum.
   Dates.prototype.isTriduum = function(date) {
     var maundyThursday = moment(this.easter).subtract(3,'days');
-    return date.isSameOrAfter(maundyThursday) && date.isBefore(this.easter);
+    return date.isSameOrAfter(maundyThursday) && date.isBefore(rubrics === 'DA' ? moment(this.easter).subtract(1,'day') : this.easter);
+  };
+  Dates.prototype.triduum = function(date) {
+    return this.isTriduum(date);
   };
   Dates.prototype.isPaschalWeek = function(date) {
     var easterSaturday = moment(this.easter).add(6,'days');
@@ -840,6 +868,7 @@ return {
   dateMatches: dateMatches,
   datesForMoment: datesForMoment,
   getFeastForDate: getFeastForDate,
-  setRubrics: setRubrics
+  setRubrics: setRubrics,
+  getRubrics: function() { return rubrics; }
 };
 });

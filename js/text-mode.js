@@ -243,9 +243,10 @@ define(['jquery'], function($) {
       if(text === null) $el.removeAttr('lang');
       else $el.attr('lang', langAttr());
     });
-    // the pointed psalms' headings ("Psalm 90"), in the psalms' and the canticle's HTML; a chant's
-    // are drawn by chant-element.js
-    $root.find('#placeholder, #canticle').addBack('#placeholder, #canticle').find('i.red').not('chant-gabc i').each(function() {
+    // the pointed psalms' headings ("Psalm 90"), in the psalms' and the canticle's HTML, and the
+    // Miserere's (#miserere); a chant's are drawn by chant-element.js
+    var headed = '#placeholder, #canticle, #miserere';
+    $root.find(headed).addBack(headed).find('i.red').not('chant-gabc i').each(function() {
       if(!('_rubricText' in this)) this._rubricText = this._rubricShown = this.innerHTML;
       var note = rubricNote(this._rubricText);
       var shown = note === null ? this._rubricText : note;

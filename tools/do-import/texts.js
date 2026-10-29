@@ -23,6 +23,8 @@
 //   amen      the last line's Amen (the language's word, or "Amen") becomes a line "R. Amen." in
 //             the language's word, of its own (added if it has none)
 //   generate  'alleluia-antiphon': "Alleluia, * alleluia, alleluia.", as DO's alleluia_ant
+//   intonation  the antiphon's opening words, up to its *, as Divino Afflatu says them before the psalms and the
+//             Nunc dimittis (DO's antetpsalm): a comma at their end becomes a full stop
 // A text can instead be {units, version}: version is the DO version its conditions are read for.
 // A hymn is {hymn, doxology}: the doxology takes the place of the hymn's stanza from its * on, and
 // the units are the stanzas.  A text DO doesn't have is {extra: why}: it comes only from
@@ -245,6 +247,11 @@ var pickLines = function(lines, spec) {
   return lines.slice(from - 1, to);
 };
 
+var intonation = function(line) {
+  if(line.indexOf('*') < 0) return '⟨no * in the antiphon⟩';
+  return line.replace(/\s*\*.*$/, '').replace(/,$/, '.');
+};
+
 // One piece's lines.  ctx: {r, w}.
 var piece = function(p, ctx) {
   if(typeof p === 'string') p = {ref: p};
@@ -252,7 +259,8 @@ var piece = function(p, ctx) {
   if(p.generate === 'alleluia-antiphon') {
     if(!ctx.w.alleluia) return ['⟨no Prayers.txt [Alleluia]⟩'];
     var a = ctx.w.alleluia;
-    return [a + ', * ' + a.toLowerCase() + ', ' + a.toLowerCase() + '.'];
+    var antiphon = a + ', * ' + a.toLowerCase() + ', ' + a.toLowerCase() + '.';
+    return [p.intonation ? intonation(antiphon) : antiphon];
   }
   if(p.paschal && !ctx.w.alleluia) return ['⟨no Prayers.txt [Alleluia]⟩'];
   var ref = expand(p.ref);
@@ -261,6 +269,7 @@ var piece = function(p, ctx) {
   else lines = [ref];
   if(p.paschal === 'responsory') lines = paschalResponsory(lines, ctx.w);
   if(p.part) lines = mariaantPart(lines, p.part);
+  if(p.intonation) lines = lines.slice(0, 1).map(intonation);
   if(p.start) {
     var at = lines.map(function(l) { return l.trim(); }).indexOf(p.start);
     lines = at < 0 ? ['⟨no ' + p.start + ' in ' + p.ref + '⟩'] : lines.slice(at + 1);

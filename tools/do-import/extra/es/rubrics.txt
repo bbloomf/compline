@@ -87,6 +87,15 @@ Luego todos se arrodillan y dicen:
 Se dice el {Pater noster} entero en silencio.
 Después se añade en voz alta, sin {Orémus}, la oración:
 
+# {Pater noster} is said, silently throughout. / Then, in a slightly louder voice:
+[triduum-pater-da]
+Se dice el {Pater noster} entero en silencio.
+Después, en voz un poco más alta:
+
+# Then there is added, without {Orémus}, the collect:
+[triduum-collect-da]
+Luego se añade, sin {Orémus}, la oración:
+
 # The Officiant then intones the Hymn {Te lucis} which is sung in one of the tones given below.  All bow slightly for the first three lines of the third stanza.
 [hymn]
 Luego el Oficiante entona el himno {Te lucis}, que se canta en uno de los tonos que siguen. Todos hacen una leve inclinación en los tres primeros versos de la tercera estrofa.
@@ -102,6 +111,22 @@ Luego el Cantor dice los versos del Responsorio breve, a los que todos responden
 # (In Passiontide, except on a First or Second Class Feast, the Gloria Patri is omitted, and all repeat again immediately “In manus tuas...” in its place)
 [responsory-passiontide]
 (En el tiempo de Pasión, salvo en las fiestas de I o II clase, se omite el {Gloria Patri}, y en su lugar todos repiten enseguida «{In manus tuas...}»)
+
+# (In Passiontide, except on the feasts of the Saints and of the Seven Sorrows, the Gloria Patri is omitted, and all repeat again immediately “In manus tuas...” in its place)
+[responsory-passiontide-da]
+(En el tiempo de Pasión, salvo en las fiestas de los Santos y de los Siete Dolores, se omite el {Gloria Patri}, y en su lugar todos repiten enseguida «{In manus tuas...}»)
+
+# Then the Preces are said:
+[preces]
+Luego se dicen las Preces:
+
+# Then all kneel, and the Preces are said:
+[preces-kneeling]
+Luego todos se arrodillan y se dicen las Preces:
+
+# {Credo} is said in silence until
+[preces-credo]
+Se dice el {Credo} en silencio hasta
 
 # The Officiant introduces the Collect:
 [dominus-vobiscum]
@@ -142,6 +167,10 @@ ANTÍFONA MARIANA
 # (from Easter Sunday until Friday in the Octave of Pentecost inclusive)
 [marian-regina]
 (desde el Domingo de Pascua hasta el viernes de la octava de Pentecostés inclusive)
+
+# (from Holy Saturday until Friday in the Octave of Pentecost inclusive)
+[marian-regina-da]
+(desde el Sábado Santo hasta el viernes de la octava de Pentecostés inclusive)
 
 # (from Saturday before Trinity Sunday until Friday before the First Sunday of Advent inclusive)
 [marian-salve]
