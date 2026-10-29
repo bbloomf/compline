@@ -36,7 +36,6 @@
   </ul>
 </div>
 <div class='hidden-print date-and-rubrics'><input type='date' id='date' class='hidden-print' aria-label='Date'> <select id='selectRubrics' aria-label='Rubrics'><option value='1960'>1960 rubrics</option><option value='DA'>Divino Afflatu (pre-1955)</option></select></div>
-<p include='divinoAfflatu' class='hidden-print sans rubrics-note'>Compline follows the Divino Afflatu rubrics as Divinum Officium gives them, with the calendar of the universal Church: the regional calendars don&rsquo;t follow them yet.</p>
 <span id='feastDay' class='hidden-print'></span>
 <div class='hidden-print'><select id='selectFeastDay' aria-label='Feast' style='display:none' class='hidden-print'></select></div>
 <div class="btn-group open-on-hover hidden-print" name="weekday" role="group">
@@ -130,9 +129,18 @@ In private recitation, compline is said as follows:
 <span include='easter-2' class='tr-pair' data-tr='index:mortem-autem-crucis'><span lang='la'>Mortem autem crucis.</span></span>
 </div>
 <div include='triduum'><br/>
-<span data-rubric='triduum-pater'><span lang='la'>Pater noster</span> <i class='red'>is said, silently throughout.
+<span data-rubric='triduum-pater' exclude='divinoAfflatu'><span lang='la'>Pater noster</span> <i class='red'>is said, silently throughout.
 <br/>
 Afterwards there is added aloud, without</i> <span lang='la'>Orémus</span><i class='red'>, the collect:</i></span>
+<!-- Under Divino Afflatu, the Miserere and the collect Respice, a little louder (DO's Tempora/Quad6-4, Special Completorium) -->
+<div include='divinoAfflatu' data-section='psalms'>
+<span data-rubric='triduum-pater-da'><span lang='la'>Pater noster</span> <i class='red'>is said, silently throughout.
+<br/>
+Then, in a slightly louder voice:</i></span>
+<br/><div id='miserere'><i class='red'>Psalm 50</i>
+<div class="verses" data-psalm='50'><p><span class="verse-number">1.&nbsp;</span>Miserére mei, Deus,&nbsp;<span class='red'>*</span> secúndum magnam misericórdiam tuam.<br></p><p><span class="verse-number">2.&nbsp;</span>Et secúndum multitúdinem miseratiónum tuárum,&nbsp;<span class='red'>*</span> dele iniquitátem meam.<br></p><p><span class="verse-number">3.&nbsp;</span>Ámplius lava me ab iniquitáte mea:&nbsp;<span class='red'>*</span> et a peccáto meo munda me.<br></p><p><span class="verse-number">4.&nbsp;</span>Quóniam iniquitátem meam ego cognósco:&nbsp;<span class='red'>*</span> et peccátum meum contra me est semper.<br></p><p><span class="verse-number">5.&nbsp;</span>Tibi soli peccávi, et malum coram te feci:&nbsp;<span class='red'>*</span> ut justificéris in sermónibus tuis, et vincas cum judicáris.<br></p><p><span class="verse-number">6.&nbsp;</span>Ecce enim, in iniquitátibus concéptus sum:&nbsp;<span class='red'>*</span> et in peccátis concépit me mater mea.<br></p><p><span class="verse-number">7.&nbsp;</span>Ecce enim, veritátem dilexísti:&nbsp;<span class='red'>*</span> incérta et occúlta sapiéntiæ tuæ manifestásti mihi.<br></p><p><span class="verse-number">8.&nbsp;</span>Aspérges me hyssópo, et mundábor:&nbsp;<span class='red'>*</span> lavábis me, et super nivem dealbábor.<br></p><p><span class="verse-number">9.&nbsp;</span>Audítui meo dabis gáudium et lætítiam:&nbsp;<span class='red'>*</span> et exsultábunt ossa humiliáta.<br></p><p><span class="verse-number">10.&nbsp;</span>Avérte fáciem tuam a peccátis meis:&nbsp;<span class='red'>*</span> et omnes iniquitátes meas dele.<br></p><p><span class="verse-number">11.&nbsp;</span>Cor mundum crea in me, Deus:&nbsp;<span class='red'>*</span> et spíritum rectum ínnova in viscéribus meis.<br></p><p><span class="verse-number">12.&nbsp;</span>Ne proícias me a fácie tua:&nbsp;<span class='red'>*</span> et spíritum sanctum tuum ne áuferas a me.<br></p><p><span class="verse-number">13.&nbsp;</span>Redde mihi lætítiam salutáris tui:&nbsp;<span class='red'>*</span> et spíritu principáli confírma me.<br></p><p><span class="verse-number">14.&nbsp;</span>Docébo iníquos vias tuas:&nbsp;<span class='red'>*</span> et ímpii ad te converténtur.<br></p><p><span class="verse-number">15.&nbsp;</span>Líbera me de sanguínibus, Deus, Deus salútis meæ:&nbsp;<span class='red'>*</span> et exsultábit lingua mea justítiam tuam.<br></p><p><span class="verse-number">16.&nbsp;</span>Dómine, lábia mea apéries:&nbsp;<span class='red'>*</span> et os meum annuntiábit laudem tuam.<br></p><p><span class="verse-number">17.&nbsp;</span>Quóniam si voluísses sacrifícium, dedíssem útique:&nbsp;<span class='red'>*</span> holocáustis non delectáberis.<br></p><p><span class="verse-number">18.&nbsp;</span>Sacrifícium Deo spíritus contribulátus:&nbsp;<span class='red'>*</span> cor contrítum, et humiliátum, Deus, non despícies.<br></p><p><span class="verse-number">19.&nbsp;</span>Benígne fac, Dómine, in bona voluntáte tua Sion:&nbsp;<span class='red'>*</span> ut ædificéntur muri Jerúsalem.<br></p><p><span class="verse-number">20.&nbsp;</span>Tunc acceptábis sacrifícium justítiæ, oblatiónes, et holocáusta:&nbsp;<span class='red'>*</span> tunc impónent super altáre tuum vítulos.<br></p></div></div>
+<span data-rubric='triduum-collect-da'><i class='red'>Then there is added, without</i> <span lang='la'>Orémus</span><i class='red'>, the collect:</i></span>
+</div>
 </div>
 <div exclude='easter-3:easter+5 allSouls'>
 <div id='hymn'>
@@ -166,7 +174,6 @@ Afterwards there is added aloud, without</i> <span lang='la'>Orémus</span><i cl
     <li include='divinoAfflatu'><a class='btn-lg' href='#' value='Easter-Christmas' id='te-lucis-Easter-Christmas'>Easter, with the Christmas doxology <i class='h5 red'>(Divino Afflatu, where Divinum Officium gives it)</i></a></li>
     <li include='divinoAfflatu'><a class='btn-lg' href='#' value='Sacred-Heart-Christmas' id='te-lucis-Sacred-Heart-Christmas'>Sacred Heart, with the Christmas doxology <i class='h5 red'>(Divino Afflatu, where Divinum Officium gives it)</i></a></li>
     <li include='divinoAfflatu'><a class='btn-lg' href='#' value='Christmas-Sacred-Heart' id='te-lucis-Christmas-Sacred-Heart'>Christmas, with the Sacred Heart doxology <i class='h5 red'>(Divino Afflatu, where Divinum Officium gives it)</i></a></li>
-    <li include='divinoAfflatu'><a class='btn-lg' href='#' value='Ascension-Easter' id='te-lucis-Ascension-Easter'>Ascension, with the Easter doxology <i class='h5 red'>(Divino Afflatu, where Divinum Officium gives it)</i></a></li>
     <li include='divinoAfflatu'><a class='btn-lg' href='#' value='Our-Lady-Ferial' id='te-lucis-Our-Lady-Ferial'>Our Lady, with the ordinary doxology <i class='h5 red'>(Divino Afflatu, where Divinum Officium gives it)</i></a></li>
     <li include='divinoAfflatu'><a class='btn-lg' href='#' value='Sacred-Heart-Ferial' id='te-lucis-Sacred-Heart-Ferial'>Sacred Heart, with the ordinary doxology <i class='h5 red'>(Divino Afflatu, where Divinum Officium gives it)</i></a></li>
     <li include='divinoAfflatu'><a class='btn-lg' href='#' value='Christmas-Ferial' id='te-lucis-Christmas-Ferial'>Christmas, with the ordinary doxology <i class='h5 red'>(Divino Afflatu, where Divinum Officium gives it)</i></a></li>
@@ -264,10 +271,13 @@ Per Dóminum nostrum Jesum Christum Fílium tuum:&nbsp;<span class='red'>†</sp
 <chant-gabc class='notated-prayer' notation='prayers' src='prayer.gabc'></chant-gabc>
 </span>
 <span data-section='prayers' include='triduum'>
-<div class='tr-pair' data-tr='index:visita-silent'><div lang='la'>Vísita, quǽsumus Dómine, habitatiónem istam, et omnes insídias inimíci ab ea longe repélle:&nbsp;<span class='red'>†</span> Angeli tui sancti hábitent in ea, qui nos in pace custódiant;&nbsp;<span class='red'>*</span> et benedíctio tua sit super nos semper.
-</div></div>
+<div exclude='divinoAfflatu'><div class='tr-pair' data-tr='index:visita-silent'><div lang='la'>Vísita, quǽsumus Dómine, habitatiónem istam, et omnes insídias inimíci ab ea longe repélle:&nbsp;<span class='red'>†</span> Angeli tui sancti hábitent in ea, qui nos in pace custódiant;&nbsp;<span class='red'>*</span> et benedíctio tua sit super nos semper.
+</div></div></div>
+<div include='divinoAfflatu'><div class='tr-pair' data-tr='index:respice-silent'><div lang='la'>Réspice, quǽsumus, Dómine, super hanc famíliam tuam,&nbsp;<span class='red'>†</span> pro qua Dóminus noster Jesus Christus non dubitávit mánibus tradi nocéntium,&nbsp;<span class='red'>*</span> et crucis subíre torméntum:
+</div></div></div>
 <i class='red' data-rubric='conclusion-silent'>The conclusion is said silently:</i>
-<div class='tr-pair' data-tr='index:per-dominum-silent'><div lang='la'>Per Dóminum nostrum Jesum Christum Fílium tuum:&nbsp;<span class='red'>†</span> qui tecum vivit et regnat in unitáte Spíritus Sancti Deus,&nbsp;<span class='red'>*</span> per ómnia sǽcula sæculórum.</div></div>
+<div exclude='divinoAfflatu'><div class='tr-pair' data-tr='index:per-dominum-silent'><div lang='la'>Per Dóminum nostrum Jesum Christum Fílium tuum:&nbsp;<span class='red'>†</span> qui tecum vivit et regnat in unitáte Spíritus Sancti Deus,&nbsp;<span class='red'>*</span> per ómnia sǽcula sæculórum.</div></div></div>
+<div include='divinoAfflatu'><div class='tr-pair' data-tr='index:qui-tecum-silent'><div lang='la'>Qui tecum vivit et regnat in unitáte Spíritus Sancti Deus,&nbsp;<span class='red'>*</span> per ómnia sǽcula sæculórum.</div></div></div>
 </span>
 </span><span exclude='triduum allSouls'>
 <br/>

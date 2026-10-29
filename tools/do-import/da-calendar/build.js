@@ -287,7 +287,7 @@ var HYMNS = {
   'Ordinary-Christmas': ['Ordinary', 'Christmas'], 'Advent-Christmas': ['Advent', 'Christmas'],
   'Solemn-Christmas': ['Solemn', 'Christmas'], 'Lent-Christmas': ['Lent', 'Christmas'],
   'Easter-Christmas': ['Easter', 'Christmas'], 'Sacred-Heart-Christmas': ['Sacred-Heart', 'Christmas'],
-  'Christmas-Sacred-Heart': ['Christmas', 'Sacred-Heart'], 'Ascension-Easter': ['Ascension', 'Easter'],
+  'Christmas-Sacred-Heart': ['Christmas', 'Sacred-Heart'],
   'Our-Lady-Ferial': ['Our-Lady', 'Ferial'], 'Sacred-Heart-Ferial': ['Sacred-Heart', 'Ferial'],
   'Christmas-Ferial': ['Christmas', 'Ferial'], 'Our-Lady-Seven-Sorrows': ['Our-Lady', 'Seven-Sorrows']
 };

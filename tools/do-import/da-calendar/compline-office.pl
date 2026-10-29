@@ -25,7 +25,7 @@ BEGIN {
 }
 use CGI;
 use DivinumOfficium::Main qw(liturgical_color);
-use DivinumOfficium::Date qw(prevnext);
+use DivinumOfficium::Date qw(prevnext getweek);
 use DivinumOfficium::RunTimeOptions qw(check_version check_horas check_language);
 use DivinumOfficium::Lexicon qw(apply_interlinear);
 use DivinumOfficium::LanguageTextTools
@@ -71,9 +71,22 @@ while (1) {
   our $precesferiales = 0;
   my $preces = preces('Dominicales') ? ($precesferiales ? 2 : 1) : 0;
   setChantTone();
-  my $tone = setupstring('Latin-gabc', 'Psalterium/Special/Minor Special.txt')->{'Hymnus Completorium'};
+  # DO's seasons for the tone and the doxology (get_tempus_id, gettempora) test the office's week ($dayname[0]) with
+  # the evening's weekday.  On the Saturday before the 5th Sunday after Easter, whose week is already the Sunday's,
+  # that gives the Ascension's; in the week of Quinquagesima, from Wednesday (and on the Saturday before),
+  # Passiontide's tone.  They're taken as on that week's Sunday: Paschal time's, and Septuagesima's, as the Liber
+  # Usualis has them (DIVINO_AFFLATU_PLAN.md, Phase 4).
+  my ($d, $m, $y) = (split('-', $date))[1, 0, 2];
+  my $week = getweek($d + 0, $m + 0, $y, 0, 0);
+  my ($tone, $doxology);
+  {
+    local $dayofweek = 0 if ($dayname[0] =~ /^Pasc5/ && $week =~ /^Pasc4/) || $dayname[0] =~ /^Quadp3/;
+    %setupstring_caches_by_version = ();
+    $tone = setupstring('Latin-gabc', 'Psalterium/Special/Minor Special.txt')->{'Hymnus Completorium'};
+    %setupstring_caches_by_version = ();
+    (undef, $doxology) = doxology('Latin');
+  }
   $tone =~ s/^.*hy(?:--|—)te_lucis_ante_terminum_(.*?)\}.*$/$1/s;
-  my (undef, $doxology) = doxology('Latin');
   $doxology .= ":$winner" if $doxology eq 'Special';
   my %english = %{setupstring('English', $winner) || {}};
   my $englishTitle = $english{Officium} || ($english{Rank} =~ s/;;.*//sr);

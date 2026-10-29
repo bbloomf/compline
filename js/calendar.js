@@ -743,6 +743,11 @@ define(['moment','moment.easter'], function(moment){
     if(d && 'rankName' in d) return !/^Sancti\/|^Tempora\/Quad5-5$/.test(d.key);
     return date.day() === 0 || !this.firstOrSecondClassFeast(date);
   };
+  // Under Divino Afflatu, the Saturday before Septuagesima, whose Compline follows the last Vespers with the Alleluia,
+  // and so has Laus tibi (DO's Alleluia)
+  Dates.prototype.septuagesimaEve = function(date) {
+    return rubrics === 'DA' && date.isSame(moment(this.septuagesima).subtract(1,'day'), 'day');
+  };
   // Holy Saturday's Compline of the Triduum, which Divino Afflatu hasn't (isTriduum)
   Dates.prototype.triduumSaturday = function(date) {
     return this.isTriduum(date) && date.isSame(moment(this.easter).subtract(1,'day'), 'day');

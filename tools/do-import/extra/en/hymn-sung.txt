@@ -48,7 +48,7 @@ A-men.
 
 # Chosen in §4b, in place of DO's 7.7.7.7 "Hymns of glory, songs of praise"; it follows the Latin
 # line by line.  For Easter only: Pentecost keeps DO's.
-[Easter Ascension-Easter] new
+[Easter] new
 All glo-ry to the Fa-ther be,
 And to the Son, who from the grave
 A-rose; and to the Par-a-clete

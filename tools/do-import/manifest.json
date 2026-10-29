@@ -85,7 +85,6 @@
     "te-lucis/Easter-Christmas.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Nat"},
     "te-lucis/Sacred-Heart-Christmas.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Nat"},
     "te-lucis/Christmas-Sacred-Heart.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Heart"},
-    "te-lucis/Ascension-Easter.gabc": {"hymn": "@Minor:Hymnus Completorium", "doxology": "@Doxologies:Pasch"},
     "te-lucis/Our-Lady-Ferial.gabc": {"hymn": "@Minor:Hymnus Completorium"},
     "te-lucis/Sacred-Heart-Ferial.gabc": {"hymn": "@Minor:Hymnus Completorium"},
     "te-lucis/Christmas-Ferial.gabc": {"hymn": "@Minor:Hymnus Completorium"},
@@ -170,6 +169,8 @@
     "prayer.gabc": [["$Oremus", "$Oratio Visita_", "$Per Dominum"]],
     "index:visita-silent": ["$Oratio Visita_"],
     "index:per-dominum-silent": [{"ref": "$Per Dominum", "lines": "1"}],
+    "index:respice-silent": [{"ref": "@Tempora/Quad6-4:Oratio Matutinum", "lines": "1"}],
+    "index:qui-tecum-silent": [{"ref": "$Qui tecum", "lines": "1"}],
     "benedicamus-domino.gabc": ["$Benedicamus Domino"],
     "index:benedicat": [{"ref": "$Benedictio Completorium2", "amen": true}],
 

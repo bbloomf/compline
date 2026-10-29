@@ -1,7 +1,7 @@
 // The app's own Latin psalms, verse by verse, from every file that has them: the pointed HTML
-// (psalms/<day>/psalm-verses*.html, canticle-psalm*.html), which has verse 2 on (or verse 1 on,
-// where no verse is chanted), and the GABC (psalm*.gabc, canticle-psalm*.gabc), which has the
-// chanted verse 1 or, fully notated, every verse.
+// (psalms/<day>/psalm-verses*.html, canticle-psalm*.html, index.html), which has verse 2 on (or
+// verse 1 on, where no verse is chanted), and the GABC (psalm*.gabc, canticle-psalm*.gabc), which
+// has the chanted verse 1 or, fully notated, every verse.
 'use strict';
 var fs = require('fs');
 var path = require('path');
@@ -56,7 +56,8 @@ exports.read = function(root) {
     html = html.concat(files(root, dir, /^psalm-verses.*\.html$/));
     gabc = gabc.concat(files(root, dir, /^psalm.*\.gabc$/));
   });
-  html = html.concat(files(root, '.', /^canticle-psalm.*\.html$/));
+  // index.html has the Miserere of the Triduum under Divino Afflatu (and the Nunc dimittis, as canticle-psalm.html)
+  html = html.concat(files(root, '.', /^canticle-psalm.*\.html$|^index\.html$/));
   gabc = gabc.concat(files(root, '.', /^canticle-psalm.*\.gabc$/));
 
   html.forEach(function(file) {

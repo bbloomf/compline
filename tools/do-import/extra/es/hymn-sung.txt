@@ -28,7 +28,7 @@ por si-glos in-ter-mi-na-bles.
 A-mén.
 
 # Chosen in §4b, for Easter and Pentecost (the Latin differs only in the last line).
-[Easter Pentecost Ascension-Easter] new
+[Easter Pentecost] new
 Glo-ria‿al Pa-dre, glo-ria‿al Hi-jo,
 que de la muer-te‿hoy re-na-ce,
 y‿al Pa-rá-cli-to di-vi-no,

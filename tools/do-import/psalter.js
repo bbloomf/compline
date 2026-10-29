@@ -9,15 +9,17 @@ var texts = require('./texts');
 // The verses the app shows from DO's Latin before they count as different, from 0 to 1 (§3).
 var THRESHOLD = 0.9;
 
-// Psalms the app has that aren't in Psalmi minor [Completorium]: the Nunc dimittis, and All
-// Souls' psalms, whole.  On All Souls' Day every psalm ends with Requiem æternam and Et lux
-// perpétua in place of the Gloria, so its Nunc dimittis is a section of its own.
+// Psalms the app has that aren't in Psalmi minor [Completorium]: the Nunc dimittis, All Souls'
+// psalms, and the Miserere of the Triduum under Divino Afflatu, whole.  On All Souls' Day every
+// psalm ends with Requiem æternam and Et lux perpétua in place of the Gloria, so its Nunc
+// dimittis is a section of its own; the Miserere has no ending (ending null).
 var EXTRA_SECTIONS = [
   {key: 'nunc-dimittis', psalm: 233},
   {key: 'nunc-dimittis-asd', psalm: 233, ending: 'Requiem'},
   {key: '122', psalm: 122, ending: 'Requiem'},
   {key: '141', psalm: 141, ending: 'Requiem'},
-  {key: '142', psalm: 142, ending: 'Requiem'}
+  {key: '142', psalm: 142, ending: 'Requiem'},
+  {key: '50', psalm: 50, ending: null}
 ];
 
 // The app's sections from Psalmi minor [Completorium]: "4,90,133", "6,7(2-10),7(11-18)", …
@@ -281,6 +283,7 @@ exports.build = function(doDir, root, languages) {
 
   // Check DO's Latin against the app's, verse by verse.
   var latinEnding = function(section) {
+    if(section.ending === null) return [];
     var name = section.ending || 'Gloria';
     var lines = ending(doDir, 'Latin', name);
     if(!lines) throw new Error('Latin Prayers.txt has no [' + name + '] of two lines, for section ' + section.key);
@@ -324,6 +327,7 @@ exports.build = function(doDir, root, languages) {
     var own = texts.extra(lang.code);
     var endings = {};
     var langEnding = function(section) {
+      if(section.ending === null) return [];
       var name = section.ending || 'Gloria';
       if(!(name in endings)) {
         var mine = own.sections['Psalterium/Common/Prayers:' + name];

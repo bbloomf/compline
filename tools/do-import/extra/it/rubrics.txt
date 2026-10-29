@@ -87,6 +87,15 @@ Poi tutti si inginocchiano e dicono:
 Si dice il {Pater noster}, tutto in silenzio.
 Poi si aggiunge ad alta voce, senza {Orémus}, l’orazione:
 
+# {Pater noster} is said, silently throughout. / Then, in a slightly louder voice:
+[triduum-pater-da]
+Si dice il {Pater noster}, tutto in silenzio.
+Poi, a voce un po’ più alta:
+
+# Then there is added, without {Orémus}, the collect:
+[triduum-collect-da]
+Poi si aggiunge, senza {Orémus}, l’orazione:
+
 # The Officiant then intones the Hymn {Te lucis} which is sung in one of the tones given below.  All bow slightly for the first three lines of the third stanza.
 [hymn]
 L’Officiante intona poi l’inno {Te lucis}, che si canta in uno dei toni dati qui sotto. Tutti fanno un leggero inchino durante i primi tre versi della terza strofa.
