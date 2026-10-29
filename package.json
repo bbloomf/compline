@@ -31,16 +31,16 @@
     "cordova-ios": "^8.1.1",
     "del": "^2.2.1",
     "gulp": "^4.0.2",
-    "gulp-concat": "^2.6.0",
+    "gulp-concat": "^2.6.1",
     "gulp-csso": "^2.0.0",
     "gulp-htmlmin": "^2.0.0",
     "gulp-if": "^2.0.1",
-    "gulp-jshint": "^2.0.1",
+    "gulp-jshint": "^2.1.0",
     "gulp-load-plugins": "^1.2.4",
     "gulp-replace": "^0.5.4",
     "gulp-size": "^2.1.0",
     "gulp-uglify": "^1.5.4",
-    "gulp-uncss": "^1.0.5",
+    "gulp-uncss": "^1.0.6",
     "gulp-useref": "^3.1.0",
     "hyphenation.en-us": "^0.2.1",
     "hyphenation.es": "^0.2.1",
@@ -49,10 +49,10 @@
     "hyphenation.pl": "^0.2.1",
     "hyphenation.pt": "^0.2.1",
     "hypher": "^0.2.5",
-    "jshint": "^2.9.2",
-    "jshint-stylish": "^2.2.0",
+    "jshint": "^2.13.6",
+    "jshint-stylish": "^2.2.1",
     "minimatch": "^3.0.2",
     "pump": "^1.0.1",
-    "requirejs": "^2.2.0"
+    "requirejs": "^2.3.8"
   }
 }
