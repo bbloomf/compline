@@ -254,7 +254,7 @@ var PSALMS = ['4;90;133', '6;7(2-10);7(11-18)', '11;12;15', '33(2-11);33(12-23);
 
 // The hymn's tone, Te lucis: DO's GABC file for it (compline-office.pl, from Latin-gabc's [Hymnus Completorium]),
 // as the te-lucis/ file with its melody.  DO's Paschal tone (in_tempore_paschali--, with no source) isn't the
-// app's (the Liber Usualis'), which is kept.
+// app's (the Liber Usualis', in its 1932 edition too), which is kept.
 var MELODIES = {
   'in_fer_et_fest_simpl--solesmes': 'Ferial', 'in_dominicis_per_annum--solesmes_1961.1': 'Ordinary',
   'in_major._festis_per_annum--solesmes': 'Solemn', 'in_adventu—solesmes_1961.1': 'Advent',
