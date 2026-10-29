@@ -22,6 +22,7 @@ gulp.task('copy', function() {
     '**/*.gabc',
     'js/require.js',
     'js/theme.js',
+    'js/calendar-da.js',
     'js/i18n/*.js',
     'js/i18n/LICENSE-divinum-officium.txt',
     'js/hyphenation/*.js',

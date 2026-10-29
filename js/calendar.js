@@ -487,6 +487,17 @@ define(['moment','moment.easter'], function(moment){
     this.advent1 = moment(this.christmas).subtract((this.christmas.day() || 7) + 7*3,'days');
     this.allSouls = moment([Y,10,2]);
     if(this.allSouls.day() === 0) this.allSouls.add(1,'day');
+    // Under Divino Afflatu, Compline of All Souls (DO's Sancti/11-02, or 11-03sec when it's moved from a
+    // Sunday) is said the evening before it, after its First Vespers.
+    if(rubrics === 'DA' && daCalendar) {
+      for(var allSouls = moment([Y,9,31]); allSouls.month() === 9 || allSouls.date() <= 3; allSouls.add(1,'day')) {
+        var da = getDAFeast(allSouls);
+        if(da && /^Sancti\/11-0(2|3sec)$/.test(da.key)) {
+          this.allSouls = moment(allSouls);
+          break;
+        }
+      }
+    }
     this.corpusChristi = moment(this.pentecost).add(11,'days');
     this.sacredHeart = moment(this.pentecost).add(19,'days');
     this.christTheKing = moment([Y,9,31]);
@@ -571,8 +582,30 @@ define(['moment','moment.easter'], function(moment){
     }
     return result;
   }
+  // Under the rubrics of Divino Afflatu, the office that Compline follows, from daCalendar (calendar-da.js, DO's
+  // own calendar for each kind of year): its title, its rank (rankName, and as rank the class of 1960 that the
+  // date tokens take it for), duplex, ol for a feast of Our Lady, first if Compline follows its First Vespers, and
+  // psalms, the day whose psalms are said.  undefined in the one kind of year that never comes from 1583 to 4099.
+  function getDAFeast(date) {
+    var Y = date.year();
+    var codes = daCalendar.years[moment.easter(Y).format('MMDD') + (moment([Y]).isLeapYear() ? 'L' : '')];
+    if(!codes) return;
+    var A = daCalendar.ALPHABET, i = 3 * (date.dayOfYear() - 1);
+    var office = daCalendar.offices[A.indexOf(codes[i]) * 64 + A.indexOf(codes[i + 1])];
+    var v = A.indexOf(codes[i + 2]), rank = daCalendar.ranks[v >> 1];
+    var feast = {title: office.title, key: office.key, rank: rank.cls, rankName: rank.rank, duplex: rank.duplex,
+      psalms: office.psalms === 0 ? 0 : date.day()};
+    if(office.ol) feast.ol = 1;
+    if(rank.sunday) feast.sunday = 1;
+    if(v & 1) feast.first = 1;
+    return feast;
+  }
   function getFeastForDate(date,currentRegion) {
     if('feast' in date) return date.feast;
+    if(rubrics === 'DA' && daCalendar) {
+      var da = getDAFeast(date);
+      if(da) return (date.feast = da);
+    }
     if(date.day() === 0) {
       return (date.feast = sundayOrFeast(date, getSunday(date), getSanctoralFeast(date,currentRegion)));
     }
@@ -685,12 +718,32 @@ define(['moment','moment.easter'], function(moment){
     return !d || d.rank >= 3;
   };
   // The rubrics the office follows (compline.js): '1960', or 'DA' for those of Divino Afflatu (1911), as
-  // they stood until the simplification of 1955.  index.html's include='divinoAfflatu' shows a part only
-  // under them.  The calendar itself is still 1960's.
-  var rubrics = '1960';
+  // they stood until the simplification of 1955, whose calendar is daCalendar (calendar-da.js), loaded only
+  // when they're chosen.  index.html's include='divinoAfflatu' shows a part only under them.
+  var rubrics = '1960', daCalendar;
   Dates.prototype.divinoAfflatu = function(date) {
     return rubrics === 'DA';
   };
+  // Calls back once the calendar of the rubrics is loaded.  If Divino Afflatu's fails to load, the calendar is
+  // still 1960's.
+  function setRubrics(r, callback) {
+    var set = function() {
+      rubrics = r;
+      // a year's Dates (allSouls) depend on the rubrics
+      dateCache = {};
+      if(callback) callback();
+    };
+    if(r !== 'DA' || daCalendar) return set();
+    // a variable, so that the build (findNestedDependencies) leaves it out of compline.js
+    var module = 'calendar-da';
+    require([module], function(table) {
+      daCalendar = table;
+      set();
+    }, function(err) {
+      console.warn('No Divino Afflatu calendar', err);
+      set();
+    });
+  }
   moment.weekdays().forEach(function(day, index) {
     Dates.prototype[day.toLowerCase()] = function(date) {
       return date.day() === index;
@@ -787,6 +840,6 @@ return {
   dateMatches: dateMatches,
   datesForMoment: datesForMoment,
   getFeastForDate: getFeastForDate,
-  setRubrics: function(r) { rubrics = r; }
+  setRubrics: setRubrics
 };
 });
