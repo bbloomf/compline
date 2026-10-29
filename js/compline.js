@@ -627,7 +627,10 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
       setCanticle('-asd');
     } else {
       var psalmDay = date.day();
-      if(showChooseDay && d && d.rank <= 2) {
+      // Sunday's psalms on a feast of the I or II class, or, under Divino Afflatu, where DO's calendar gives
+      // them (d.psalms, calendar.js)
+      var sundayPsalms = d && ('psalms' in d ? d.psalms === 0 : d.rank <= 2);
+      if(showChooseDay && sundayPsalms) {
         $('#rbSunday').trigger('click',true);
         psalmDay = 0;
       } else {
@@ -652,7 +655,9 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
       if(alt.length) _currentRegion = alt[0].region[0];
       selectFeast.val(_currentRegion);
     } else {
-      $('#feastDay').text(d.title + (d.rank < 5?(' (' + formattedRank(d.rank) + ')'): ''));
+      // under Divino Afflatu, the rank as it was, and whether Compline follows the office's First Vespers
+      $('#feastDay').text(d.title + (d.rankName ? ' (' + d.rankName + (d.first ? ', First Vespers' : '') + ')' :
+          d.rank < 5 ? ' (' + formattedRank(d.rank) + ')' : ''));
     }
     $('#feastDay').toggle(!d.alternates);
     $('#selectFeastDay').toggle(!!d.alternates);
@@ -712,19 +717,20 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     loadChant(chant, val, id);
   });
   var $date = $('#date');
-  // The rubrics the office follows: 1960's, or Divino Afflatu's, as before 1955 (calendar.js).
-  var $rubrics = $('#selectRubrics');
-  if(!$rubrics.children('[value="' + localStorage.rubrics + '"]').length) localStorage.rubrics = '1960';
-  calendar.setRubrics(localStorage.rubrics);
-  $rubrics.val(localStorage.rubrics).change(function(){
-    localStorage.rubrics = $(this).val();
-    calendar.setRubrics(localStorage.rubrics);
-    $date.change();
-  });
   $date.change(function(){
     // localStorage.region is a code ('US'); the calendar's regions are names ('United States')
     if(this.value) setDate(moment(this.value), calendar.roman.regionCodeMap[localStorage.region] || '');
-  }).change();
+  });
+  // The rubrics the office follows: 1960's, or Divino Afflatu's, as before 1955 (calendar.js).  The date is
+  // shown once their calendar is loaded.
+  var $rubrics = $('#selectRubrics');
+  if(!$rubrics.children('[value="' + localStorage.rubrics + '"]').length) localStorage.rubrics = '1960';
+  var showDate = function() { $date.change(); };
+  calendar.setRubrics(localStorage.rubrics, showDate);
+  $rubrics.val(localStorage.rubrics).change(function(){
+    localStorage.rubrics = $(this).val();
+    calendar.setRubrics(localStorage.rubrics, showDate);
+  });
   $('#selectFeastDay').change(function(){
     setDate(moment($date.val()), this.value);
   });
