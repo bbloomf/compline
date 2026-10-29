@@ -103,6 +103,18 @@ O Cantor diz então os versos do Responsório breve, aos quais todos respondem d
 [responsory-passiontide]
 (No tempo da Paixão, exceto nas festas de 1.ª ou 2.ª classe, omite-se o {Gloria Patri}, e em seu lugar todos repetem logo «{In manus tuas...}»)
 
+# Then the Preces are said:
+[preces]
+Dizem-se depois as Preces:
+
+# Then all kneel, and the Preces are said:
+[preces-kneeling]
+Depois todos se ajoelham, e dizem-se as Preces:
+
+# {Credo} is said in silence until
+[preces-credo]
+Diz-se o {Credo} em silêncio até
+
 # The Officiant introduces the Collect:
 [dominus-vobiscum]
 O Oficiante introduz a oração:

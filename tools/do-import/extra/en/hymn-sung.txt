@@ -17,14 +17,14 @@ From night-ly fears and fan-ta-sies;
 Tread un-der foot our ghost-ly foe,
 That no pol-lu-tion we may know.
 
-[Ferial Ordinary Solemn Advent Lent Passiontide]
+[Ferial Ordinary Solemn Advent Lent Passiontide Our-Lady-Ferial Sacred-Heart-Ferial Christmas-Ferial]
 O Fa-ther, that we ask be done,
 Through Je-sus Christ, thine on-ly Son;
 Who, with the Ho-ly Ghost and thee,
 Doth live and reign e-ter-nal-ly.
 A-men.
 
-[Christmas Our-Lady Seven-Dolors]
+[Christmas Our-Lady Seven-Dolors Ordinary-Christmas Advent-Christmas Solemn-Christmas Lent-Christmas Easter-Christmas Sacred-Heart-Christmas]
 All hon-or, laud, and glo-ry be,
 O Je-su, Vir-gin-Born, to thee;
 Whom with the Fa-ther we a-dore,
@@ -48,7 +48,7 @@ A-men.
 
 # Chosen in §4b, in place of DO's 7.7.7.7 "Hymns of glory, songs of praise"; it follows the Latin
 # line by line.  For Easter only: Pentecost keeps DO's.
-[Easter] new
+[Easter Ascension-Easter] new
 All glo-ry to the Fa-ther be,
 And to the Son, who from the grave
 A-rose; and to the Par-a-clete
@@ -69,7 +69,7 @@ Whom with the Fa-ther we a-dore,
 And Ho-ly Ghost, for ev-er-more.
 A-men.
 
-[Sacred-Heart]
+[Sacred-Heart Christmas-Sacred-Heart]
 We give thee praise, who dost im-part
 Such grace, O Je-su, from thy Heart;
 Whom with the Fa-ther we a-dore,

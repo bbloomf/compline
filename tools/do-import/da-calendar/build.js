@@ -252,11 +252,56 @@ var englishTitle = function(latin, en) {
 var PSALMS = ['4;90;133', '6;7(2-10);7(11-18)', '11;12;15', '33(2-11);33(12-23);60', '69;70(1-12);70(13-24)',
   '76(2-13);76(14-21);85', '87;102(1-12);102(13-22)'];
 
+// The hymn's tone, Te lucis: DO's GABC file for it (compline-office.pl, from Latin-gabc's [Hymnus Completorium]),
+// as the te-lucis/ file with its melody.  DO's Paschal tone (in_tempore_paschali--, with no source) isn't the
+// app's (the Liber Usualis'), which is kept.
+var MELODIES = {
+  'in_fer_et_fest_simpl--solesmes': 'Ferial', 'in_dominicis_per_annum--solesmes_1961.1': 'Ordinary',
+  'in_major._festis_per_annum--solesmes': 'Solemn', 'in_adventu—solesmes_1961.1': 'Advent',
+  'in_quadragesima--solesmes': 'Lent', 'passiontide--solesmes_1961.1': 'Passiontide',
+  'in_nativ._domini--solesmes': 'Christmas', 'in_epiphania--solesmes': 'Epiphany', 'in_tempore_paschali--': 'Easter',
+  'in_tempore_ascensionis--': 'Ascension', 'in_transfiguratione--': 'Ascension', 'in_pentecoste--solesmes': 'Pentecost',
+  'in_festo_d._n._j._c._regis--solesmes': 'Pentecost', 'in_sacratis._cord._jesu--solesmes': 'Sacred-Heart',
+  'in_festis_et_oct._b._m._v.--solesmes': 'Our-Lady', 'septem_dolorum--': 'Passiontide'
+};
+// Its doxology: DO's name for it (hymni.pl's doxology, or Special:<file> for the office's own), as the te-lucis/
+// file it's sung with.  '' is the hymn's own, Praesta Pater.
+var DOXOLOGIES = {
+  '': 'Ferial', Nat: 'Christmas', Corp: 'Christmas', Epi: 'Epiphany', Pasch: 'Easter', Asc: 'Ascension',
+  Pent: 'Pentecost', Heart: 'Sacred-Heart', 'Special:Sancti/08-06.txt': 'Transfiguration',
+  'Special:Sancti/10-DU.txt': 'Christ-the-King', 'Special:Sancti/11-01.txt': 'Christ-the-King',
+  'Special:Tempora/Epi1-0.txt': 'Holy-Family', 'Special:Tempora/Epi1-0g.txt': 'Holy-Family',
+  'Special:Sancti/09-15.txt': 'Seven-Sorrows', 'Special:Tempora/Quad5-5.txt': 'Seven-Sorrows'
+};
+// Each te-lucis/ file's melody and doxology, as above.  <Melody>-<Doxology> is a melody with another's doxology,
+// which only Divino Afflatu has, and Seven-Sorrows is Our Lady's melody with the Seven Sorrows' own doxology.
+var HYMNS = {
+  Ferial: ['Ferial', 'Ferial'], Ordinary: ['Ordinary', 'Ferial'], Solemn: ['Solemn', 'Ferial'],
+  Advent: ['Advent', 'Ferial'], Lent: ['Lent', 'Ferial'], Passiontide: ['Passiontide', 'Ferial'],
+  Christmas: ['Christmas', 'Christmas'], Epiphany: ['Epiphany', 'Epiphany'], 'Holy-Family': ['Epiphany', 'Holy-Family'],
+  Easter: ['Easter', 'Easter'], Ascension: ['Ascension', 'Ascension'], Transfiguration: ['Ascension', 'Transfiguration'],
+  Pentecost: ['Pentecost', 'Pentecost'], 'Christ-the-King': ['Pentecost', 'Christ-the-King'],
+  'Sacred-Heart': ['Sacred-Heart', 'Sacred-Heart'], 'Our-Lady': ['Our-Lady', 'Christmas'],
+  'Seven-Dolors': ['Passiontide', 'Christmas'], 'Seven-Sorrows': ['Our-Lady', 'Seven-Sorrows']
+};
+fs.readdirSync(path.join(root, 'te-lucis')).forEach(function(file) {
+  var m = /^(.+?)-(Christmas|Ferial|Sacred-Heart|Easter)\.gabc$/.exec(file);
+  if(m && !(m[1] + '-' + m[2] in HYMNS)) HYMNS[m[1] + '-' + m[2]] = [m[1], m[2]];
+});
+var hymnFile = function(tone, doxology) {
+  var melody = MELODIES[tone], dox = DOXOLOGIES[doxology];
+  if(!melody) unknown['tone: ' + tone] = true;
+  if(dox === undefined) unknown['doxology: ' + doxology] = true;
+  var name = Object.keys(HYMNS).filter(function(h) { return HYMNS[h][0] === melody && HYMNS[h][1] === dox; })[0];
+  if(!name && melody) unknown['te-lucis/ file: ' + melody + ' with the doxology of ' + dox] = true;
+  return name || melody || 'Ferial';
+};
+
 var ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 function finish() {
   console.log();
-  var offices = [], officeIndex = {}, ranks = [], rankIndex = {};
+  var offices = [], officeIndex = {}, ranks = [], rankIndex = {}, hymns = [], hymnIndex = {};
   var indexOf = function(list, index, item) {
     var id = JSON.stringify(item);
     if(!(id in index)) {
@@ -279,12 +324,16 @@ function finish() {
       if(psalms === 0 && weekday) office.psalms = 0;
       else if(psalms !== weekday) unknown['psalms: ' + c[8] + ' on ' + c[0] + ' (' + key + ')'] = true;
       var r = indexOf(ranks, rankIndex, englishRank(rank, duplex));
-      codes += ALPHABET[indexOf(offices, officeIndex, office) >> 6] + ALPHABET[officeIndex[JSON.stringify(office)] & 63] +
-          ALPHABET[r * 2 + (vespera === 1 ? 1 : 0)];
+      // the office and the preces, DO's 0, 1 or 2
+      var o = indexOf(offices, officeIndex, office) * 3 + +c[10];
+      codes += ALPHABET[o >> 6] + ALPHABET[o & 63] + ALPHABET[r * 2 + (vespera === 1 ? 1 : 0)] +
+          ALPHABET[indexOf(hymns, hymnIndex, hymnFile(c[11], c[12]))];
     });
     table[kind] = codes;
   });
-  if(offices.length > 64 * 64 || ranks.length > 32) throw new Error(offices.length + ' offices and ' + ranks.length + ' ranks don\'t fit');
+  if(offices.length * 3 > 64 * 64 || ranks.length > 32 || hymns.length > 64) {
+    throw new Error(offices.length + ' offices, ' + ranks.length + ' ranks and ' + hymns.length + ' hymns don\'t fit');
+  }
   Object.keys(unknown).sort().forEach(function(u) { console.warn('Not translated: ' + u); });
   var file = path.join(root, 'js/calendar-da.js');
   var header = [
@@ -293,21 +342,24 @@ function finish() {
     '// Copyright (c) 2026 Divinum Officium, MIT license (js/i18n/LICENSE-divinum-officium.txt).',
     '//',
     '// Generated by tools/do-import/da-calendar/build.js (DIVINO_AFFLATU_PLAN.md, Phase 2): fix it or DO, not this',
-    '// file.  For each kind of year (its Easter as MMDD, with L for a leap year), years has three characters of',
-    '// ALPHABET a day, from 1 January: two give the index in offices of the office that Compline follows (DO\'s',
-    '// file as key, its title, ol for a feast of Our Lady, and psalms: 0 if Sunday\'s psalms are said on another',
-    '// day), and the third is twice the index in ranks (duplex: 1 for a simple or a feria, 2 a semidouble, 3 a',
-    '// double; cls, the class of 1960 that calendar.js takes it for; sunday for a Sunday\'s), plus 1 if Compline',
-    '// follows the office\'s First Vespers.'
+    '// file.  For each kind of year (its Easter as MMDD, with L for a leap year), years has four characters of',
+    '// ALPHABET a day, from 1 January.  The first two are three times the index in offices of the office that',
+    '// Compline follows (DO\'s file as key, its title, ol for a feast of Our Lady, and psalms: 0 if Sunday\'s psalms',
+    '// are said on another day), plus the preces after the Nunc dimittis (0 none, 1 the Dominicales, 2 the',
+    '// Dominicales said kneeling).  The third is twice the index in ranks (duplex: 1 for a simple or a feria, 2 a',
+    '// semidouble, 3 a double; cls, the class of 1960 that calendar.js takes it for; sunday for a Sunday\'s), plus 1',
+    '// if Compline follows the office\'s First Vespers.  The fourth is the index in hymns of the hymn\'s tone, its',
+    '// te-lucis/ file.'
   ];
   var json = '{\n"ALPHABET": ' + JSON.stringify(ALPHABET) +
+      ',\n"hymns": ' + JSON.stringify(hymns) +
       ',\n"ranks": [\n' + ranks.map(function(r) { return JSON.stringify(r); }).join(',\n') +
       '\n],\n"offices": [\n' + offices.map(function(o) { return JSON.stringify(o); }).join(',\n') +
       '\n],\n"years": {\n' + kinds.map(function(k) { return JSON.stringify(k) + ': ' + JSON.stringify(table[k]); }).join(',\n') +
       '\n}\n}';
   fs.writeFileSync(file, header.join('\n') + '\ndefine(' + json + ');\n');
   console.log('Wrote ' + path.relative(root, file) + ': ' + offices.length + ' offices, ' + ranks.length + ' ranks, ' +
-      kinds.length + ' kinds of year, ' + Math.round(fs.statSync(file).size / 1024) + ' KB');
+      hymns.length + ' hymns, ' + kinds.length + ' kinds of year, ' + Math.round(fs.statSync(file).size / 1024) + ' KB');
 }
 
 console.log('Running DO over ' + kinds.length + ' years, ' + parallel + ' at a time');

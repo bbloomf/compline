@@ -1,8 +1,11 @@
 #!/usr/bin/perl
 # For each day from FROM to TO (MM-DD-YYYY), the office that Compline follows under Divino Afflatu, as Divinum
 # Officium decides it: tab-separated date, DO file, Latin title, English title, English rank, DO's rank number,
-# duplex (1 simplex or feria, 2 semiduplex, 3 duplex), vespera (1 if the office's First Vespers, 3 if its Second)
-# and the commemorations.  build.js runs it; it can also be run alone:
+# duplex (1 simplex or feria, 2 semiduplex, 3 duplex), vespera (1 if the office's First Vespers, 3 if its Second),
+# the psalms, the commemorations, the preces after the Nunc dimittis (0 none, 1 Dominicales, 2 Dominicales said
+# kneeling, where the Feriales are said at the other hours), the hymn's tone (the end of the name of DO's GABC file
+# of Te lucis, from Latin-gabc's [Hymnus Completorium]) and its doxology (DO's name in Doxologies.txt, or
+# Special:<file> for the office's own).  build.js runs it; it can also be run alone:
 #   perl compline-office.pl DO_CHECKOUT FROM TO
 use utf8;
 use strict;
@@ -60,14 +63,24 @@ my $clean = sub { my $s = shift // ''; $s =~ s/[\t\r\n]+/ /g; $s =~ s/^\s+|\s+$/
 
 my $date = $from;
 while (1) {
+  # DO resolves a file's conditions (the hymn's "tonus" and "tempore") when it first reads it, and keeps it for
+  # the run: each day reads them afresh, as each of DO's pages does.
+  %setupstring_caches_by_version = ();
   precedence($date);
   setsecondcol();
+  our $precesferiales = 0;
+  my $preces = preces('Dominicales') ? ($precesferiales ? 2 : 1) : 0;
+  setChantTone();
+  my $tone = setupstring('Latin-gabc', 'Psalterium/Special/Minor Special.txt')->{'Hymnus Completorium'};
+  $tone =~ s/^.*hy(?:--|—)te_lucis_ante_terminum_(.*?)\}.*$/$1/s;
+  my (undef, $doxology) = doxology('Latin');
+  $doxology .= ":$winner" if $doxology eq 'Special';
   my %english = %{setupstring('English', $winner) || {}};
   my $englishTitle = $english{Officium} || ($english{Rank} =~ s/;;.*//sr);
   my ($ant, $psalms) = split(';;', psalmi_minor('Latin')->[0]);
   print join("\t", map { $clean->($_) }
     $date, $winner, $winner{Officium}, $englishTitle, rankname('English'),
-    $rank, $duplex, $vespera, $psalms, join('|', $commemoratio, $commemoratio1)), "\n";
+    $rank, $duplex, $vespera, $psalms, join('|', $commemoratio, $commemoratio1), $preces, $tone, $doxology), "\n";
   last if $date eq $to;
   $date = prevnext($date, 1);
 }
