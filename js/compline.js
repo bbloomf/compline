@@ -220,17 +220,22 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     $trLang.val(rubricsOnly ? textMode.rubricsLang(textMode.lang()) : textMode.lang());
   };
   showTextMode();
-  // How to show the hymn in the translation as text (TRANSLATIONS_PLAN.md §4b and §5): literal or
-  // metrical, while it isn't sung (the hymn's 'Fully notated translation').  A choice the language
-  // hasn't is disabled.  text-mode.js falls back from a choice the language or the season hasn't.
+  // How to show the hymn in the translation (TRANSLATIONS_PLAN.md §4b and §5): literal or metrical
+  // as text, or fully notated where the language can sing it, which is the hymn's 'Fully notated
+  // translation'.  A choice the language hasn't is disabled.  text-mode.js falls back from a choice
+  // the language or the season hasn't.
   var $hymnMode = $('#selectHymnMode');
   var showHymnMode = function() {
-    var hymnMode = textMode.sectionMode('hymn');
-    var kinds = hymnMode !== 'la' && storedNotation('hymn') !== 'sung' && textMode.hymnKinds();
+    var kinds = textMode.sectionMode('hymn') !== 'la' && textMode.hymnKinds();
     $hymnMode.closest('.hymn-mode-choice').prop('hidden', !kinds);
     if(!kinds) return;
     $hymnMode.children('[value=literal]').prop('disabled', !kinds.literal);
     $hymnMode.children('[value=metrical]').prop('disabled', !kinds.metrical);
+    $hymnMode.children('[value=sung]').prop({disabled: !textMode.canSing(), hidden: !textMode.canSing()});
+    if(storedNotation('hymn') === 'sung') {
+      $hymnMode.val('sung');
+      return;
+    }
     // a choice that's disabled here shows what is shown in its place, and is kept for a language
     // that has it
     var fallbacks = {literal: ['literal', 'metrical'], metrical: ['metrical', 'literal']};
@@ -239,7 +244,15 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     })[0]);
   };
   $hymnMode.change(function(e){
-    textMode.setHymnMode($(this).val());
+    var kind = $(this).val();
+    // to or from singing it: as text, the Latin stays notated beside it, or it's alone
+    if(kind === 'sung' || storedNotation('hymn') === 'sung') {
+      if(kind !== 'sung') textMode.setHymnMode(kind);
+      setNotation(['hymn'], kind === 'sung'? 'sung' : textMode.mode() === 'both'? 'full' : 'tr');
+      updateOtherChants();
+      return;
+    }
+    textMode.setHymnMode(kind);
     $('chant-gabc[notation=hymn]').each(function(){
       if(this.updateText) this.updateText();
     });
