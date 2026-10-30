@@ -274,19 +274,11 @@ div#options-menu>ul a:hover {
 div#options-menu>ul>li:not(:first-child) {
   margin-top: 0.6em;
 }
-/* The button after "Other chants" opens the list of each chant it sets */
-div#options-menu button.expander {
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  line-height: 1;
-  padding: 0 0.3em;
-  margin-left: 0.1em;
-  cursor: pointer;
-}
-div#options-menu button.expander[aria-expanded=true] {
-  transform: rotate(90deg);
+/* Other chants lists its chants on hover. */
+div#options-menu .lists {
+  cursor: help;
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
 }
 /* The button before a section's menu goes to the section (compline.js), so a row without one
    keeps its place. */
@@ -317,14 +309,6 @@ div#options-menu button.jump svg {
   stroke-width: 2.5;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
-div#options-menu ul ul {
-  list-style-type: none;
-  padding-left: 1em;
-  margin: 0;
-}
-div#options-menu ul ul>li {
-  margin-top: 0.6em;
 }
 div#options-menu.showing>ul {
   display: block;
@@ -363,6 +347,13 @@ body.hide-choose-day #rbWeekday {
   top: 100%;
   width: 100%;
   width: calc(100vw - 30px);
+}
+/* Once the page stops growing (1258px, above), a menu's room is the page's width, not the
+   window's, or it reaches past the window's right edge and the page scrolls sideways. */
+@media screen and (min-width: 1274px) {
+  .btn-group>.btn+div {
+    width: calc(1258px - 30px);
+  }
 }
 .btn-group>.btn > .lbl {
   margin-left: 1em;
@@ -407,8 +398,11 @@ chant-gabc > svg {
 chant-gabc {
   margin: -2px 0 4px;
 }/* Notation levels (TRANSLATIONS_PLAN.md §4c).  compline.js puts notation-<section>-<level>
-   on <body>.  Plain text of the psalms, chapter and prayers is the pointed text with the
+   on <body>.  Plain text of the psalms, lesson, chapter and prayers is the pointed text with the
    pointing switched off; the other chants give their own plain text (chant-element.js). */
+body.notation-lesson-text .notated-lesson,
+body.notation-lesson-pointed .notated-lesson,
+body.notation-lesson-full .pointed-lesson,
 body.notation-chapter-text .notated-chapter,
 body.notation-chapter-pointed .notated-chapter,
 body.notation-chapter-full .pointed-chapter,
@@ -422,6 +416,8 @@ body.notation-psalms-text #placeholder .verses b,
 body.notation-psalms-text #placeholder .verses i,
 body.notation-canticle-text #canticle .verses b,
 body.notation-canticle-text #canticle .verses i,
+body.notation-lesson-text .pointed-lesson b,
+body.notation-lesson-text .pointed-lesson i,
 body.notation-chapter-text .pointed-chapter b,
 body.notation-chapter-text .pointed-chapter i,
 body.notation-prayers-text .pointed-prayer b,
@@ -465,6 +461,13 @@ span.tr-pair.text-tr,
 span.tr-pair.text-both > span,
 span.tr-pair.text-tr > span:not(.has-tr) {
   display: block;
+}
+/* "Pater noster / Credo is said in silence until" is set apart from the line above; inline-block,
+   so in Latin only the versicle it leads into still follows on its line. */
+[data-rubric=all-souls-pater],
+[data-rubric=preces-credo] {
+  display: inline-block;
+  margin-top: 0.5em;
 }
 .text-la .tr,
 .text-la .chant-tr,
@@ -517,10 +520,18 @@ chant-gabc > .chant-tr:has(+ svg) {
   chant-gabc.text-both:not(.plain-text)+.verses.text-both>p.has-tr:first-child {
     margin-top: calc(0.75em + 0.4615em);
   }
+  /* A block of versicles, split into one pair for each ℣ (js/text-mode.js), with each translation
+     set apart from the next ℣. */
+  .tr-versicles.text-both > .tr:not(:last-child),
+  .text-both .tr-versicles > .tr:not(:last-child) {
+    margin-bottom: 0.4615em;
+  }
 }
 /* On a narrow screen the translation is under the Latin; on a wide one, and in print, beside it. */
 @media print, screen and (min-width: 768px) {
+  /* (a <span class='tr-pair'> too, which is otherwise a block, above) */
   .tr-pair.text-both,
+  span.tr-pair.text-both,
   .text-both .tr-pair,
   .verses.text-both:not(.chant-tr),
   .text-both .verses:not(.chant-tr) {

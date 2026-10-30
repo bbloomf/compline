@@ -13,6 +13,10 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   if(!('notationHymn' in localStorage)) localStorage.notationHymn = 'full';
   if(!('notationMarian' in localStorage)) localStorage.notationMarian = 'full';
   if(!('notationChants' in localStorage)) localStorage.notationChants = 'full';
+  // The short lesson and the short responsory were among the other chants until they got menus of
+  // their own.
+  if(!('notationLesson' in localStorage)) localStorage.notationLesson = localStorage.notationChants;
+  if(!('notationResponsory' in localStorage)) localStorage.notationResponsory = localStorage.notationChants;
   // The canticle had the psalms' menu until it got its own.
   if(!('notationCanticle' in localStorage)) localStorage.notationCanticle = localStorage.notationPsalms;
   // The hymn translation's "Sung with chant" is now the hymn's 'Fully notated translation', where it
@@ -51,9 +55,11 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   // hymn's 'sung' is the translation sung to the chant (§4b): beside the Latin as the Text menu
   // says, or alone with the Latin only.
   var notationSections = {
+    lesson:   {key: 'notationLesson',   levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'full'},
     psalms:   {key: 'notationPsalms',   levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'pointed'},
     canticle: {key: 'notationCanticle', levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'pointed'},
     chapter:  {key: 'notationChapter',  levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'full'},
+    responsory: {key: 'notationResponsory', levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
     prayers:  {key: 'notationPrayers',  levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'pointed'},
     hymn:     {key: 'notationHymn',     levels: ['text', 'full', 'sung', 'tr'], defaultLevel: 'full'},
     marian:   {key: 'notationMarian',   levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
@@ -86,7 +92,7 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   var fullyNotated = function(section) {
     return notation(section) === 'full';
   };
-  // The notated chapter and prayers are hidden below 'full', so they skip exsurge layout too.
+  // The notated lesson, chapter and prayers are hidden below 'full', so they skip exsurge layout too.
   // A chant shows in its own section's mode (text-mode.js modeOf).  The psalms' and the canticle's
   // antiphons (the chants without a notation of their own in #placeholder and #canticle) are plain
   // text with their psalm, and notated while it's pointed.
@@ -115,16 +121,16 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     if(section === 'hymn') showHymnNotation();
     markPlainText(section);
   };
-  // The hymn's menus offer singing it where the language can, and with the Text menu's translation
-  // only (which hides the other notation menus), nothing else: there the options menu has a menu of
-  // its own for the hymn, while the language can sing it.
+  // The hymn's menu offers singing it where the language can, and with the Text menu's translation
+  // only (which hides the other notation menus), nothing else: there it stays while the language can
+  // sing it.
   var showHymnNotation = function() {
     var trOnly = textMode.mode() === 'tr';
     var $selects = $('select[notation=hymn]');
     $selects.children('[value=sung]').prop({disabled: !textMode.canSing(), hidden: !textMode.canSing()});
     $selects.children('[value=text],[value=full]').prop({disabled: trOnly, hidden: trOnly});
     if(trOnly) $selects.val(storedNotation('hymn') === 'sung'? 'sung' : 'tr');
-    $('.hymn-notation-menu').prop('hidden', !trOnly || !textMode.canSing());
+    $('.hymn-notation-menu').prop('hidden', trOnly && !textMode.canSing());
   };
   $.each(notationSections, updateNotation);
   // Sets the sections' notation to level.
@@ -149,36 +155,6 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   $('select[notation]').change(function(e){
     setNotation([$(this).attr('notation')], $(this).val());
   });
-  // "Other chants" in the options menu sets the hymn, the Marian antiphon and every
-  // chant without a section of its own at once, and reads "Mixed" when they differ.
-  // Its button shows each of them.
-  var $otherChants = $('#notation-other-chants');
-  var $otherChantsList = $('#notation-other-chants-list');
-  var updateOtherChants = function() {
-    var levels = $otherChantsList.find('select[notation]').map(function(){
-      return storedNotation($(this).attr('notation'));
-    }).get();
-    var mixed = levels.some(function(l){ return l !== levels[0]; });
-    $otherChants.val(mixed ? 'mixed' : levels[0]);
-    return mixed;
-  };
-  $otherChants.change(function(e){
-    // all at once, so the page is set up once for a change to or from the translation only
-    var $selects = $otherChantsList.find('select[notation]').val($(this).val());
-    setNotation($selects.map(function(){ return $(this).attr('notation'); }).get(), $(this).val());
-    updateOtherChants();
-  });
-  $('select[notation]').change(updateOtherChants);
-  var $otherChantsButton = $('#options-menu button[aria-controls=notation-other-chants-list]');
-  var showOtherChants = function(show) {
-    $otherChantsButton.attr('aria-expanded', show);
-    $otherChantsList.prop('hidden', !show);
-  };
-  $otherChantsButton.click(function(e){
-    showOtherChants($otherChantsList.prop('hidden'));
-  });
-  // Start open when they differ, so "Mixed" is explained
-  showOtherChants(updateOtherChants());
   // The button before a section's menu goes to that section on the page, where it's shown today,
   // and leaves the menu open.
   var $jumps = $optionsMenu.find('button.jump');
@@ -249,7 +225,6 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     if(kind === 'sung' || storedNotation('hymn') === 'sung') {
       if(kind !== 'sung') textMode.setHymnMode(kind);
       setNotation(['hymn'], kind === 'sung'? 'sung' : textMode.mode() === 'both'? 'full' : 'tr');
-      updateOtherChants();
       return;
     }
     textMode.setHymnMode(kind);

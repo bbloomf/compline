@@ -71,8 +71,8 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
     'Ant.': '<i>Ant.</i>'
   };
   // The paragraphs of a score that isn't a psalm, each of which is a unit of its translation
-  // (TRANSLATIONS_PLAN.md §4).  gabcToHtml and splitUnits both use this, so a translation pairs
-  // the same way with the words as with the chant.  Blank lines separate paragraphs, and a
+  // (TRANSLATIONS_PLAN.md §4).  gabcToHtml and splitUnits both use this (through unitGroups), so a
+  // translation pairs the same way with the words as with the chant.  Blank lines separate paragraphs, and a
   // paragraph with no words (only neumes or bars) belongs to the one before it, or if it comes
   // first, to the one after.
   var unitParagraphs = function(body) {
@@ -92,6 +92,25 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
     });
     if(wordless) paragraphs.push(wordless);
     return paragraphs;
+  };
+  // Whether a paragraph of GABC (or an annotation) starts with a ℣ or a ℟ (mark: 'V' or 'R').
+  var startsWith = function(paragraph, mark) {
+    return normalizeGabc(paragraph).replace(/^(\s|\([^)]*\))*/, '').indexOf(mark + '/.') === 0;
+  };
+  // The unitParagraphs of a score, grouped as they're shown with their translations: a versicle
+  // (a score that starts with a ℣, in its words or its annotation) is all one group, with its ℟ and
+  // whatever follows (Deus in adjutórium's Glória Patri), and elsewhere a ℟ stays with what it
+  // answers (the lesson's Deo grátias).
+  var unitGroups = function(body, header) {
+    var paragraphs = unitParagraphs(body);
+    var versicle = [].concat(header.annotation || []).some(function(annotation) {
+      return startsWith(annotation, 'V');
+    }) || (paragraphs.length > 0 && startsWith(paragraphs[0], 'V'));
+    return paragraphs.reduce(function(groups, paragraph) {
+      if(groups.length && (versicle || startsWith(paragraph, 'R'))) groups[groups.length - 1].push(paragraph);
+      else groups.push([paragraph]);
+      return groups;
+    }, []);
   };
   // The first letter of a score is a drop cap, so the capitals after it (as in "TE lucis") are lower case.
   var lowerDropCapCaps = function(body) {
@@ -118,13 +137,38 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
   var hasNotes = function(gabc) {
     return /^\uFEFF?\s*(user-notes|commentary)\s*:/m.test(gabc || '');
   };
+  // A \u211F cut short ("\u211F In manus..."), where the chant sings only its start, written out from the
+  // line before that it starts, for plain text, which shows the whole response.  lines are a
+  // chant's lines in order; response matches a \u211F at the start of a line, and mark a \u2123 or a \u211F.
+  var completeResponses = function(lines, response, mark) {
+    var cut = /\s*(\.\.\.|\u2026)$/;
+    var words = function(line) {
+      return line.replace(mark, '').replace(/<[^>]*>|&nbsp;/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+    };
+    return lines.map(function(line, i) {
+      var start = line.match(response);
+      if(!start || !cut.test(line)) return line;
+      var stem = words(line.replace(cut, ''));
+      for(var j = 0; stem && j < i; j++) {
+        if(!cut.test(lines[j]) && words(lines[j]).indexOf(stem) === 0) return start[0] + lines[j].replace(mark, '');
+      }
+      return line;
+    });
+  };
+  // The same for a translation's units, whose lines start "V. " and "R. ".
+  var completeUnitResponses = function(units) {
+    var lines = completeResponses([].concat.apply([], units.map(function(unit) { return unit.split('\n'); })), /^R\. /, /^[VR]\. /);
+    return units.map(function(unit) {
+      return lines.splice(0, unit.split('\n').length).join('\n');
+    });
+  };
   // The whole of a GABC file as HTML.  Blank lines separate paragraphs, and in a psalm, a
   // paragraph whose lines all start with a number is laid out like the pointed verses.  Only the
   // first textLines lines are kept, if it's given: the rest of a psalm's intonation file
   // shows how to sing the flex and later verses.
   // With a translation (see translation() below), each psalm verse is followed by its own,
-  // and each other paragraph by its unit.  If the units don't match the paragraphs, they all
-  // follow the whole chant.
+  // and each other paragraph (or unitGroups' group of them) by its units.  If the units don't
+  // match the paragraphs, they all follow the whole chant.
   var gabcToHtml = function(gabc, annotationAttr, useDropCapAttr, textLines, translation) {
     var lineCount = 0;
     var verse = /^(\d+)\. /;
@@ -152,7 +196,10 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
         body = lowerDropCapCaps(body);
       }
       var section = textMode.psalmSection(header);
-      (section? body.trim().split(/\r?\n\s*\r?\n/) : unitParagraphs(body)).forEach(function(paragraph, i) {
+      // each group of paragraphs is one, with its translation's units
+      (section? body.trim().split(/\r?\n\s*\r?\n/).map(function(p) { return [p]; }) :
+        translation? unitGroups(body, header) : unitParagraphs(body).map(function(p) { return [p]; })).forEach(function(group, i) {
+        var paragraph = group.join('\n\n');
         if(i === 0 && prefix) paragraph = prefix + ' ' + paragraph;
         var lines = paragraph.split(/\r?\n/).map(gabcLineToHtml).filter(function(line) {
           return line && !(textLines && ++lineCount > textLines);
@@ -161,12 +208,17 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
           labels: i === 0? html : '',
           trPrefix: i === 0? trPrefix : '',
           lines: lines,
+          units: group.length,
           verses: !!section && lines.length > 0 && lines.every(function(line) { return verse.test(line); }),
           section: section
         });
       });
     });
-    var unitCount = paragraphs.filter(function(p) { return p.lines.length && !p.section; }).length;
+    var lines = completeResponses([].concat.apply([], paragraphs.map(function(p) { return p.lines; })),
+      /^<span class='versiculum'>r<\/span>&nbsp;/, /^<span class='versiculum'>[vr]<\/span>&nbsp;/);
+    paragraphs.forEach(function(p) { p.lines = lines.splice(0, p.lines.length); });
+    if(units) units = completeUnitResponses(units);
+    var unitCount = paragraphs.reduce(function(count, p) { return count + (p.lines.length && !p.section? p.units : 0); }, 0);
     var paired = units && units.length === unitCount;
     var unit = 0;
     paragraphs.forEach(function(p) {
@@ -182,7 +234,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       } else {
         var latin = p.lines.join('<br>').replace(verse, "<span class='red'>$1.</span> ");
         p.html = (translation && !p.section && (paired || !units))?
-          textMode.pairHtml(latin, paired? [units[unit++]] : null, 'p', translation.mode, p.trPrefix) : '<p>' + latin + '</p>';
+          textMode.pairHtml(latin, paired? units.slice(unit, unit += p.units) : null, 'p', translation.mode, p.trPrefix) : '<p>' + latin + '</p>';
       }
     });
     if(units && !paired) {
@@ -249,7 +301,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
   };
   // Splits a chant into units for 'both' mode, each a score of its own with the translation that
   // follows it (TRANSLATIONS_PLAN.md §4): a psalm's verses (but a psalm's intonation stays whole,
-  // followed by verse 1), or the paragraphs of anything else.  A later unit of a score gets the
+  // followed by verse 1), or the unitGroups of anything else.  A later unit of a score gets the
   // clef again, and no drop cap, annotation or notes.  A chant with no translation isn't split,
   // and if the units don't match the paragraphs, they all follow the whole chant.
   var regexClef = /^\s*(\([cf]b?[1-4]\))/;
@@ -269,7 +321,12 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       var clef = (score.body.match(regexClef) || [])[1] || '(c4)';
       (section? score.body.split(/\r?\n(?=\s*\d+\.\s)/).filter(function(chunk) {
         return /\S/.test(chunk);
-      }) : unitParagraphs(score.body)).forEach(function(chunk, i) {
+      }) : unitGroups(score.body, score.header)).forEach(function(chunk, i) {
+        var count = 1;
+        if(!section) {
+          count = chunk.length;
+          chunk = chunk.join('\n\n');
+        }
         var unit = {
           header: i === 0? score.header : {'initial-style': '0'},
           body: (i === 0 || regexClef.test(chunk))? chunk : clef + chunk.replace(/^\s+/, ''),
@@ -279,7 +336,9 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
           var html = textMode.verseTranslationHtml(section, parseInt(chunk.replace(regexClef, '')), translation.mode);
           if(html) unit.translationHtml = '<div class="verses chant-tr">' + html + '</div>';
         } else {
-          unit.index = unitCount++;
+          unit.index = unitCount;
+          unit.count = count;
+          unitCount += count;
         }
         result.push(unit);
       });
@@ -314,7 +373,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
     }
     result.forEach(function(unit) {
       // its ℟ Amen on its own line or not, as the Latin's is in the GABC (and so in plain text)
-      if('index' in unit) unit.translationHtml = unitHtml([units[unit.index]],
+      if('index' in unit) unit.translationHtml = unitHtml(units.slice(unit.index, unit.index + unit.count),
         textMode.runsOnResponse(unit.body.split(/\r?\n/).map(gabcLineToHtml).join('<br>')));
     });
     return result;
