@@ -220,7 +220,7 @@ define(['jquery','exsurge'], function($,exsurge) {
       svg: score.svg,
       notes: notes,
       noteId: 0,
-      transpose: score.playbackStartPitch - firstNote.pitch.toInt()
+      transpose: score.playbackPitch.transpose
     };
     setHighlight('dropCap', $(score.svg).find('text.dropCap')[0]);
     showMediaControls();
@@ -412,24 +412,56 @@ define(['jquery','exsurge'], function($,exsurge) {
   var removeMenus = function() {
     $('.chant-context').remove();
   };
+  // A score's notes, in order, in exsurge's pitch numbers
+  var getPitches = function(score) {
+    var pitches = [];
+    score.notations.forEach(function(notation) {
+      if(notation.notes) notation.notes.forEach(function(note) {
+        pitches.push(note.pitch.toInt());
+      });
+    });
+    return pitches;
+  };
+  // The scores sung at one pitch with this one: the rest of its chant, and within data-pitch-group (the
+  // psalms, the canticle), the antiphons and the psalm tone around it too.  They share one transposition
+  // (score.playbackPitch), set at first from the range of all of them, so raising or lowering any of
+  // them raises or lowers them all.
+  var getPitchGroup = function(score) {
+    var $chant = $(score.svg).closest('chant-gabc'),
+        $group = $chant.closest('[data-pitch-group]');
+    // jQuery's map flattens each chant's array of scores
+    var scores = ($group.length? $group.find('chant-gabc') : $chant).map(function() {
+      return this._score || [];
+    }).get();
+    if(scores.indexOf(score) < 0) scores = [score];
+    var lowPitch = Infinity, highPitch = -Infinity;
+    scores.forEach(function(s) {
+      getPitches(s).forEach(function(pitch) {
+        lowPitch = Math.min(lowPitch, pitch);
+        highPitch = Math.max(highPitch, pitch);
+      });
+    });
+    // as the group was last played, if any of it still has the pitch it was given;
+    // otherwise the middle of the range at the G above middle C, until it is changed
+    var pitch = scores.map(function(s) {
+      return s.playbackPitch;
+    }).filter(Boolean)[0] || {transpose: 55 - Math.floor((lowPitch + highPitch) / 2)};
+    scores.forEach(function(s) {
+      s.playbackPitch = pitch;
+    });
+    return {pitch: pitch, lowPitch: lowPitch, highPitch: highPitch};
+  };
   // over the initial, or over the first syllable
   var showMenu = function(anchor) {
     removeMenus();
     var score = $(anchor).closest('svg').prop('source');
     if(!score || !AudioContext) return;
     getAudio();
-    var startPitch = null, lowPitch = Infinity, highPitch = -Infinity;
-    score.notations.forEach(function(notation) {
-      if(notation.notes) notation.notes.forEach(function(note) {
-        var pitch = note.pitch.toInt();
-        if(startPitch === null) startPitch = pitch;
-        lowPitch = Math.min(lowPitch, pitch);
-        highPitch = Math.max(highPitch, pitch);
-      });
-    });
-    if(startPitch === null) return;
-    // the middle of the range at the G above middle C, until it is changed
-    if(!score.playbackStartPitch) score.playbackStartPitch = startPitch + 55 - Math.floor((lowPitch + highPitch) / 2);
+    var startPitch = getPitches(score)[0];
+    if(startPitch === undefined) return;
+    var group = getPitchGroup(score),
+        lowPitch = group.lowPitch,
+        highPitch = group.highPitch;
 
     var $menu = $("<div class='chant-context btn-group-vertical hidden-print'>" +
         "<button class='btn btn-primary play'>" + icons.play + " Play</button>" +
@@ -445,16 +477,17 @@ define(['jquery','exsurge'], function($,exsurge) {
       "</div>");
     // Raising the pitch names it as a sharp, and lowering it as a flat.
     var changePitch = function(offset) {
-      var pitch = score.playbackStartPitch += offset,
-          lowest = pitch - startPitch + lowPitch,
-          highest = pitch - startPitch + highPitch,
+      var transpose = group.pitch.transpose += offset,
+          pitch = startPitch + transpose,
+          lowest = lowPitch + transpose,
+          highest = highPitch + transpose,
           name = noteNames[pitchClass(pitch)];
       if(offset === 1) name = name.slice(0, 2);
       else if(offset === -1) name = name.slice(-2);
       $menu.find('.this-pitch').html(withOctave(name, pitch));
       $menu.find('.lowest-pitch').html(withOctave(noteNames[pitchClass(lowest)].slice(0, 2), lowest));
       $menu.find('.highest-pitch').html(withOctave(noteNames[pitchClass(highest)].slice(0, 2), highest));
-      $menu.find('.do-pitch').text(noteNames[pitchClass(pitch - startPitch)]);
+      $menu.find('.do-pitch').text(noteNames[pitchClass(transpose)]);
     };
     var hasPointerEvents = !!window.PointerEvent;
     $menu.on('click', function(e) {
@@ -468,7 +501,7 @@ define(['jquery','exsurge'], function($,exsurge) {
     }).on('click', '.pitch-down', function() {
       changePitch(-1);
     }).find('.hold-pitch').on(hasPointerEvents? 'pointerdown' : 'mousedown touchstart', function() {
-      if(!stopHeldTone) holdTone(score.playbackStartPitch);
+      if(!stopHeldTone) holdTone(startPitch + group.pitch.transpose);
     }).on(hasPointerEvents? 'pointerup pointercancel pointerleave' : 'mouseup touchcancel touchend', releaseHeldTone)
     .on('contextmenu', function(e) {
       e.preventDefault();

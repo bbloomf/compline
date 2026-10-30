@@ -169,6 +169,16 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
   // With a translation (see translation() below), each psalm verse is followed by its own,
   // and each other paragraph (or unitGroups' group of them) by its units.  If the units don't
   // match the paragraphs, they all follow the whole chant.
+  // A score's annotation in plain text, and so in its translation: its header's beside a drop cap,
+  // or else the element's.
+  var scoreAnnotation = function(header, annotationAttr, useDropCapAttr) {
+    var useDropCap = ('initial-style' in header)? header['initial-style'] === '1' : useDropCapAttr;
+    return (header.annotation && useDropCap)? header.annotation : annotationAttr;
+  };
+  // An antiphon's translation starts with Ant. as well, whether under its notes or in plain text.
+  var trPrefixFor = function(annotation) {
+    return [].concat(annotation || []).indexOf('Ant.') >= 0? "<i class='red'>Ant.</i> " : '';
+  };
   var gabcToHtml = function(gabc, annotationAttr, useDropCapAttr, textLines, translation) {
     var lineCount = 0;
     var verse = /^(\d+)\. /;
@@ -184,12 +194,11 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       if(header.commentary) {
         html += textMode.noteHtml(header.commentary, 'float:right');
       }
-      var annotation = (header.annotation && useDropCap)? header.annotation : annotationAttr;
+      var annotation = scoreAnnotation(header, annotationAttr, useDropCapAttr);
       var prefix = [].concat(annotation || []).map(function(annotation) {
         return annotationGabc[annotation] || '';
       }).join(' ');
-      // An antiphon's translation starts with Ant. as well.
-      var trPrefix = [].concat(annotation || []).indexOf('Ant.') >= 0? "<i class='red'>Ant.</i> " : '';
+      var trPrefix = trPrefixFor(annotation);
       var body = score.body;
       if(useDropCap) {
         // The first letter isn't a drop cap.
@@ -303,9 +312,10 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
   // follows it (TRANSLATIONS_PLAN.md §4): a psalm's verses (but a psalm's intonation stays whole,
   // followed by verse 1), or the unitGroups of anything else.  A later unit of a score gets the
   // clef again, and no drop cap, annotation or notes.  A chant with no translation isn't split,
-  // and if the units don't match the paragraphs, they all follow the whole chant.
+  // and if the units don't match the paragraphs, they all follow the whole chant.  An antiphon's
+  // first unit has Ant. before its translation, as in plain text.
   var regexClef = /^\s*(\([cf]b?[1-4]\))/;
-  var splitUnits = function(scores, translation) {
+  var splitUnits = function(scores, translation, annotationAttr, useDropCapAttr) {
     var units = translation.units;
     var sung = translation.sung;
     var result = [];
@@ -319,6 +329,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
         return;
       }
       var clef = (score.body.match(regexClef) || [])[1] || '(c4)';
+      var trPrefix = trPrefixFor(scoreAnnotation(score.header, annotationAttr, useDropCapAttr));
       (section? score.body.split(/\r?\n(?=\s*\d+\.\s)/).filter(function(chunk) {
         return /\S/.test(chunk);
       }) : unitGroups(score.body, score.header)).forEach(function(chunk, i) {
@@ -330,7 +341,8 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
         var unit = {
           header: i === 0? score.header : {'initial-style': '0'},
           body: (i === 0 || regexClef.test(chunk))? chunk : clef + chunk.replace(/^\s+/, ''),
-          laterUnit: i > 0
+          laterUnit: i > 0,
+          trPrefix: i === 0? trPrefix : ''
         };
         if(section) {
           var html = textMode.verseTranslationHtml(section, parseInt(chunk.replace(regexClef, '')), translation.mode);
@@ -363,18 +375,18 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
     if(!units) return result;
     // Under the notes, a hymn's or a Marian antiphon's lines run together, with a red slash between them.
     var slashes = /^(te-lucis|marian-antiphon)\/(?!.*-prayer)/.test(translation.key);
-    var unitHtml = function(units, runOn) {
-      return '<div class="chant-tr"><p' + textMode.trAttributes() + '>' + textMode.unitsHtml(units, slashes, runOn) + '</p></div>';
+    var unitHtml = function(units, runOn, trPrefix) {
+      return '<div class="chant-tr"><p' + textMode.trAttributes() + '>' + (trPrefix || '') + textMode.unitsHtml(units, slashes, runOn) + '</p></div>';
     };
     if(units.length !== unitCount) {
       console.warn('The translation has ' + units.length + ' units, the chant ' + unitCount, translation.key);
-      scores[scores.length - 1].translationHtml = unitHtml(units);
+      scores[scores.length - 1].translationHtml = unitHtml(units, false, result.length? result[0].trPrefix : '');
       return scores;
     }
     result.forEach(function(unit) {
       // its ℟ Amen on its own line or not, as the Latin's is in the GABC (and so in plain text)
       if('index' in unit) unit.translationHtml = unitHtml(units.slice(unit.index, unit.index + unit.count),
-        textMode.runsOnResponse(unit.body.split(/\r?\n/).map(gabcLineToHtml).join('<br>')));
+        textMode.runsOnResponse(unit.body.split(/\r?\n/).map(gabcLineToHtml).join('<br>')), unit.trPrefix);
     });
     return result;
   };
@@ -632,7 +644,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       gabc = normalizeGabc(gabc.replace(/(<b>[^<]+)<sp>'(?:oe|œ)<\/sp>/g,'$1œ</b>\u0301<b>') // character doesn't work in the bold version of this font.
         .replace(/<b><\/b>/g,''));
       var scores = splitGabc(gabc);
-      if(translation) scores = splitUnits(scores, translation);
+      if(translation) scores = splitUnits(scores, translation, annotationAttr, useDropCapAttr);
       if(translation && translation.sung && /‿/.test(translation.sung.join(''))) {
         var elem = this;
         var drawn = this._gabc;
