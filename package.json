@@ -1,6 +1,6 @@
 {
   "name": "compline",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "The office of Compline, with gregorian chant",
   "main": "index.html",
   "scripts": {
