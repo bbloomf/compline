@@ -455,6 +455,13 @@ span.tr-pair.text-both > span,
 span.tr-pair.text-tr > span:not(.has-tr) {
   display: block;
 }
+/* "Pater noster / Credo is said in silence until" is set apart from the line above; inline-block,
+   so in Latin only the versicle it leads into still follows on its line. */
+[data-rubric=all-souls-pater],
+[data-rubric=preces-credo] {
+  display: inline-block;
+  margin-top: 0.5em;
+}
 .text-la .tr,
 .text-la .chant-tr,
 .text-tr .has-tr,
