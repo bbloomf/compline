@@ -87,12 +87,16 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     return notation(section) === 'full';
   };
   // The notated chapter and prayers are hidden below 'full', so they skip exsurge layout too.
-  // A chant shows in its own section's mode (text-mode.js modeOf): the psalms' antiphons are
-  // 'chants' here, but plain text in the psalms' 'Translation only', and notated (the default) in
-  // the chants' unless the psalms are in it too.
+  // A chant shows in its own section's mode (text-mode.js modeOf).  The psalms' and the canticle's
+  // antiphons (the chants without a notation of their own in #placeholder and #canticle) are plain
+  // text with their psalm, and notated while it's pointed.
+  var antiphons = '[data-section=psalms] chant-gabc:not([notation]), [data-section=canticle] chant-gabc:not([notation])';
   var markPlainText = function(section) {
     var stored = storedNotation(section);
-    $(section === 'chants'? 'chant-gabc:not([notation])' : 'chant-gabc[notation=' + section + ']').each(function(){
+    var $chants = section === 'chants'? $('chant-gabc:not([notation])').not(antiphons) :
+      $('chant-gabc[notation=' + section + ']').add(section === 'psalms' || section === 'canticle'?
+        '[data-section=' + section + '] chant-gabc:not([notation])' : null);
+    $chants.each(function(){
       var level = textMode.modeOf(this) === 'tr'? 'text' : stored === 'tr'? notationSections[section].defaultLevel : stored === 'sung'? 'full' : stored;
       var plainText = section === 'psalms' || section === 'canticle'? level === 'text' : level !== 'full';
       $(this).attr('plain-text', plainText? '' : null);
