@@ -144,6 +144,8 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       var prefix = [].concat(annotation || []).map(function(annotation) {
         return annotationGabc[annotation] || '';
       }).join(' ');
+      // An antiphon's translation starts with Ant. as well.
+      var trPrefix = [].concat(annotation || []).indexOf('Ant.') >= 0? "<i class='red'>Ant.</i> " : '';
       var body = score.body;
       if(useDropCap) {
         // The first letter isn't a drop cap.
@@ -157,6 +159,7 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
         });
         paragraphs.push({
           labels: i === 0? html : '',
+          trPrefix: i === 0? trPrefix : '',
           lines: lines,
           verses: !!section && lines.length > 0 && lines.every(function(line) { return verse.test(line); }),
           section: section
@@ -179,14 +182,15 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       } else {
         var latin = p.lines.join('<br>').replace(verse, "<span class='red'>$1.</span> ");
         p.html = (translation && !p.section && (paired || !units))?
-          textMode.pairHtml(latin, paired? [units[unit++]] : null, 'p', translation.mode) : '<p>' + latin + '</p>';
+          textMode.pairHtml(latin, paired? [units[unit++]] : null, 'p', translation.mode, p.trPrefix) : '<p>' + latin + '</p>';
       }
     });
     if(units && !paired) {
       console.warn('The translation has ' + units.length + ' units, the chant ' + unitCount, translation.key);
       // the labels stay out of the Latin, which the translation only hides
       return paragraphs.map(function(p) { return p.labels; }).join('') +
-        textMode.pairHtml(paragraphs.map(function(p) { return p.html; }).join(''), units, 'div', translation.mode);
+        textMode.pairHtml(paragraphs.map(function(p) { return p.html; }).join(''), units, 'div', translation.mode,
+          paragraphs.length? paragraphs[0].trPrefix : '');
     }
     return paragraphs.map(function(p) { return p.labels + p.html; }).join('');
   };

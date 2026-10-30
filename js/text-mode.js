@@ -394,11 +394,12 @@ define(['jquery'], function($) {
       latinHtml + '</p>' + (translation || '');
   };
   // A Latin block and its translation (units), side by side or one under the other (style.css).
-  // tag is the element for each, 'p' or 'div'.
-  var pairHtml = function(latinHtml, units, tag, m) {
+  // tag is the element for each, 'p' or 'div'.  trPrefix is HTML that starts the translation, as
+  // an antiphon's red Ant. does.
+  var pairHtml = function(latinHtml, units, tag, m, trPrefix) {
     tag = tag || 'p';
     return "<div class='tr-pair'><" + tag + " lang='la' class='" + latinClass(!!units, m) + "'>" + latinHtml + '</' + tag + '>' +
-      (units ? '<' + tag + trAttributes() + '>' + unitsHtml(units, false, runsOnResponse(latinHtml)) + '</' + tag + '>' : '') + '</div>';
+      (units ? '<' + tag + trAttributes() + '>' + (trPrefix || '') + unitsHtml(units, false, runsOnResponse(latinHtml)) + '</' + tag + '>' : '') + '</div>';
   };
 
   // Adds the translations to the page, or takes them away in 'la' mode: each .tr-pair[data-tr]

@@ -87,12 +87,16 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     return notation(section) === 'full';
   };
   // The notated chapter and prayers are hidden below 'full', so they skip exsurge layout too.
-  // A chant shows in its own section's mode (text-mode.js modeOf): the psalms' antiphons are
-  // 'chants' here, but plain text in the psalms' 'Translation only', and notated (the default) in
-  // the chants' unless the psalms are in it too.
+  // A chant shows in its own section's mode (text-mode.js modeOf).  The psalms' and the canticle's
+  // antiphons (the chants without a notation of their own in #placeholder and #canticle) are plain
+  // text with their psalm, and notated while it's pointed.
+  var antiphons = '[data-section=psalms] chant-gabc:not([notation]), [data-section=canticle] chant-gabc:not([notation])';
   var markPlainText = function(section) {
     var stored = storedNotation(section);
-    $(section === 'chants'? 'chant-gabc:not([notation])' : 'chant-gabc[notation=' + section + ']').each(function(){
+    var $chants = section === 'chants'? $('chant-gabc:not([notation])').not(antiphons) :
+      $('chant-gabc[notation=' + section + ']').add(section === 'psalms' || section === 'canticle'?
+        '[data-section=' + section + '] chant-gabc:not([notation])' : null);
+    $chants.each(function(){
       var level = textMode.modeOf(this) === 'tr'? 'text' : stored === 'tr'? notationSections[section].defaultLevel : stored === 'sung'? 'full' : stored;
       var plainText = section === 'psalms' || section === 'canticle'? level === 'text' : level !== 'full';
       $(this).attr('plain-text', plainText? '' : null);
@@ -216,17 +220,22 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     $trLang.val(rubricsOnly ? textMode.rubricsLang(textMode.lang()) : textMode.lang());
   };
   showTextMode();
-  // How to show the hymn in the translation as text (TRANSLATIONS_PLAN.md §4b and §5): literal or
-  // metrical, while it isn't sung (the hymn's 'Fully notated translation').  A choice the language
-  // hasn't is disabled.  text-mode.js falls back from a choice the language or the season hasn't.
+  // How to show the hymn in the translation (TRANSLATIONS_PLAN.md §4b and §5): literal or metrical
+  // as text, or fully notated where the language can sing it, which is the hymn's 'Fully notated
+  // translation'.  A choice the language hasn't is disabled.  text-mode.js falls back from a choice
+  // the language or the season hasn't.
   var $hymnMode = $('#selectHymnMode');
   var showHymnMode = function() {
-    var hymnMode = textMode.sectionMode('hymn');
-    var kinds = hymnMode !== 'la' && storedNotation('hymn') !== 'sung' && textMode.hymnKinds();
+    var kinds = textMode.sectionMode('hymn') !== 'la' && textMode.hymnKinds();
     $hymnMode.closest('.hymn-mode-choice').prop('hidden', !kinds);
     if(!kinds) return;
     $hymnMode.children('[value=literal]').prop('disabled', !kinds.literal);
     $hymnMode.children('[value=metrical]').prop('disabled', !kinds.metrical);
+    $hymnMode.children('[value=sung]').prop({disabled: !textMode.canSing(), hidden: !textMode.canSing()});
+    if(storedNotation('hymn') === 'sung') {
+      $hymnMode.val('sung');
+      return;
+    }
     // a choice that's disabled here shows what is shown in its place, and is kept for a language
     // that has it
     var fallbacks = {literal: ['literal', 'metrical'], metrical: ['metrical', 'literal']};
@@ -235,7 +244,15 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     })[0]);
   };
   $hymnMode.change(function(e){
-    textMode.setHymnMode($(this).val());
+    var kind = $(this).val();
+    // to or from singing it: as text, the Latin stays notated beside it, or it's alone
+    if(kind === 'sung' || storedNotation('hymn') === 'sung') {
+      if(kind !== 'sung') textMode.setHymnMode(kind);
+      setNotation(['hymn'], kind === 'sung'? 'sung' : textMode.mode() === 'both'? 'full' : 'tr');
+      updateOtherChants();
+      return;
+    }
+    textMode.setHymnMode(kind);
     $('chant-gabc[notation=hymn]').each(function(){
       if(this.updateText) this.updateText();
     });
