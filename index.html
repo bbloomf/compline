@@ -20,18 +20,15 @@
     <li><label>Region&nbsp;<select id='selectRegion'></select></label></li>
     <li><label>Text&nbsp;<select id='selectTextMode'><option value='la'>Latin</option><option value='both'>Latin &amp; translation</option><option value='tr'>Translation</option></select></label></li>
     <li><label><span id='trLangLabel'>Translation</span>&nbsp;<select id='selectTrLang'></select></label></li>
+    <li class='notation-menu'><button type='button' class='jump' data-jump='[data-rubric=lesson]' aria-label='Go to the short lesson'></button><label>Short lesson&nbsp;<select notation='lesson'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
     <li class='notation-menu'><button type='button' class='jump' data-jump='#placeholder' aria-label='Go to the psalms'></button><label>Psalms&nbsp;<select notation='psalms'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
     <li class='notation-menu'><button type='button' class='jump' data-jump='[data-rubric=chapter]' aria-label='Go to the chapter'></button><label>Chapter&nbsp;<select notation='chapter'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
+    <li class='notation-menu'><button type='button' class='jump' data-jump='[data-rubric=responsory]' aria-label='Go to the short responsory'></button><label>Short responsory&nbsp;<select notation='responsory'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
     <li class='notation-menu'><button type='button' class='jump' data-jump='#canticle' aria-label='Go to the canticle'></button><label>Canticle&nbsp;<select notation='canticle'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
     <li class='notation-menu'><button type='button' class='jump' data-jump='[data-section=prayers]' aria-label='Go to the prayers'></button><label>Prayers&nbsp;<select notation='prayers'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-    <li class='notation-menu'><span class='jump'></span><label>Other chants&nbsp;<select id='notation-other-chants'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option><option value='mixed' disabled hidden>Mixed</option></select></label><button type='button' class='expander' aria-expanded='false' aria-controls='notation-other-chants-list' aria-label='Each chant'>&#9656;</button>
-      <ul id='notation-other-chants-list' hidden>
-        <li><button type='button' class='jump' data-jump='#hymn' aria-label='Go to the hymn'></button><label>Hymn&nbsp;<select notation='hymn'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='sung'>Fully notated translation</option><option value='tr'>Translation only</option></select></label></li>
-        <li><button type='button' class='jump' data-jump='#marian' aria-label='Go to the Marian antiphon'></button><label>Marian antiphon&nbsp;<select notation='marian'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-        <li><span class='jump'></span><label>Everything else&nbsp;<select notation='chants'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-      </ul>
-    </li>
     <li class='hymn-notation-menu'><button type='button' class='jump' data-jump='#hymn' aria-label='Go to the hymn'></button><label>Hymn&nbsp;<select notation='hymn'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='sung'>Fully notated translation</option><option value='tr'>Translation only</option></select></label></li>
+    <li class='notation-menu'><button type='button' class='jump' data-jump='#marian' aria-label='Go to the Marian antiphon'></button><label>Marian antiphon&nbsp;<select notation='marian'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
+    <li class='notation-menu'><span class='jump'></span><label><span class='lists' title='The chants without a menu of their own:&#10;Jube, domne, benedícere&#10;Noctem quiétam (the blessing)&#10;Adjutórium nostrum&#10;Convérte nos&#10;Deus in adjutórium&#10;Benedicámus Dómino'>Other chants</span>&nbsp;<select notation='chants'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
     <li><label>Theme&nbsp;<select id='selectTheme'><option value="auto">Auto (follow device)</option><option value="light">Light</option><option value="dark">Dark</option></select></label></li>
   </ul>
 </div>
@@ -88,7 +85,13 @@ In private recitation, compline is said as follows:
 <i class='red' data-rubric='blessing'>The Officiant gives the blessing:</i>
 <chant-gabc src='blessing.gabc'></chant-gabc>
 <i class='red' data-rubric='lesson'>The Lector/Cantor continues (at the words “<span class='cited' lang='la'>Tu autem...nobis</span>,” he alone genuflects):</i>
-<chant-gabc src='lesson.gabc'></chant-gabc>
+<div class='pointed-lesson'><div class='tr-pair' data-tr='lesson.gabc'><div lang='la'>
+Fratres: Sóbrii estóte, et vigiláte:&nbsp;<span class='red'>†</span> quia adversárius vester diábolus, tamquam leo rúgiens, círcuit, quæ<i>rens quem</i> <b>dé</b>voret:&nbsp;<span class='red'>*</span> cui resístite fortes in fide.  Tu <i>autem</i> <b>Dó</b>mine, miserére nobis.
+<br/><span class='versiculum'>r</span>&nbsp;Deo grátias.
+</div></div></div>
+<div class='notated-lesson'>
+<chant-gabc notation='lesson' src='lesson.gabc'></chant-gabc>
+</div>
 <i class='red' data-rubric='adjutorium-nostrum'>All make the Sign of the Cross as the Officiant says:</i>
 <chant-gabc src='adjutorium-nostrum.gabc'></chant-gabc>
 <i class='red' data-rubric='examen' exclude='divinoAfflatu'>Here all pause in silence wherein one may make a short examination of conscience or quietly say a Pater Noster.</i>
@@ -207,10 +210,10 @@ Tu autem in nobis es, Dómine,&nbsp;<span class='red'>†</span> et nomen sanctu
 <i class='red' data-rubric='responsory-passiontide' exclude='divinoAfflatu'>(In Passiontide, except on a First or Second Class Feast, the <span class='cited' lang='la'>Gloria Patri</span> is omitted, and all repeat again immediately “<span class='cited' lang='la'>In manus tuas...</span>” in its place)</i>
 <i class='red' data-rubric='responsory-passiontide-da' include='divinoAfflatu'>(In Passiontide, except on the feasts of the Saints and of the Seven Sorrows, the <span class='cited' lang='la'>Gloria Patri</span> is omitted, and all repeat again immediately “<span class='cited' lang='la'>In manus tuas...</span>” in its place)</i>
 </div>
-<chant-gabc id='in-manus-tuas' src='in-manus-tuas/ordinary_full.gabc'></chant-gabc>
-<div class='in-manus-tuas ordinary_full passiontide_full'><chant-gabc src='custodi-nos.gabc'></chant-gabc></div>
-<div class='in-manus-tuas advent_full'><chant-gabc src='custodi-nos-advent.gabc'></chant-gabc></div>
-<div class='in-manus-tuas pt_full'><chant-gabc src='custodi-nos-pt.gabc'></chant-gabc></div>
+<chant-gabc id='in-manus-tuas' notation='responsory' src='in-manus-tuas/ordinary_full.gabc'></chant-gabc>
+<div class='in-manus-tuas ordinary_full passiontide_full'><chant-gabc notation='responsory' src='custodi-nos.gabc'></chant-gabc></div>
+<div class='in-manus-tuas advent_full'><chant-gabc notation='responsory' src='custodi-nos-advent.gabc'></chant-gabc></div>
+<div class='in-manus-tuas pt_full'><chant-gabc notation='responsory' src='custodi-nos-pt.gabc'></chant-gabc></div>
 <br/>
 </div>
 <div id="canticle" data-section='canticle' exclude='triduum'>

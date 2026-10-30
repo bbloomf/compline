@@ -102,13 +102,14 @@ define(['jquery'], function($) {
     var m = mode();
     return section && trSections[section] ? 'tr' : m;
   };
-  // A block's section: a <chant-gabc>'s notation, the pointed chapter and prayers, or the
+  // A block's section: a <chant-gabc>'s notation, the pointed lesson, chapter and prayers, or the
   // data-section of the part of index.html it's in (the psalms' and the canticle's verses and
   // antiphons, in #placeholder and #canticle, and the versicles of the collect).  Any other chant is
   // 'chants', and anything else follows the Text menu.
   var sectionOf = function(el) {
     var $el = $(el);
     if($el.is('chant-gabc[notation]')) return $el.attr('notation');
+    if($el.closest('.pointed-lesson').length) return 'lesson';
     if($el.closest('.pointed-chapter').length) return 'chapter';
     if($el.closest('.pointed-prayer').length) return 'prayers';
     return $el.closest('[data-section]').attr('data-section') || ($el.is('chant-gabc') ? 'chants' : null);
@@ -402,9 +403,41 @@ define(['jquery'], function($) {
       (units ? '<' + tag + trAttributes() + '>' + (trPrefix || '') + unitsHtml(units, false, runsOnResponse(latinHtml)) + '</' + tag + '>' : '') + '</div>';
   };
 
+  // A translation's units as one unit for each ℣ and the ℟s after it, or null unless it has two
+  // or more and starts with one.
+  var versicleUnits = function(units) {
+    var groups = [];
+    units.join('\n').split('\n').forEach(function(line) {
+      if(/^V\. /.test(line) || !groups.length) groups.push(line);
+      else groups[groups.length - 1] += '\n' + line;
+    });
+    return groups.length > 1 && /^V\. /.test(groups[0]) ? groups : null;
+  };
+  // Splits a Latin block of versicles into one block (of the same tag) for each ℣ and the ℟s after
+  // it, so that each is followed by its translation: under it on a narrow screen, and beside it on
+  // a wide one (style.css).  A <span>'s keeps the <br> after it, so that in Latin only it reads as
+  // it did.  If there aren't count of them, it stays as it is.
+  var splitVersicles = function($latin, count) {
+    var regexBreak = /<br\s*\/?>\s*(?=\(?<span class=["']versiculum["']>v<\/span>)/g;
+    var span = $latin.is('span');
+    var html = $latin.html();
+    var chunks = [];
+    var start = 0;
+    var match;
+    while((match = regexBreak.exec(html))) {
+      chunks.push(html.slice(start, span ? match.index + match[0].length : match.index));
+      start = match.index + match[0].length;
+    }
+    chunks.push(html.slice(start));
+    if(chunks.length !== count) return $latin;
+    var $blocks = $(chunks.map(function(chunk) { return $latin.clone().html(chunk)[0]; }));
+    $latin.replaceWith($blocks);
+    return $blocks;
+  };
   // Adds the translations to the page, or takes them away in 'la' mode: each .tr-pair[data-tr]
   // block of index.html, and each verse of the pointed psalms (.verses[data-psalm]), each in its
-  // section's mode.
+  // section's mode.  A block of versicles is split into one pair for each ℣ (splitVersicles),
+  // the first time it has a translation that divides the same way.
   var translate = function(root) {
     var $root = $(root);
     translateRubrics($root);
@@ -412,7 +445,7 @@ define(['jquery'], function($) {
       var $pair = $(this);
       $pair.children('.tr').remove();
       var $latin = $pair.children('[lang=la]');
-      if($latin.length !== 1) {
+      if($latin.length !== 1 && !$pair.hasClass('tr-versicles')) {
         console.warn('A .tr-pair needs one Latin child (lang=la)', this);
         return;
       }
@@ -420,9 +453,20 @@ define(['jquery'], function($) {
       markMode(this, m);
       var units = m === 'la' ? null : texts($pair.attr('data-tr'));
       $latin.removeClass('has-tr tr-missing tr-same').addClass(latinClass(!!units, m));
-      if(units) {
-        var tag = $latin.prop('tagName').toLowerCase();
-        $latin.after('<' + tag + trAttributes() + '>' + unitsHtml(units, false, runsOnResponse($latin.html())) + '</' + tag + '>');
+      if(!units) return;
+      var tag = $latin.prop('tagName').toLowerCase();
+      var trHtml = function(units, $before) {
+        return '<' + tag + trAttributes() + '>' + unitsHtml(units, false, runsOnResponse($before.html())) + '</' + tag + '>';
+      };
+      var versicles = versicleUnits(units);
+      if(versicles && $latin.length === 1) {
+        $latin = splitVersicles($latin, versicles.length);
+        $pair.toggleClass('tr-versicles', $latin.length > 1);
+      }
+      if(versicles && versicles.length === $latin.length) {
+        $latin.each(function(i) { $(this).after(trHtml([versicles[i]], $(this))); });
+      } else {
+        $latin.last().after(trHtml(units, $latin.last()));
       }
     });
     $root.find('.verses[data-psalm]').each(function() {
