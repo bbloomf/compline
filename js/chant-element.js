@@ -339,8 +339,14 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
     _width = window.document.body.clientWidth;
     console.info(_width, sync);
     if(sync === true) _width = Math.min(_width,printWidth);
-    $('chant-gabc').each(function(){
-      this.doLayout(_width,sync === true);
+    // the text scale may have changed with the window (or in the settings, while the app was away)
+    cachedTextScale = null;
+    // every chant's layout first, then every chant onto the page: the page then has its styles
+    // worked out once, not once for each chant (exsurge checks the fonts, which needs them)
+    $('chant-gabc').filter(function(){
+      return this.layout && this.layout(_width,sync === true);
+    }).each(function(){
+      this.render();
     });
   };
   // Wait for the resize or rotation to finish before laying out again.
@@ -359,13 +365,18 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
   // How much the browser enlarges CSS text beyond its specified size: Android's font size setting
   // (the WebView's text zoom, and Chrome's text scaling).  It leaves SVG text alone, so without
   // this the chant's words come out smaller than the text around them.  A 100px probe reports it.
+  // Reading it has the browser work out the whole page's styles, so it's read once for all the
+  // chants, and again only when doLayout() lays them all out again.
+  var cachedTextScale = null;
   var textScale = function() {
+    if(cachedTextScale !== null) return cachedTextScale;
     var probe = document.createElement('div');
     probe.style.cssText = 'position:absolute;visibility:hidden;font-size:100px';
     document.body.appendChild(probe);
     var scale = parseFloat(window.getComputedStyle(probe).fontSize) / 100;
     document.body.removeChild(probe);
-    return scale > 0 ? scale : 1;
+    cachedTextScale = scale > 0 ? scale : 1;
+    return cachedTextScale;
   };
   if (window.matchMedia) {
     var mediaQueryList = window.matchMedia('print');
@@ -389,6 +400,8 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
   if (window.addEventListener) {
     window.addEventListener('resize',doLayoutAfterResize,false);
     window.addEventListener('orientationchange',doLayoutAfterResize,false);
+    // Cordova: back in the app, whose font size may have been changed in Android's settings
+    document.addEventListener('resume',doLayoutAfterResize,false);
   } else if (window.attachEvent) window.attachEvent('onresize',doLayoutAfterResize);
   // client side support
   class ChantVisualElement extends HTMLElement {
@@ -414,21 +427,44 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
     }
 
     doLayout(newWidth, sync) {
+      if(this.layout(newWidth, sync)) this.render();
+    }
+
+    // Lays out the chant's scores at the width and draws each one, without touching the page
+    // (render() puts them on it).  False if there's nothing to draw, or it's drawn at this width.
+    layout(newWidth, sync) {
 
       var score = this._score;
       var ctxt = this._ctxt;
       // not loaded yet, or plain text
-      if(!score) return;
+      if(!score) return false;
       newWidth = newWidth || (this.parentElement && this.parentElement.clientWidth) || window.document.body.clientWidth;
-      if(newWidth === 0) return;
+      if(newWidth === 0) return false;
       sync = !!sync;
       // printing uses the full width, without scaling.  On screen, laying out narrower by the text
       // scale has the SVG scale up by it, notes and words together, to match the text around it.
       if(!sync) newWidth = Math.min(newWidth, maxLayoutWidth) / textScale();
-      if(this._width === newWidth && this._sync === sync) return;
+      if(this._width === newWidth && this._sync === sync) return false;
       var width = this._width = newWidth;
       this._sync = sync;
       // perform layout on the chant
+      for(var i = 0; i < score.length; ++i) {
+        score[i].performLayout(ctxt);
+        score[i].layoutChantLines(ctxt, width);
+        // render the score to svg
+        if(sync) {
+          score[i].drawing = score[i].createSvgForEachLine(ctxt);
+        } else {
+          // as nodes, which playback lights up note by note (chant-playback.js)
+          score[i].drawing = makeSvgScalable(score[i].createSvgNode(ctxt), width);
+        }
+      }
+      return true;
+    }
+
+    // Puts the scores that layout() drew on the page, each with its notes and translation.
+    render() {
+      var score = this._score;
       this.innerHTML = this._noteHtml || '';
       for(var i = 0; i < score.length; ++i) {
         if(score[i].userNotes) {
@@ -437,15 +473,11 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
         if(score[i].commentary) {
           this.insertAdjacentHTML('beforeend', textMode.noteHtml(score[i].commentary, 'float:right'));
         }
-        score[i].performLayout(ctxt);
-        score[i].layoutChantLines(ctxt, width);
-        // render the score to svg
         var firstSvg = this.children.length;
-        if(sync) {
-          this.insertAdjacentHTML('beforeend', score[i].createSvgForEachLine(ctxt));
+        if(this._sync) {
+          this.insertAdjacentHTML('beforeend', score[i].drawing);
         } else {
-          // as nodes, which playback lights up note by note (chant-playback.js)
-          this.appendChild(makeSvgScalable(score[i].createSvgNode(ctxt), width));
+          this.appendChild(score[i].drawing);
         }
         // the language of its words, for screen readers: Latin, or the translation's where the hymn
         // is sung in it (§4b)
@@ -511,7 +543,6 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       this._gabc = gabc;
       this._annotationAttr = annotationAttr;
       this._useDropCapAttr = useDropCapAttr;
-      this._width = 0;
       var mode = textMode.modeOf(this);
       textMode.markMode(this, mode);
       this._textKey = textMode.renderKey(this.getAttribute('src'), mode, hasNotes(gabc));
@@ -532,12 +563,12 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       if(this._plainText) {
         // no exsurge layout at all
         this._score = null;
+        this._exsurgeKey = null;
         this.innerHTML = this._noteHtml + gabcToHtml(gabc, annotationAttr, useDropCapAttr, parseInt(this.getAttribute('text-lines')), translation);
         this.markLang();
         return;
       }
-      var mappings = this._mappings = [];
-      var score = this._score = [];
+      var inputs = [];
       var ctxt = this._ctxt;
       gabc = normalizeGabc(gabc.replace(/(<b>[^<]+)<sp>'(?:oe|œ)<\/sp>/g,'$1œ</b>\u0301<b>') // character doesn't work in the bold version of this font.
         .replace(/<b><\/b>/g,''));
@@ -549,6 +580,8 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
         whenUndertieLoaded(function() {
           if(elem._gabc !== drawn) return;
           elem._ctxt.clearTextCache();
+          // drawn again from the start, with the font's widths
+          elem._exsurgeKey = null;
           elem.setGabc(elem._gabc, elem._annotationAttr, elem._useDropCapAttr);
         });
       }
@@ -574,33 +607,60 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
             lyricsLang = textMode.langAttr();
           } else console.warn('The sung translation doesn\'t fit the notes', this.getAttribute('src'), scores[i].sung);
         }
-        mappings[i] = exsurge.Gabc.createMappingsFromSource(ctxt, gabc);
-        score[i] = new exsurge.ChantScore(ctxt, mappings[i], useDropCap[i]);
+        var annotation = null;
+        if(gabcHeader && gabcHeader.annotation && useDropCap[i]) {
+          annotation = gabcHeader.annotation;
+        } else if(annotationAttr && !scores[i].laterUnit) {
+          annotation = annotationAttr;
+        } else if(gabcHeader && gabcHeader.mode) {
+          annotation = gabcHeader.mode + '.';
+        }
+        inputs[i] = {
+          gabc: gabc,
+          useDropCap: useDropCap[i],
+          lyricsLang: lyricsLang,
+          annotation: annotation,
+          userNotes: gabcHeader && gabcHeader['user-notes'],
+          commentary: gabcHeader && gabcHeader.commentary
+        };
+      }
+      // A translation under the notes changes nothing that exsurge draws, so with the same scores
+      // as before, the drawings are put back with the new translation under them.
+      var exsurgeKey = JSON.stringify(inputs);
+      if(this._score && this._exsurgeKey === exsurgeKey) {
+        for(i = 0; i < scores.length; ++i) {
+          this._score[i].translationHtml = scores[i].translationHtml;
+        }
+        // laid out again only if the width has changed since
+        if(this.layout(_width) || this._width) this.render();
+        return;
+      }
+      this._exsurgeKey = exsurgeKey;
+      this._width = 0;
+      var mappings = this._mappings = [];
+      var score = this._score = [];
+      inputs.forEach(function(input, i) {
+        mappings[i] = exsurge.Gabc.createMappingsFromSource(ctxt, input.gabc);
+        score[i] = new exsurge.ChantScore(ctxt, mappings[i], input.useDropCap);
         // the translation's rules for centering the notes over its syllables, where exsurge has them
         // (English and Spanish, the languages with a sung hymn); the others keep the Latin's
-        if(lyricsLang !== 'la') {
-          exsurge.Gabc.applyHeader(score[i], ctxt, {language: lyricsLang.split('-')[0]}, {annotation: false, mode: false});
+        if(input.lyricsLang !== 'la') {
+          exsurge.Gabc.applyHeader(score[i], ctxt, {language: input.lyricsLang.split('-')[0]}, {annotation: false, mode: false});
         }
-        if(gabcHeader && gabcHeader.annotation && useDropCap[i]) {
-          if(gabcHeader.annotation instanceof Array) {
-            score[i].annotation = new exsurge.Annotations(ctxt, gabcHeader.annotation[0], gabcHeader.annotation[1]);
-          } else {
-            score[i].annotation = new exsurge.Annotation(ctxt, gabcHeader.annotation);
-          }
-        } else if(annotationAttr && !scores[i].laterUnit) {
-          score[i].annotation = new exsurge.Annotation(ctxt, annotationAttr);
-        } else if(gabcHeader && gabcHeader.mode) {
-          score[i].annotation = new exsurge.Annotation(ctxt, gabcHeader.mode + '.');
+        if(input.annotation instanceof Array) {
+          score[i].annotation = new exsurge.Annotations(ctxt, input.annotation[0], input.annotation[1]);
+        } else if(input.annotation) {
+          score[i].annotation = new exsurge.Annotation(ctxt, input.annotation);
         }
-        if(gabcHeader && gabcHeader['user-notes']) {
-          score[i].userNotes = gabcHeader['user-notes'];
+        if(input.userNotes) {
+          score[i].userNotes = input.userNotes;
         }
-        if(gabcHeader && gabcHeader.commentary) {
-          score[i].commentary = gabcHeader.commentary;
+        if(input.commentary) {
+          score[i].commentary = input.commentary;
         }
         score[i].translationHtml = scores[i].translationHtml;
-        score[i].lyricsLang = lyricsLang;
-      }
+        score[i].lyricsLang = input.lyricsLang;
+      });
       this.doLayout(_width);
     }
 
