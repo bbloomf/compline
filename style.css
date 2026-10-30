@@ -348,6 +348,13 @@ body.hide-choose-day #rbWeekday {
   width: 100%;
   width: calc(100vw - 30px);
 }
+/* Once the page stops growing (1258px, above), a menu's room is the page's width, not the
+   window's, or it reaches past the window's right edge and the page scrolls sideways. */
+@media screen and (min-width: 1274px) {
+  .btn-group>.btn+div {
+    width: calc(1258px - 30px);
+  }
+}
 .btn-group>.btn > .lbl {
   margin-left: 1em;
   text-indent: -1em;
