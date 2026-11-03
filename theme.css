@@ -62,16 +62,24 @@ chant-gabc use {
     color: #fff !important;
   }
 
-  /* options menu */
-  html.dark div#options-menu>svg {
-    fill: #bbb;
+  /* the side panel (style.css) */
+  html.dark {
+    --panel-bg: #121212;
+    --panel-line: #2b2b2b;
+    --panel-text: #eee;
+    --panel-muted: #8c8c8c;
+    --panel-hover: rgba(255, 255, 255, 0.05);
+    --panel-chip: rgba(255, 255, 255, 0.08);
+    --panel-chip-hover: rgba(255, 255, 255, 0.14);
   }
-  html.dark div#options-menu>svg:hover {
-    fill: #fff;
+  html.dark #panel-toggle {
+    color: #bbb;
   }
-  html.dark div#options-menu>ul {
-    border-color: #555;
-    background: #1a1a1a;
+  html.dark #panel-toggle:hover {
+    color: #fff;
+  }
+  html.dark.panel-open #side-panel {
+    box-shadow: -2px 0 18px rgba(0, 0, 0, 0.5);
   }
 
   /* links */

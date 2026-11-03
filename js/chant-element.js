@@ -234,12 +234,17 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       if(p.lines.length === 0) {
         p.html = '';
       } else if(p.verses) {
-        p.html = '<div class="verses">' + p.lines.map(function(line) {
+        // grouped, the translations follow all the verses, but an intonation's go with the rest of
+        // the psalm's, in the pointed verses after it (text-mode.js translate)
+        var translations = '';
+        var latinHtml = p.lines.map(function(line) {
           var n = parseInt(line.match(verse)[1]);
           var latin = line.replace(verse, '');
-          if(translation) return textMode.verseHtml(p.section, n, latin, translation.mode);
-          return '<p><span class="verse-number">' + n + '.&nbsp;</span>' + latin + '</p>';
-        }).join('') + '</div>';
+          if(!translation) return '<p><span class="verse-number">' + n + '.&nbsp;</span>' + latin + '</p>';
+          if(translation.grouped && !translation.intonation) translations += textMode.verseTranslationHtml(p.section, n, translation.mode) || '';
+          return textMode.verseHtml(p.section, n, latin, translation.mode, translation.grouped);
+        }).join('');
+        p.html = '<div class="verses' + (translations? ' verses-grouped' : '') + '">' + latinHtml + translations + '</div>';
       } else {
         var latin = p.lines.join('<br>').replace(verse, "<span class='red'>$1.</span> ");
         p.html = (translation && !p.section && (paired || !units))?
@@ -322,17 +327,29 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
     var unitCount = 0;
     scores.forEach(function(score) {
       var section = textMode.psalmSection(score.header);
+      // grouped, verse 1's translation goes with the rest of the psalm's, after the intonation
+      // (text-mode.js translate)
       if(!(section? textMode.hasPsalm(section) : units || sung) || translation.intonation) {
-        var verse = section && translation.intonation && textMode.verseTranslationHtml(section, 1, translation.mode);
+        var verse = section && translation.intonation && !translation.grouped && textMode.verseTranslationHtml(section, 1, translation.mode);
         if(verse) score.translationHtml = '<div class="verses chant-tr">' + verse + '</div>';
         result.push(score);
         return;
       }
       var clef = (score.body.match(regexClef) || [])[1] || '(c4)';
       var trPrefix = trPrefixFor(scoreAnnotation(score.header, annotationAttr, useDropCapAttr));
-      (section? score.body.split(/\r?\n(?=\s*\d+\.\s)/).filter(function(chunk) {
+      var chunks = section? score.body.split(/\r?\n(?=\s*\d+\.\s)/).filter(function(chunk) {
         return /\S/.test(chunk);
-      }) : unitGroups(score.body, score.header)).forEach(function(chunk, i) {
+      }) : unitGroups(score.body, score.header);
+      // grouped, a psalm stays whole, followed by the translations of all its verses
+      if(section && translation.grouped) {
+        var verses = chunks.map(function(chunk) {
+          return textMode.verseTranslationHtml(section, parseInt(chunk.replace(regexClef, '')), translation.mode) || '';
+        }).join('');
+        if(verses) score.translationHtml = '<div class="verses chant-tr verses-grouped">' + verses + '</div>';
+        result.push(score);
+        return;
+      }
+      chunks.forEach(function(chunk, i) {
         var count = 1;
         if(!section) {
           count = chunk.length;
@@ -598,7 +615,9 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
         units: psalm || sung? null : hymn? hymn.units : textMode.texts(key),
         sung: sung? hymn.units : null,
         unsung: !!(hymn && hymn.unsung),
-        intonation: psalm && this.hasAttribute('text-lines')
+        intonation: psalm && this.hasAttribute('text-lines'),
+        // a psalm's verses together, and then their translations (text-mode.js grouped)
+        grouped: psalm && textMode.grouped(mode)
       };
     }
 

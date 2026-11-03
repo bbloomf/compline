@@ -12,26 +12,46 @@
 </head>
 <body>
 <div class='lyric-font' style='font-size: 1px; visibility: hidden;' >I<span class='b'>I<span class='i'>I</span></span><span class='i'>I</span><span style="font-family:'Exsurge Characters';">V. R.</span></div>
-<div id='options-menu' class='sans hidden-print'>
+<!-- The settings, and each section of the office, to go to it and choose how much notation it
+     shows (compline.js), in a panel that the gear opens on the right. -->
+<button type='button' id='panel-toggle' class='hidden-print' aria-expanded='false' aria-controls='side-panel' aria-label='Settings'>
   <!-- <text x="0" y="115" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">Created by Johan Gunnarsson</text><text x="0" y="120" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text> -->
-  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" enable-background="new 0 0 100 100" xml:space="preserve"><path d="M89.846,56.221V43.779l-9.536-1.423c-0.734-2.916-1.882-5.667-3.368-8.193l6.575-8.883l-8.798-8.797l-8.882,6.575  c-2.468-1.453-5.145-2.582-7.985-3.317l-1.63-10.921H43.777l-1.629,10.921c-2.911,0.753-5.656,1.917-8.172,3.424l-7.75-5.737  l-8.8,8.797l5.739,7.752c-1.541,2.576-2.723,5.393-3.476,8.38l-9.536,1.423v12.441l9.536,1.424c0.734,2.916,1.882,5.667,3.366,8.193  l-6.573,8.882l8.798,8.798l8.88-6.576c2.468,1.453,5.148,2.582,7.987,3.317l1.629,10.92h12.444l1.63-10.92  c2.911-0.753,5.654-1.916,8.172-3.424l7.753,5.739l8.797-8.796l-5.739-7.754c1.542-2.576,2.724-5.392,3.476-8.379L89.846,56.221z   M50,68.603c-10.273,0-18.602-8.329-18.602-18.603c0-10.273,8.329-18.601,18.602-18.601c10.275,0,18.603,8.329,18.603,18.601  C68.603,60.273,60.275,68.603,50,68.603z"/></svg>
-  <ul>
-    <li><label><input type="checkbox" toggle="autoSelectRegion">&nbsp;Auto Select Region</label></li>
-    <li><label>Region&nbsp;<select id='selectRegion'></select></label></li>
-    <li><label>Text&nbsp;<select id='selectTextMode'><option value='la'>Latin</option><option value='both'>Latin &amp; translation</option><option value='tr'>Translation</option></select></label></li>
-    <li><label><span id='trLangLabel'>Translation</span>&nbsp;<select id='selectTrLang'></select></label></li>
-    <li class='notation-menu'><button type='button' class='jump' data-jump='[data-rubric=lesson]' aria-label='Go to the short lesson'></button><label>Short lesson&nbsp;<select notation='lesson'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-    <li class='notation-menu'><button type='button' class='jump' data-jump='#placeholder' aria-label='Go to the psalms'></button><label>Psalms&nbsp;<select notation='psalms'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-    <li class='notation-menu'><button type='button' class='jump' data-jump='[data-rubric=chapter]' aria-label='Go to the chapter'></button><label>Chapter&nbsp;<select notation='chapter'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-    <li class='notation-menu'><button type='button' class='jump' data-jump='[data-rubric=responsory]' aria-label='Go to the short responsory'></button><label>Short responsory&nbsp;<select notation='responsory'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-    <li class='notation-menu'><button type='button' class='jump' data-jump='#canticle' aria-label='Go to the canticle'></button><label>Canticle&nbsp;<select notation='canticle'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-    <li class='notation-menu'><button type='button' class='jump' data-jump='[data-section=prayers]' aria-label='Go to the prayers'></button><label>Prayers&nbsp;<select notation='prayers'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-    <li class='hymn-notation-menu'><button type='button' class='jump' data-jump='#hymn' aria-label='Go to the hymn'></button><label>Hymn&nbsp;<select notation='hymn'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='sung'>Fully notated translation</option><option value='tr'>Translation only</option></select></label></li>
-    <li class='notation-menu'><button type='button' class='jump' data-jump='#marian' aria-label='Go to the Marian antiphon'></button><label>Marian antiphon&nbsp;<select notation='marian'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-    <li class='notation-menu'><span class='jump'></span><label><span class='lists' title='The chants without a menu of their own:&#10;Jube, domne, benedícere&#10;Noctem quiétam (the blessing)&#10;Adjutórium nostrum&#10;Convérte nos&#10;Deus in adjutórium&#10;Benedicámus Dómino'>Other chants</span>&nbsp;<select notation='chants'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></label></li>
-    <li><label>Theme&nbsp;<select id='selectTheme'><option value="auto">Auto (follow device)</option><option value="light">Light</option><option value="dark">Dark</option></select></label></li>
-  </ul>
-</div>
+  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 100 100"><path d="M89.846,56.221V43.779l-9.536-1.423c-0.734-2.916-1.882-5.667-3.368-8.193l6.575-8.883l-8.798-8.797l-8.882,6.575  c-2.468-1.453-5.145-2.582-7.985-3.317l-1.63-10.921H43.777l-1.629,10.921c-2.911,0.753-5.656,1.917-8.172,3.424l-7.75-5.737  l-8.8,8.797l5.739,7.752c-1.541,2.576-2.723,5.393-3.476,8.38l-9.536,1.423v12.441l9.536,1.424c0.734,2.916,1.882,5.667,3.366,8.193  l-6.573,8.882l8.798,8.798l8.88-6.576c2.468,1.453,5.148,2.582,7.987,3.317l1.629,10.92h12.444l1.63-10.92  c2.911-0.753,5.654-1.916,8.172-3.424l7.753,5.739l8.797-8.796l-5.739-7.754c1.542-2.576,2.724-5.392,3.476-8.379L89.846,56.221z   M50,68.603c-10.273,0-18.602-8.329-18.602-18.603c0-10.273,8.329-18.601,18.602-18.601c10.275,0,18.603,8.329,18.603,18.601  C68.603,60.273,60.275,68.603,50,68.603z"/></svg>
+</button>
+<!-- beside the section the panel marks as the one being read (compline.js) -->
+<div id='section-marker' class='hidden-print' aria-hidden='true'></div>
+<aside id='side-panel' class='sans hidden-print' aria-label='Settings and sections'>
+  <section id='settings'>
+    <header><h2>Settings</h2></header>
+    <ul>
+      <li><label><span>Auto select region</span><input type="checkbox" toggle="autoSelectRegion"></label></li>
+      <li><label><span>Region</span><span class='menu'><select id='selectRegion'></select></span></label></li>
+      <li><label><span>Text</span><span class='menu'><select id='selectTextMode'><option value='la'>Latin</option><option value='both'>Latin &amp; translation</option><option value='tr'>Translation</option></select></span></label></li>
+      <li><label><span id='trLangLabel'>Translation</span><span class='menu'><select id='selectTrLang'></select></span></label></li>
+      <li id='trVersesChoice'><label><span>Translated verses</span><span class='menu'><select id='selectTrVerses'><option value='individual'>Individual</option><option value='grouped'>Grouped</option></select></span></label></li>
+      <li><label><span>Theme</span><span class='menu'><select id='selectTheme'><option value="auto">Auto (follow device)</option><option value="light">Light</option><option value="dark">Dark</option></select></span></label></li>
+    </ul>
+  </section>
+  <nav id='sections-nav' aria-label='Sections'>
+    <header><h2>Sections</h2><p>Go to a section, or choose how it&rsquo;s shown.</p></header>
+    <ol>
+      <li class='incipit'><a href='#' class='jump' data-jump='[data-rubric=lector]' lang='la'>Jube, domne</a><span class='notation-menu'><select notation='jube' aria-label='Jube, domne'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></span></li>
+      <li class='incipit'><a href='#' class='jump' data-jump='[data-rubric=blessing]' lang='la'>Noctem quiétam</a><span class='notation-menu'><select notation='blessing' aria-label='Noctem quiétam'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></span></li>
+      <li><a href='#' class='jump' data-jump='[data-rubric=lesson]'>Short lesson</a><span class='notation-menu'><select notation='lesson' aria-label='Short lesson'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></span></li>
+      <li class='incipit'><a href='#' class='jump' data-jump='[data-rubric=adjutorium-nostrum]' lang='la'>Adjutórium nostrum</a><span class='notation-menu'><select notation='adjutorium' aria-label='Adjutórium nostrum'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></span></li>
+      <li class='incipit'><a href='#' class='jump' data-jump='[data-rubric=converte-nos]' lang='la'>Convérte nos</a><span class='notation-menu'><select notation='converte' aria-label='Convérte nos'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></span></li>
+      <li class='incipit'><a href='#' class='jump' data-jump='[data-rubric=deus-in-adjutorium]' lang='la'>Deus in adjutórium</a><span class='notation-menu'><select notation='deus-in-adjutorium' aria-label='Deus in adjutórium'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></span></li>
+      <li><a href='#' class='jump' data-jump='#placeholder'>Psalms</a><span class='notation-menu'><select notation='psalms' aria-label='Psalms'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></span></li>
+      <li><a href='#' class='jump' data-jump='#hymn'>Hymn</a><span class='hymn-notation-menu'><select notation='hymn' aria-label='Hymn'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='sung'>Fully notated translation</option><option value='tr'>Translation only</option></select></span></li>
+      <li><a href='#' class='jump' data-jump='[data-rubric=chapter]'>Chapter</a><span class='notation-menu'><select notation='chapter' aria-label='Chapter'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></span></li>
+      <li><a href='#' class='jump' data-jump='[data-rubric=responsory]'>Short responsory</a><span class='notation-menu'><select notation='responsory' aria-label='Short responsory'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></span></li>
+      <li><a href='#' class='jump' data-jump='#canticle'>Canticle</a><span class='notation-menu'><select notation='canticle' aria-label='Canticle'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></span></li>
+      <li><a href='#' class='jump' data-jump='[data-section=prayers]'>Prayers</a><span class='notation-menu'><select notation='prayers' aria-label='Prayers'><option value='text'>Plain text</option><option value='pointed'>Pointed</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></span></li>
+      <li class='incipit'><a href='#' class='jump' data-jump='[data-rubric=benedicamus]' lang='la'>Benedicámus Dómino</a><span class='notation-menu'><select notation='benedicamus' aria-label='Benedicámus Dómino'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></span></li>
+      <li><a href='#' class='jump' data-jump='#marian'>Marian antiphon</a><span class='notation-menu'><select notation='marian' aria-label='Marian antiphon'><option value='text'>Plain text</option><option value='full'>Fully notated</option><option value='tr'>Translation only</option></select></span></li>
+    </ol>
+  </nav>
+</aside>
 <div class='hidden-print date-and-rubrics'><input type='date' id='date' class='hidden-print' aria-label='Date'> <select id='selectRubrics' aria-label='Rubrics'><option value='1960'>1960 rubrics</option><option value='DA'>Divino Afflatu (pre-1955)</option></select></div>
 <span id='feastDay' class='hidden-print'></span>
 <div class='hidden-print'><select id='selectFeastDay' aria-label='Feast' style='display:none' class='hidden-print'></select></div>
@@ -81,9 +101,9 @@ In private recitation, compline is said as follows:
 <i class='red' data-rubric='lector-domine'>In the absence of a priest or deacon, the Lector says “<span class='cited' lang='la'>Dómine</span>” below so as to invoke Our Lord directly for the blessing.</i>
 </div>
 <div><i class='red' data-rubric='lector'>Lector:</i></div>
-<chant-gabc officiant-priest='jube-domne.gabc' officiant-no-priest='jube-domine.gabc' src='jube-domine.gabc'></chant-gabc>
+<chant-gabc notation='jube' officiant-priest='jube-domne.gabc' officiant-no-priest='jube-domine.gabc' src='jube-domine.gabc'></chant-gabc>
 <i class='red' data-rubric='blessing'>The Officiant gives the blessing:</i>
-<chant-gabc src='blessing.gabc'></chant-gabc>
+<chant-gabc notation='blessing' src='blessing.gabc'></chant-gabc>
 <i class='red' data-rubric='lesson'>The Lector/Cantor continues (at the words “<span class='cited' lang='la'>Tu autem...nobis</span>,” he alone genuflects):</i>
 <div class='pointed-lesson'><div class='tr-pair' data-tr='lesson.gabc'><div lang='la'>
 Fratres: Sóbrii estóte, et vigiláte:&nbsp;<span class='red'>†</span> quia adversárius vester diábolus, tamquam leo rúgiens, círcuit, quæ<i>rens quem</i> <b>dé</b>voret:&nbsp;<span class='red'>*</span> cui resístite fortes in fide.  Tu <i>autem</i> <b>Dó</b>mine, miserére nobis.
@@ -93,7 +113,7 @@ Fratres: Sóbrii estóte, et vigiláte:&nbsp;<span class='red'>†</span> quia a
 <chant-gabc notation='lesson' src='lesson.gabc'></chant-gabc>
 </div>
 <i class='red' data-rubric='adjutorium-nostrum'>All make the Sign of the Cross as the Officiant says:</i>
-<chant-gabc src='adjutorium-nostrum.gabc'></chant-gabc>
+<chant-gabc notation='adjutorium' src='adjutorium-nostrum.gabc'></chant-gabc>
 <i class='red' data-rubric='examen' exclude='divinoAfflatu'>Here all pause in silence wherein one may make a short examination of conscience or quietly say a Pater Noster.</i>
 <i class='red' data-rubric='pater-silent' include='divinoAfflatu'>Here all say the <span class='cited' lang='la'>Pater noster</span> silently throughout.</i>
 </div>
@@ -118,11 +138,11 @@ Fratres: Sóbrii estóte, et vigiláte:&nbsp;<span class='red'>†</span> quia a
 <div class='tr-pair' data-tr='index:indulgentiam'><p lang='la'>Indulgéntiam, absolutiónem, et remissiónem peccatórum nostrórum tríbuat nobis omnípotens et miséricors Dóminus. <span class='versiculum'>r</span>&nbsp;Amen.</p></div>
 <div exclude='triduum allSouls'>
 <p class='red' data-rubric='converte-nos'><i>Then all make the Sign of the Cross with their thumbs over their hearts, as the Officiant says:</i></p>
-<chant-gabc src='converte-nos.gabc'></chant-gabc>
+<chant-gabc notation='converte' src='converte-nos.gabc'></chant-gabc>
 <i class='red' data-rubric='deus-in-adjutorium'>Then all make the Sign of the Cross as the Officiant says: (All continue together with the entire “<span class='cited' lang='la'>Gloria Patri</span>” after the response.)</i>
 <!-- TODO: if no date is selected, show with alleluia AND laus tibi: <chant-gabc src='deus-in-adjutorium.gabc'></chant-gabc> -->
-<chant-gabc exclude='septuagesima-1:easter-2 triduum' src='deus-in-adjutorium_alleluia.gabc'></chant-gabc>
-<chant-gabc include='septuagesima-1:easter-2 triduum' src='deus-in-adjutorium_laus-tibi.gabc'></chant-gabc>
+<chant-gabc notation='deus-in-adjutorium' exclude='septuagesima-1:easter-2 triduum' src='deus-in-adjutorium_alleluia.gabc'></chant-gabc>
+<chant-gabc notation='deus-in-adjutorium' include='septuagesima-1:easter-2 triduum' src='deus-in-adjutorium_laus-tibi.gabc'></chant-gabc>
 </div>
 <div id='placeholder' data-section='psalms' data-pitch-group></div>
 <div include='easter-3:easter-2'>
@@ -294,7 +314,7 @@ Per Dóminum nostrum Jesum Christum Fílium tuum:&nbsp;<span class='red'>†</sp
 <br/><span class='versiculum'>r</span>&nbsp;Et clamor meus ad te véniat.</div></div>
 </div>
 <br/><i class='red' data-rubric='benedicamus'>The Cantor then says:</i>
-<div><chant-gabc src='benedicamus-domino.gabc'></chant-gabc></div>
+<div><chant-gabc notation='benedicamus' src='benedicamus-domino.gabc'></chant-gabc></div>
 <br/><i class='red' data-rubric='benedicat'>The Officiant then says the blessing in a low recto tono, slowly and gravely, at the end of which all make the Sign of the Cross:</i>
 <div class='tr-pair' data-tr='index:benedicat'><div lang='la'>Benedícat et custódiat nos omnípotens et miséricors Dóminus, Pater, et Fílius, et Spíritus Sanctus.
 <span class='versiculum'>r</span>&nbsp;Amen.</div></div>

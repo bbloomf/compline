@@ -17,6 +17,11 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   // their own.
   if(!('notationLesson' in localStorage)) localStorage.notationLesson = localStorage.notationChants;
   if(!('notationResponsory' in localStorage)) localStorage.notationResponsory = localStorage.notationChants;
+  // and the rest of them shared that menu until each got its own
+  ['notationJube', 'notationBlessing', 'notationAdjutorium', 'notationConverte', 'notationDeusInAdjutorium',
+      'notationBenedicamus'].forEach(function(key) {
+    if(!(key in localStorage)) localStorage[key] = localStorage.notationChants;
+  });
   // The canticle had the psalms' menu until it got its own.
   if(!('notationCanticle' in localStorage)) localStorage.notationCanticle = localStorage.notationPsalms;
   // The hymn translation's "Sung with chant" is now the hymn's 'Fully notated translation', where it
@@ -37,20 +42,10 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     usedRegions[name] = '';
     return '<option value="'+code+'"">'+name+'</option>';
   }).join('')).val(localStorage.region);
-  var $optionsMenu = $('#options-menu');
-  $(document.body).click(function(e){
-    var $target = $(e.target);
-    if($target.parents().is($optionsMenu)) {
-      if(!$target.closest('a,input,select,label,button').length) $optionsMenu.toggleClass('showing');
-      if($optionsMenu.hasClass('showing')) showJumps();
-    } else {
-      $optionsMenu.removeClass('showing');  
-    }
-  });
   // How much notation each section shows (TRANSLATIONS_PLAN.md §4c).  Each has a
   // <select notation='section'>, and the body class notation-<section>-<level>, which
-  // style.css reads.  Its <chant-gabc notation='section'> elements (no attribute means
-  // 'chants') get the attribute plain-text when they should show their words.  'tr' is the
+  // style.css reads.  Its <chant-gabc notation='section'> elements get the attribute plain-text
+  // when they should show their words.  'tr' is the
   // translation only, as plain text, whatever the Text menu says (text-mode.js sectionMode).  The
   // hymn's 'sung' is the translation sung to the chant (§4b): beside the Latin as the Text menu
   // says, or alone with the Latin only.
@@ -63,7 +58,12 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     prayers:  {key: 'notationPrayers',  levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'pointed'},
     hymn:     {key: 'notationHymn',     levels: ['text', 'full', 'sung', 'tr'], defaultLevel: 'full'},
     marian:   {key: 'notationMarian',   levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
-    chants:   {key: 'notationChants',   levels: ['text', 'full', 'tr'], defaultLevel: 'full'}
+    jube:       {key: 'notationJube',       levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
+    blessing:   {key: 'notationBlessing',   levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
+    adjutorium: {key: 'notationAdjutorium', levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
+    converte:   {key: 'notationConverte',   levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
+    'deus-in-adjutorium': {key: 'notationDeusInAdjutorium', levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
+    benedicamus: {key: 'notationBenedicamus', levels: ['text', 'full', 'tr'], defaultLevel: 'full'}
   };
   // A sung hymn, where the language can't sing it, is the translation only, as the menu shows; it's
   // kept for a language that can.
@@ -96,12 +96,10 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   // A chant shows in its own section's mode (text-mode.js modeOf).  The psalms' and the canticle's
   // antiphons (the chants without a notation of their own in #placeholder and #canticle) are plain
   // text with their psalm, and notated while it's pointed.
-  var antiphons = '[data-section=psalms] chant-gabc:not([notation]), [data-section=canticle] chant-gabc:not([notation])';
   var markPlainText = function(section) {
     var stored = storedNotation(section);
-    var $chants = section === 'chants'? $('chant-gabc:not([notation])').not(antiphons) :
-      $('chant-gabc[notation=' + section + ']').add(section === 'psalms' || section === 'canticle'?
-        '[data-section=' + section + '] chant-gabc:not([notation])' : null);
+    var $chants = $('chant-gabc[notation=' + section + ']').add(section === 'psalms' || section === 'canticle'?
+      '[data-section=' + section + '] chant-gabc:not([notation])' : null);
     $chants.each(function(){
       var level = textMode.modeOf(this) === 'tr'? 'text' : stored === 'tr'? notationSections[section].defaultLevel : stored === 'sung'? 'full' : stored;
       var plainText = section === 'psalms' || section === 'canticle'? level === 'text' : level !== 'full';
@@ -155,28 +153,171 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   $('select[notation]').change(function(e){
     setNotation([$(this).attr('notation')], $(this).val());
   });
-  // The button before a section's menu goes to that section on the page, where it's shown today,
-  // and leaves the menu open.
-  var $jumps = $optionsMenu.find('button.jump');
-  $jumps.html('<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>');
-  var jumpTarget = function(button) {
-    return $($(button).attr('data-jump')).filter(':visible')[0];
+  // The side panel (index.html): the settings, then each section, whose link goes to it on the page,
+  // where it's shown today, and whose menu is the section's notation.  The gear opens and closes it,
+  // and Escape closes it.  The section at the top of the window is marked while it's open.
+  var $root = $(document.documentElement);
+  var $panelToggle = $('#panel-toggle');
+  var $panel = $('#side-panel');
+  var $jumps = $panel.find('a.jump');
+  // where the page makes room for the panel (style.css), rather than being covered by it
+  var besidePage = window.matchMedia ? window.matchMedia('(min-width: 900px)') : {matches: true};
+  var jumpTarget = function(link) {
+    return $($(link).attr('data-jump')).filter(':visible')[0];
   };
-  var showJumps = function() {
+  var markSections = function() {
+    var current = null, currentTop = -Infinity;
     $jumps.each(function(){
-      $(this).css('visibility', jumpTarget(this)? '' : 'hidden');
+      var target = jumpTarget(this);
+      $(this).toggleClass('absent', !target).attr({
+        'aria-disabled': target? null : 'true',
+        title: target? null : 'Not said today'
+      });
+      // the last section that starts at the top of the window or above it, as one does that's gone
+      // to (scroll-margin-top in style.css); some chants are only a few lines apart
+      var top = target? target.getBoundingClientRect().top : Infinity;
+      if(top < 48 && top > currentTop) {
+        current = this;
+        currentTop = top;
+      }
+    });
+    $jumps.removeClass('current').closest('li').removeClass('current');
+    $(current).addClass('current').closest('#sections-nav ol > li').addClass('current');
+    placeMarker(current);
+  };
+  // What a section's menu sets: its chants and its other text (text-mode.js sectionOf), where
+  // they're shown.
+  var pointed = {lesson: '.pointed-lesson', chapter: '.pointed-chapter', prayers: '.pointed-prayer'};
+  var sectionContent = function(section) {
+    return $(['chant-gabc[notation="' + section + '"]', '[data-section="' + section + '"]'].concat(pointed[section] || []).join(', '))
+      .filter(':visible');
+  };
+  // The bar beside the section that's marked (style.css), from its start to the end of what its menu
+  // sets there, before the next section (the prayers' menu sets the Marian antiphon's prayer too).
+  // It slides when the section changes, and keeps up with the page otherwise.
+  var $marker = $('#section-marker');
+  var markedTarget = null;
+  var placeMarker = function(link) {
+    var target = link && jumpTarget(link);
+    $marker.toggleClass('shown', !!target);
+    if(!target) return;
+    var page = document.documentElement.getBoundingClientRect();
+    var rect = target.getBoundingClientRect();
+    var next = Infinity;
+    $jumps.each(function(){
+      var other = jumpTarget(this);
+      var top = other && other.getBoundingClientRect().top;
+      if(other && top > rect.top && top < next) next = top;
+    });
+    var bottom = rect.bottom;
+    sectionContent($(link).closest('li').find('select[notation]').attr('notation')).each(function(){
+      var r = this.getBoundingClientRect();
+      // with what's in it: a chant is inline, but its plain text is in blocks
+      var range = document.createRange();
+      range.selectNodeContents(this);
+      var inner = range.getBoundingClientRect();
+      var end = inner.width || inner.height? Math.max(r.bottom, inner.bottom) : r.bottom;
+      if(r.top >= rect.top - 1 && r.top < next) bottom = Math.max(bottom, end);
+    });
+    $marker.toggleClass('sliding', target !== markedTarget && markedTarget !== null).css({
+      top: rect.top - page.top,
+      height: Math.max(Math.min(bottom, next - 6) - rect.top, 0),
+      left: document.body.getBoundingClientRect().left - page.left - 7
+    });
+    markedTarget = target;
+  };
+  var markPending = false;
+  var scheduleMark = function(){
+    if(markPending || !$root.hasClass('panel-open')) return;
+    markPending = true;
+    window.requestAnimationFrame(function(){
+      markPending = false;
+      markSections();
     });
   };
+  $(window).on('scroll resize', scheduleMark);
+  // and as the page changes size: making room for the panel, and a chant drawn or drawn again
+  if(window.ResizeObserver) new ResizeObserver(scheduleMark).observe(document.body);
+  // As the page narrows or widens beside the panel, the text or chant at the top of the window stays
+  // there, the same point of it at the same place, until the page has finished moving (style.css), or
+  // is scrolled some other way.
+  var placeAtTop = function() {
+    var body = document.body.getBoundingClientRect();
+    for(var y = 10; y < window.innerHeight; y += 20) {
+      var el = document.elementFromPoint(body.left + body.width / 2, y);
+      if(!el || el === document.body || el === document.documentElement || !document.body.contains(el)) continue;
+      // a line of chant, rather than a note in it
+      var svg = el.closest && el.closest('svg');
+      while(svg && svg.parentNode && svg.parentNode.closest && svg.parentNode.closest('svg')) svg = svg.parentNode.closest('svg');
+      return svg || el;
+    }
+    return null;
+  };
+  var keepPlace = function() {
+    var anchor = placeAtTop();
+    if(!anchor) return;
+    var start = anchor.getBoundingClientRect();
+    var placed = window.pageYOffset, done = false;
+    var place = function() {
+      if(done) return;
+      var page = document.documentElement;
+      // (at the foot of the page, a shorter page scrolls up by itself)
+      var atFoot = window.pageYOffset >= page.scrollHeight - window.innerHeight - 1;
+      if(Math.abs(window.pageYOffset - placed) > 1 && !atFoot) return stop();
+      var rect = anchor.getBoundingClientRect();
+      var top = start.height? start.top * rect.height / start.height : start.top;
+      window.scrollBy(0, rect.top - top);
+      placed = window.pageYOffset;
+    };
+    var stop = function() {
+      done = true;
+      $root.css('overflow-anchor', '').off('transitionend', moved);
+      clearTimeout(timeout);
+    };
+    var moved = function(e) {
+      if(e.target !== document.documentElement || e.originalEvent.propertyName !== 'padding-right') return;
+      place();
+      stop();
+    };
+    var frame = function() {
+      place();
+      if(!done) window.requestAnimationFrame(frame);
+    };
+    $root.css('overflow-anchor', 'none').on('transitionend', moved);
+    window.requestAnimationFrame(frame);
+    // without the transition (prefers-reduced-motion), it has already moved
+    var timeout = setTimeout(function() {
+      place();
+      stop();
+    }, 1000);
+  };
+  var showPanel = function(show) {
+    if(show === $root.hasClass('panel-open')) return;
+    if(besidePage.matches) keepPlace();
+    $root.toggleClass('panel-open', show);
+    $panelToggle.attr({'aria-expanded': show, 'aria-label': show? 'Close settings' : 'Settings'});
+    // (it appears where the section is, rather than sliding there from where it was last)
+    markedTarget = null;
+    if(show) markSections();
+    else if($.contains($panel[0], document.activeElement)) $panelToggle.focus();
+  };
+  $panelToggle.click(function(){
+    showPanel(!$root.hasClass('panel-open'));
+  });
+  $(document).on('keydown', function(e){
+    if(e.key === 'Escape' && $root.hasClass('panel-open')) showPanel(false);
+  });
   $jumps.click(function(e){
+    e.preventDefault();
     var target = jumpTarget(this);
-    if(!target) return;
-    target.scrollIntoView(true);
+    if(target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
   });
   // What text to show: Latin, Latin and a translation, or the translation only; and which
   // translation (TRANSLATIONS_PLAN.md §5).  js/text-mode.js keeps both, and the body class
   // text-<mode>, which style.css reads.
   var $textMode = $('#selectTextMode');
   var $trLang = $('#selectTrLang');
+  var $trVerses = $('#selectTrVerses');
   $trLang.append(textMode.languages.map(function(l){
     return '<option value="' + l.code + '">' + l.name + '</option>';
   }).join(''));
@@ -194,6 +335,8 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
       $(this).prop({disabled: other, hidden: other});
     });
     $trLang.val(rubricsOnly ? textMode.rubricsLang(textMode.lang()) : textMode.lang());
+    // only the Latin and the translation together have verses to group
+    $trVerses.val(textMode.versesMode()).closest('li').toggle(textMode.mode() === 'both');
   };
   showTextMode();
   // How to show the hymn in the translation (TRANSLATIONS_PLAN.md §4b and §5): literal or metrical
@@ -281,6 +424,12 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   $trLang.change(function(e){
     textMode.setLang($(this).val());
     updateTextMode();
+  });
+  // Each psalm verse with its translation, or the Latin's verses together and the translation's
+  // (text-mode.js versesMode).
+  $trVerses.change(function(e){
+    textMode.setVersesMode($(this).val());
+    translatePage();
   });
   var toggles = {};
   var autoSelectRegion = toggles.autoSelectRegion = function(newVal) {
