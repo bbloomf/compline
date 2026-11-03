@@ -394,7 +394,21 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   var prevDay = function(week) {
     $('#date').val(changeDateBy(week? -7 : -1)).change();
   };
-  $(document).on('click', function(e) {
+  var wakeLockRequest;
+  $(document).on('scroll', function(e) {
+    // Keep the screen awake while someone is reading along; the lock is released when the page is hidden.
+    if (wakeLockRequest || !navigator.wakeLock) return;
+    wakeLockRequest = navigator.wakeLock.request('screen');
+    wakeLockRequest.then(function(wakeLock) {
+      wakeLock.addEventListener('release', function() {
+        // if the page is scrolled later on, we want to re-acquire a wake lock
+        wakeLockRequest = undefined;
+      });
+    }, function(err) {
+      console.warn(err);
+      wakeLockRequest = undefined;
+    });
+  }).on('click', function(e) {
     $('.btn-group.open').removeClass('open');
   }).on('click', '[data-toggle="dropdown"]', function(e) {
     var $openBtns = $('.btn-group.open');
