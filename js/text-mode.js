@@ -104,15 +104,15 @@ define(['jquery'], function($) {
   };
   // A block's section: a <chant-gabc>'s notation, the pointed lesson, chapter and prayers, or the
   // data-section of the part of index.html it's in (the psalms' and the canticle's verses and
-  // antiphons, in #placeholder and #canticle, and the versicles of the collect).  Any other chant is
-  // 'chants', and anything else follows the Text menu.
+  // antiphons, in #placeholder and #canticle, and the versicles of the collect).  Anything else follows
+  // the Text menu.
   var sectionOf = function(el) {
     var $el = $(el);
     if($el.is('chant-gabc[notation]')) return $el.attr('notation');
     if($el.closest('.pointed-lesson').length) return 'lesson';
     if($el.closest('.pointed-chapter').length) return 'chapter';
     if($el.closest('.pointed-prayer').length) return 'prayers';
-    return $el.closest('[data-section]').attr('data-section') || ($el.is('chant-gabc') ? 'chants' : null);
+    return $el.closest('[data-section]').attr('data-section') || null;
   };
   var modeOf = function(el) {
     return sectionMode(sectionOf(el));
@@ -142,6 +142,22 @@ define(['jquery'], function($) {
   var setLang = function(l) {
     dropQuery('lang');
     localStorage.trLang = l;
+  };
+  // How a psalm's or the canticle's verses show beside their translation: localStorage.trVerses,
+  // 'individual' (the default), each verse's translation after it, under it on a narrow screen
+  // and beside it on a wide one; or 'grouped', all the Latin's verses together and then all the
+  // translation's, below them or in a column of their own beside them (style.css).
+  var versesModes = ['individual', 'grouped'];
+  var versesMode = function() {
+    return versesModes.indexOf(localStorage.trVerses) >= 0 ? localStorage.trVerses : 'individual';
+  };
+  var setVersesMode = function(v) {
+    localStorage.trVerses = v;
+  };
+  // Whether a psalm shown as m has its verses grouped, which is only with the Latin and the
+  // translation both shown.
+  var grouped = function(m) {
+    return m === 'both' && versesMode() === 'grouped';
   };
   var hymnModes = ['literal', 'metrical'];
   var hymnMode = function() {
@@ -184,7 +200,8 @@ define(['jquery'], function($) {
   // What a chant (whose src is key, shown as m) was drawn for, so it's drawn again only when this
   // changes.  notes: whether it has a heading (user-notes or commentary) for the rubrics to translate.
   var renderKey = function(key, m, notes) {
-    return (m === 'la' ? m : m + ':' + lang() + (modules[lang()] ? '' : ':loading') + (hymnTone(key) ? ':' + (hymnSung ? 'sung' : hymnMode()) : '')) +
+    return (m === 'la' ? m : m + ':' + lang() + (modules[lang()] ? '' : ':loading') + (hymnTone(key) ? ':' + (hymnSung ? 'sung' : hymnMode()) : '') +
+      (/^(psalms\/.*\/psalm|canticle-psalm)/.test(key || '') ? ':' + (grouped(m) ? 'grouped' : 'individual') : '')) +
       (notes && rubrics() ? ':rubrics-' + lang() : '');
   };
 
@@ -388,11 +405,12 @@ define(['jquery'], function($) {
     var verse = (m || mode()) === 'la' ? null : psalmVerse(section, n);
     return verse ? '<p' + trAttributes() + "><span class='verse-number'>" + n + '.&nbsp;</span>' + unitHtml(verse) + '</p>' : verse;
   };
-  // A psalm verse: its Latin <p> (whose inner HTML is latinHtml), then the translation's.
-  var verseHtml = function(section, n, latinHtml, m) {
+  // A psalm verse: its Latin <p> (whose inner HTML is latinHtml), then the translation's, unless
+  // alone, where it goes with the others (grouped).
+  var verseHtml = function(section, n, latinHtml, m, alone) {
     var translation = verseTranslationHtml(section, n, m);
     return "<p lang='la' class='" + latinClass(translation !== null, m) + "'><span class='verse-number'>" + n + '.&nbsp;</span>' +
-      latinHtml + '</p>' + (translation || '');
+      latinHtml + '</p>' + (alone ? '' : translation || '');
   };
   // A Latin block and its translation (units), side by side or one under the other (style.css).
   // tag is the element for each, 'p' or 'div'.  trPrefix is HTML that starts the translation, as
@@ -472,14 +490,23 @@ define(['jquery'], function($) {
     $root.find('.verses[data-psalm]').each(function() {
       var section = $(this).attr('data-psalm');
       var m = modeOf(this);
+      var group = grouped(m);
       markMode(this, m);
       $(this).children('p.tr').remove();
-      $(this).children('p').each(function() {
+      var translations = [];
+      $(this).children('p').each(function(i) {
         var $p = $(this);
-        var translation = verseTranslationHtml(section, parseInt($p.children('.verse-number').text()), m);
+        var n = parseInt($p.children('.verse-number').text());
+        // grouped, the verses before these, under the psalm's intonation, are translated here
+        // (chant-element.js)
+        for(var before = 1; group && i === 0 && before < n; ++before) translations.push(verseTranslationHtml(section, before, m));
+        var translation = verseTranslationHtml(section, n, m);
         $p.attr('lang', 'la').removeClass('has-tr tr-missing tr-same').addClass(latinClass(translation !== null, m));
-        if(translation) $p.after(translation);
+        if(group) translations.push(translation);
+        else if(translation) $p.after(translation);
       });
+      var trHtml = translations.filter(Boolean).join('');
+      $(this).append(trHtml).toggleClass('verses-grouped', !!trHtml);
     });
   };
   var updateBodyClasses = function() {
@@ -505,6 +532,9 @@ define(['jquery'], function($) {
     setLang: setLang,
     hymnMode: hymnMode,
     setHymnMode: setHymnMode,
+    versesMode: versesMode,
+    setVersesMode: setVersesMode,
+    grouped: grouped,
     setHymnSung: setHymnSung,
     canSing: canSing,
     hymnKinds: hymnKinds,

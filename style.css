@@ -207,6 +207,8 @@ body {
   }
   body {
     max-width: 1258px;
+    /* and 8px from each side where the panel leaves less room than that (html.panel-open) */
+    max-width: min(1258px, 100% - 16px);
     margin: 8px auto;
   }
 }
@@ -218,103 +220,344 @@ tspan[style="font-family:'Exsurge Characters';fill:#f00;"] {
 select {
   max-width: 100%;
 }
-/* The options menu stays in the top right corner as the page scrolls.  Its text
-   scales with the page like the rest, but stops growing at 28px. */
-div#options-menu {
-  display: inline-block;
+/* The side panel (index.html, compline.js): the settings, then each section of the office, to go to
+   it and choose how much notation it shows.  The gear that opens and closes it stays in the top right
+   corner as the page scrolls, over the panel's corner while it's open. */
+:root {
+  --panel-width: min(336px, 88vw);
+  --panel-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --panel-bg: #faf8f4;
+  --panel-line: #e7e2d9;
+  --panel-text: #222;
+  --panel-muted: #857d70;
+  --panel-hover: rgba(90, 60, 20, 0.06);
+  --panel-chip: rgba(90, 60, 20, 0.07);
+  --panel-chip-hover: rgba(90, 60, 20, 0.13);
+}
+#panel-toggle {
   position: fixed;
-  top: 8px;
-  right: 8px;
-  z-index: 3;
-  font-size: min(1em, 28px);
+  top: 4px;
+  right: 4px;
+  z-index: 6;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: #444;
+  cursor: pointer;
+  transition: opacity 0.2s, color 0.2s;
+}
+#panel-toggle:hover {
+  color: #000;
+}
+#panel-toggle:focus {
+  outline: none;
+}
+#panel-toggle:focus-visible {
+  outline: 2px solid var(--playback-color);
+  outline-offset: -2px;
+}
+#panel-toggle svg {
+  display: block;
+  width: 25px;
+  height: 25px;
+  margin: auto;
+  fill: currentColor;
+  transition: transform 0.3s var(--panel-ease);
+}
+html.panel-open #panel-toggle svg {
+  transform: rotate(60deg);
 }
 /* Unless the page is wide enough to leave a right margin for the gear to sit in
    (1258px of page plus 2 × 41px, plus room for a scrollbar), the gear covers the
    text, so keep it faint until it's hovered or open. */
 @media screen and (max-width: 1359px) {
-  div#options-menu:not(:hover):not(.showing) {
+  html:not(.panel-open) #panel-toggle:not(:hover):not(:focus-visible) {
     opacity: 0.5;
   }
 }
-div#options-menu>svg {
-  width: 25px;
-  cursor: pointer;
-  fill: #444;
-  margin-right: -2px;
-  margin-top: -2px;
-}
-div#options-menu>svg:hover {
-  fill: #000;
-}
-div#options-menu>ul {
-  display: none;
-  list-style-type: none;
-  border: 1px solid #999;
-  border-radius: 4px;
-  padding: 0.25em;
-  background: #f6f6f6;
-  width: max-content;
-  max-width: calc(100vw - 16px);
-  max-height: calc(100vh - 16px);
+#side-panel {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 5;
+  width: var(--panel-width);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--panel-bg);
+  border-left: 1px solid var(--panel-line);
+  color: var(--panel-text);
+  font-size: 14px;
+  line-height: 1.3;
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform 0.3s var(--panel-ease), visibility 0s 0.3s;
+}
+html.panel-open #side-panel {
+  transform: none;
+  visibility: visible;
+  box-shadow: -2px 0 18px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s var(--panel-ease);
+}
+#side-panel header {
+  padding: 13px 20px 14px;
+  border-bottom: 1px solid var(--panel-line);
+}
+/* (clear of the gear) */
+#settings header {
+  padding-right: 56px;
+}
+#sections-nav header {
+  border-top: 1px solid var(--panel-line);
+}
+#side-panel h2 {
   margin: 0;
+  font-family: 'Crimson Text', serif;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--rubric-color);
 }
-div#options-menu input[type=checkbox] {
-  width: 0.75em;
-  height: 0.75em;
+#side-panel header p {
+  margin: 3px 0 0;
+  font-size: 12.5px;
+  color: var(--panel-muted);
+}
+#side-panel ul,
+#side-panel ol {
+  list-style: none;
   margin: 0;
-  vertical-align: -0.05em;
+  padding: 8px 0 20px;
 }
-div#options-menu>ul a {
-  text-decoration: none;
+#side-panel ul {
+  padding-bottom: 12px;
 }
-div#options-menu>ul a:hover {
-  text-decoration: underline;
-}
-div#options-menu>ul>li:not(:first-child) {
-  margin-top: 0.6em;
-}
-/* Other chants lists its chants on hover. */
-div#options-menu .lists {
-  cursor: help;
-  text-decoration: underline dotted;
-  text-underline-offset: 0.2em;
-}
-/* The button before a section's menu goes to the section (compline.js), so a row without one
-   keeps its place. */
-div#options-menu .jump {
-  display: inline-block;
-  width: 1em;
-  margin-right: 0.3em;
-  vertical-align: -0.1em;
-}
-div#options-menu button.jump {
-  border: 0;
-  background: none;
-  padding: 0;
-  color: inherit;
+/* a setting, with its control on the right */
+#settings li > label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 12px;
+  min-height: 40px;
+  margin: 0;
+  padding: 0 14px 0 20px;
+  font-weight: normal;
   cursor: pointer;
-  opacity: 0.6;
 }
-div#options-menu button.jump:hover,
-div#options-menu button.jump:focus-visible {
+#settings li > label:hover {
+  background: var(--panel-hover);
+}
+#settings .menu,
+#settings input[type=checkbox] {
+  justify-self: end;
+}
+/* the checkbox, as a switch */
+#settings input[type=checkbox] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+  width: 34px;
+  height: 20px;
+  margin: 0;
+  border-radius: 999px;
+  background: var(--panel-chip-hover);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+#settings input[type=checkbox]::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s var(--panel-ease);
+}
+#settings input[type=checkbox]:checked {
+  background: var(--rubric-color);
+}
+#settings input[type=checkbox]:checked::before {
+  transform: translateX(14px);
+}
+#settings input[type=checkbox]:focus {
+  outline: none;
+}
+#settings input[type=checkbox]:focus-visible {
+  outline: 2px solid var(--playback-color);
+  outline-offset: 2px;
+}
+#sections-nav ol > li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  column-gap: 10px;
+  padding-right: 14px;
+}
+#sections-nav ol > li:hover {
+  background: var(--panel-hover);
+}
+/* the section being read, while the panel is open */
+#sections-nav ol > li.current::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  bottom: 7px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--rubric-color);
+}
+/* and a bar like it beside that section on the page, from its start to the next one's (compline.js
+   places it); it slides to the next section as the page is read on */
+#section-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 0;
+  border-radius: 3px;
+  background: var(--rubric-color);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+html.panel-open #section-marker.shown {
   opacity: 1;
 }
-div#options-menu button.jump svg {
-  display: block;
-  width: 1em;
-  height: 1em;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+#section-marker.sliding {
+  transition: opacity 0.2s, top 0.25s var(--panel-ease), height 0.25s var(--panel-ease);
 }
-div#options-menu.showing>ul {
+#sections-nav ol > li > a.jump {
   display: block;
+  padding: 9px 0 9px 20px;
+  font-family: 'Crimson Text', serif;
+  font-size: 18px;
+  line-height: 22px;
+  color: inherit;
+  text-decoration: none;
 }
-div#options-menu.showing>svg {
-  display: none;
+#sections-nav a.jump:focus {
+  outline: none;
+}
+#sections-nav a.jump:focus-visible {
+  outline: 2px solid var(--playback-color);
+  outline-offset: -2px;
+}
+/* a chant, by its incipit */
+#sections-nav ol > li.incipit > a.jump {
+  font-style: italic;
+}
+#sections-nav ol > li.current > a.jump {
+  color: var(--rubric-color);
+}
+/* a section that isn't said today */
+#sections-nav a.jump.absent {
+  color: var(--panel-muted);
+  opacity: 0.6;
+  cursor: default;
+}
+#side-panel .menu,
+#side-panel .notation-menu,
+#side-panel .hymn-notation-menu {
+  position: relative;
+  display: block;
+  justify-self: end;
+  max-width: 100%;
+}
+#side-panel select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  max-width: 100%;
+  margin: 0;
+  padding: 5px 25px 5px 11px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--panel-chip);
+  color: inherit;
+  font: 13px/1.25 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  text-align: right;
+  text-align-last: right;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+#side-panel select:hover {
+  background: var(--panel-chip-hover);
+}
+#side-panel select:focus {
+  outline: none;
+}
+#side-panel select:focus-visible {
+  outline: 2px solid var(--playback-color);
+  outline-offset: 1px;
+}
+#side-panel option {
+  background: var(--panel-bg);
+  color: var(--panel-text);
+}
+#side-panel .menu::after,
+#side-panel .notation-menu::after,
+#side-panel .hymn-notation-menu::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 11px;
+  width: 6px;
+  height: 6px;
+  margin-top: -5px;
+  border-right: 1.5px solid var(--panel-muted);
+  border-bottom: 1.5px solid var(--panel-muted);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+/* a section the panel goes to, a little below the top of the window */
+#placeholder, #hymn, #canticle, #marian, [data-rubric], [data-section], chant-gabc {
+  scroll-margin-top: 10px;
+}
+/* On a wide screen the page makes room for the panel, narrower, and its text and chant scale down
+   with it (as with the window, above); on a narrow one, the panel covers the right of the page. */
+@media screen and (min-width: 900px) {
+  html {
+    transition: padding-right 0.3s var(--panel-ease);
+  }
+  html.panel-open {
+    padding-right: var(--panel-width);
+    --scaled-px: calc((min(100vw - var(--panel-width), 1274px) - 16px) / 624);
+  }
+  /* 100cqw is the root's width inside its padding */
+  @supports (width: 1cqw) {
+    html.panel-open {
+      --scaled-px: calc((min(100cqw, 1274px) - 16px) / 624);
+    }
+  }
+  html.panel-open .btn-group>.btn+div {
+    width: calc(min(100vw - var(--panel-width), 1274px) - 30px);
+  }
+  html.panel-open #mediaControls {
+    width: auto;
+    right: var(--panel-width);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html,
+  #panel-toggle svg,
+  #side-panel,
+  #settings input[type=checkbox],
+  #settings input[type=checkbox]::before,
+  #section-marker {
+    transition: none !important;
+  }
 }
 body.hide-choose-day #rbSunday{
   display: none;
@@ -472,7 +715,7 @@ span.tr-pair.text-tr > span:not(.has-tr) {
 .text-la .tr,
 .text-la .chant-tr,
 .text-tr .has-tr,
-body.page-text-tr #options-menu .notation-menu,
+body.page-text-tr #sections-nav .notation-menu,
 body.page-text-tr .notation-choice {
   display: none;
 }
@@ -507,17 +750,17 @@ chant-gabc > .chant-tr:has(+ svg) {
 /* On a narrow screen a psalm verse's translation is under it, nearer to it than to the next verse,
    so that each pair reads as one.  (Not under the notes, where the next verse's notes are below.) */
 @media screen and (max-width: 767px) {
-  .text-both .verses>p.has-tr,
-  .verses.text-both>p.has-tr {
+  .text-both .verses:not(.verses-grouped)>p.has-tr,
+  .verses.text-both:not(.verses-grouped)>p.has-tr {
     margin-bottom: 0.2em;
   }
-  .verses.text-both:not(.chant-tr)>p.tr,
-  .text-both .verses:not(.chant-tr)>p.tr {
+  .verses.text-both:not(.chant-tr):not(.verses-grouped)>p.tr,
+  .text-both .verses:not(.chant-tr):not(.verses-grouped)>p.tr {
     margin: 0.2em 0 0.75em;
   }
   /* Verse 2, after the translation of verse 1 under the pointed psalm's intonation, as far from it as
      from the translation of any other verse (the verses' -0.4615em top margin takes back the rest) */
-  chant-gabc.text-both:not(.plain-text)+.verses.text-both>p.has-tr:first-child {
+  chant-gabc.text-both:not(.plain-text)+.verses.text-both:not(.verses-grouped)>p.has-tr:first-child {
     margin-top: calc(0.75em + 0.4615em);
   }
   /* A block of versicles, split into one pair for each ℣ (js/text-mode.js), with each translation
@@ -533,8 +776,8 @@ chant-gabc > .chant-tr:has(+ svg) {
   .tr-pair.text-both,
   span.tr-pair.text-both,
   .text-both .tr-pair,
-  .verses.text-both:not(.chant-tr),
-  .text-both .verses:not(.chant-tr) {
+  .verses.text-both:not(.chant-tr):not(.verses-grouped),
+  .text-both .verses:not(.chant-tr):not(.verses-grouped) {
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 1.5em;
@@ -552,14 +795,38 @@ chant-gabc > .chant-tr:has(+ svg) {
     grid-column: 2;
   }
   /* grid items' margins don't collapse */
-  .verses.text-both:not(.chant-tr),
-  .text-both .verses:not(.chant-tr) {
+  .verses.text-both:not(.chant-tr):not(.verses-grouped),
+  .text-both .verses:not(.chant-tr):not(.verses-grouped) {
     row-gap: 0.4615em;
     margin: 0 0 0.4615em;
   }
-  .verses.text-both:not(.chant-tr) > p,
-  .text-both .verses:not(.chant-tr) > p {
+  .verses.text-both:not(.chant-tr):not(.verses-grouped) > p,
+  .text-both .verses:not(.chant-tr):not(.verses-grouped) > p {
     margin: 0;
+  }
+}
+/* With the translated verses grouped (js/text-mode.js), a psalm's Latin verses are together, and
+   then its translation's, set apart from them; a fully notated psalm's follow its notes. */
+.verses.verses-grouped > p:not(.tr) + p.tr {
+  margin-top: 1.25em;
+}
+chant-gabc > .chant-tr.verses-grouped {
+  margin: 0.75em 0 1em;
+}
+/* On a wide screen, and in print, the pointed verses' translation is a column of its own beside them,
+   each running on by itself rather than verse by verse. */
+@media print, screen and (min-width: 768px) {
+  .verses.verses-grouped:not(.chant-tr) {
+    columns: 2;
+    column-gap: 1.5em;
+  }
+  .verses.verses-grouped:not(.chant-tr) > p {
+    break-inside: avoid;
+  }
+  .verses.verses-grouped:not(.chant-tr) > p:not(.tr) + p.tr {
+    margin-top: 0.4615em;
+    -webkit-column-break-before: always;
+    break-before: column;
   }
 }
 /* Chant playback (js/chant-playback.js), as in jgabc: the initial or first syllable opens a menu to play the
