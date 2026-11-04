@@ -3606,7 +3606,8 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   });
   // The side panel (index.html): the settings, then each section, whose link goes to it on the page,
   // where it's shown today, and whose menu is the section's notation.  The gear opens and closes it,
-  // and Escape closes it.  The section at the top of the window is marked while it's open.
+  // as does a swipe left or right on a touch screen, and Escape or a click outside it closes it.  The
+  // section at the top of the window is marked while it's open.
   var $root = $(document.documentElement);
   var $panelToggle = $('#panel-toggle');
   var $panel = $('#side-panel');
@@ -3758,6 +3759,50 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   $(document).on('keydown', function(e){
     if(e.key === 'Escape' && $root.hasClass('panel-open')) showPanel(false);
   });
+  // A click or tap outside the panel closes it, and does only that: what's under it isn't pressed too
+  // (so it's caught before the page's own handlers, some of which stop it from going further).  Not
+  // a click from the keyboard, though, nor one that began in the panel, as in selecting its text.
+  var downInPanel = false;
+  document.addEventListener('mousedown', function(e) {
+    downInPanel = $panel[0].contains(e.target);
+  }, true);
+  document.addEventListener('click', function(e) {
+    if(!$root.hasClass('panel-open') || !e.detail || downInPanel) return;
+    var target = e.target;
+    if(!document.documentElement.contains(target) || $panel[0].contains(target) || $panelToggle[0].contains(target)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    showPanel(false);
+  }, true);
+  // On a touch screen, a swipe to the left anywhere opens the panel, and one to the right closes it.
+  // It's a swipe once one finger has gone 50px across, and twice as far across as up or down; not
+  // while the page is zoomed in (when a swipe moves the page) or text is being selected, nor on the
+  // playback controls, which have their own.
+  var swipe = null;
+  document.addEventListener('touchstart', function(e) {
+    var touch = e.touches[0];
+    swipe = e.touches.length === 1 && !$(e.target).closest('.chant-context, #mediaControls').length?
+      {x: touch.clientX, y: touch.clientY} : null;
+  }, {passive: true});
+  document.addEventListener('touchmove', function(e) {
+    if(!swipe) return;
+    var touch = e.touches[0];
+    var dx = touch.clientX - swipe.x, dy = touch.clientY - swipe.y;
+    // a second finger, or scrolling up or down
+    if(e.touches.length !== 1 || (Math.abs(dy) > 30 && Math.abs(dy) > Math.abs(dx))) {
+      swipe = null;
+      return;
+    }
+    if(Math.abs(dx) < 50 || Math.abs(dx) < 2 * Math.abs(dy)) return;
+    swipe = null;
+    if(window.visualViewport && window.visualViewport.scale > 1.01) return;
+    var selection = window.getSelection && window.getSelection();
+    if(selection && !selection.isCollapsed) return;
+    showPanel(dx < 0);
+  }, {passive: true});
+  document.addEventListener('touchcancel', function() {
+    swipe = null;
+  }, {passive: true});
   $jumps.click(function(e){
     e.preventDefault();
     var target = jumpTarget(this);
