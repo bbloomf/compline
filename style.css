@@ -207,8 +207,6 @@ body {
   }
   body {
     max-width: 1258px;
-    /* and 8px from each side where the panel leaves less room than that (html.panel-open) */
-    max-width: min(1258px, 100% - 16px);
     margin: 8px auto;
   }
 }
@@ -525,32 +523,9 @@ html.panel-open #section-marker.shown {
 #placeholder, #hymn, #canticle, #marian, [data-rubric], [data-section], chant-gabc {
   scroll-margin-top: 10px;
 }
-/* On a wide screen the page makes room for the panel, narrower, and its text and chant scale down
-   with it (as with the window, above); on a narrow one, the panel covers the right of the page. */
-@media screen and (min-width: 900px) {
-  html {
-    transition: padding-right 0.3s var(--panel-ease);
-  }
-  html.panel-open {
-    padding-right: var(--panel-width);
-    --scaled-px: calc((min(100vw - var(--panel-width), 1274px) - 16px) / 624);
-  }
-  /* 100cqw is the root's width inside its padding */
-  @supports (width: 1cqw) {
-    html.panel-open {
-      --scaled-px: calc((min(100cqw, 1274px) - 16px) / 624);
-    }
-  }
-  html.panel-open .btn-group>.btn+div {
-    width: calc(min(100vw - var(--panel-width), 1274px) - 30px);
-  }
-  html.panel-open #mediaControls {
-    width: auto;
-    right: var(--panel-width);
-  }
-}
+/* The panel covers the right of the page, whatever the size of the screen: the page stays as it is,
+   neither narrower nor scaled down. */
 @media (prefers-reduced-motion: reduce) {
-  html,
   #panel-toggle svg,
   #side-panel,
   #settings input[type=checkbox],
