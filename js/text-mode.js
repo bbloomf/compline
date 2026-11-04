@@ -385,10 +385,10 @@ define(['jquery'], function($) {
   var langAttr = function() {
     return ((data() || {}).meta || {}).lang || lang();
   };
-  // The attributes of the translation that follows a Latin element.
-  var trAttributes = function() {
+  // The attributes of the translation that follows a Latin element, with any other classes cls.
+  var trAttributes = function(cls) {
     var meta = (data() || {}).meta || {};
-    return " class='tr' lang='" + langAttr() + "'" + (meta.dir === 'rtl' ? " dir='rtl'" : '');
+    return " class='tr" + (cls ? ' ' + cls : '') + "' lang='" + langAttr() + "'" + (meta.dir === 'rtl' ? " dir='rtl'" : '');
   };
   // Classes for a Latin element: in 'tr' mode it hides when it has a translation, and is shown
   // in a subtle style when it doesn't (style.css).  A Latin translation (meta.latin, Latin-Bea)
@@ -400,10 +400,10 @@ define(['jquery'], function($) {
     return ((data() || {}).meta || {}).latin ? 'tr-same' : 'tr-missing';
   };
   // The translation of a psalm verse as a <p>, laid out like the Latin; '' if the verse before's
-  // covers it, and null if there isn't one.  m is the mode it's shown in.
-  var verseTranslationHtml = function(section, n, m) {
+  // covers it, and null if there isn't one.  m is the mode it's shown in, and cls any other classes.
+  var verseTranslationHtml = function(section, n, m, cls) {
     var verse = (m || mode()) === 'la' ? null : psalmVerse(section, n);
-    return verse ? '<p' + trAttributes() + "><span class='verse-number'>" + n + '.&nbsp;</span>' + unitHtml(verse) + '</p>' : verse;
+    return verse ? '<p' + trAttributes(cls) + "><span class='verse-number'>" + n + '.&nbsp;</span>' + unitHtml(verse) + '</p>' : verse;
   };
   // A psalm verse: its Latin <p> (whose inner HTML is latinHtml), then the translation's, unless
   // alone, where it goes with the others (grouped).
@@ -498,8 +498,9 @@ define(['jquery'], function($) {
         var $p = $(this);
         var n = parseInt($p.children('.verse-number').text());
         // grouped, the verses before these, under the psalm's intonation, are translated here
-        // (chant-element.js)
-        for(var before = 1; group && i === 0 && before < n; ++before) translations.push(verseTranslationHtml(section, before, m));
+        // (chant-element.js); but on a wide screen, an intonation in plain text has their
+        // translation beside it instead (style.css)
+        for(var before = 1; group && i === 0 && before < n; ++before) translations.push(verseTranslationHtml(section, before, m, 'tr-intonation'));
         var translation = verseTranslationHtml(section, n, m);
         $p.attr('lang', 'la').removeClass('has-tr tr-missing tr-same').addClass(latinClass(translation !== null, m));
         if(group) translations.push(translation);

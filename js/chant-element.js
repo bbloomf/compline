@@ -234,17 +234,19 @@ define(['jquery','exsurge','text-mode','document-register-element','chant-playba
       if(p.lines.length === 0) {
         p.html = '';
       } else if(p.verses) {
-        // grouped, the translations follow all the verses, but an intonation's go with the rest of
-        // the psalm's, in the pointed verses after it (text-mode.js translate)
+        // grouped, the translations follow all the verses.  An intonation's go with the rest of
+        // the psalm's, in the pointed verses after it (text-mode.js translate), but on a wide
+        // screen they're beside it, so that verse 1's is beside verse 1 (style.css).
         var translations = '';
         var latinHtml = p.lines.map(function(line) {
           var n = parseInt(line.match(verse)[1]);
           var latin = line.replace(verse, '');
           if(!translation) return '<p><span class="verse-number">' + n + '.&nbsp;</span>' + latin + '</p>';
-          if(translation.grouped && !translation.intonation) translations += textMode.verseTranslationHtml(p.section, n, translation.mode) || '';
+          if(translation.grouped) translations += textMode.verseTranslationHtml(p.section, n, translation.mode) || '';
           return textMode.verseHtml(p.section, n, latin, translation.mode, translation.grouped);
         }).join('');
-        p.html = '<div class="verses' + (translations? ' verses-grouped' : '') + '">' + latinHtml + translations + '</div>';
+        p.html = '<div class="verses' + (translations? ' verses-grouped' : '') + (translations && translation.intonation? ' verses-intonation' : '') + '">' +
+          latinHtml + translations + '</div>';
       } else {
         var latin = p.lines.join('<br>').replace(verse, "<span class='red'>$1.</span> ");
         p.html = (translation && !p.section && (paired || !units))?
