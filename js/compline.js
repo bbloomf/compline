@@ -161,8 +161,6 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   var $panelToggle = $('#panel-toggle');
   var $panel = $('#side-panel');
   var $jumps = $panel.find('a.jump');
-  // where the page makes room for the panel (style.css), rather than being covered by it
-  var besidePage = window.matchMedia ? window.matchMedia('(min-width: 900px)') : {matches: true};
   var jumpTarget = function(link) {
     return $($(link).attr('data-jump')).filter(':visible')[0];
   };
@@ -237,64 +235,10 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     });
   };
   $(window).on('scroll resize', scheduleMark);
-  // and as the page changes size: making room for the panel, and a chant drawn or drawn again
+  // and as the page changes size: a chant drawn or drawn again
   if(window.ResizeObserver) new ResizeObserver(scheduleMark).observe(document.body);
-  // As the page narrows or widens beside the panel, the text or chant at the top of the window stays
-  // there, the same point of it at the same place, until the page has finished moving (style.css), or
-  // is scrolled some other way.
-  var placeAtTop = function() {
-    var body = document.body.getBoundingClientRect();
-    for(var y = 10; y < window.innerHeight; y += 20) {
-      var el = document.elementFromPoint(body.left + body.width / 2, y);
-      if(!el || el === document.body || el === document.documentElement || !document.body.contains(el)) continue;
-      // a line of chant, rather than a note in it
-      var svg = el.closest && el.closest('svg');
-      while(svg && svg.parentNode && svg.parentNode.closest && svg.parentNode.closest('svg')) svg = svg.parentNode.closest('svg');
-      return svg || el;
-    }
-    return null;
-  };
-  var keepPlace = function() {
-    var anchor = placeAtTop();
-    if(!anchor) return;
-    var start = anchor.getBoundingClientRect();
-    var placed = window.pageYOffset, done = false;
-    var place = function() {
-      if(done) return;
-      var page = document.documentElement;
-      // (at the foot of the page, a shorter page scrolls up by itself)
-      var atFoot = window.pageYOffset >= page.scrollHeight - window.innerHeight - 1;
-      if(Math.abs(window.pageYOffset - placed) > 1 && !atFoot) return stop();
-      var rect = anchor.getBoundingClientRect();
-      var top = start.height? start.top * rect.height / start.height : start.top;
-      window.scrollBy(0, rect.top - top);
-      placed = window.pageYOffset;
-    };
-    var stop = function() {
-      done = true;
-      $root.css('overflow-anchor', '').off('transitionend', moved);
-      clearTimeout(timeout);
-    };
-    var moved = function(e) {
-      if(e.target !== document.documentElement || e.originalEvent.propertyName !== 'padding-right') return;
-      place();
-      stop();
-    };
-    var frame = function() {
-      place();
-      if(!done) window.requestAnimationFrame(frame);
-    };
-    $root.css('overflow-anchor', 'none').on('transitionend', moved);
-    window.requestAnimationFrame(frame);
-    // without the transition (prefers-reduced-motion), it has already moved
-    var timeout = setTimeout(function() {
-      place();
-      stop();
-    }, 1000);
-  };
   var showPanel = function(show) {
     if(show === $root.hasClass('panel-open')) return;
-    if(besidePage.matches) keepPlace();
     $root.toggleClass('panel-open', show);
     $panelToggle.attr({'aria-expanded': show, 'aria-label': show? 'Close settings' : 'Settings'});
     // (it appears where the section is, rather than sliding there from where it was last)
