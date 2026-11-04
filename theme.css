@@ -1,8 +1,9 @@
 /*
  * Light/dark theme support.
  *
- * js/theme.js puts class "dark" on <html> when the device prefers a dark color
- * scheme, or when the options menu forces it (stored in localStorage.theme).
+ * js/theme.js puts class "dark" on <html> when the options menu chooses Dark
+ * (stored in localStorage.theme), or chooses System Default and the device
+ * prefers a dark color scheme.  Light is the default.
  * Everything dark-specific is keyed on that class and limited to screen media
  * so printing stays black on white.
  *
