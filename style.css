@@ -875,10 +875,22 @@ chant-gabc > .chant-tr.verses-grouped {
   .verses.verses-grouped:not(.chant-tr) > p {
     break-inside: avoid;
   }
-  .verses.verses-grouped:not(.chant-tr) > p:not(.tr) + p.tr {
+  .verses.verses-grouped:not(.chant-tr) > p:not(.tr) + p.tr,
+  chant-gabc.plain-text + .verses.verses-grouped > p.tr-intonation + p.tr:not(.tr-intonation) {
     margin-top: 0.4615em;
     -webkit-column-break-before: always;
     break-before: column;
+  }
+  /* A psalm's intonation in plain text (verse 1) has its translation beside it (js/chant-element.js),
+     so it isn't beside verse 2 in the pointed verses' column. */
+  chant-gabc.plain-text + .verses.verses-grouped > p.tr-intonation {
+    display: none;
+  }
+}
+/* On a narrow screen it follows the pointed verses' Latin with the rest of the translation. */
+@media screen and (max-width: 767px) {
+  .verses-intonation > p.tr {
+    display: none;
   }
 }
 /* Chant playback (js/chant-playback.js), as in jgabc: the initial or first syllable opens a menu to play the
