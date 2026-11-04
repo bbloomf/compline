@@ -2,9 +2,10 @@
  * Light/dark theme switching.  Loaded synchronously in <head> (after the
  * stylesheet) so <html> already carries the right class before the first paint.
  *
- * localStorage.theme is 'auto' (follow the device's preferred color scheme,
- * the default), 'light' or 'dark'.  The options menu in compline.js sets it
- * through complineTheme.setTheme.
+ * localStorage.theme is 'light' (the default), 'dark' or 'auto' (follow the
+ * device's preferred color scheme).  The options menu in compline.js sets it
+ * through complineTheme.setTheme; its 'auto' option is labeled with the scheme
+ * the device currently prefers, e.g. "System Default (Dark)".
  */
 (function (window, document) {
   'use strict';
@@ -13,7 +14,7 @@
   var root = document.documentElement;
   var media = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
   // used when localStorage is unavailable, so a choice still lasts for this page load
-  var memoryTheme = 'auto';
+  var memoryTheme = 'light';
 
   function systemPrefersDark() {
     return !!(media && media.matches);
@@ -26,7 +27,7 @@
     } catch (e) {
       theme = memoryTheme;
     }
-    return theme === 'light' || theme === 'dark' ? theme : 'auto';
+    return theme === 'auto' || theme === 'dark' ? theme : 'light';
   }
 
   function isDark() {
@@ -56,13 +57,21 @@
     }
   }
 
+  // name the scheme 'auto' would give, so the menu shows what following the device means
+  function labelAutoOption() {
+    var option = document.querySelector('#selectTheme option[value="auto"]');
+    if (option) option.textContent = 'System Default (' + (systemPrefersDark() ? 'Dark' : 'Light') + ')';
+  }
+
   function applyTheme() {
     var dark = isDark();
     root.classList.toggle('dark', dark);
     syncStatusBar(dark);
+    labelAutoOption();
   }
 
   applyTheme();
+  document.addEventListener('DOMContentLoaded', labelAutoOption, false);
   document.addEventListener('deviceready', applyTheme, false);
   if (media) {
     if (media.addEventListener) media.addEventListener('change', applyTheme);
