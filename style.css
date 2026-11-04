@@ -609,6 +609,58 @@ body.hide-choose-day #rbWeekday {
   flex: 0 0 auto;
   margin: auto -7px auto 7px;
 }
+/* The date, the rubrics and the feast are chosen with native controls (.btn-select, index.html),
+   drawn like the buttons of the menus below them: their colors from .btn-default, which they also
+   carry, and the box of .btn-lg (above), with a select's caret where theirs is, 9px in from the
+   right.  The height is set, not left to the line-height, which some browsers don't apply to a
+   select, and which iOS doesn't apply to a date without its native look. */
+.btn-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  max-width: 100%;
+  height: calc(22px + 1.25em);
+  margin: 0 0 4px;
+  padding: 10px 16px calc(10px + 0.25em);
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 6px;
+  /* as .btn-lg, scaled with the page (above) */
+  font-size: calc(18 * var(--scaled-px, 1px));
+  line-height: 1;
+  vertical-align: top;
+}
+/* the caret (as .caret), one triangle; and still while it's pressed (.btn-default:active) */
+select.btn-select,
+select.btn-select:active {
+  padding-right: 26px;
+  background-image: conic-gradient(from -45deg at 50% 100%, currentColor 90deg, transparent 0);
+  background-size: 10px 5px;
+  background-position: right 9px center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+.btn-select:focus {
+  outline: none;
+}
+.btn-select:focus-visible {
+  outline: 2px solid var(--playback-color);
+  outline-offset: 1px;
+}
+/* Chrome pads the date's fields, which would make it taller than the buttons, and iOS centers it */
+.btn-select::-webkit-datetime-edit,
+.btn-select::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+.btn-select::-webkit-date-and-time-value {
+  margin: 0;
+  text-align: left;
+}
+.btn-select::-webkit-calendar-picker-indicator {
+  padding: 0;
+  margin: 0 -7px 0 7px;
+  cursor: pointer;
+}
 .btn-group li > a {
   padding-left: calc(20px + 1em);
   text-indent: -1em;
