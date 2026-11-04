@@ -668,8 +668,9 @@ chant-gabc > svg {
 chant-gabc {
   margin: -2px 0 4px;
 }/* Notation levels (TRANSLATIONS_PLAN.md §4c).  compline.js puts notation-<section>-<level>
-   on <body>.  Plain text of the psalms, lesson, chapter and prayers is the pointed text with the
-   pointing switched off; the other chants give their own plain text (chant-element.js). */
+   on <body>.  Plain text of the psalms, lesson, chapter, prayers, Noctem quiétam, Adjutórium nostrum
+   and Convérte nos is the pointed text with the pointing switched off; the other chants give their
+   own plain text (chant-element.js). */
 body.notation-lesson-text .notated-lesson,
 body.notation-lesson-pointed .notated-lesson,
 body.notation-lesson-full .pointed-lesson,
@@ -679,6 +680,15 @@ body.notation-chapter-full .pointed-chapter,
 body.notation-prayers-text .notated-prayer,
 body.notation-prayers-pointed .notated-prayer,
 body.notation-prayers-full .pointed-prayer,
+body.notation-blessing-text .notated-blessing,
+body.notation-blessing-pointed .notated-blessing,
+body.notation-blessing-full .pointed-blessing,
+body.notation-adjutorium-text .notated-adjutorium,
+body.notation-adjutorium-pointed .notated-adjutorium,
+body.notation-adjutorium-full .pointed-adjutorium,
+body.notation-converte-text .notated-converte,
+body.notation-converte-pointed .notated-converte,
+body.notation-converte-full .pointed-converte,
 body.notation-marian-text #marian-antiphon-solemn-choice {
   display: none;
 }
@@ -691,7 +701,13 @@ body.notation-lesson-text .pointed-lesson i,
 body.notation-chapter-text .pointed-chapter b,
 body.notation-chapter-text .pointed-chapter i,
 body.notation-prayers-text .pointed-prayer b,
-body.notation-prayers-text .pointed-prayer i {
+body.notation-prayers-text .pointed-prayer i,
+body.notation-blessing-text .pointed-blessing b,
+body.notation-blessing-text .pointed-blessing i,
+body.notation-adjutorium-text .pointed-adjutorium b,
+body.notation-adjutorium-text .pointed-adjutorium i,
+body.notation-converte-text .pointed-converte b,
+body.notation-converte-text .pointed-converte i {
   font-weight: normal;
   font-style: normal;
 }

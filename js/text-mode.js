@@ -102,16 +102,19 @@ define(['jquery'], function($) {
     var m = mode();
     return section && trSections[section] ? 'tr' : m;
   };
-  // A block's section: a <chant-gabc>'s notation, the pointed lesson, chapter and prayers, or the
-  // data-section of the part of index.html it's in (the psalms' and the canticle's verses and
-  // antiphons, in #placeholder and #canticle, and the versicles of the collect).  Anything else follows
-  // the Text menu.
+  // A block's section: a <chant-gabc>'s notation, the pointed lesson, chapter, prayers, Noctem
+  // quiétam, Adjutórium nostrum and Convérte nos, or the data-section of the part of index.html it's
+  // in (the psalms' and the canticle's verses and antiphons, in #placeholder and #canticle, and the
+  // versicles of the collect).  Anything else follows the Text menu.
   var sectionOf = function(el) {
     var $el = $(el);
     if($el.is('chant-gabc[notation]')) return $el.attr('notation');
     if($el.closest('.pointed-lesson').length) return 'lesson';
     if($el.closest('.pointed-chapter').length) return 'chapter';
     if($el.closest('.pointed-prayer').length) return 'prayers';
+    if($el.closest('.pointed-blessing').length) return 'blessing';
+    if($el.closest('.pointed-adjutorium').length) return 'adjutorium';
+    if($el.closest('.pointed-converte').length) return 'converte';
     return $el.closest('[data-section]').attr('data-section') || null;
   };
   var modeOf = function(el) {
