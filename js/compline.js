@@ -59,9 +59,9 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     hymn:     {key: 'notationHymn',     levels: ['text', 'full', 'sung', 'tr'], defaultLevel: 'full'},
     marian:   {key: 'notationMarian',   levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
     jube:       {key: 'notationJube',       levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
-    blessing:   {key: 'notationBlessing',   levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
-    adjutorium: {key: 'notationAdjutorium', levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
-    converte:   {key: 'notationConverte',   levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
+    blessing:   {key: 'notationBlessing',   levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'full'},
+    adjutorium: {key: 'notationAdjutorium', levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'full'},
+    converte:   {key: 'notationConverte',   levels: ['text', 'pointed', 'full', 'tr'], defaultLevel: 'full'},
     'deus-in-adjutorium': {key: 'notationDeusInAdjutorium', levels: ['text', 'full', 'tr'], defaultLevel: 'full'},
     benedicamus: {key: 'notationBenedicamus', levels: ['text', 'full', 'tr'], defaultLevel: 'full'}
   };
@@ -188,7 +188,8 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   };
   // What a section's menu sets: its chants and its other text (text-mode.js sectionOf), where
   // they're shown.
-  var pointed = {lesson: '.pointed-lesson', chapter: '.pointed-chapter', prayers: '.pointed-prayer'};
+  var pointed = {lesson: '.pointed-lesson', chapter: '.pointed-chapter', prayers: '.pointed-prayer',
+    blessing: '.pointed-blessing', adjutorium: '.pointed-adjutorium', converte: '.pointed-converte'};
   var sectionContent = function(section) {
     return $(['chant-gabc[notation="' + section + '"]', '[data-section="' + section + '"]'].concat(pointed[section] || []).join(', '))
       .filter(':visible');
