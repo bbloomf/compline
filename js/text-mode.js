@@ -41,7 +41,8 @@ define(['jquery'], function($) {
   // with the Pius XII psalter, for comparison, in Phase 6).
   // compline.js hides the Text and Translation menus while there are none.  rubrics: the language
   // its rubrics are in, where it hasn't its own.  sung: its module has the hymn to sing (hymn.sung),
-  // which the hymn's notation menu offers before the module is loaded.
+  // which the hymn's notation menu offers before the module is loaded.  shortName: what each
+  // section's text menu calls it, where that isn't its name.
   var languages = [
     {code: 'en', name: 'English', sung: true},
     {code: 'fr', name: 'Français'},
@@ -49,7 +50,7 @@ define(['jquery'], function($) {
     {code: 'it', name: 'Italiano'},
     {code: 'pt', name: 'Português'},
     {code: 'pl', name: 'Polski'},
-    {code: 'la-bea', name: 'Latin (Pius XII psalter)', rubrics: 'en'}
+    {code: 'la-bea', name: 'Latin (Pius XII psalter)', shortName: 'Pius XII Psalter', rubrics: 'en'}
   ];
   var isLanguage = function(code) {
     return languages.some(function(l) { return l.code === code; });
@@ -90,17 +91,32 @@ define(['jquery'], function($) {
     if(isLanguage(query.lang)) return query.lang;
     return isLanguage(localStorage.trLang) ? localStorage.trLang : browserLang();
   };
-  // The sections whose notation menu says 'Translation only' (compline.js), which show the
-  // translation only whatever the Text menu says.  Each block of text shows as its section's mode
-  // says (modeOf), and has the class text-<mode>, which style.css reads.
-  var trSections = {};
-  var setTrSections = function(sections) {
-    trSections = {};
-    sections.forEach(function(section) { trSections[section] = true; });
+  // What each section shows, where it isn't what the Text menu last said: localStorage.textSections,
+  // {section: mode} as JSON.  Choosing in the Text menu sets every section to it (setMode), and
+  // choosing in a section's own menu (compline.js) sets that one alone, after which the Text menu
+  // says Mixed.  Each block of text shows as its section's mode says (modeOf), and has the class
+  // text-<mode>, which style.css reads.  ?text= shows every section in its mode.
+  var sectionModes = {};
+  try {
+    sectionModes = JSON.parse(localStorage.textSections || '{}') || {};
+  } catch(e) {}
+  var saveSectionModes = function() {
+    localStorage.textSections = JSON.stringify(sectionModes);
+  };
+  // Before there was a menu of each section's text, its notation menu had 'Translation only'
+  // (compline.js carries that over): sections is {section: mode}, for when there's nothing stored.
+  var carrySectionModes = function(sections) {
+    if('textSections' in localStorage) return;
+    sectionModes = sections;
+    saveSectionModes();
   };
   var sectionMode = function(section) {
-    var m = mode();
-    return section && trSections[section] ? 'tr' : m;
+    var m = modes.indexOf(query.text) < 0 && section && sectionModes[section];
+    return modes.indexOf(m) >= 0 ? m : mode();
+  };
+  // Whether some section shows other than the Text menu says.
+  var mixed = function() {
+    return Object.keys(sectionModes).some(function(section) { return sectionMode(section) !== mode(); });
   };
   // A block's section: a <chant-gabc>'s notation, the pointed lesson, chapter, prayers, Noctem
   // quiétam, Adjutórium nostrum and Convérte nos, or the data-section of the part of index.html it's
@@ -122,7 +138,7 @@ define(['jquery'], function($) {
   };
   // Whether any translation is shown.
   var translated = function() {
-    return mode() !== 'la' || Object.keys(trSections).length > 0;
+    return mode() !== 'la' || Object.keys(sectionModes).some(function(section) { return sectionMode(section) !== 'la'; });
   };
   // The language of the rubrics: the translation's, which with the Latin only the menu calls the
   // Rubrics' (compline.js).  English is the page's own.
@@ -141,6 +157,16 @@ define(['jquery'], function($) {
   var setMode = function(m) {
     dropQuery('text');
     localStorage.textMode = m;
+    sectionModes = {};
+    saveSectionModes();
+  };
+  // A section's own choice.  What ?text= showed is kept for the others.
+  var setSectionMode = function(section, m) {
+    if(modes.indexOf(query.text) >= 0) localStorage.textMode = query.text;
+    dropQuery('text');
+    if(m === mode()) delete sectionModes[section];
+    else sectionModes[section] = m;
+    saveSectionModes();
   };
   var setLang = function(l) {
     dropQuery('lang');
@@ -525,8 +551,11 @@ define(['jquery'], function($) {
     query: query,
     languages: languages,
     mode: mode,
-    setTrSections: setTrSections,
+    modes: modes,
     sectionMode: sectionMode,
+    mixed: mixed,
+    setSectionMode: setSectionMode,
+    carrySectionModes: carrySectionModes,
     modeOf: modeOf,
     markMode: markMode,
     translated: translated,

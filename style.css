@@ -401,6 +401,25 @@ html.panel-open #side-panel {
   column-gap: 10px;
   padding-right: 14px;
 }
+/* A section's text menu, under its notation menu: only for the section being read, or one being
+   chosen in from the keyboard (compline.js).  With the translation only, where the notation menu
+   goes, it's always there in its place. */
+#sections-nav ol > li > .section-text-menu {
+  grid-column: 2;
+  display: none;
+}
+#sections-nav ol > li.current > .section-text-menu,
+#sections-nav ol > li:focus-within > .section-text-menu,
+#sections-nav ol > li > [hidden] + .section-text-menu {
+  display: block;
+}
+#sections-nav ol > li > :not([hidden]) + .section-text-menu {
+  margin-bottom: 8px;
+}
+/* a notation menu that a section's text menu takes away */
+#sections-nav ol > li > [hidden] {
+  display: none;
+}
 #sections-nav ol > li:hover {
   background: var(--panel-hover);
 }
@@ -733,8 +752,9 @@ chant-gabc.plain-text > p {
   margin-right: 1em;
 }
 /* Translations (TRANSLATIONS_PLAN.md §4).  js/text-mode.js puts text-la, text-both or text-tr on
-   each .tr-pair, psalm's .verses and <chant-gabc>, as its section shows (the Text menu, or a
-   section's 'Translation only'), and page-text-<mode>, the Text menu's, on <body>.  It follows each
+   each .tr-pair, psalm's .verses and <chant-gabc>, as its section shows (its own menu, which the
+   Text menu sets), and page-text-<mode>, the Text menu's, and section-text-<section>-<mode>, each
+   section's (compline.js), on <body>.  It follows each
    Latin block (lang=la) with its translation (.tr), inside a .tr-pair or a psalm's .verses.  A Latin block has the class has-tr when it has a translation, and
    tr-missing when it doesn't, or tr-same where the translation is Latin (Latin-Bea) and the
    same, so the Latin is its text and shows as it is.  In a chant, each unit's translation
@@ -758,8 +778,7 @@ span.tr-pair.text-tr > span:not(.has-tr) {
 .text-la .tr,
 .text-la .chant-tr,
 .text-tr .has-tr,
-body.page-text-tr #sections-nav .notation-menu,
-body.page-text-tr .notation-choice {
+body.section-text-marian-tr .notation-choice {
   display: none;
 }
 /* Beside the Latin, the translation is quieter.  With the translation only, a text that has no
