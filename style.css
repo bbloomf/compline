@@ -607,7 +607,10 @@ body.hide-choose-day #rbWeekday {
    drawn like the buttons of the menus below them: their colors from .btn-default, which they also
    carry, and the box of .btn-lg (above), with a select's caret where theirs is, 9px in from the
    right.  The height is set, not left to the line-height, which some browsers don't apply to a
-   select, and which iOS doesn't apply to a date without its native look. */
+   select, and which iOS doesn't apply to a date without its native look.
+   A control clips its text to its content box, and Crimson's descenders (p, 9, parentheses) reach
+   0.16em below a line-height of 1, so the line is 1.5 with 0.25em less padding above and below:
+   the box and the text are where they were, and the descenders are inside it. */
 .btn-select {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -615,13 +618,13 @@ body.hide-choose-day #rbWeekday {
   max-width: 100%;
   height: calc(22px + 1.25em);
   margin: 0 0 4px;
-  padding: 10px 16px calc(10px + 0.25em);
+  padding: calc(10px - 0.25em) 16px 10px;
   border-width: 1px;
   border-style: solid;
   border-radius: 6px;
   /* as .btn-lg, scaled with the page (above) */
   font-size: calc(18 * var(--scaled-px, 1px));
-  line-height: 1;
+  line-height: 1.5;
   vertical-align: top;
 }
 /* the caret (as .caret), one triangle; and still while it's pressed (.btn-default:active) */
