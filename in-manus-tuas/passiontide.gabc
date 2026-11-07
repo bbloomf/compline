@@ -3,15 +3,15 @@ annotation: V/.;
 annotation: 6.;
 %%
 (c4)IN(f) ma(f)nus(f) tu(fg)as(g) Dó(gf)mi(g)ne,(gh..) *(;) Com(h')mén(f)do(gh) spí(g)ri(fd)tum(fg) me(g.)um.(f.) (::)
-<v>\Rbar</v> In(f) ma(f)nus...(f) (::)
+<v>\Rbar</v> <nlba>In(f) ma(f)nus...(f)</nlba> (::)
 
 initial-style: 1;
 annotation: <v>\Vbar</v>;
 %%
 (c4)Red(h)e(h)mí(ixhi)sti(h) nos(h) Dó(gh)mi(g)ne,(g'_) (,) De(h)us(g') ve(g)ri(gf)tá(g)tis.(gh..) (::)
-*() Com(h')men(f)do...(gh) (::)
+<nlba>*() Com(h')men(f)do...(gh)</nlba> (::)
 
 initial-style: 1;
 annotation: <v>\Rbar</v>;
 %%
-(c4)In(f) ma(f)nus...(f) (::)
+(c4)<nlba>In(f) ma(f)nus...(f)</nlba> (::)
