@@ -120,8 +120,11 @@ define(['jquery'], function($) {
   };
   // A block's section: a <chant-gabc>'s notation, the pointed lesson, chapter, prayers, Noctem
   // quiétam, Adjutórium nostrum and Convérte nos, or the data-section of the part of index.html it's
-  // in (the psalms' and the canticle's verses and antiphons, in #placeholder and #canticle, and the
-  // versicles of the collect).  Anything else follows the Text menu.
+  // in (the psalms' and the canticle's verses and antiphons, in #placeholder and #canticle, the
+  // versicles before the collect, the one after it (with the Benedicamus), and the Marian antiphon's,
+  // the All Souls prayers, and the sections that aren't chanted: the Confiteor, Christus factus est,
+  // the Benedicat, Divinum auxilium and the Pater, Ave and Credo).  Anything else follows the Text
+  // menu.
   var sectionOf = function(el) {
     var $el = $(el);
     if($el.is('chant-gabc[notation]')) return $el.attr('notation');
