@@ -403,17 +403,19 @@ html.panel-open #side-panel {
 }
 /* A section's text menu, under its notation menu: only for the section being read, or one being
    chosen in from the keyboard (compline.js).  With the translation only, where the notation menu
-   goes, it's always there in its place. */
+   goes, it's always there in its place, as it is for a section that isn't chanted, which has no
+   notation menu. */
 #sections-nav ol > li > .section-text-menu {
   grid-column: 2;
   display: none;
 }
 #sections-nav ol > li.current > .section-text-menu,
 #sections-nav ol > li:focus-within > .section-text-menu,
-#sections-nav ol > li > [hidden] + .section-text-menu {
+#sections-nav ol > li > [hidden] + .section-text-menu,
+#sections-nav ol > li > a.jump + .section-text-menu {
   display: block;
 }
-#sections-nav ol > li > :not([hidden]) + .section-text-menu {
+#sections-nav ol > li > span:not([hidden]) + .section-text-menu {
   margin-bottom: 8px;
 }
 /* a notation menu that a section's text menu takes away */
@@ -477,11 +479,9 @@ html.panel-open #section-marker.shown {
 #sections-nav ol > li.current > a.jump {
   color: var(--rubric-color);
 }
-/* a section that isn't said today */
-#sections-nav a.jump.absent {
-  color: var(--panel-muted);
-  opacity: 0.6;
-  cursor: default;
+/* a section that isn't said today (compline.js) */
+#sections-nav ol > li[hidden] {
+  display: none;
 }
 #side-panel .menu,
 #side-panel .notation-menu,
