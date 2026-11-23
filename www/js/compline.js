@@ -1103,8 +1103,11 @@ define('text-mode',['jquery'], function($) {
   };
   // A block's section: a <chant-gabc>'s notation, the pointed lesson, chapter, prayers, Noctem
   // quiétam, Adjutórium nostrum and Convérte nos, or the data-section of the part of index.html it's
-  // in (the psalms' and the canticle's verses and antiphons, in #placeholder and #canticle, and the
-  // versicles of the collect).  Anything else follows the Text menu.
+  // in (the psalms' and the canticle's verses and antiphons, in #placeholder and #canticle, the
+  // versicles before the collect, the one after it (with the Benedicamus), and the Marian antiphon's,
+  // the All Souls prayers, and the sections that aren't chanted: the Confiteor, Christus factus est,
+  // the Benedicat, Divinum auxilium and the Pater, Ave and Credo).  Anything else follows the Text
+  // menu.
   var sectionOf = function(el) {
     var $el = $(el);
     if($el.is('chant-gabc[notation]')) return $el.attr('notation');
@@ -3615,14 +3618,22 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
   // Each section's text menu (TRANSLATIONS_PLAN.md §5): Latin, Latin and the translation, or the
   // translation only, as the Text menu sets them all.  It's under the section's notation menu in the
   // panel, shown for the section being read (style.css).  With the translation only, the notation
-  // menu goes, but for the hymn's where the language can sing it.
-  $('select[notation]').each(function(){
-    var section = $(this).attr('notation');
+  // menu goes, but for the hymn's where the language can sing it.  A section that isn't chanted (the
+  // Confiteor, the Benedicat and so on: its row's data-text-section) has only its text menu.
+  var sectionOfRow = function(li) {
+    return $(li).find('select[notation]').attr('notation') || $(li).attr('data-text-section');
+  };
+  var textSections = $('#sections-nav li[data-text-section]').map(function(){
+    return $(this).attr('data-text-section');
+  }).get();
+  $('#sections-nav ol > li').each(function(){
+    var $notation = $(this).find('select[notation]');
     var $select = $("<select class='section-text'></select>").attr({
-      'data-section-text': section,
-      'aria-label': $(this).attr('aria-label') + ': text'
+      'data-section-text': sectionOfRow(this),
+      // (the link's text without the soft hyphens hyphenate.js puts in it)
+      'aria-label': ($notation.attr('aria-label') || $(this).children('a.jump').text().replace(/\u00ad/g, '')) + ': text'
     }).append("<option value='la'></option><option value='both'></option><option value='tr'></option>");
-    $(this).parent().after($("<span class='menu section-text-menu'></span>").append($select));
+    $(this).append($("<span class='menu section-text-menu'></span>").append($select));
   });
   // which name the translation chosen in the Translation menu: Latin & English, English Only
   var labelSectionText = function() {
@@ -3633,17 +3644,23 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     $selects.children('[value=both]').text('Latin & ' + name);
     $selects.children('[value=tr]').text(name + ' Only');
   };
+  // A section's text: the body class section-text-<section>-<mode>, and its text menu.
+  var updateSectionText = function(section) {
+    var m = textMode.sectionMode(section);
+    $.each(textMode.modes, function(i, each) {
+      $(document.body).toggleClass('section-text-' + section + '-' + each, each === m);
+    });
+    $('select[data-section-text=' + section + ']').val(m);
+  };
+  textSections.forEach(updateSectionText);
   var updateNotation = function(section) {
     var level = notation(section);
     var m = textMode.sectionMode(section);
     $.each(notationSections[section].levels, function(i, l) {
       $(document.body).toggleClass('notation-' + section + '-' + l, l === level);
     });
-    $.each(textMode.modes, function(i, each) {
-      $(document.body).toggleClass('section-text-' + section + '-' + each, each === m);
-    });
+    updateSectionText(section);
     $('select[notation=' + section + ']').val(menuNotation(section));
-    $('select[data-section-text=' + section + ']').val(m);
     if(section === 'hymn') showHymnNotation();
     else $('select[notation=' + section + ']').parent().prop('hidden', m === 'tr');
     markPlainText(section);
@@ -3682,9 +3699,10 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     setNotation([$(this).attr('notation')], $(this).val());
   });
   // The side panel (index.html): the settings, then each section, whose link goes to it on the page,
-  // where it's shown today, and whose menu is the section's notation.  The gear opens and closes it,
-  // as does a swipe left or right on a touch screen, and Escape or a click outside it closes it.  The
-  // section at the top of the window is marked while it's open.
+  // where it's shown today (it isn't listed on a day it isn't said), and whose menu is the section's
+  // notation.  The gear opens and closes it, as does a swipe left or right on a touch screen, and
+  // Escape or a click outside it closes it.  The section at the top of the window is marked while
+  // it's open.
   var $root = $(document.documentElement);
   var $panelToggle = $('#panel-toggle');
   var $panel = $('#side-panel');
@@ -3696,10 +3714,7 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     var current = null, currentTop = -Infinity;
     $jumps.each(function(){
       var target = jumpTarget(this);
-      $(this).toggleClass('absent', !target).attr({
-        'aria-disabled': target? null : 'true',
-        title: target? null : 'Not said today'
-      });
+      $(this).closest('li').prop('hidden', !target);
       // the last section that starts at the top of the window or above it, as one does that's gone
       // to (scroll-margin-top in style.css); some chants are only a few lines apart
       var top = target? target.getBoundingClientRect().top : Infinity;
@@ -3738,7 +3753,7 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
       if(other && top > rect.top && top < next) next = top;
     });
     var bottom = rect.bottom;
-    sectionContent($(link).closest('li').find('select[notation]').attr('notation')).each(function(){
+    sectionContent(sectionOfRow($(link).closest('li'))).each(function(){
       var r = this.getBoundingClientRect();
       // with what's in it: a chant is inline, but its plain text is in blocks
       var range = document.createRange();
@@ -3936,6 +3951,7 @@ require(['jquery','moment','calendar','text-mode','hyphenate'], function($,momen
     textMode.load(function() {
       // the translation only makes its sections plain text
       $.each(notationSections, updateNotation);
+      textSections.forEach(updateSectionText);
       setPsalms();
       setCanticle();
       translatePage();
